@@ -3,26 +3,25 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 from flask_bcrypt import Bcrypt
 
-from config import DevelopmentConfig
-
-from flask import Flask
-from flask_sqlalchemy import SQLAlchemy
-from flask_bcrypt import Bcrypt
-from flask_login import LoginManager
-
 db = SQLAlchemy()
-bcrypt = Bcrypt()
 login_manager = LoginManager()
+bcrypt = Bcrypt()
 
-def create_app():
+
+def create_app(config_class=None):
+    if config_class is None:
+        from config import DevelopmentConfig
+        config_class = DevelopmentConfig
+
     app = Flask(__name__)
-    app.config['SECRET_KEY'] = 'your_secret_key'
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.db'
+    app.config.from_object(config_class)
 
     db.init_app(app)
-    bcrypt.init_app(app)
     login_manager.init_app(app)
+    bcrypt.init_app(app)
 
-    from app.models import user
+    with app.app_context():
+        from app.models.user import User
+        db.create_all()
 
     return app
