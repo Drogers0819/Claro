@@ -1,0 +1,1 @@
+from app.routes.auth_routes import auth_bp
