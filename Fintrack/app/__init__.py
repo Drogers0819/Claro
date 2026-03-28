@@ -26,9 +26,12 @@ def create_app(config_class=None):
 
     with app.app_context():
         from app.models.user import User
+        from app.models.transaction import Transaction
         db.create_all()
 
     from app.routes.auth_routes import auth_bp
+    from app.routes.transaction_routes import transaction_bp
     app.register_blueprint(auth_bp)
+    app.register_blueprint(transaction_bp)
 
     return app
