@@ -31,7 +31,9 @@ def create_app(config_class=None):
 
     from app.routes.auth_routes import auth_bp
     from app.routes.transaction_routes import transaction_bp
+    from app.routes.dashboard_routes import dashboard_bp
     app.register_blueprint(auth_bp)
     app.register_blueprint(transaction_bp)
+    app.register_blueprint(dashboard_bp)
 
     return app
