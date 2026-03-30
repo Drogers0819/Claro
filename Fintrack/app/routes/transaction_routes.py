@@ -2,6 +2,7 @@ from flask import Blueprint, request, jsonify
 from flask_login import login_required, current_user
 from app import db
 from app.models.transaction import Transaction
+from app.models.category import Category
 from datetime import date
 
 
@@ -17,7 +18,6 @@ def create_transaction():
         return jsonify({"error": "Request body must be JSON"}), 400
 
     description = data.get("description", "").strip()
-    category = data.get("category", "Other").strip()
     transaction_type = data.get("type", "").strip().lower()
     merchant = data.get("merchant", "").strip() or None
 
@@ -40,11 +40,22 @@ def create_transaction():
     except (ValueError, TypeError):
         return jsonify({"error": "Date must be in YYYY-MM-DD format"}), 400
 
+    category_id = data.get("category_id")
+    if category_id:
+        category = db.session.get(Category, category_id)
+        if not category:
+            return jsonify({"error": "Invalid category_id"}), 400
+    else:
+        category = Category.query.filter_by(name="Other").first()
+        if not category:
+            return jsonify({"error": "Default category not found"}), 500
+        category_id = category.id
+
     transaction = Transaction(
         user_id=current_user.id,
         amount=amount,
         description=description,
-        category=category,
+        category_id=category_id,
         type=transaction_type,
         date=transaction_date,
         merchant=merchant

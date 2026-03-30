@@ -5,6 +5,7 @@ from app.models.user import User
 from app.models.transaction import Transaction
 from sqlalchemy import func
 from datetime import date, datetime
+from app.models.category import Category
 
 
 page_bp = Blueprint("pages", __name__)
@@ -150,8 +151,12 @@ def add_transaction():
             return redirect(url_for("pages.add_transaction"))
 
         transaction_type = request.form.get("type", "expense")
-        category = request.form.get("category", "Other")
+        category_id = request.form.get("category_id", type=int)
         merchant = request.form.get("merchant", "").strip() or None
+
+        if not category_id:
+            other = Category.query.filter_by(name="Other").first()
+            category_id = other.id if other else 1
 
         try:
             transaction_date = date.fromisoformat(request.form.get("date", ""))
@@ -163,7 +168,7 @@ def add_transaction():
             user_id=current_user.id,
             amount=amount,
             description=description,
-            category=category,
+            category_id=category_id,
             type=transaction_type,
             date=transaction_date,
             merchant=merchant
@@ -175,8 +180,8 @@ def add_transaction():
         flash("Transaction recorded successfully", "success")
         return redirect(url_for("pages.transactions"))
 
-    return render_template("add_transaction.html")
-
+    categories = Category.query.order_by(Category.name).all()
+    return render_template("add_transaction.html", categories=categories)
 
 @page_bp.route("/delete-transaction/<int:transaction_id>", methods=["POST"])
 @login_required

@@ -1,6 +1,7 @@
 import pytest
 from app import create_app, db
 from app.models.user import User
+from app.models.category import Category
 from config import TestingConfig
 
 
@@ -10,6 +11,19 @@ def app():
 
     with app.app_context():
         db.create_all()
+
+        if Category.query.count() == 0:
+            defaults = [
+                Category(name="Food", icon="🍕", colour="#E07A5F"),
+                Category(name="Transport", icon="🚌", colour="#3D85C6"),
+                Category(name="Bills", icon="🏠", colour="#81B29A"),
+                Category(name="Income", icon="💰", colour="#C5A35D"),
+                Category(name="Other", icon="📌", colour="#888780"),
+            ]
+            for cat in defaults:
+                db.session.add(cat)
+            db.session.commit()
+
         yield app
         db.session.remove()
         db.drop_all()

@@ -4,7 +4,7 @@ class TestCreateTransaction:
         response = auth_client.post("/api/transactions", json={
             "amount": 45.99,
             "description": "Tesco weekly shop",
-            "category": "Food",
+            "category_id": 1,
             "type": "expense",
             "date": "2026-03-25",
             "merchant": "Tesco"
@@ -70,6 +70,16 @@ class TestCreateTransaction:
         assert response.status_code == 201
         data = response.get_json()
         assert data["transaction"]["category"] == "Other"
+
+    def test_create_transaction_invalid_category(self, auth_client):
+        response = auth_client.post("/api/transactions", json={
+            "amount": 50,
+            "description": "Test",
+            "category_id": 9999,
+            "type": "expense",
+            "date": "2026-03-25"
+        })
+        assert response.status_code == 400
 
 
 class TestListTransactions:
@@ -176,4 +186,20 @@ class TestDashboard:
 
     def test_dashboard_without_auth(self, client):
         response = client.get("/api/dashboard")
+        assert response.status_code == 401
+
+
+class TestCategories:
+
+    def test_list_categories(self, auth_client):
+        response = auth_client.get("/api/categories")
+        assert response.status_code == 200
+        data = response.get_json()
+        assert data["count"] >= 5
+        names = [c["name"] for c in data["categories"]]
+        assert "Food" in names
+        assert "Other" in names
+
+    def test_list_categories_without_auth(self, client):
+        response = client.get("/api/categories")
         assert response.status_code == 401
