@@ -1,0 +1,155 @@
+{% extends "base.html" %}
+{% block title %}Simulator — Claro{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div class="section-label">Financial Consequence Engine</div>
+    <h1 style="font-style: italic;">Where your habits take you</h1>
+    <p>See the real cost of today's decisions on tomorrow's goals.</p>
+</div>
+
+<!-- Goal Projections -->
+{% if projections | length > 0 %}
+<div class="section-label">Goal timelines</div>
+<div style="display: flex; flex-direction: column; gap: 16px; margin-bottom: 40px;">
+    {% for p in projections %}
+    <div class="glass-card">
+        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 16px;">
+            <div>
+                <div style="font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.15em; color: var(--roman-gold); font-weight: 600; margin-bottom: 4px;">
+                    {{ p.goal_type | default("savings_target") | replace("_", " ") | title }}
+                </div>
+                <div style="font-size: 1.1rem; color: var(--text-primary);">{{ p.goal_name }}</div>
+            </div>
+            {% if p.reachable is defined %}
+            <span style="font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.1em; padding: 4px 10px; border-radius: 6px;
+                {% if p.reachable %}background: rgba(45, 106, 79, 0.15); color: var(--success);
+                {% else %}background: rgba(139, 69, 19, 0.15); color: var(--danger);{% endif %}">
+                {% if p.reachable %}on track{% else %}needs attention{% endif %}
+            </span>
+            {% endif %}
+        </div>
+
+        {% if p.reachable %}
+        <div class="grid-3" style="margin-bottom: 16px;">
+            <div>
+                <div class="metric-label">Arrives</div>
+                <div style="font-family: var(--font-serif); font-size: 1.3rem; color: var(--roman-gold);">{{ p.completion_date_human }}</div>
+                <div style="font-size: 0.7rem; color: var(--text-tertiary);">{{ p.months_to_target }} months</div>
+            </div>
+            <div>
+                <div class="metric-label">You'll contribute</div>
+                <div style="font-family: var(--font-serif); font-size: 1.1rem;">£{{ "%.2f" | format(p.total_contributed) }}</div>
+            </div>
+            <div>
+                <div class="metric-label">Growth earns you</div>
+                <div style="font-family: var(--font-serif); font-size: 1.1rem; color: var(--success);">+£{{ "%.2f" | format(p.total_interest_earned) }}</div>
+            </div>
+        </div>
+
+        {% if p.milestones %}
+        <div style="padding-top: 16px; border-top: 0.5px solid rgba(255,255,255,0.05);">
+            <div class="metric-label" style="margin-bottom: 8px;">Milestones</div>
+            <div style="display: flex; gap: 16px; flex-wrap: wrap;">
+                {% for m in p.milestones %}
+                <div style="font-size: 0.75rem; color: var(--text-secondary);">
+                    <span style="color: var(--roman-gold); font-weight: 600;">{{ m.percent }}%</span> — {{ m.date }}
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+
+        {% elif p.message is defined %}
+        <p style="font-size: 0.85rem; color: var(--text-secondary); font-style: italic;">{{ p.message }}</p>
+        {% endif %}
+
+        <div style="margin-top: 16px;">
+            <a href="{{ url_for('pages.goal_detail', goal_id=p.goal_id) }}" style="font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.1em;">
+                View full projection →
+            </a>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<div class="glass-card" style="margin-bottom: 40px;">
+    <div class="empty-state">
+        No goals to project. <a href="{{ url_for('pages.add_goal') }}">Create a goal</a> to see your timeline.
+    </div>
+</div>
+{% endif %}
+
+<!-- Habit Cost Calculator -->
+<div class="section-label">What does your habit actually cost?</div>
+<div class="glass-card" style="max-width: 560px; margin-bottom: 40px;">
+    <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 20px; font-style: italic;">
+        Enter a monthly spending habit to see its true cost over time — including the growth you miss out on.
+    </p>
+    <form method="POST" action="{{ url_for('pages.simulator_page') }}">
+        <input type="hidden" name="form_type" value="habit_cost">
+        <div class="grid-2">
+            <div class="form-group">
+                <label class="form-label">Monthly spend (£)</label>
+                <input type="number" name="habit_amount" class="form-input" step="0.01" min="0.01"
+                       placeholder="e.g. 340" value="{{ habit_amount if habit_amount else '' }}" required>
+            </div>
+            <div class="form-group">
+                <label class="form-label">What is it?</label>
+                <input type="text" name="habit_description" class="form-input"
+                       placeholder="e.g. Deliveroo" value="{{ habit_description if habit_description else '' }}">
+            </div>
+        </div>
+        <button type="submit" class="btn-gold">Show me the real cost</button>
+    </form>
+</div>
+
+{% if habit_result %}
+<div class="section-label">The cost of {{ habit_description if habit_description else "this habit" }}</div>
+<div class="gold-card" style="margin-bottom: 24px;">
+    <div style="font-family: var(--font-serif); font-size: 1.3rem; color: var(--roman-gold); margin-bottom: 8px;">
+        {{ habit_result.insight.headline }}
+    </div>
+    <p style="font-size: 0.85rem; color: var(--text-secondary); line-height: 1.7;">
+        {{ habit_result.insight.detail }}
+    </p>
+    <p style="font-size: 0.85rem; color: var(--roman-gold); font-style: italic; margin-top: 12px;">
+        {{ habit_result.insight.reframe }}
+    </p>
+</div>
+
+<div class="grid-3" style="margin-bottom: 40px;">
+    {% for key in ["5_year", "10_year", "20_year"] %}
+    {% set h = habit_result.horizons[key] %}
+    <div class="glass-card">
+        <div class="metric-label">{{ h.years }} years</div>
+        <div style="font-family: var(--font-serif); font-size: 1.3rem; margin-bottom: 4px;">
+            £{{ "{:,.2f}".format(h.opportunity_cost) }}
+        </div>
+        <div style="font-size: 0.7rem; color: var(--text-tertiary); margin-bottom: 8px;">
+            opportunity cost
+        </div>
+        <div style="padding-top: 8px; border-top: 0.5px solid rgba(255,255,255,0.05);">
+            <div style="font-size: 0.75rem; color: var(--text-secondary);">
+                Spent: £{{ "{:,.2f}".format(h.simple_cost) }}
+            </div>
+            <div style="font-size: 0.75rem; color: var(--success);">
+                Lost growth: £{{ "{:,.2f}".format(h.lost_growth) }}
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+
+<!-- Scenario Link -->
+<div class="section-label">What if?</div>
+<div class="glass-card" style="max-width: 560px;">
+    <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 16px; font-style: italic;">
+        See how changing your spending, income, or goals shifts your entire financial future.
+    </p>
+    <a href="{{ url_for('pages.scenario_page') }}" class="btn-outline" style="display: inline-block; padding: 10px 24px;">
+        Run a scenario →
+    </a>
+</div>
+{% endblock %}

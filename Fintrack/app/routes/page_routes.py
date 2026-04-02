@@ -10,6 +10,13 @@ from sqlalchemy import func
 from datetime import date, datetime
 from app.models.category import Category
 from sqlalchemy import extract
+from app.services.simulator_service import (
+    project_goal_timeline,
+    calculate_cost_of_habit,
+    simulate_scenario,
+    generate_multi_horizon_projection,
+    GROWTH_RATES
+)
 
 
 page_bp = Blueprint("pages", __name__)
@@ -581,6 +588,164 @@ def waterfall_page():
     waterfall = generate_waterfall_summary(user_profile, goals_data)
 
     return render_template("waterfall.html", waterfall=waterfall)
+
+@page_bp.route("/simulator", methods=["GET", "POST"])
+@login_required
+def simulator_page():
+    goals = Goal.query.filter_by(
+        user_id=current_user.id,
+        status="active"
+    ).order_by(Goal.priority_rank.asc()).all()
+
+    projections = []
+    for goal in goals:
+        if not goal.target_amount:
+            projections.append({
+                "goal_id": goal.id,
+                "goal_name": goal.name,
+                "goal_type": goal.type,
+                "message": "No target amount — ongoing allocation",
+                "monthly_allocation": float(goal.monthly_allocation) if goal.monthly_allocation else 0
+            })
+            continue
+
+        contribution = float(goal.monthly_allocation) if goal.monthly_allocation else 0
+        goal_data = {
+            "target_amount": float(goal.target_amount),
+            "current_amount": float(goal.current_amount) if goal.current_amount else 0
+        }
+
+        projection = project_goal_timeline(goal_data, contribution)
+        projection["goal_name"] = goal.name
+        projection["goal_id"] = goal.id
+        projection["goal_type"] = goal.type
+
+        if "monthly_projections" in projection:
+            del projection["monthly_projections"]
+
+        projections.append(projection)
+
+    habit_result = None
+    habit_amount = None
+    habit_description = None
+
+    if request.method == "POST" and request.form.get("form_type") == "habit_cost":
+        try:
+            habit_amount = round(float(request.form.get("habit_amount", 0)), 2)
+            habit_description = request.form.get("habit_description", "This habit").strip() or "This habit"
+
+            if habit_amount > 0:
+                habit_result = calculate_cost_of_habit(habit_amount)
+                habit_result["description"] = habit_description
+        except (ValueError, TypeError):
+            flash("Invalid amount", "error")
+
+    return render_template("simulator.html",
+        projections=projections,
+        habit_result=habit_result,
+        habit_amount=habit_amount,
+        habit_description=habit_description
+    )
+
+
+@page_bp.route("/simulator/goal/<int:goal_id>")
+@login_required
+def goal_detail(goal_id):
+    goal = Goal.query.filter_by(
+        id=goal_id,
+        user_id=current_user.id
+    ).first()
+
+    if not goal:
+        flash("Goal not found", "error")
+        return redirect(url_for("pages.simulator_page"))
+
+    if not goal.target_amount:
+        flash("This goal has no target to project", "error")
+        return redirect(url_for("pages.simulator_page"))
+
+    contribution = float(goal.monthly_allocation) if goal.monthly_allocation else 0
+    goal_data = {
+        "target_amount": float(goal.target_amount),
+        "current_amount": float(goal.current_amount) if goal.current_amount else 0
+    }
+
+    projection = project_goal_timeline(goal_data, contribution)
+    multi_horizon = generate_multi_horizon_projection(goal_data, contribution)
+
+    return render_template("goal_detail.html",
+        goal=goal,
+        projection=projection,
+        multi_horizon=multi_horizon
+    )
+
+
+@page_bp.route("/scenario", methods=["GET", "POST"])
+@login_required
+def scenario_page():
+    if not current_user.factfind_completed:
+        flash("Complete your financial profile first", "error")
+        return redirect(url_for("pages.factfind"))
+
+    goals = Goal.query.filter_by(
+        user_id=current_user.id,
+        status="active"
+    ).order_by(Goal.priority_rank.asc()).all()
+
+    goals_list = []
+    for g in goals:
+        goals_list.append({
+            "id": g.id,
+            "name": g.name,
+            "type": g.type,
+            "target_amount": float(g.target_amount) if g.target_amount else None,
+            "current_amount": float(g.current_amount) if g.current_amount else 0,
+            "monthly_allocation": float(g.monthly_allocation) if g.monthly_allocation else 0,
+            "priority_rank": g.priority_rank
+        })
+
+    current_income = float(current_user.monthly_income)
+    current_commitments = current_user.fixed_commitments
+
+    scenario_result = None
+
+    if request.method == "POST":
+        try:
+            proposed_income = round(float(request.form.get("monthly_income", current_income)), 2)
+            proposed_commitments = round(float(request.form.get("fixed_commitments", current_commitments)), 2)
+        except (ValueError, TypeError):
+            flash("Invalid numbers", "error")
+            return redirect(url_for("pages.scenario_page"))
+
+        spending_changes = {}
+        for g in goals_list:
+            form_value = request.form.get(f"goal_{g['id']}")
+            if form_value:
+                try:
+                    spending_changes[str(g["id"])] = round(float(form_value), 2)
+                except (ValueError, TypeError):
+                    pass
+
+        current_state = {
+            "monthly_income": current_income,
+            "fixed_commitments": current_commitments,
+            "goals": goals_list
+        }
+
+        proposed_changes = {
+            "monthly_income": proposed_income,
+            "fixed_commitments": proposed_commitments,
+            "spending_changes": spending_changes
+        }
+
+        scenario_result = simulate_scenario(current_state, proposed_changes)
+
+    return render_template("scenario.html",
+        goals=goals_list,
+        current_income=current_income,
+        current_commitments=current_commitments,
+        scenario_result=scenario_result
+    )
 
 
 @page_bp.route("/settings")

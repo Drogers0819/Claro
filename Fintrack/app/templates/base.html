@@ -44,6 +44,9 @@
                 <a href="{{ url_for('pages.settings') }}" class="nav-link {% if request.endpoint == 'pages.settings' %}active{% endif %}">
                     <span class="nav-icon">&#9881;</span> Settings
                 </a>
+                <a href="{{ url_for('pages.simulator_page') }}" class="nav-link {% if request.endpoint in ['pages.simulator_page', 'pages.goal_detail', 'pages.scenario_page'] %}active{% endif %}">
+                    <span class="nav-icon">⟁</span> Simulator
+                </a>
             </nav>
 
             <div class="sidebar-footer">

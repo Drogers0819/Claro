@@ -1,0 +1,128 @@
+{% extends "base.html" %}
+{% block title %}{{ goal.name }} — Claro{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div class="section-label">Goal Projection</div>
+    <h1 style="font-style: italic;">{{ goal.name }}</h1>
+</div>
+
+{% if projection.reachable %}
+<div class="gold-card" style="margin-bottom: 32px;">
+    <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
+        <span class="ai-pulse"></span>
+        <span class="metric-label" style="margin-bottom: 0; color: var(--roman-gold);">Projection</span>
+    </div>
+    <div style="font-family: var(--font-serif); font-size: 1.8rem; color: var(--roman-gold); margin-bottom: 4px;">
+        {{ projection.completion_date_human }}
+    </div>
+    <p style="font-size: 0.85rem; color: var(--text-secondary); font-style: italic;">
+        At £{{ "%.2f" | format(projection.monthly_contribution) }}/month with {{ "%.0f" | format(projection.growth_rate_used * 100) }}% growth,
+        {{ goal.name }} is {{ projection.months_to_target }} months away.
+    </p>
+</div>
+
+<div class="grid-3" style="margin-bottom: 32px;">
+    <div class="glass-card">
+        <div class="metric-label">Target</div>
+        <div style="font-family: var(--font-serif); font-size: 1.3rem;">£{{ "{:,.2f}".format(projection.target_amount) }}</div>
+    </div>
+    <div class="glass-card">
+        <div class="metric-label">You'll contribute</div>
+        <div style="font-family: var(--font-serif); font-size: 1.3rem;">£{{ "{:,.2f}".format(projection.total_contributed) }}</div>
+    </div>
+    <div class="glass-card">
+        <div class="metric-label">Growth earns you</div>
+        <div style="font-family: var(--font-serif); font-size: 1.3rem; color: var(--success);">+£{{ "{:,.2f}".format(projection.total_interest_earned) }}</div>
+    </div>
+</div>
+
+<!-- Progress bar -->
+{% set progress = ((projection.current_amount / projection.target_amount) * 100) %}
+<div class="glass-card" style="margin-bottom: 32px;">
+    <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 8px;">
+        <span style="font-family: var(--font-serif); font-size: 1.3rem;">£{{ "{:,.2f}".format(projection.current_amount) }}</span>
+        <span style="font-size: 0.8rem; color: var(--text-tertiary);">of £{{ "{:,.2f}".format(projection.target_amount) }}</span>
+    </div>
+    <div style="height: 8px; background: rgba(255,255,255,0.05); border-radius: 4px; overflow: hidden; margin-bottom: 8px;">
+        <div style="height: 100%; width: {{ progress }}%; background: var(--roman-gold); border-radius: 4px;"></div>
+    </div>
+    <div style="font-size: 0.75rem; color: var(--text-tertiary);">{{ "%.1f" | format(progress) }}% complete</div>
+</div>
+
+<!-- Milestones -->
+{% if projection.milestones %}
+<div class="section-label">Milestones</div>
+<div class="glass-card" style="margin-bottom: 32px;">
+    {% for m in projection.milestones %}
+    <div style="display: flex; justify-content: space-between; align-items: center;
+        {% if not loop.last %}margin-bottom: 16px; padding-bottom: 16px; border-bottom: 0.5px solid rgba(255,255,255,0.05);{% endif %}">
+        <div style="display: flex; align-items: center; gap: 12px;">
+            <div style="width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+                font-size: 0.7rem; font-weight: 600;
+                {% if m.percent == 100 %}background: var(--roman-gold-dim); color: var(--roman-gold);
+                {% else %}background: rgba(255,255,255,0.05); color: var(--text-secondary);{% endif %}">
+                {{ m.percent }}%
+            </div>
+            <div>
+                <div style="font-size: 0.85rem; color: var(--text-primary);">£{{ "{:,.2f}".format(m.balance) }}</div>
+                <div style="font-size: 0.7rem; color: var(--text-tertiary);">Month {{ m.month }}</div>
+            </div>
+        </div>
+        <div style="font-size: 0.85rem; color: var(--text-secondary);">{{ m.date }}</div>
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+
+<!-- Multi-horizon -->
+{% if multi_horizon %}
+<div class="section-label">Growth scenarios</div>
+<div class="glass-card" style="margin-bottom: 32px; overflow-x: auto;">
+    <table style="width: 100%; border-collapse: collapse; font-size: 0.85rem;">
+        <thead>
+            <tr style="border-bottom: 0.5px solid rgba(255,255,255,0.08);">
+                <th style="text-align: left; padding: 8px 12px; color: var(--text-tertiary); font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.1em; font-weight: 400;">Horizon</th>
+                <th style="text-align: right; padding: 8px 12px; color: var(--text-tertiary); font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.1em; font-weight: 400;">Conservative (2%)</th>
+                <th style="text-align: right; padding: 8px 12px; color: var(--roman-gold); font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.1em; font-weight: 400;">Moderate (4%)</th>
+                <th style="text-align: right; padding: 8px 12px; color: var(--text-tertiary); font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.1em; font-weight: 400;">Optimistic (6%)</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for horizon_key in ["5_year", "10_year", "20_year"] %}
+            {% set horizon = multi_horizon[horizon_key] %}
+            <tr style="{% if not loop.last %}border-bottom: 0.5px solid rgba(255,255,255,0.05);{% endif %}">
+                <td style="padding: 12px; color: var(--text-secondary);">
+                    {{ horizon_key | replace("_", " ") | title }}
+                </td>
+                <td style="padding: 12px; text-align: right; font-family: var(--font-serif);">
+                    £{{ "{:,.2f}".format(horizon.conservative.final_balance) }}
+                </td>
+                <td style="padding: 12px; text-align: right; font-family: var(--font-serif); color: var(--roman-gold);">
+                    £{{ "{:,.2f}".format(horizon.moderate.final_balance) }}
+                </td>
+                <td style="padding: 12px; text-align: right; font-family: var(--font-serif);">
+                    £{{ "{:,.2f}".format(horizon.optimistic.final_balance) }}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endif %}
+
+{% elif projection.reachable is defined and not projection.reachable %}
+<div class="glass-card" style="margin-bottom: 32px;">
+    <p style="font-size: 0.9rem; color: var(--text-secondary); font-style: italic;">{{ projection.message }}</p>
+    <a href="{{ url_for('pages.goals_page') }}" style="display: inline-block; margin-top: 12px; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em;">
+        Adjust this goal →
+    </a>
+</div>
+{% endif %}
+
+<div style="text-align: center; margin-top: 16px;">
+    <a href="{{ url_for('pages.simulator_page') }}" style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em;">
+        ← Back to Simulator
+    </a>
+</div>
+{% endblock %}

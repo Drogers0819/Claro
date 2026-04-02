@@ -63,6 +63,8 @@ def create_app(config_class=None):
     from app.routes.upload_routes import upload_bp
     from app.routes.profile_routes import profile_bp
     from app.routes.analytics_routes import analytics_bp
+    from app.routes.simulator_routes import simulator_bp
+    app.register_blueprint(simulator_bp)
     app.register_blueprint(analytics_bp)
     app.register_blueprint(profile_bp)
     app.register_blueprint(upload_bp)

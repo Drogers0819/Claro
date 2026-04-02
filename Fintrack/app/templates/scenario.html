@@ -1,0 +1,127 @@
+{% extends "base.html" %}
+{% block title %}What If — Claro{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div class="section-label">Scenario Modelling</div>
+    <h1 style="font-style: italic;">What if?</h1>
+    <p>Adjust the numbers below and see how your entire financial picture shifts.</p>
+</div>
+
+<div class="glass-card" style="max-width: 640px; margin-bottom: 32px;">
+    <form method="POST" action="{{ url_for('pages.scenario_page') }}">
+        <div class="section-label" style="margin-top: 0;">Income & Commitments</div>
+        <div class="grid-2" style="margin-bottom: 24px;">
+            <div class="form-group">
+                <label class="form-label">Monthly income (£)</label>
+                <input type="number" name="monthly_income" class="form-input" step="0.01"
+                       value="{{ current_income }}" required>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Fixed commitments (£)</label>
+                <input type="number" name="fixed_commitments" class="form-input" step="0.01"
+                       value="{{ current_commitments }}" required>
+            </div>
+        </div>
+
+        {% if goals | length > 0 %}
+        <div class="section-label">Monthly allocations per goal</div>
+        <p style="font-size: 0.75rem; color: var(--text-tertiary); margin-bottom: 16px; font-style: italic;">
+            Change a number to see what happens. Current allocations shown as defaults.
+        </p>
+
+        {% for g in goals %}
+        <div class="form-group">
+            <label class="form-label" style="display: flex; justify-content: space-between;">
+                <span>{{ g.name }}</span>
+                <span style="color: var(--text-tertiary); font-weight: 400;">currently £{{ "%.2f" | format(g.monthly_allocation) }}/mo</span>
+            </label>
+            <input type="number" name="goal_{{ g.id }}" class="form-input" step="0.01" min="0"
+                   value="{{ g.monthly_allocation }}">
+        </div>
+        {% endfor %}
+        {% endif %}
+
+        <button type="submit" class="btn-gold" style="margin-top: 8px;">See the impact</button>
+    </form>
+</div>
+
+{% if scenario_result %}
+<div class="section-label">Scenario comparison</div>
+
+<!-- Summary -->
+<div class="grid-3" style="margin-bottom: 24px;">
+    <div class="glass-card">
+        <div class="metric-label">Current Surplus</div>
+        <div class="metric-value" style="font-size: 1.3rem;">£{{ "%.2f" | format(scenario_result.summary.current_surplus) }}</div>
+    </div>
+    <div class="glass-card">
+        <div class="metric-label">Proposed Surplus</div>
+        <div class="metric-value" style="font-size: 1.3rem;">£{{ "%.2f" | format(scenario_result.summary.proposed_surplus) }}</div>
+    </div>
+    <div class="glass-card">
+        <div class="metric-label">Change</div>
+        <div class="metric-value" style="font-size: 1.3rem;
+            {% if scenario_result.summary.surplus_change > 0 %}color: var(--success);
+            {% elif scenario_result.summary.surplus_change < 0 %}color: var(--danger);
+            {% endif %}">
+            {% if scenario_result.summary.surplus_change > 0 %}+{% endif %}£{{ "%.2f" | format(scenario_result.summary.surplus_change) }}
+        </div>
+    </div>
+</div>
+
+<!-- Net insight -->
+{% if scenario_result.summary.net_insight %}
+<div class="gold-card" style="margin-bottom: 24px;">
+    <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
+        <span class="ai-pulse"></span>
+        <span class="metric-label" style="margin-bottom: 0; color: var(--roman-gold);">Insight</span>
+    </div>
+    <p style="font-size: 0.9rem; font-style: italic; color: var(--text-secondary); line-height: 1.7;">
+        "{{ scenario_result.summary.net_insight }}"
+    </p>
+</div>
+{% endif %}
+
+<!-- Goal-by-goal comparison -->
+<div class="section-label">Goal-by-goal impact</div>
+<div style="display: flex; flex-direction: column; gap: 16px; margin-bottom: 32px;">
+    {% for c in scenario_result.comparison %}
+    <div class="glass-card">
+        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px;">
+            <div style="font-size: 1rem; color: var(--text-primary);">{{ c.goal_name }}</div>
+            <span style="font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.1em; padding: 4px 10px; border-radius: 6px;
+                {% if c.months_saved > 0 %}background: rgba(45, 106, 79, 0.15); color: var(--success);
+                {% elif c.months_saved < 0 %}background: rgba(139, 69, 19, 0.15); color: var(--danger);
+                {% else %}background: rgba(255, 255, 255, 0.05); color: var(--text-tertiary);{% endif %}">
+                {% if c.months_saved > 0 %}{{ c.months_saved }} months faster
+                {% elif c.months_saved < 0 %}{{ c.months_saved | abs }} months slower
+                {% else %}unchanged{% endif %}
+            </span>
+        </div>
+
+        <div class="grid-2">
+            <div style="padding: 12px; border-radius: 8px; background: rgba(255,255,255,0.02);">
+                <div style="font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-tertiary); margin-bottom: 4px;">Current path</div>
+                <div style="font-family: var(--font-serif); font-size: 1rem;">£{{ "%.2f" | format(c.current_allocation) }}/mo</div>
+                {% if c.current_date != "N/A" %}
+                <div style="font-size: 0.75rem; color: var(--text-secondary); margin-top: 4px;">Arrives: {{ c.current_date }}</div>
+                {% endif %}
+            </div>
+            <div style="padding: 12px; border-radius: 8px; background: var(--roman-gold-dim);">
+                <div style="font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--roman-gold); margin-bottom: 4px;">Proposed path</div>
+                <div style="font-family: var(--font-serif); font-size: 1rem; color: var(--roman-gold);">£{{ "%.2f" | format(c.proposed_allocation) }}/mo</div>
+                {% if c.proposed_date != "N/A" %}
+                <div style="font-size: 0.75rem; color: var(--text-secondary); margin-top: 4px;">Arrives: {{ c.proposed_date }}</div>
+                {% endif %}
+            </div>
+        </div>
+
+        <div style="font-size: 0.8rem; color: var(--text-secondary); font-style: italic; margin-top: 12px;">
+            {{ c.impact }}
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+{% endblock %}
