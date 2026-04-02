@@ -1,3 +1,4 @@
+from app.services.prediction_service import predict_monthly_spending, calculate_budget_status
 from app.services.recurring_service import detect_recurring_transactions, identify_potential_savings
 from app.services.allocator_service import generate_waterfall_summary
 from app.models.goal import Goal
@@ -812,6 +813,50 @@ def recurring_page():
     return render_template("recurring.html",
         recurring=recurring,
         savings=savings
+    )
+
+@page_bp.route("/insights")
+@login_required
+def insights_page():
+    transactions = Transaction.query.filter_by(
+        user_id=current_user.id
+    ).order_by(Transaction.date.asc()).all()
+
+    txn_list = []
+    for t in transactions:
+        txn_list.append({
+            "amount": float(t.amount),
+            "description": t.description,
+            "category": t.category_rel.name if t.category_rel else "Other",
+            "type": t.type,
+            "date": t.date
+        })
+
+    predictions = predict_monthly_spending(txn_list)
+
+    budget_status = None
+    if current_user.factfind_completed:
+        goals = Goal.query.filter_by(
+            user_id=current_user.id,
+            status="active"
+        ).all()
+
+        goals_data = [
+            {"id": g.id, "name": g.name,
+             "monthly_allocation": float(g.monthly_allocation) if g.monthly_allocation else 0}
+            for g in goals
+        ]
+
+        user_profile = {
+            "monthly_income": float(current_user.monthly_income),
+            "fixed_commitments": current_user.fixed_commitments
+        }
+
+        budget_status = calculate_budget_status(predictions, user_profile, goals_data)
+
+    return render_template("insights.html",
+        predictions=predictions,
+        budget_status=budget_status
     )
 
 @page_bp.route("/settings")

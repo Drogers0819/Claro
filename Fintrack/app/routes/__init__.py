@@ -9,3 +9,4 @@ from app.routes.profile_routes import profile_bp
 from app.routes.analytics_routes import analytics_bp
 from app.routes.simulator_routes import simulator_bp
 from app.routes.recurring_routes import recurring_bp
+from app.routes.prediction_routes import prediction_bp
