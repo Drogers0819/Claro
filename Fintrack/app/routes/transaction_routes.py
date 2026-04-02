@@ -112,3 +112,30 @@ def delete_transaction(transaction_id):
     db.session.commit()
 
     return jsonify({"message": "Transaction deleted successfully"}), 200
+
+@transaction_bp.route("/<int:transaction_id>/categorise", methods=["PUT"])
+@login_required
+def recategorise_transaction(transaction_id):
+    transaction = Transaction.query.filter_by(
+        id=transaction_id,
+        user_id=current_user.id
+    ).first()
+
+    if not transaction:
+        return jsonify({"error": "Transaction not found"}), 404
+
+    data = request.get_json()
+    if not data or "category_id" not in data:
+        return jsonify({"error": "category_id is required"}), 400
+
+    category = db.session.get(Category, data["category_id"])
+    if not category:
+        return jsonify({"error": "Invalid category_id"}), 400
+
+    transaction.category_id = category.id
+    db.session.commit()
+
+    return jsonify({
+        "message": "Transaction recategorised",
+        "transaction": transaction.to_dict()
+    }), 200

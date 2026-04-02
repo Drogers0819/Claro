@@ -49,6 +49,20 @@
             <div style="font-family: var(--font-serif); font-size: 1.5rem; color: var(--text-secondary);">{{ result.skipped }}</div>
         </div>
     </div>
+    <div class="grid-3" style="margin-bottom: 16px;">
+        <div style="padding: 12px; background: rgba(45, 106, 79, 0.1); border-radius: 12px; text-align: center;">
+            <div class="metric-label">Imported</div>
+            <div style="font-family: var(--font-serif); font-size: 1.5rem; color: var(--success);">{{ result.created }}</div>
+        </div>
+        <div style="padding: 12px; background: var(--roman-gold-dim); border-radius: 12px; text-align: center;">
+            <div class="metric-label">Auto-categorised</div>
+            <div style="font-family: var(--font-serif); font-size: 1.5rem; color: var(--roman-gold);">{{ result.auto_categorised }}</div>
+        </div>
+        <div style="padding: 12px; background: rgba(255,255,255,0.02); border-radius: 12px; text-align: center;">
+            <div class="metric-label">Skipped</div>
+            <div style="font-family: var(--font-serif); font-size: 1.5rem; color: var(--text-secondary);">{{ result.skipped }}</div>
+        </div>
+    </div>
 
     {% if result.errors %}
     <details style="margin-top: 12px;">

@@ -246,19 +246,38 @@ def upload_statement():
         except CSVParseError as e:
             flash(str(e), "error")
             return redirect(url_for("pages.upload_statement"))
-
-        if not parse_result["transactions"]:
-            flash("No valid transactions found in file", "error")
-            return redirect(url_for("pages.upload_statement"))
+# Build categoriser from existing data
+        from app.services.categoriser_service import categorise_transactions, build_categoriser_for_user
 
         other_category = Category.query.filter_by(name="Other").first()
-        default_category_id = other_category.id if other_category else 1
+        other_id = other_category.id if other_category else 1
+
+        existing = Transaction.query.filter(
+            Transaction.user_id == current_user.id,
+            Transaction.category_id != other_id
+        ).all()
+
+        training_data = []
+        for t in existing:
+            if t.category_rel:
+                training_data.append({
+                    "description": t.description,
+                    "category": t.category_rel.name
+                })
+
+        categoriser = build_categoriser_for_user(training_data) if training_data else None
+
+        categorised = categorise_transactions(parse_result["transactions"], categoriser)
+
+        categories_all = Category.query.all()
+        category_lookup = {c.name: c.id for c in categories_all}
 
         created_count = 0
         skipped_count = 0
+        auto_categorised_count = 0
 
-        for t in parse_result["transactions"]:
-            existing = Transaction.query.filter_by(
+        for t in categorised:
+            existing_t = Transaction.query.filter_by(
                 user_id=current_user.id,
                 amount=t["amount"],
                 description=t["description"],
@@ -266,15 +285,21 @@ def upload_statement():
                 type=t["type"]
             ).first()
 
-            if existing:
+            if existing_t:
                 skipped_count += 1
                 continue
+
+            suggested = t.get("suggested_category", "Other")
+            category_id = category_lookup.get(suggested, other_id)
+
+            if suggested != "Other":
+                auto_categorised_count += 1
 
             transaction = Transaction(
                 user_id=current_user.id,
                 amount=t["amount"],
                 description=t["description"],
-                category_id=default_category_id,
+                category_id=category_id,
                 type=t["type"],
                 date=t["date"],
                 merchant=t.get("merchant")
@@ -282,6 +307,19 @@ def upload_statement():
 
             db.session.add(transaction)
             created_count += 1
+
+        db.session.commit()
+
+        result = {
+            "bank_detected": parse_result["bank_detected"],
+            "created": created_count,
+            "skipped": skipped_count,
+            "auto_categorised": auto_categorised_count,
+            "errors": parse_result["errors"],
+            "error_count": parse_result["error_count"]
+        }
+
+        flash(f"Import complete. {created_count} transactions imported, {auto_categorised_count} auto-categorised.", "success")
 
         db.session.commit()
 
