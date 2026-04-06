@@ -69,6 +69,8 @@ def create_app(config_class=None):
     from app.routes.prediction_routes import prediction_bp
     from app.routes.budget_routes import budget_bp
     from app.routes.anomaly_routes import anomaly_bp
+    from app.routes.insight_routes import insight_bp
+    app.register_blueprint(insight_bp)
     app.register_blueprint(anomaly_bp)
     app.register_blueprint(budget_bp)
     app.register_blueprint(prediction_bp)
