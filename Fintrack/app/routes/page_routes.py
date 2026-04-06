@@ -1,42 +1,209 @@
-from app.models.budget import Budget
-from app.services.budget_service import calculate_budget_status as calc_budget_status, suggest_budgets
-from app.services.prediction_service import predict_monthly_spending, calculate_budget_status as calc_prediction_budget_status
-from app.services.recurring_service import detect_recurring_transactions, identify_potential_savings
-from app.services.allocator_service import generate_waterfall_summary
-from app.models.goal import Goal
-from app.services.csv_parser import extract_transactions_from_csv, CSVParseError
 from flask import Blueprint, render_template, request, redirect, url_for, flash
 from flask_login import login_user, logout_user, login_required, current_user
 from app import db, bcrypt
 from app.models.user import User
 from app.models.transaction import Transaction
-from sqlalchemy import func
-from datetime import date, datetime
 from app.models.category import Category
-from sqlalchemy import extract
+from app.models.goal import Goal
+from app.models.budget import Budget
+from sqlalchemy import func, extract
+from datetime import date, datetime
+from app.services.csv_parser import extract_transactions_from_csv, CSVParseError
+from app.services.categoriser_service import categorise_transactions, build_categoriser_for_user
+from app.services.allocator_service import generate_waterfall_summary
+from app.services.prediction_service import predict_monthly_spending, calculate_budget_status as calc_prediction_budget_status
+from app.services.budget_service import calculate_budget_status as calc_budget_status, suggest_budgets
+from app.services.recurring_service import detect_recurring_transactions, identify_potential_savings
+from app.services.anomaly_service import detect_anomalies
+from app.services.insight_service import generate_page_insights
 from app.services.simulator_service import (
-    project_goal_timeline,
-    calculate_cost_of_habit,
-    simulate_scenario,
-    generate_multi_horizon_projection,
-    GROWTH_RATES
+    project_goal_timeline, calculate_cost_of_habit,
+    simulate_scenario, generate_multi_horizon_projection
 )
-
+import calendar
 
 page_bp = Blueprint("pages", __name__)
 
 
+# ─── HELPERS ──────────────────────────────────────────────
+
+def _get_txn_list():
+    """Returns all user transactions as dicts."""
+    transactions = Transaction.query.filter_by(
+        user_id=current_user.id
+    ).order_by(Transaction.date.asc()).all()
+
+    return [{
+        "amount": float(t.amount),
+        "description": t.description,
+        "merchant": t.merchant or t.description,
+        "category": t.category_rel.name if t.category_rel else "Other",
+        "category_id": t.category_id,
+        "type": t.type,
+        "date": t.date,
+        "id": t.id
+    } for t in transactions]
+
+
+def _get_money_left():
+    """Calculates money left to spend this month."""
+    if not current_user.factfind_completed or not current_user.monthly_income:
+        return None, 0
+
+    today = date.today()
+    days_in_month = calendar.monthrange(today.year, today.month)[1]
+    days_remaining = days_in_month - today.day
+
+    current_month_expenses = db.session.query(
+        func.coalesce(func.sum(Transaction.amount), 0)
+    ).filter(
+        Transaction.user_id == current_user.id,
+        Transaction.type == "expense",
+        extract("month", Transaction.date) == today.month,
+        extract("year", Transaction.date) == today.year
+    ).scalar()
+
+    goals = Goal.query.filter_by(user_id=current_user.id, status="active").all()
+    total_goal_allocation = sum(
+        float(g.monthly_allocation) if g.monthly_allocation else 0
+        for g in goals
+    )
+
+    disposable = current_user.monthly_surplus - total_goal_allocation
+    money_left = round(disposable - float(current_month_expenses), 2)
+
+    return money_left, days_remaining
+
+
+def _build_whisper_data():
+    """Builds the data object used by the insight engine."""
+    txn_list = _get_txn_list()
+    money_left, days_remaining = _get_money_left()
+
+    predictions = predict_monthly_spending(txn_list)
+    anomalies = detect_anomalies(txn_list)
+
+    goals = Goal.query.filter_by(
+        user_id=current_user.id, status="active"
+    ).order_by(Goal.priority_rank.asc()).all()
+    goals_list = [g.to_dict() for g in goals]
+
+    primary_goal = goals_list[0] if goals_list else {}
+
+    budgets = Budget.query.filter_by(
+        user_id=current_user.id, is_active=True
+    ).all()
+    budget_list = [b.to_dict() for b in budgets]
+    budget_status_result = calc_budget_status(budget_list, txn_list) if budget_list else {"budgets": [], "summary": {}}
+
+    recurring = detect_recurring_transactions(txn_list)
+    savings = identify_potential_savings(recurring["recurring"])
+
+    waterfall = {}
+    projections = []
+    if current_user.factfind_completed and current_user.monthly_income:
+        goals_data = [{
+            "id": g.id, "name": g.name, "type": g.type,
+            "target_amount": float(g.target_amount) if g.target_amount else None,
+            "current_amount": float(g.current_amount) if g.current_amount else 0,
+            "monthly_allocation": float(g.monthly_allocation) if g.monthly_allocation else 0,
+            "priority_rank": g.priority_rank
+        } for g in goals]
+
+        user_profile = {
+            "monthly_income": float(current_user.monthly_income),
+            "fixed_commitments": current_user.fixed_commitments
+        }
+        waterfall = generate_waterfall_summary(user_profile, goals_data)
+
+        for g in goals:
+            if g.target_amount and g.monthly_allocation:
+                proj = project_goal_timeline(
+                    {"target_amount": float(g.target_amount),
+                     "current_amount": float(g.current_amount) if g.current_amount else 0},
+                    float(g.monthly_allocation)
+                )
+                proj["goal_name"] = g.name
+                proj["goal_id"] = g.id
+                projections.append(proj)
+
+    # Trends
+    today = date.today()
+    current_month = today.month
+    current_year = today.year
+    prev_month = current_month - 1 if current_month > 1 else 12
+    prev_year = current_year if current_month > 1 else current_year - 1
+
+    current_cat = db.session.query(
+        Category.name, Category.icon, func.sum(Transaction.amount).label("total")
+    ).join(Category, Transaction.category_id == Category.id).filter(
+        Transaction.user_id == current_user.id,
+        Transaction.type == "expense",
+        extract("month", Transaction.date) == current_month,
+        extract("year", Transaction.date) == current_year
+    ).group_by(Category.id, Category.name, Category.icon).all()
+
+    prev_cat = db.session.query(
+        Category.name, func.sum(Transaction.amount).label("total")
+    ).join(Category, Transaction.category_id == Category.id).filter(
+        Transaction.user_id == current_user.id,
+        Transaction.type == "expense",
+        extract("month", Transaction.date) == prev_month,
+        extract("year", Transaction.date) == prev_year
+    ).group_by(Category.id, Category.name).all()
+
+    prev_dict = {r.name: float(r.total) for r in prev_cat}
+
+    trends = []
+    for r in current_cat:
+        current_total = float(r.total)
+        prev_total = prev_dict.get(r.name, 0)
+        if prev_total > 0:
+            change = current_total - prev_total
+            pct = round((change / prev_total) * 100, 1)
+        else:
+            change = current_total
+            pct = 100.0
+        trends.append({
+            "category": r.name, "icon": r.icon,
+            "change_amount": round(change, 2), "change_percent": pct,
+            "direction": "up" if change > 0 else "down" if change < 0 else "flat"
+        })
+    trends.sort(key=lambda t: abs(t["change_amount"]), reverse=True)
+
+    return {
+        "user_name": current_user.name,
+        "money_left": money_left,
+        "days_remaining": days_remaining,
+        "predictions": predictions,
+        "anomalies": anomalies,
+        "primary_goal": primary_goal,
+        "goals": goals_list,
+        "budget_statuses": budget_status_result.get("budgets", []),
+        "budget_status": budget_status_result.get("summary", {}),
+        "waterfall": waterfall,
+        "projections": projections,
+        "recurring": recurring,
+        "savings_opportunities": savings,
+        "trends": trends,
+        "total_transactions": Transaction.query.filter_by(user_id=current_user.id).count(),
+        "active_goals": len(goals_list)
+    }
+
+
+# ─── AUTH ROUTES ──────────────────────────────────────────
+
 @page_bp.route("/")
 def index():
     if current_user.is_authenticated:
-        return redirect(url_for("pages.dashboard"))
+        return redirect(url_for("pages.overview"))
     return redirect(url_for("pages.login"))
 
 
 @page_bp.route("/register", methods=["GET", "POST"])
 def register():
     if current_user.is_authenticated:
-        return redirect(url_for("pages.dashboard"))
+        return redirect(url_for("pages.overview"))
 
     if request.method == "POST":
         name = request.form.get("name", "").strip()
@@ -62,7 +229,7 @@ def register():
 
         login_user(user)
         flash("Account created successfully", "success")
-        return redirect(url_for("pages.dashboard"))
+        return redirect(url_for("pages.overview"))
 
     return render_template("register.html")
 
@@ -70,7 +237,7 @@ def register():
 @page_bp.route("/login", methods=["GET", "POST"])
 def login():
     if current_user.is_authenticated:
-        return redirect(url_for("pages.dashboard"))
+        return redirect(url_for("pages.overview"))
 
     if request.method == "POST":
         email = request.form.get("email", "").strip()
@@ -83,7 +250,7 @@ def login():
             return redirect(url_for("pages.login"))
 
         login_user(user)
-        return redirect(url_for("pages.dashboard"))
+        return redirect(url_for("pages.overview"))
 
     return render_template("login.html")
 
@@ -92,16 +259,21 @@ def login():
 @login_required
 def logout():
     logout_user()
-    flash("You have been logged out", "success")
+    flash("You have been signed out", "success")
     return redirect(url_for("pages.login"))
 
 
-@page_bp.route("/dashboard")
+# ─── OVERVIEW ─────────────────────────────────────────────
+
+@page_bp.route("/overview")
 @login_required
-def dashboard():
+def overview():
     if not current_user.factfind_completed:
         flash("Complete your financial profile to get started", "success")
         return redirect(url_for("pages.factfind"))
+
+    data = _build_whisper_data()
+    whisper_result = generate_page_insights("overview", data)
 
     income = db.session.query(
         func.coalesce(func.sum(Transaction.amount), 0)
@@ -111,306 +283,182 @@ def dashboard():
         func.coalesce(func.sum(Transaction.amount), 0)
     ).filter_by(user_id=current_user.id, type="expense").scalar()
 
-    balance = float(income) - float(expenses)
-    transaction_count = Transaction.query.filter_by(user_id=current_user.id).count()
-
     recent = Transaction.query.filter_by(
         user_id=current_user.id
     ).order_by(Transaction.date.desc()).limit(5).all()
 
     hour = datetime.now().hour
-    if hour < 12:
-        greeting = "morning"
-    elif hour < 18:
-        greeting = "afternoon"
-    else:
-        greeting = "evening"
+    greeting = "morning" if hour < 12 else "afternoon" if hour < 18 else "evening"
 
-    primary_goal = Goal.query.filter_by(
-        user_id=current_user.id,
-        status="active"
-    ).order_by(Goal.priority_rank.asc()).first()
-
-    active_goals_count = Goal.query.filter_by(
-        user_id=current_user.id,
-        status="active"
-    ).count()
-
-    # Monthly prediction
-    all_transactions = Transaction.query.filter_by(
-        user_id=current_user.id
-    ).order_by(Transaction.date.asc()).all()
-
-    txn_list = [{
-        "amount": float(t.amount),
-        "description": t.description,
-        "category": t.category_rel.name if t.category_rel else "Other",
-        "type": t.type,
-        "date": t.date
-    } for t in all_transactions]
-
-    predictions = predict_monthly_spending(txn_list)
-
-    # Budget status
     budget_status = None
     if current_user.monthly_income:
-        goals = Goal.query.filter_by(
-            user_id=current_user.id,
-            status="active"
-        ).all()
+        budget_status = calc_prediction_budget_status(
+            data["predictions"],
+            {"monthly_income": float(current_user.monthly_income),
+             "fixed_commitments": current_user.fixed_commitments},
+            [{"id": g["id"], "name": g["name"],
+              "monthly_allocation": g.get("monthly_allocation", 0)}
+             for g in data["goals"]]
+        )
 
-        goals_data = [{
-            "id": g.id,
-            "name": g.name,
-            "monthly_allocation": float(g.monthly_allocation) if g.monthly_allocation else 0
-        } for g in goals]
+    return render_template("overview.html",
+        greeting=greeting,
+        whisper=whisper_result["whisper"],
+        money_left=data["money_left"],
+        days_remaining=data["days_remaining"],
+        budget_status=budget_status,
+        primary_goal=data["primary_goal"] if data["primary_goal"] else None,
+        active_goals_count=data["active_goals"],
+        summary={
+            "total_income": float(income),
+            "total_expenses": float(expenses),
+            "balance": float(income) - float(expenses)
+        },
+        recent_transactions=[t.to_dict() for t in recent]
+    )
 
-        user_profile = {
-            "monthly_income": float(current_user.monthly_income),
-            "fixed_commitments": current_user.fixed_commitments
-        }
 
-        budget_status = calc_prediction_budget_status(predictions, user_profile, goals_data)
+# ─── MY MONEY ────────────────────────────────────────────
 
-    # Money left to spend this month
-    current_month_expenses = db.session.query(
-        func.coalesce(func.sum(Transaction.amount), 0)
-    ).filter(
+@page_bp.route("/my-money")
+@login_required
+def my_money():
+    data = _build_whisper_data()
+    whisper_result = generate_page_insights("my_money", data)
+
+    today = date.today()
+    month_name = today.strftime("%B")
+
+    # Category breakdown
+    results = db.session.query(
+        Category.name, Category.icon, Category.colour,
+        func.sum(Transaction.amount).label("total"),
+        func.count(Transaction.id).label("count")
+    ).join(Category, Transaction.category_id == Category.id).filter(
         Transaction.user_id == current_user.id,
         Transaction.type == "expense",
-        extract("month", Transaction.date) == date.today().month,
-        extract("year", Transaction.date) == date.today().year
-    ).scalar()
+        extract("month", Transaction.date) == today.month,
+        extract("year", Transaction.date) == today.year
+    ).group_by(
+        Category.id, Category.name, Category.icon, Category.colour
+    ).order_by(func.sum(Transaction.amount).desc()).all()
 
-    money_left = None
-    if current_user.monthly_income:
-        total_goal_allocation = sum(
-            float(g.monthly_allocation) if g.monthly_allocation else 0
-            for g in Goal.query.filter_by(user_id=current_user.id, status="active").all()
-        )
-        disposable = current_user.monthly_surplus - total_goal_allocation
-        money_left = round(disposable - float(current_month_expenses), 2)
+    total_expenses = sum(float(r.total) for r in results)
+    categories = []
+    for r in results:
+        amount = float(r.total)
+        categories.append({
+            "name": r.name, "icon": r.icon, "colour": r.colour,
+            "total": amount, "count": r.count,
+            "percentage": round((amount / total_expenses * 100), 1) if total_expenses > 0 else 0
+        })
 
-    return render_template("dashboard.html",
-        summary={
-            "total_income": float(income),
-            "total_expenses": float(expenses),
-            "balance": balance,
-            "transaction_count": transaction_count
-        },
-        recent_transactions=[t.to_dict() for t in recent],
-        greeting=greeting,
-        primary_goal=primary_goal.to_dict() if primary_goal else None,
-        active_goals_count=active_goals_count,
-        predictions=predictions,
-        budget_status=budget_status,
-        money_left=money_left
-    )
-
-    return render_template("dashboard.html",
-        summary={
-            "total_income": float(income),
-            "total_expenses": float(expenses),
-            "balance": balance,
-            "transaction_count": transaction_count
-        },
-        recent_transactions=[t.to_dict() for t in recent],
-        greeting=greeting,
-        primary_goal=primary_goal.to_dict() if primary_goal else None,
-        active_goals_count=active_goals_count
-    )
-
-
-
-@page_bp.route("/transactions")
-@login_required
-def transactions():
     all_transactions = Transaction.query.filter_by(
         user_id=current_user.id
     ).order_by(Transaction.date.desc()).all()
 
-    return render_template("transactions.html",
+    return render_template("my_money.html",
+        whisper=whisper_result["whisper"],
+        month_name=month_name,
+        total_expenses=total_expenses,
+        categories=categories,
+        trends=data["trends"],
         transactions=[t.to_dict() for t in all_transactions]
     )
 
 
-@page_bp.route("/add-transaction", methods=["GET", "POST"])
+# ─── MY GOALS ────────────────────────────────────────────
+
+@page_bp.route("/my-goals", methods=["GET", "POST"])
 @login_required
-def add_transaction():
-    if request.method == "POST":
+def my_goals():
+    data = _build_whisper_data()
+    whisper_result = generate_page_insights("my_goals", data)
+
+    goals = Goal.query.filter_by(
+        user_id=current_user.id, status="active"
+    ).order_by(Goal.priority_rank.asc()).all()
+
+    # Habit cost calculator
+    habit_result = None
+    habit_amount = None
+    habit_description = None
+
+    if request.method == "POST" and request.form.get("form_type") == "habit_cost":
         try:
-            amount = round(float(request.form.get("amount", 0)), 2)
+            habit_amount = round(float(request.form.get("habit_amount", 0)), 2)
+            habit_description = request.form.get("habit_description", "").strip() or "This habit"
+            if habit_amount > 0:
+                habit_result = calculate_cost_of_habit(habit_amount)
+                habit_result["description"] = habit_description
         except (ValueError, TypeError):
             flash("Invalid amount", "error")
-            return redirect(url_for("pages.add_transaction"))
 
-        if amount <= 0:
-            flash("Amount must be greater than zero", "error")
-            return redirect(url_for("pages.add_transaction"))
-
-        description = request.form.get("description", "").strip()
-        if not description:
-            flash("Description is required", "error")
-            return redirect(url_for("pages.add_transaction"))
-
-        transaction_type = request.form.get("type", "expense")
-        category_id = request.form.get("category_id", type=int)
-        merchant = request.form.get("merchant", "").strip() or None
-
-        if not category_id:
-            other = Category.query.filter_by(name="Other").first()
-            category_id = other.id if other else 1
-
-        try:
-            transaction_date = date.fromisoformat(request.form.get("date", ""))
-        except (ValueError, TypeError):
-            flash("Invalid date", "error")
-            return redirect(url_for("pages.add_transaction"))
-
-        transaction = Transaction(
-            user_id=current_user.id,
-            amount=amount,
-            description=description,
-            category_id=category_id,
-            type=transaction_type,
-            date=transaction_date,
-            merchant=merchant
-        )
-
-        db.session.add(transaction)
-        db.session.commit()
-
-        flash("Transaction recorded successfully", "success")
-        return redirect(url_for("pages.transactions"))
-
-    categories = Category.query.order_by(Category.name).all()
-    return render_template("add_transaction.html", categories=categories)
+    return render_template("my_goals.html",
+        whisper=whisper_result["whisper"],
+        goals=[g.to_dict() for g in goals],
+        waterfall=data["waterfall"],
+        projections=data["projections"],
+        habit_result=habit_result,
+        habit_amount=habit_amount,
+        habit_description=habit_description
+    )
 
 
-@page_bp.route("/upload", methods=["GET", "POST"])
+# ─── MY BUDGETS ──────────────────────────────────────────
+
+@page_bp.route("/my-budgets")
 @login_required
-def upload_statement():
-    result = None
+def my_budgets():
+    data = _build_whisper_data()
+    whisper_result = generate_page_insights("my_budgets", data)
 
-    if request.method == "POST":
-        if "file" not in request.files:
-            flash("No file provided", "error")
-            return redirect(url_for("pages.upload_statement"))
+    today = date.today()
+    days_in_month = calendar.monthrange(today.year, today.month)[1]
+    month_progress = round((today.day / days_in_month) * 100, 1)
+    days_remaining = days_in_month - today.day
 
-        file = request.files["file"]
+    budgeted_cat_ids = [b.category_id for b in Budget.query.filter_by(
+        user_id=current_user.id, is_active=True).all()]
+    available_categories = Category.query.filter(
+        ~Category.id.in_(budgeted_cat_ids) if budgeted_cat_ids else Category.id > 0
+    ).order_by(Category.name).all()
 
-        if file.filename == "":
-            flash("No file selected", "error")
-            return redirect(url_for("pages.upload_statement"))
+    return render_template("my_budgets.html",
+        whisper=whisper_result["whisper"],
+        budget_statuses=data["budget_statuses"],
+        month_progress=month_progress,
+        days_remaining=days_remaining,
+        available_categories=available_categories,
+        recurring=data["recurring"],
+        savings=data["savings_opportunities"]
+    )
 
-        if not file.filename.lower().endswith(".csv"):
-            flash("File must be a CSV", "error")
-            return redirect(url_for("pages.upload_statement"))
 
-        file_content = file.read()
+# ─── SETTINGS ────────────────────────────────────────────
 
-        if len(file_content) == 0:
-            flash("File is empty", "error")
-            return redirect(url_for("pages.upload_statement"))
+@page_bp.route("/settings")
+@login_required
+def settings():
+    return render_template("settings.html")
 
-        if len(file_content) > 5 * 1024 * 1024:
-            flash("File too large. Maximum size is 5MB", "error")
-            return redirect(url_for("pages.upload_statement"))
 
-        try:
-            parse_result = extract_transactions_from_csv(file_content)
-        except CSVParseError as e:
-            flash(str(e), "error")
-            return redirect(url_for("pages.upload_statement"))
-# Build categoriser from existing data
-        from app.services.categoriser_service import categorise_transactions, build_categoriser_for_user
+@page_bp.route("/update-theme", methods=["POST"])
+@login_required
+def update_theme():
+    theme = request.form.get("theme", "racing-green")
+    valid = ["racing-green", "midnight-navy", "oxford-saddle", "amethyst",
+             "rosso", "cobalt", "ivory", "pearl", "sandstone", "sage", "lavender", "mist"]
+    if theme not in valid:
+        theme = "racing-green"
 
-        other_category = Category.query.filter_by(name="Other").first()
-        other_id = other_category.id if other_category else 1
+    current_user.theme = theme
+    db.session.commit()
+    flash("Theme updated", "success")
+    return redirect(url_for("pages.settings"))
 
-        existing = Transaction.query.filter(
-            Transaction.user_id == current_user.id,
-            Transaction.category_id != other_id
-        ).all()
 
-        training_data = []
-        for t in existing:
-            if t.category_rel:
-                training_data.append({
-                    "description": t.description,
-                    "category": t.category_rel.name
-                })
-
-        categoriser = build_categoriser_for_user(training_data) if training_data else None
-
-        categorised = categorise_transactions(parse_result["transactions"], categoriser)
-
-        categories_all = Category.query.all()
-        category_lookup = {c.name: c.id for c in categories_all}
-
-        created_count = 0
-        skipped_count = 0
-        auto_categorised_count = 0
-
-        for t in categorised:
-            existing_t = Transaction.query.filter_by(
-                user_id=current_user.id,
-                amount=t["amount"],
-                description=t["description"],
-                date=t["date"],
-                type=t["type"]
-            ).first()
-
-            if existing_t:
-                skipped_count += 1
-                continue
-
-            suggested = t.get("suggested_category", "Other")
-            category_id = category_lookup.get(suggested, other_id)
-
-            if suggested != "Other":
-                auto_categorised_count += 1
-
-            transaction = Transaction(
-                user_id=current_user.id,
-                amount=t["amount"],
-                description=t["description"],
-                category_id=category_id,
-                type=t["type"],
-                date=t["date"],
-                merchant=t.get("merchant")
-            )
-
-            db.session.add(transaction)
-            created_count += 1
-
-        db.session.commit()
-
-        result = {
-            "bank_detected": parse_result["bank_detected"],
-            "created": created_count,
-            "skipped": skipped_count,
-            "auto_categorised": auto_categorised_count,
-            "errors": parse_result["errors"],
-            "error_count": parse_result["error_count"]
-        }
-
-        flash(f"Import complete. {created_count} transactions imported, {auto_categorised_count} auto-categorised.", "success")
-
-        db.session.commit()
-
-        result = {
-            "bank_detected": parse_result["bank_detected"],
-            "created": created_count,
-            "skipped": skipped_count,
-            "errors": parse_result["errors"],
-            "error_count": parse_result["error_count"]
-        }
-
-        flash(f"Import complete. {created_count} transactions imported.", "success")
-
-    return render_template("upload.html", result=result)
-
+# ─── FACTFIND ────────────────────────────────────────────
 
 @page_bp.route("/factfind", methods=["GET", "POST"])
 @login_required
@@ -447,144 +495,173 @@ def factfind():
         current_user.factfind_completed = True
 
         db.session.commit()
-
-        flash("Financial profile saved successfully", "success")
-        return redirect(url_for("pages.dashboard"))
+        flash("Financial profile saved", "success")
+        return redirect(url_for("pages.overview"))
 
     return render_template("factfind.html", profile=current_user.profile_dict())
 
-@page_bp.route("/analytics")
+
+# ─── UPLOAD & ADD ────────────────────────────────────────
+
+@page_bp.route("/upload", methods=["GET", "POST"])
 @login_required
-def analytics():
-    month = request.args.get("month", type=int)
-    year = request.args.get("year", type=int)
+def upload_statement():
+    result = None
 
-    if not month or not year:
-        today = date.today()
-        month = today.month
-        year = today.year
+    if request.method == "POST":
+        if "file" not in request.files:
+            flash("No file provided", "error")
+            return redirect(url_for("pages.upload_statement"))
 
-    results = db.session.query(
-        Category.name,
-        Category.icon,
-        Category.colour,
-        func.sum(Transaction.amount).label("total"),
-        func.count(Transaction.id).label("count")
-    ).join(
-        Category, Transaction.category_id == Category.id
-    ).filter(
-        Transaction.user_id == current_user.id,
-        Transaction.type == "expense",
-        extract("month", Transaction.date) == month,
-        extract("year", Transaction.date) == year
-    ).group_by(
-        Category.id, Category.name, Category.icon, Category.colour
-    ).order_by(
-        func.sum(Transaction.amount).desc()
-    ).all()
+        file = request.files["file"]
+        if file.filename == "":
+            flash("No file selected", "error")
+            return redirect(url_for("pages.upload_statement"))
 
-    total_expenses = sum(float(r.total) for r in results)
+        if not file.filename.lower().endswith(".csv"):
+            flash("File must be a CSV", "error")
+            return redirect(url_for("pages.upload_statement"))
 
-    categories = []
-    for r in results:
-        amount = float(r.total)
-        categories.append({
-            "name": r.name,
-            "icon": r.icon,
-            "colour": r.colour,
-            "total": amount,
-            "count": r.count,
-            "percentage": round((amount / total_expenses * 100), 1) if total_expenses > 0 else 0
-        })
+        file_content = file.read()
+        if len(file_content) == 0:
+            flash("File is empty", "error")
+            return redirect(url_for("pages.upload_statement"))
 
-    current_month = month
-    current_year = year
+        if len(file_content) > 5 * 1024 * 1024:
+            flash("File too large", "error")
+            return redirect(url_for("pages.upload_statement"))
 
-    if current_month == 1:
-        prev_month = 12
-        prev_year = current_year - 1
-    else:
-        prev_month = current_month - 1
-        prev_year = current_year
+        try:
+            parse_result = extract_transactions_from_csv(file_content)
+        except CSVParseError as e:
+            flash(str(e), "error")
+            return redirect(url_for("pages.upload_statement"))
 
-    current_cat_expenses = db.session.query(
-        Category.name,
-        Category.icon,
-        func.sum(Transaction.amount).label("total")
-    ).join(
-        Category, Transaction.category_id == Category.id
-    ).filter(
-        Transaction.user_id == current_user.id,
-        Transaction.type == "expense",
-        extract("month", Transaction.date) == current_month,
-        extract("year", Transaction.date) == current_year
-    ).group_by(
-        Category.id, Category.name, Category.icon
-    ).all()
+        if not parse_result["transactions"]:
+            flash("No valid transactions found", "error")
+            return redirect(url_for("pages.upload_statement"))
 
-    prev_cat_expenses = db.session.query(
-        Category.name,
-        func.sum(Transaction.amount).label("total")
-    ).join(
-        Category, Transaction.category_id == Category.id
-    ).filter(
-        Transaction.user_id == current_user.id,
-        Transaction.type == "expense",
-        extract("month", Transaction.date) == prev_month,
-        extract("year", Transaction.date) == prev_year
-    ).group_by(
-        Category.id, Category.name
-    ).all()
+        other_category = Category.query.filter_by(name="Other").first()
+        other_id = other_category.id if other_category else 1
 
-    prev_dict = {r.name: float(r.total) for r in prev_cat_expenses}
+        existing = Transaction.query.filter(
+            Transaction.user_id == current_user.id,
+            Transaction.category_id != other_id
+        ).all()
 
-    trends = []
-    for r in current_cat_expenses:
-        current_total = float(r.total)
-        prev_total = prev_dict.get(r.name, 0)
+        training_data = [{"description": t.description, "category": t.category_rel.name}
+                         for t in existing if t.category_rel]
 
-        if prev_total > 0:
-            change_amount = current_total - prev_total
-            change_percent = round(((current_total - prev_total) / prev_total) * 100, 1)
-        else:
-            change_amount = current_total
-            change_percent = 100.0
+        categoriser = build_categoriser_for_user(training_data) if training_data else None
+        categorised = categorise_transactions(parse_result["transactions"], categoriser)
 
-        trends.append({
-            "category": r.name,
-            "icon": r.icon,
-            "current_month": current_total,
-            "previous_month": prev_total,
-            "change_amount": change_amount,
-            "change_percent": change_percent,
-            "direction": "up" if change_amount > 0 else "down" if change_amount < 0 else "flat"
-        })
+        categories_all = Category.query.all()
+        category_lookup = {c.name: c.id for c in categories_all}
 
-    trends.sort(key=lambda t: abs(t["change_amount"]), reverse=True)
+        created_count = 0
+        skipped_count = 0
+        auto_categorised_count = 0
 
-    month_name = date(year, month, 1).strftime("%B")
+        for t in categorised:
+            existing_t = Transaction.query.filter_by(
+                user_id=current_user.id, amount=t["amount"],
+                description=t["description"], date=t["date"], type=t["type"]
+            ).first()
 
-    return render_template("analytics.html",
-        categories=categories,
-        total_expenses=total_expenses,
-        trends=trends,
-        month=month,
-        year=year,
-        month_name=month_name
-    )
+            if existing_t:
+                skipped_count += 1
+                continue
 
-@page_bp.route("/goals")
+            suggested = t.get("suggested_category", "Other")
+            category_id = category_lookup.get(suggested, other_id)
+            if suggested != "Other":
+                auto_categorised_count += 1
+
+            transaction = Transaction(
+                user_id=current_user.id, amount=t["amount"],
+                description=t["description"], category_id=category_id,
+                type=t["type"], date=t["date"], merchant=t.get("merchant")
+            )
+            db.session.add(transaction)
+            created_count += 1
+
+        db.session.commit()
+
+        result = {
+            "bank_detected": parse_result["bank_detected"],
+            "created": created_count, "skipped": skipped_count,
+            "auto_categorised": auto_categorised_count,
+            "errors": parse_result["errors"],
+            "error_count": parse_result["error_count"]
+        }
+        flash(f"{created_count} transactions imported, {auto_categorised_count} auto-categorised.", "success")
+
+    return render_template("upload.html", result=result)
+
+
+@page_bp.route("/add-transaction", methods=["GET", "POST"])
 @login_required
-def goals_page():
-    goals = Goal.query.filter_by(
-        user_id=current_user.id,
-        status="active"
-    ).order_by(Goal.priority_rank.asc()).all()
+def add_transaction():
+    if request.method == "POST":
+        try:
+            amount = round(float(request.form.get("amount", 0)), 2)
+        except (ValueError, TypeError):
+            flash("Invalid amount", "error")
+            return redirect(url_for("pages.add_transaction"))
 
-    return render_template("goals.html",
-        goals=[g.to_dict() for g in goals]
-    )
+        if amount <= 0:
+            flash("Amount must be greater than zero", "error")
+            return redirect(url_for("pages.add_transaction"))
 
+        description = request.form.get("description", "").strip()
+        if not description:
+            flash("Description is required", "error")
+            return redirect(url_for("pages.add_transaction"))
+
+        transaction_type = request.form.get("type", "expense")
+        category_id = request.form.get("category_id", type=int)
+        merchant = request.form.get("merchant", "").strip() or None
+
+        if not category_id:
+            other = Category.query.filter_by(name="Other").first()
+            category_id = other.id if other else 1
+
+        try:
+            transaction_date = date.fromisoformat(request.form.get("date", ""))
+        except (ValueError, TypeError):
+            flash("Invalid date", "error")
+            return redirect(url_for("pages.add_transaction"))
+
+        transaction = Transaction(
+            user_id=current_user.id, amount=amount, description=description,
+            category_id=category_id, type=transaction_type,
+            date=transaction_date, merchant=merchant
+        )
+        db.session.add(transaction)
+        db.session.commit()
+        flash("Transaction recorded", "success")
+        return redirect(url_for("pages.my_money"))
+
+    categories = Category.query.order_by(Category.name).all()
+    return render_template("add_transaction.html", categories=categories)
+
+
+@page_bp.route("/delete-transaction/<int:transaction_id>", methods=["POST"])
+@login_required
+def delete_transaction(transaction_id):
+    transaction = Transaction.query.filter_by(
+        id=transaction_id, user_id=current_user.id).first()
+    if not transaction:
+        flash("Transaction not found", "error")
+        return redirect(url_for("pages.my_money"))
+
+    db.session.delete(transaction)
+    db.session.commit()
+    flash("Transaction deleted", "success")
+    return redirect(url_for("pages.my_money"))
+
+
+# ─── GOALS ────────────────────────────────────────────────
 
 @page_bp.route("/add-goal", methods=["GET", "POST"])
 @login_required
@@ -599,54 +676,47 @@ def add_goal():
             return redirect(url_for("pages.add_goal"))
 
         target_amount = None
-        target_val = request.form.get("target_amount", "").strip()
-        if target_val:
+        val = request.form.get("target_amount", "").strip()
+        if val:
             try:
-                target_amount = round(float(target_val), 2)
+                target_amount = round(float(val), 2)
             except ValueError:
-                flash("Invalid target amount", "error")
-                return redirect(url_for("pages.add_goal"))
+                pass
 
         current_amount = 0
-        current_val = request.form.get("current_amount", "").strip()
-        if current_val:
+        val = request.form.get("current_amount", "").strip()
+        if val:
             try:
-                current_amount = round(float(current_val), 2)
+                current_amount = round(float(val), 2)
             except ValueError:
-                current_amount = 0
+                pass
 
         monthly_allocation = None
-        alloc_val = request.form.get("monthly_allocation", "").strip()
-        if alloc_val:
+        val = request.form.get("monthly_allocation", "").strip()
+        if val:
             try:
-                monthly_allocation = round(float(alloc_val), 2)
+                monthly_allocation = round(float(val), 2)
             except ValueError:
-                monthly_allocation = None
+                pass
 
         deadline = None
-        deadline_val = request.form.get("deadline", "").strip()
-        if deadline_val:
+        val = request.form.get("deadline", "").strip()
+        if val:
             try:
-                deadline = date.fromisoformat(deadline_val)
+                deadline = date.fromisoformat(val)
             except ValueError:
-                deadline = None
+                pass
 
         goal = Goal(
-            user_id=current_user.id,
-            name=name,
-            type=goal_type,
-            target_amount=target_amount,
-            current_amount=current_amount,
-            monthly_allocation=monthly_allocation,
-            deadline=deadline,
+            user_id=current_user.id, name=name, type=goal_type,
+            target_amount=target_amount, current_amount=current_amount,
+            monthly_allocation=monthly_allocation, deadline=deadline,
             priority_rank=priority_rank
         )
-
         db.session.add(goal)
         db.session.commit()
-
-        flash("Goal created successfully", "success")
-        return redirect(url_for("pages.goals_page"))
+        flash("Goal created", "success")
+        return redirect(url_for("pages.my_goals"))
 
     return render_template("add_goal.html")
 
@@ -654,129 +724,29 @@ def add_goal():
 @page_bp.route("/delete-goal/<int:goal_id>", methods=["POST"])
 @login_required
 def delete_goal(goal_id):
-    goal = Goal.query.filter_by(
-        id=goal_id,
-        user_id=current_user.id
-    ).first()
-
+    goal = Goal.query.filter_by(id=goal_id, user_id=current_user.id).first()
     if not goal:
         flash("Goal not found", "error")
-        return redirect(url_for("pages.goals_page"))
+        return redirect(url_for("pages.my_goals"))
 
     db.session.delete(goal)
     db.session.commit()
-
     flash("Goal deleted", "success")
-    return redirect(url_for("pages.goals_page"))
-
-
-@page_bp.route("/waterfall")
-@login_required
-def waterfall_page():
-    if not current_user.factfind_completed:
-        flash("Complete your financial profile first", "error")
-        return redirect(url_for("pages.factfind"))
-
-    goals = Goal.query.filter_by(
-        user_id=current_user.id,
-        status="active"
-    ).order_by(Goal.priority_rank.asc()).all()
-
-    goals_data = []
-    for g in goals:
-        goals_data.append({
-            "id": g.id,
-            "name": g.name,
-            "type": g.type,
-            "target_amount": float(g.target_amount) if g.target_amount else None,
-            "current_amount": float(g.current_amount) if g.current_amount else 0,
-            "monthly_allocation": float(g.monthly_allocation) if g.monthly_allocation else 0,
-            "priority_rank": g.priority_rank
-        })
-
-    user_profile = {
-        "monthly_income": float(current_user.monthly_income),
-        "fixed_commitments": current_user.fixed_commitments
-    }
-
-    waterfall = generate_waterfall_summary(user_profile, goals_data)
-
-    return render_template("waterfall.html", waterfall=waterfall)
-
-@page_bp.route("/simulator", methods=["GET", "POST"])
-@login_required
-def simulator_page():
-    goals = Goal.query.filter_by(
-        user_id=current_user.id,
-        status="active"
-    ).order_by(Goal.priority_rank.asc()).all()
-
-    projections = []
-    for goal in goals:
-        if not goal.target_amount:
-            projections.append({
-                "goal_id": goal.id,
-                "goal_name": goal.name,
-                "goal_type": goal.type,
-                "message": "No target amount — ongoing allocation",
-                "monthly_allocation": float(goal.monthly_allocation) if goal.monthly_allocation else 0
-            })
-            continue
-
-        contribution = float(goal.monthly_allocation) if goal.monthly_allocation else 0
-        goal_data = {
-            "target_amount": float(goal.target_amount),
-            "current_amount": float(goal.current_amount) if goal.current_amount else 0
-        }
-
-        projection = project_goal_timeline(goal_data, contribution)
-        projection["goal_name"] = goal.name
-        projection["goal_id"] = goal.id
-        projection["goal_type"] = goal.type
-
-        if "monthly_projections" in projection:
-            del projection["monthly_projections"]
-
-        projections.append(projection)
-
-    habit_result = None
-    habit_amount = None
-    habit_description = None
-
-    if request.method == "POST" and request.form.get("form_type") == "habit_cost":
-        try:
-            habit_amount = round(float(request.form.get("habit_amount", 0)), 2)
-            habit_description = request.form.get("habit_description", "This habit").strip() or "This habit"
-
-            if habit_amount > 0:
-                habit_result = calculate_cost_of_habit(habit_amount)
-                habit_result["description"] = habit_description
-        except (ValueError, TypeError):
-            flash("Invalid amount", "error")
-
-    return render_template("simulator.html",
-        projections=projections,
-        habit_result=habit_result,
-        habit_amount=habit_amount,
-        habit_description=habit_description
-    )
+    return redirect(url_for("pages.my_goals"))
 
 
 @page_bp.route("/simulator/goal/<int:goal_id>")
 @login_required
 def goal_detail(goal_id):
-    goal = Goal.query.filter_by(
-        id=goal_id,
-        user_id=current_user.id
-    ).first()
+    goal = Goal.query.filter_by(id=goal_id, user_id=current_user.id).first()
 
     if not goal:
         flash("Goal not found", "error")
-        return redirect(url_for("pages.simulator_page"))
+        return redirect(url_for("pages.my_goals"))
 
     if not goal.target_amount:
         flash("This goal has no target to project", "error")
-        return redirect(url_for("pages.simulator_page"))
+        return redirect(url_for("pages.my_goals"))
 
     contribution = float(goal.monthly_allocation) if goal.monthly_allocation else 0
     goal_data = {
@@ -787,25 +757,21 @@ def goal_detail(goal_id):
     projection = project_goal_timeline(goal_data, contribution)
     multi_horizon = generate_multi_horizon_projection(goal_data, contribution)
 
-    # Calculate slider range — max is 2x current or user's surplus, whichever is larger
     if current_user.factfind_completed and current_user.monthly_income:
-        surplus = current_user.monthly_surplus
-        max_contribution = max(contribution * 2.5, surplus, 500)
+        max_contribution = max(contribution * 2.5, current_user.monthly_surplus, 500)
     else:
         max_contribution = max(contribution * 2.5, 1000)
 
-    max_contribution = round(max_contribution / 10) * 10  # Round to nearest 10
-
+    max_contribution = round(max_contribution / 10) * 10
     slider_percent = round((contribution / max_contribution * 100), 1) if max_contribution > 0 else 50
 
     return render_template("goal_detail.html",
-        goal=goal,
-        projection=projection,
-        multi_horizon=multi_horizon,
-        max_contribution=max_contribution,
-        slider_percent=slider_percent
+        goal=goal, projection=projection, multi_horizon=multi_horizon,
+        max_contribution=max_contribution, slider_percent=slider_percent
     )
 
+
+# ─── SCENARIO ────────────────────────────────────────────
 
 @page_bp.route("/scenario", methods=["GET", "POST"])
 @login_required
@@ -815,21 +781,16 @@ def scenario_page():
         return redirect(url_for("pages.factfind"))
 
     goals = Goal.query.filter_by(
-        user_id=current_user.id,
-        status="active"
+        user_id=current_user.id, status="active"
     ).order_by(Goal.priority_rank.asc()).all()
 
-    goals_list = []
-    for g in goals:
-        goals_list.append({
-            "id": g.id,
-            "name": g.name,
-            "type": g.type,
-            "target_amount": float(g.target_amount) if g.target_amount else None,
-            "current_amount": float(g.current_amount) if g.current_amount else 0,
-            "monthly_allocation": float(g.monthly_allocation) if g.monthly_allocation else 0,
-            "priority_rank": g.priority_rank
-        })
+    goals_list = [{
+        "id": g.id, "name": g.name, "type": g.type,
+        "target_amount": float(g.target_amount) if g.target_amount else None,
+        "current_amount": float(g.current_amount) if g.current_amount else 0,
+        "monthly_allocation": float(g.monthly_allocation) if g.monthly_allocation else 0,
+        "priority_rank": g.priority_rank
+    } for g in goals]
 
     current_income = float(current_user.monthly_income)
     current_commitments = current_user.fixed_commitments
@@ -868,125 +829,13 @@ def scenario_page():
         scenario_result = simulate_scenario(current_state, proposed_changes)
 
     return render_template("scenario.html",
-        goals=goals_list,
-        current_income=current_income,
+        goals=goals_list, current_income=current_income,
         current_commitments=current_commitments,
         scenario_result=scenario_result
     )
 
-@page_bp.route("/recurring")
-@login_required
-def recurring_page():
-    transactions = Transaction.query.filter_by(
-        user_id=current_user.id
-    ).order_by(Transaction.date.asc()).all()
 
-    txn_list = []
-    for t in transactions:
-        txn_list.append({
-            "id": t.id,
-            "amount": float(t.amount),
-            "description": t.description,
-            "merchant": t.merchant or t.description,
-            "category": t.category_rel.name if t.category_rel else "Other",
-            "category_id": t.category_id,
-            "type": t.type,
-            "date": t.date
-        })
-
-    recurring = detect_recurring_transactions(txn_list)
-    savings = identify_potential_savings(recurring["recurring"])
-
-    return render_template("recurring.html",
-        recurring=recurring,
-        savings=savings
-    )
-
-@page_bp.route("/insights")
-@login_required
-def insights_page():
-    transactions = Transaction.query.filter_by(
-        user_id=current_user.id
-    ).order_by(Transaction.date.asc()).all()
-
-    txn_list = []
-    for t in transactions:
-        txn_list.append({
-            "amount": float(t.amount),
-            "description": t.description,
-            "category": t.category_rel.name if t.category_rel else "Other",
-            "type": t.type,
-            "date": t.date
-        })
-
-    predictions = predict_monthly_spending(txn_list)
-
-    budget_status = None
-    if current_user.factfind_completed:
-        goals = Goal.query.filter_by(
-            user_id=current_user.id,
-            status="active"
-        ).all()
-
-        goals_data = [
-            {"id": g.id, "name": g.name,
-             "monthly_allocation": float(g.monthly_allocation) if g.monthly_allocation else 0}
-            for g in goals
-        ]
-
-        user_profile = {
-            "monthly_income": float(current_user.monthly_income),
-            "fixed_commitments": current_user.fixed_commitments
-        }
-
-        budget_status = calculate_budget_status(predictions, user_profile, goals_data)
-
-    return render_template("insights.html",
-        predictions=predictions,
-        budget_status=budget_status
-    )
-
-@page_bp.route("/budgets")
-@login_required
-def budgets_page():
-    budgets = Budget.query.filter_by(
-        user_id=current_user.id,
-        is_active=True
-    ).all()
-
-    budget_list = [b.to_dict() for b in budgets]
-
-    transactions = Transaction.query.filter_by(
-        user_id=current_user.id
-    ).all()
-
-    txn_list = [{
-        "amount": float(t.amount),
-        "category": t.category_rel.name if t.category_rel else "Other",
-        "type": t.type,
-        "date": t.date
-    } for t in transactions]
-
-    status_result = calc_budget_status(budget_list, txn_list)
-
-    # Get categories that don't already have budgets
-    budgeted_cat_ids = [b.category_id for b in budgets]
-    available_categories = Category.query.filter(
-        ~Category.id.in_(budgeted_cat_ids) if budgeted_cat_ids else Category.id > 0
-    ).order_by(Category.name).all()
-
-    # Get suggestions
-    suggestions_result = suggest_budgets(txn_list)
-
-    return render_template("budgets.html",
-        budget_statuses=status_result["budgets"],
-        summary=status_result["summary"],
-        alerts=status_result["alerts"],
-        month_context=status_result["month_context"],
-        available_categories=available_categories,
-        suggestions=suggestions_result["suggestions"]
-    )
-
+# ─── BUDGETS ─────────────────────────────────────────────
 
 @page_bp.route("/budgets/create", methods=["POST"])
 @login_required
@@ -996,89 +845,34 @@ def create_budget_page():
 
     if not category_id or not monthly_limit or monthly_limit <= 0:
         flash("Please select a category and enter a valid limit", "error")
-        return redirect(url_for("pages.budgets_page"))
+        return redirect(url_for("pages.my_budgets"))
 
     existing = Budget.query.filter_by(
-        user_id=current_user.id,
-        category_id=category_id,
-        is_active=True
-    ).first()
-
+        user_id=current_user.id, category_id=category_id, is_active=True).first()
     if existing:
         flash("A budget already exists for this category", "error")
-        return redirect(url_for("pages.budgets_page"))
+        return redirect(url_for("pages.my_budgets"))
 
     budget = Budget(
-        user_id=current_user.id,
-        category_id=category_id,
+        user_id=current_user.id, category_id=category_id,
         monthly_limit=round(monthly_limit, 2)
     )
-
     db.session.add(budget)
     db.session.commit()
-
     flash("Budget created", "success")
-    return redirect(url_for("pages.budgets_page"))
+    return redirect(url_for("pages.my_budgets"))
 
 
 @page_bp.route("/budgets/<int:budget_id>/delete", methods=["POST"])
 @login_required
 def delete_budget(budget_id):
     budget = Budget.query.filter_by(
-        id=budget_id,
-        user_id=current_user.id
-    ).first()
-
+        id=budget_id, user_id=current_user.id).first()
     if not budget:
         flash("Budget not found", "error")
-        return redirect(url_for("pages.budgets_page"))
+        return redirect(url_for("pages.my_budgets"))
 
     db.session.delete(budget)
     db.session.commit()
-
     flash("Budget removed", "success")
-    return redirect(url_for("pages.budgets_page"))
-
-@page_bp.route("/settings")
-@login_required
-def settings():
-    return render_template("settings.html")
-
-
-@page_bp.route("/update-theme", methods=["POST"])
-@login_required
-def update_theme():
-    theme = request.form.get("theme", "racing-green")
-
-    valid_themes = [
-        "racing-green", "midnight-navy", "oxford-saddle", "amethyst",
-        "rosso", "cobalt", "ivory", "pearl", "sandstone", "sage",
-        "lavender", "mist"
-    ]
-
-    if theme not in valid_themes:
-        theme = "racing-green"
-
-    current_user.theme = theme
-    db.session.commit()
-
-    flash(f"Theme updated", "success")
-    return redirect(url_for("pages.settings"))
-
-@page_bp.route("/delete-transaction/<int:transaction_id>", methods=["POST"])
-@login_required
-def delete_transaction(transaction_id):
-    transaction = Transaction.query.filter_by(
-        id=transaction_id,
-        user_id=current_user.id
-    ).first()
-
-    if not transaction:
-        flash("Transaction not found", "error")
-        return redirect(url_for("pages.transactions"))
-
-    db.session.delete(transaction)
-    db.session.commit()
-
-    flash("Transaction deleted", "success")
-    return redirect(url_for("pages.transactions"))
+    return redirect(url_for("pages.my_budgets"))

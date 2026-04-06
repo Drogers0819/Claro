@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}FinTrack{% endblock %}</title>
+    <title>{% block title %}Claro{% endblock %}</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/themes.css') }}">
 </head>
@@ -13,48 +13,24 @@
         <aside class="sidebar">
             <div>
                 <div class="sidebar-logo">Claro</div>
-                <div class="sidebar-subtitle">Financial Intelligence</div>
+                <div class="sidebar-subtitle">Your financial companion</div>
             </div>
 
             <nav class="sidebar-nav">
-                <a href="{{ url_for('pages.dashboard') }}" class="nav-link {% if request.endpoint == 'pages.dashboard' %}active{% endif %}">
-                    <span class="nav-icon">&#9673;</span> Overview
+                <a href="{{ url_for('pages.overview') }}" class="nav-link {% if request.endpoint == 'pages.overview' %}active{% endif %}">
+                    <span class="nav-icon">◉</span> Overview
                 </a>
-                <a href="{{ url_for('pages.transactions') }}" class="nav-link {% if request.endpoint == 'pages.transactions' %}active{% endif %}">
-                    <span class="nav-icon">&#10209;</span> Transactions
+                <a href="{{ url_for('pages.my_money') }}" class="nav-link {% if request.endpoint in ['pages.my_money', 'pages.add_transaction', 'pages.upload_statement'] %}active{% endif %}">
+                    <span class="nav-icon">◈</span> My Money
                 </a>
-                <a href="{{ url_for('pages.add_transaction') }}" class="nav-link {% if request.endpoint == 'pages.add_transaction' %}active{% endif %}">
-                    <span class="nav-icon">+</span> Add Transaction
+                <a href="{{ url_for('pages.my_goals') }}" class="nav-link {% if request.endpoint in ['pages.my_goals', 'pages.add_goal', 'pages.goal_detail'] %}active{% endif %}">
+                    <span class="nav-icon">◎</span> My Goals
                 </a>
-                <a href="{{ url_for('pages.upload_statement') }}" class="nav-link {% if request.endpoint == 'pages.upload_statement' %}active{% endif %}">
-                    <span class="nav-icon">&uarr;</span> Upload Statement
+                <a href="{{ url_for('pages.my_budgets') }}" class="nav-link {% if request.endpoint == 'pages.my_budgets' %}active{% endif %}">
+                    <span class="nav-icon">▣</span> My Budgets
                 </a>
-                <a href="{{ url_for('pages.goals_page') }}" class="nav-link {% if request.endpoint == 'pages.goals_page' %}active{% endif %}">
-                    <span class="nav-icon">&#9678;</span> Goals
-                </a>
-                <a href="{{ url_for('pages.waterfall_page') }}" class="nav-link {% if request.endpoint == 'pages.waterfall_page' %}active{% endif %}">
-                    <span class="nav-icon">&#9707;</span> Waterfall
-                </a>
-                <a href="{{ url_for('pages.analytics') }}" class="nav-link {% if request.endpoint == 'pages.analytics' %}active{% endif %}">
-                    <span class="nav-icon">&#9678;</span> Spending
-                </a>
-                <a href="{{ url_for('pages.factfind') }}" class="nav-link {% if request.endpoint == 'pages.factfind' %}active{% endif %}">
-                    <span class="nav-icon">&#9776;</span> My Profile
-                </a>
-                <a href="{{ url_for('pages.settings') }}" class="nav-link {% if request.endpoint == 'pages.settings' %}active{% endif %}">
-                    <span class="nav-icon">&#9881;</span> Settings
-                </a>
-                <a href="{{ url_for('pages.simulator_page') }}" class="nav-link {% if request.endpoint in ['pages.simulator_page', 'pages.goal_detail', 'pages.scenario_page'] %}active{% endif %}">
-                    <span class="nav-icon">⟁</span> Simulator
-                </a>
-                <a href="{{ url_for('pages.recurring_page') }}" class="nav-link {% if request.endpoint == 'pages.recurring_page' %}active{% endif %}">
-                    <span class="nav-icon">↻</span> Recurring
-                </a>
-                <a href="{{ url_for('pages.insights_page') }}" class="nav-link {% if request.endpoint == 'pages.insights_page' %}active{% endif %}">
-                    <span class="nav-icon">◈</span> Insights
-                </a>
-                <a href="{{ url_for('pages.budgets_page') }}" class="nav-link {% if request.endpoint == 'pages.budgets_page' %}active{% endif %}">
-                    <span class="nav-icon">▣</span> Budgets
+                <a href="{{ url_for('pages.settings') }}" class="nav-link {% if request.endpoint in ['pages.settings', 'pages.factfind'] %}active{% endif %}">
+                    <span class="nav-icon">⚙</span> Settings
                 </a>
             </nav>
 
@@ -63,11 +39,11 @@
                     <div class="user-avatar">{{ current_user.name[0:2] | upper }}</div>
                     <div>
                         <div class="user-name">{{ current_user.name }}</div>
-                        <div class="user-tier">v2.0</div>
+                        <div class="user-tier">Free trial</div>
                     </div>
                 </div>
                 <form action="{{ url_for('pages.logout') }}" method="POST" style="margin-top: 12px;">
-                    <button type="submit" class="btn-outline" style="width: 100%; padding: 10px;">Logout</button>
+                    <button type="submit" class="btn-outline" style="width: 100%; padding: 10px;">Sign out</button>
                 </form>
             </div>
         </aside>
@@ -93,7 +69,7 @@
         {% block auth_content %}{% endblock %}
     </div>
     {% endif %}
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
-    {% block scripts %}{% endblock %}
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
 </body>
 </html>

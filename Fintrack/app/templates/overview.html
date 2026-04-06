@@ -1,0 +1,123 @@
+{% extends "base.html" %}
+{% block title %}Overview — Claro{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1 style="font-style: italic;">Good {{ greeting }}, {{ current_user.name }}.</h1>
+</div>
+
+<!-- Whisper — always the first thing -->
+<div class="gold-card" style="margin-bottom: 24px;">
+    <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
+        <span class="ai-pulse"></span>
+        <span class="metric-label" style="margin-bottom: 0; color: var(--roman-gold);">What you need to know</span>
+    </div>
+    <p style="font-size: 0.9rem; font-style: italic; color: var(--text-secondary); line-height: 1.7;">
+        "{{ whisper }}"
+    </p>
+</div>
+
+<!-- Money left — the single most important number -->
+{% if money_left is not none %}
+<div class="glass-card" style="margin-bottom: 24px; text-align: center; padding: 32px 24px;">
+    <div class="metric-label">Left to spend this month</div>
+    <div style="font-family: var(--font-serif); font-size: 2.8rem; margin: 8px 0;
+        {% if money_left >= 0 %}color: var(--roman-gold);{% else %}color: var(--danger);{% endif %}">
+        £{{ "%.2f" | format(money_left) }}
+    </div>
+    <div style="font-size: 0.8rem; color: var(--text-tertiary);">
+        {% if money_left > 0 and days_remaining > 0 %}
+            That's £{{ "%.2f" | format(money_left / days_remaining) }}/day for {{ days_remaining }} days
+        {% elif money_left < 0 %}
+            You've gone over your spending allowance
+        {% endif %}
+    </div>
+</div>
+{% endif %}
+
+<!-- Budget forecast -->
+{% if budget_status %}
+<div class="glass-card" style="margin-bottom: 24px; border-left: 3px solid
+    {% if budget_status.status == 'healthy' %}var(--success){% elif budget_status.status == 'tight' %}var(--roman-gold){% else %}var(--danger){% endif %};">
+    <div style="display: flex; justify-content: space-between; align-items: center;">
+        <div>
+            <div style="font-size: 0.85rem; color: var(--text-secondary);">{{ budget_status.message }}</div>
+        </div>
+        <span style="font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.1em; padding: 3px 8px; border-radius: 4px;
+            {% if budget_status.status == 'healthy' %}background: rgba(45, 106, 79, 0.15); color: var(--success);
+            {% elif budget_status.status == 'tight' %}background: var(--roman-gold-dim); color: var(--roman-gold);
+            {% else %}background: rgba(139, 69, 19, 0.15); color: var(--danger);{% endif %}">
+            {{ budget_status.status }}
+        </span>
+    </div>
+</div>
+{% endif %}
+
+<!-- Primary goal -->
+{% if primary_goal and primary_goal.target_amount %}
+<div class="glass-card" style="margin-bottom: 24px;">
+    <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px;">
+        <div>
+            <div class="metric-label">{{ primary_goal.name }}</div>
+        </div>
+        {% if active_goals_count > 1 %}
+        <a href="{{ url_for('pages.my_goals') }}" style="font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.1em;">
+            +{{ active_goals_count - 1 }} more →
+        </a>
+        {% endif %}
+    </div>
+    <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 8px;">
+        <span style="font-family: var(--font-serif); font-size: 1.5rem; color: var(--roman-gold);">
+            £{{ "%.2f" | format(primary_goal.current_amount) }}
+        </span>
+        <span style="font-size: 0.8rem; color: var(--text-tertiary);">
+            of £{{ "%.2f" | format(primary_goal.target_amount) }}
+        </span>
+    </div>
+    <div style="height: 6px; background: rgba(255,255,255,0.05); border-radius: 3px; overflow: hidden;">
+        <div style="height: 100%; width: {{ primary_goal.progress_percent if primary_goal.progress_percent else 0 }}%; background: var(--roman-gold); border-radius: 3px;"></div>
+    </div>
+</div>
+{% endif %}
+
+<!-- Quick stats -->
+<div class="grid-3" style="margin-bottom: 24px;">
+    <div class="glass-card">
+        <div class="metric-label">Money in</div>
+        <div style="font-family: var(--font-serif); font-size: 1.3rem;">£{{ "%.2f" | format(summary.total_income) }}</div>
+    </div>
+    <div class="glass-card">
+        <div class="metric-label">Money out</div>
+        <div style="font-family: var(--font-serif); font-size: 1.3rem;">£{{ "%.2f" | format(summary.total_expenses) }}</div>
+    </div>
+    <div class="glass-card">
+        <div class="metric-label">Balance</div>
+        <div style="font-family: var(--font-serif); font-size: 1.3rem;">£{{ "%.2f" | format(summary.balance) }}</div>
+    </div>
+</div>
+
+<!-- Recent transactions -->
+<div class="glass-card">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+        <span class="metric-label" style="margin-bottom: 0;">Recent activity</span>
+        <a href="{{ url_for('pages.my_money') }}" style="font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.1em;">View all →</a>
+    </div>
+    {% if recent_transactions | length > 0 %}
+        {% for t in recent_transactions %}
+        <div class="transaction-row">
+            <div class="transaction-info">
+                <div class="transaction-description">{{ t.description }}</div>
+                <div class="transaction-meta">{{ t.date }} · {{ t.category }}</div>
+            </div>
+            <div class="transaction-amount {{ t.type }}">
+                {% if t.type == "income" %}+{% else %}-{% endif %}£{{ "%.2f" | format(t.amount) }}
+            </div>
+        </div>
+        {% endfor %}
+    {% else %}
+        <div class="empty-state">
+            No transactions yet. <a href="{{ url_for('pages.upload_statement') }}">Upload a statement</a> to get started.
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

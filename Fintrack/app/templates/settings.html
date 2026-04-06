@@ -3,61 +3,94 @@
 
 {% block content %}
 <div class="page-header">
-    <div class="section-label">The Vault</div>
     <h1 style="font-style: italic;">Settings</h1>
 </div>
 
-<div class="section-label">Select your aura</div>
-<div class="glass-card" style="margin-bottom: 32px;">
+<!-- Financial profile -->
+<div class="glass-card" style="margin-bottom: 24px;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+        <span class="metric-label" style="margin-bottom: 0;">Your financial profile</span>
+        <a href="{{ url_for('pages.factfind') }}" style="font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.1em;">Edit →</a>
+    </div>
+
+    {% if current_user.factfind_completed %}
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+        <div>
+            <div style="font-size: 0.7rem; color: var(--text-tertiary);">Take-home pay</div>
+            <div style="font-size: 0.9rem;">£{{ "%.2f" | format(current_user.monthly_income | float) }}/month</div>
+        </div>
+        <div>
+            <div style="font-size: 0.7rem; color: var(--text-tertiary);">Rent/mortgage</div>
+            <div style="font-size: 0.9rem;">£{{ "%.2f" | format(current_user.rent_amount | float) }}/month</div>
+        </div>
+        <div>
+            <div style="font-size: 0.7rem; color: var(--text-tertiary);">Bills</div>
+            <div style="font-size: 0.9rem;">£{{ "%.2f" | format(current_user.bills_amount | float) }}/month</div>
+        </div>
+        <div>
+            <div style="font-size: 0.7rem; color: var(--text-tertiary);">Available for goals</div>
+            <div style="font-size: 0.9rem; color: var(--roman-gold);">£{{ "%.2f" | format(current_user.monthly_surplus) }}/month</div>
+        </div>
+    </div>
+    {% else %}
+    <p style="font-size: 0.85rem; color: var(--text-secondary);">
+        <a href="{{ url_for('pages.factfind') }}">Complete your financial profile</a> to unlock budgets, goals, and predictions.
+    </p>
+    {% endif %}
+</div>
+
+<!-- Theme selector -->
+<div class="glass-card" style="margin-bottom: 24px;">
+    <span class="metric-label">Choose your look</span>
     <form method="POST" action="{{ url_for('pages.update_theme') }}">
-        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 24px;">
+        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-top: 12px;">
             {% set themes = [
-                ("racing-green", "Emerald", "linear-gradient(135deg, #0A2A22, #020408)", "dark"),
-                ("midnight-navy", "Midnight Navy", "linear-gradient(135deg, #0A1628, #020408)", "dark"),
-                ("oxford-saddle", "Oxford Saddle", "linear-gradient(135deg, #1A0F0A, #050302)", "dark"),
-                ("amethyst", "Amethyst", "linear-gradient(135deg, #0D0514, #030105)", "dark"),
-                ("rosso", "Rosso Corsa", "linear-gradient(135deg, #2A0A0A, #080202)", "dark"),
-                ("cobalt", "Electric Cobalt", "linear-gradient(135deg, #0A1A3A, #020408)", "dark"),
-                ("ivory", "Ivory Estate", "linear-gradient(135deg, #FAF8F5, #F0EDE8)", "light"),
-                ("pearl", "Pearl Essence", "linear-gradient(135deg, #F5F7FA, #E8ECF2)", "light"),
-                ("sandstone", "Sandstone", "linear-gradient(135deg, #F8F4EE, #EDE6DA)", "light"),
-                ("sage", "Morning Sage", "linear-gradient(135deg, #F2F5F0, #E4EBE0)", "light"),
-                ("lavender", "Soft Lavender", "linear-gradient(135deg, #F5F3F8, #EAE5F0)", "light"),
-                ("mist", "Silver Mist", "linear-gradient(135deg, #F4F4F2, #E6E6E2)", "light")
+                ("racing-green", "Racing Green", "linear-gradient(135deg, #0A2A22, #020408)"),
+                ("midnight-navy", "Midnight Navy", "linear-gradient(135deg, #0A1628, #020408)"),
+                ("oxford-saddle", "Oxford Saddle", "linear-gradient(135deg, #2A1A10, #0A0604)"),
+                ("amethyst", "Amethyst", "linear-gradient(135deg, #1A0C28, #060210)"),
+                ("rosso", "Rosso Corsa", "linear-gradient(135deg, #3A1212, #0C0404)"),
+                ("cobalt", "Electric Cobalt", "linear-gradient(135deg, #0A1A3A, #020408)"),
+                ("ivory", "Ivory Estate", "linear-gradient(135deg, #F0EBE2, #E4DDD0)"),
+                ("pearl", "Pearl Essence", "linear-gradient(135deg, #E4E8F0, #D6DCE8)"),
+                ("sandstone", "Sandstone", "linear-gradient(135deg, #ECE4D6, #DED4C2)"),
+                ("sage", "Morning Sage", "linear-gradient(135deg, #E0E8DC, #D0DCC8)"),
+                ("lavender", "Soft Lavender", "linear-gradient(135deg, #E4DFF0, #D6CEE4)"),
+                ("mist", "Silver Mist", "linear-gradient(135deg, #E2E2DE, #D4D4CE)")
             ] %}
 
-            {% for theme_id, theme_name, gradient, mode in themes %}
+            {% for theme_id, theme_name, gradient in themes %}
             <label style="cursor: pointer; text-align: center;">
                 <input type="radio" name="theme" value="{{ theme_id }}"
                        {% if current_user.theme == theme_id %}checked{% endif %}
                        style="display: none;"
                        onchange="this.form.submit()">
-                <div style="height: 60px; border-radius: 12px; background: {{ gradient }};
+                <div style="height: 48px; border-radius: 10px; background: {{ gradient }};
                     border: 2px solid {% if current_user.theme == theme_id %}var(--roman-gold){% else %}transparent{% endif %};
-                    transition: border-color 0.3s ease; margin-bottom: 6px;"
+                    transition: border-color 0.3s ease; margin-bottom: 4px;"
                     onmouseover="this.style.borderColor='var(--roman-gold)'"
                     onmouseout="this.style.borderColor='{% if current_user.theme == theme_id %}var(--roman-gold){% else %}transparent{% endif %}'">
                 </div>
-                <div style="font-size: 0.65rem; color: var(--text-secondary);">{{ theme_name }}</div>
-                <div style="font-size: 0.55rem; color: var(--text-tertiary);">{{ mode }}</div>
+                <div style="font-size: 0.6rem; color: var(--text-secondary);">{{ theme_name }}</div>
             </label>
             {% endfor %}
         </div>
     </form>
 </div>
 
-<div class="section-label">Account</div>
+<!-- Account -->
 <div class="glass-card">
-    <div style="padding: 12px 0; border-bottom: 0.5px solid rgba(255,255,255,0.05); display: flex; justify-content: space-between;">
-        <span style="font-size: 0.85rem; color: var(--text-secondary);">Name</span>
+    <span class="metric-label">Account</span>
+    <div style="padding: 8px 0; border-bottom: 0.5px solid rgba(255,255,255,0.05); display: flex; justify-content: space-between;">
+        <span style="font-size: 0.85rem; color: var(--text-tertiary);">Name</span>
         <span style="font-size: 0.85rem;">{{ current_user.name }}</span>
     </div>
-    <div style="padding: 12px 0; border-bottom: 0.5px solid rgba(255,255,255,0.05); display: flex; justify-content: space-between;">
-        <span style="font-size: 0.85rem; color: var(--text-secondary);">Email</span>
+    <div style="padding: 8px 0; border-bottom: 0.5px solid rgba(255,255,255,0.05); display: flex; justify-content: space-between;">
+        <span style="font-size: 0.85rem; color: var(--text-tertiary);">Email</span>
         <span style="font-size: 0.85rem;">{{ current_user.email }}</span>
     </div>
-    <div style="padding: 12px 0; display: flex; justify-content: space-between;">
-        <span style="font-size: 0.85rem; color: var(--text-secondary);">Member since</span>
+    <div style="padding: 8px 0; display: flex; justify-content: space-between;">
+        <span style="font-size: 0.85rem; color: var(--text-tertiary);">Member since</span>
         <span style="font-size: 0.85rem;">{{ current_user.created_at.strftime("%B %Y") if current_user.created_at else "—" }}</span>
     </div>
 </div>

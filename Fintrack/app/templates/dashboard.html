@@ -73,7 +73,7 @@
             <div style="font-size: 1.1rem; color: var(--text-primary);">{{ primary_goal.name }}</div>
         </div>
         {% if active_goals_count > 1 %}
-        <a href="{{ url_for('pages.goals_page') }}" style="font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.1em;">
+        <a href="{{ url_for('pages.my_goals') }}" style="font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.1em;">
             +{{ active_goals_count - 1 }} more →
         </a>
         {% endif %}
@@ -103,7 +103,7 @@
 <div class="glass-card" style="margin-bottom: 32px; background: rgba(255,255,255,0.01);">
     <div style="font-size: 0.75rem; color: var(--text-tertiary); font-style: italic;">
         If nothing changes:
-        <a href="{{ url_for('pages.simulator_page') }}" style="color: var(--roman-gold);">
+        <a href="{{ url_for('pages.my_goals') }}" style="color: var(--roman-gold);">
             open the simulator to explore what could change →
         </a>
     </div>
@@ -142,7 +142,7 @@
         </div>
         {% endfor %}
         <div style="text-align: center; margin-top: 16px;">
-            <a href="{{ url_for('pages.transactions') }}" style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em;">View All Transactions →</a>
+            <a href="{{ url_for('pages.my_money') }}" style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em;">View All Transactions →</a>
         </div>
     {% else %}
         <div class="empty-state">

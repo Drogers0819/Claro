@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+{% block title %}My Money — Claro{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1 style="font-style: italic;">My Money</h1>
+</div>
+
+<!-- Whisper -->
+<div class="gold-card" style="margin-bottom: 24px;">
+    <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
+        <span class="ai-pulse"></span>
+        <span class="metric-label" style="margin-bottom: 0; color: var(--roman-gold);">What you need to know</span>
+    </div>
+    <p style="font-size: 0.9rem; font-style: italic; color: var(--text-secondary); line-height: 1.7;">
+        "{{ whisper }}"
+    </p>
+</div>
+
+<!-- Actions -->
+<div style="display: flex; gap: 12px; margin-bottom: 24px;">
+    <a href="{{ url_for('pages.upload_statement') }}" class="btn-gold" style="display: inline-block; padding: 10px 20px; font-size: 0.75rem;">
+        Upload statement
+    </a>
+    <a href="{{ url_for('pages.add_transaction') }}" class="btn-outline" style="display: inline-block; padding: 10px 20px; font-size: 0.75rem;">
+        Add transaction
+    </a>
+</div>
+
+<!-- Spending breakdown — this month -->
+{% if categories | length > 0 %}
+<div class="glass-card" style="margin-bottom: 24px;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+        <span class="metric-label" style="margin-bottom: 0;">Where your money goes — {{ month_name }}</span>
+        <span style="font-family: var(--font-serif); font-size: 1.1rem;">£{{ "%.2f" | format(total_expenses) }}</span>
+    </div>
+
+    {% for cat in categories %}
+    <div style="margin-bottom: 14px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+            <span style="font-size: 0.85rem; color: var(--text-primary);">{{ cat.icon }} {{ cat.name }}</span>
+            <span style="font-size: 0.85rem;">£{{ "%.2f" | format(cat.total) }} <span style="color: var(--text-tertiary); font-size: 0.7rem;">{{ cat.percentage }}%</span></span>
+        </div>
+        <div style="height: 4px; background: rgba(255,255,255,0.05); border-radius: 2px; overflow: hidden;">
+            <div style="height: 100%; width: {{ cat.percentage }}%; background: {{ cat.colour }}; border-radius: 2px;"></div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+
+<!-- Month-over-month trends -->
+{% if trends | length > 0 %}
+<div class="glass-card" style="margin-bottom: 24px;">
+    <span class="metric-label">Compared to last month</span>
+    {% for t in trends[:5] %}
+    <div style="display: flex; justify-content: space-between; align-items: center; padding: 8px 0;
+        {% if not loop.last %}border-bottom: 0.5px solid rgba(255,255,255,0.05);{% endif %}">
+        <span style="font-size: 0.85rem;">{{ t.icon }} {{ t.category }}</span>
+        <span style="font-size: 0.8rem;
+            {% if t.direction == 'up' %}color: var(--danger);
+            {% elif t.direction == 'down' %}color: var(--success);
+            {% else %}color: var(--text-tertiary);{% endif %}">
+            {% if t.direction == 'up' %}↑{% elif t.direction == 'down' %}↓{% else %}—{% endif %}
+            {{ t.change_percent | abs }}%
+        </span>
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+
+<!-- All transactions -->
+<div class="glass-card">
+    <span class="metric-label">All transactions</span>
+    {% if transactions | length > 0 %}
+        {% for t in transactions %}
+        <div class="transaction-row">
+            <div class="transaction-info">
+                <div class="transaction-description">{{ t.description }}</div>
+                <div class="transaction-meta">{{ t.date }} · {{ t.category }}</div>
+            </div>
+            <div style="display: flex; align-items: center; gap: 12px;">
+                <div class="transaction-amount {{ t.type }}">
+                    {% if t.type == "income" %}+{% else %}-{% endif %}£{{ "%.2f" | format(t.amount) }}
+                </div>
+                <form action="{{ url_for('pages.delete_transaction', transaction_id=t.id) }}" method="POST"
+                      onsubmit="return confirm('Delete this transaction?')" style="margin: 0;">
+                    <button type="submit" style="background: none; border: none; color: var(--text-tertiary); cursor: pointer; font-size: 0.7rem; padding: 4px;">✕</button>
+                </form>
+            </div>
+        </div>
+        {% endfor %}
+    {% else %}
+        <div class="empty-state">
+            No transactions yet. Upload a bank statement to see your spending picture.
+        </div>
+    {% endif %}
+</div>
+{% endblock %}
