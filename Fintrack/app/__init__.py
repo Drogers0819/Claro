@@ -46,6 +46,7 @@ def create_app(config_class=None):
         from app.models.category import Category
         from app.models.transaction import Transaction
         from app.models.goal import Goal
+        from app.models.budget import Budget
         db.create_all()
 
         if Category.query.count() == 0:
@@ -66,6 +67,8 @@ def create_app(config_class=None):
     from app.routes.simulator_routes import simulator_bp
     from app.routes.recurring_routes import recurring_bp
     from app.routes.prediction_routes import prediction_bp
+    from app.routes.budget_routes import budget_bp
+    app.register_blueprint(budget_bp)
     app.register_blueprint(prediction_bp)
     app.register_blueprint(recurring_bp)
     app.register_blueprint(simulator_bp)

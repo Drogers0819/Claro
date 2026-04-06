@@ -1,4 +1,6 @@
-from app.services.prediction_service import predict_monthly_spending, calculate_budget_status
+from app.models.budget import Budget
+from app.services.budget_service import calculate_budget_status as calc_budget_status, suggest_budgets
+from app.services.prediction_service import predict_monthly_spending, calculate_budget_status as calc_prediction_budget_status
 from app.services.recurring_service import detect_recurring_transactions, identify_potential_savings
 from app.services.allocator_service import generate_waterfall_summary
 from app.models.goal import Goal
@@ -123,7 +125,7 @@ def dashboard():
         greeting = "afternoon"
     else:
         greeting = "evening"
-    
+
     primary_goal = Goal.query.filter_by(
         user_id=current_user.id,
         status="active"
@@ -133,6 +135,77 @@ def dashboard():
         user_id=current_user.id,
         status="active"
     ).count()
+
+    # Monthly prediction
+    all_transactions = Transaction.query.filter_by(
+        user_id=current_user.id
+    ).order_by(Transaction.date.asc()).all()
+
+    txn_list = [{
+        "amount": float(t.amount),
+        "description": t.description,
+        "category": t.category_rel.name if t.category_rel else "Other",
+        "type": t.type,
+        "date": t.date
+    } for t in all_transactions]
+
+    predictions = predict_monthly_spending(txn_list)
+
+    # Budget status
+    budget_status = None
+    if current_user.monthly_income:
+        goals = Goal.query.filter_by(
+            user_id=current_user.id,
+            status="active"
+        ).all()
+
+        goals_data = [{
+            "id": g.id,
+            "name": g.name,
+            "monthly_allocation": float(g.monthly_allocation) if g.monthly_allocation else 0
+        } for g in goals]
+
+        user_profile = {
+            "monthly_income": float(current_user.monthly_income),
+            "fixed_commitments": current_user.fixed_commitments
+        }
+
+        budget_status = calc_prediction_budget_status(predictions, user_profile, goals_data)
+
+    # Money left to spend this month
+    current_month_expenses = db.session.query(
+        func.coalesce(func.sum(Transaction.amount), 0)
+    ).filter(
+        Transaction.user_id == current_user.id,
+        Transaction.type == "expense",
+        extract("month", Transaction.date) == date.today().month,
+        extract("year", Transaction.date) == date.today().year
+    ).scalar()
+
+    money_left = None
+    if current_user.monthly_income:
+        total_goal_allocation = sum(
+            float(g.monthly_allocation) if g.monthly_allocation else 0
+            for g in Goal.query.filter_by(user_id=current_user.id, status="active").all()
+        )
+        disposable = current_user.monthly_surplus - total_goal_allocation
+        money_left = round(disposable - float(current_month_expenses), 2)
+
+    return render_template("dashboard.html",
+        summary={
+            "total_income": float(income),
+            "total_expenses": float(expenses),
+            "balance": balance,
+            "transaction_count": transaction_count
+        },
+        recent_transactions=[t.to_dict() for t in recent],
+        greeting=greeting,
+        primary_goal=primary_goal.to_dict() if primary_goal else None,
+        active_goals_count=active_goals_count,
+        predictions=predictions,
+        budget_status=budget_status,
+        money_left=money_left
+    )
 
     return render_template("dashboard.html",
         summary={
@@ -146,6 +219,7 @@ def dashboard():
         primary_goal=primary_goal.to_dict() if primary_goal else None,
         active_goals_count=active_goals_count
     )
+
 
 
 @page_bp.route("/transactions")
@@ -871,6 +945,99 @@ def insights_page():
         predictions=predictions,
         budget_status=budget_status
     )
+
+@page_bp.route("/budgets")
+@login_required
+def budgets_page():
+    budgets = Budget.query.filter_by(
+        user_id=current_user.id,
+        is_active=True
+    ).all()
+
+    budget_list = [b.to_dict() for b in budgets]
+
+    transactions = Transaction.query.filter_by(
+        user_id=current_user.id
+    ).all()
+
+    txn_list = [{
+        "amount": float(t.amount),
+        "category": t.category_rel.name if t.category_rel else "Other",
+        "type": t.type,
+        "date": t.date
+    } for t in transactions]
+
+    status_result = calc_budget_status(budget_list, txn_list)
+
+    # Get categories that don't already have budgets
+    budgeted_cat_ids = [b.category_id for b in budgets]
+    available_categories = Category.query.filter(
+        ~Category.id.in_(budgeted_cat_ids) if budgeted_cat_ids else Category.id > 0
+    ).order_by(Category.name).all()
+
+    # Get suggestions
+    suggestions_result = suggest_budgets(txn_list)
+
+    return render_template("budgets.html",
+        budget_statuses=status_result["budgets"],
+        summary=status_result["summary"],
+        alerts=status_result["alerts"],
+        month_context=status_result["month_context"],
+        available_categories=available_categories,
+        suggestions=suggestions_result["suggestions"]
+    )
+
+
+@page_bp.route("/budgets/create", methods=["POST"])
+@login_required
+def create_budget_page():
+    category_id = request.form.get("category_id", type=int)
+    monthly_limit = request.form.get("monthly_limit", type=float)
+
+    if not category_id or not monthly_limit or monthly_limit <= 0:
+        flash("Please select a category and enter a valid limit", "error")
+        return redirect(url_for("pages.budgets_page"))
+
+    existing = Budget.query.filter_by(
+        user_id=current_user.id,
+        category_id=category_id,
+        is_active=True
+    ).first()
+
+    if existing:
+        flash("A budget already exists for this category", "error")
+        return redirect(url_for("pages.budgets_page"))
+
+    budget = Budget(
+        user_id=current_user.id,
+        category_id=category_id,
+        monthly_limit=round(monthly_limit, 2)
+    )
+
+    db.session.add(budget)
+    db.session.commit()
+
+    flash("Budget created", "success")
+    return redirect(url_for("pages.budgets_page"))
+
+
+@page_bp.route("/budgets/<int:budget_id>/delete", methods=["POST"])
+@login_required
+def delete_budget(budget_id):
+    budget = Budget.query.filter_by(
+        id=budget_id,
+        user_id=current_user.id
+    ).first()
+
+    if not budget:
+        flash("Budget not found", "error")
+        return redirect(url_for("pages.budgets_page"))
+
+    db.session.delete(budget)
+    db.session.commit()
+
+    flash("Budget removed", "success")
+    return redirect(url_for("pages.budgets_page"))
 
 @page_bp.route("/settings")
 @login_required

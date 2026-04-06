@@ -7,32 +7,59 @@
     <h1 style="font-style: italic;">Good {{ greeting }}, {{ current_user.name }}.</h1>
 </div>
 
-<div class="grid-hero">
-    <div class="glass-card">
-        <div class="metric-label">Current Balance</div>
-        <div class="metric-value gold">£{{ "%.2f" | format(summary.balance) }}</div>
-        <div class="metric-subtext" style="margin-top: 12px;">
-            {{ summary.transaction_count }} transaction{{ "s" if summary.transaction_count != 1 else "" }} recorded
-        </div>
+<!-- Money Left — the most important number -->
+{% if money_left is not none %}
+<div class="gold-card" style="margin-bottom: 32px;">
+    <div class="metric-label" style="color: var(--roman-gold);">Money left to spend this month</div>
+    <div style="font-family: var(--font-serif); font-size: 2.5rem; color: var(--roman-gold); margin: 8px 0;">
+        £{{ "%.2f" | format(money_left) }}
     </div>
+    <p style="font-size: 0.8rem; color: var(--text-secondary); font-style: italic;">
+        After commitments, goal allocations, and what you've spent so far.
+        {% if predictions and predictions.current_month %}
+        {{ predictions.current_month.days_remaining }} days remaining this month.
+        {% endif %}
+    </p>
+</div>
+{% endif %}
 
-    <div class="gold-card">
-        <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 12px;">
-            <span class="ai-pulse"></span>
-            <span class="metric-label" style="margin-bottom: 0; color: var(--roman-gold);">Intelligence</span>
-        </div>
-        <p style="font-size: 0.85rem; font-style: italic; color: var(--text-secondary); line-height: 1.7;">
-            {% if primary_goal and primary_goal.progress_percent %}
-                "{{ current_user.name }}, your {{ primary_goal.name }} is {{ primary_goal.progress_percent }}% funded. Keep building momentum."
-            {% elif summary.transaction_count > 0 %}
-                "{{ current_user.name }}, you've recorded £{{ "%.2f" | format(summary.total_expenses) }} in expenses so far. Keep tracking to unlock spending insights."
-            {% else %}
-                "Welcome, {{ current_user.name }}. Start by adding your first transaction — even one entry begins to build your financial picture."
-            {% endif %}
-        </p>
+<!-- AI Whisper -->
+<div class="glass-card" style="margin-bottom: 32px;">
+    <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 12px;">
+        <span class="ai-pulse"></span>
+        <span class="metric-label" style="margin-bottom: 0; color: var(--roman-gold);">Intelligence</span>
     </div>
+    <p style="font-size: 0.85rem; font-style: italic; color: var(--text-secondary); line-height: 1.7;">
+        {% if predictions and predictions.insight and predictions.insight.summary %}
+            "{{ predictions.insight.summary }}"
+        {% elif primary_goal and primary_goal.progress_percent %}
+            "{{ current_user.name }}, your {{ primary_goal.name }} is {{ primary_goal.progress_percent }}% funded. Keep building momentum."
+        {% elif summary.transaction_count > 0 %}
+            "{{ current_user.name }}, you've recorded £{{ "%.2f" | format(summary.total_expenses) }} in expenses so far. Keep tracking to unlock spending insights."
+        {% else %}
+            "Welcome, {{ current_user.name }}. Start by uploading a bank statement or adding your first transaction."
+        {% endif %}
+    </p>
 </div>
 
+<!-- Budget Status -->
+{% if budget_status %}
+<div class="glass-card" style="margin-bottom: 32px; border-left: 3px solid
+    {% if budget_status.status == 'healthy' %}var(--success){% elif budget_status.status == 'tight' %}var(--roman-gold){% else %}var(--danger){% endif %};">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+        <span class="metric-label" style="margin-bottom: 0;">Monthly forecast</span>
+        <span style="font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.1em; padding: 3px 8px; border-radius: 4px;
+            {% if budget_status.status == 'healthy' %}background: rgba(45, 106, 79, 0.15); color: var(--success);
+            {% elif budget_status.status == 'tight' %}background: var(--roman-gold-dim); color: var(--roman-gold);
+            {% else %}background: rgba(139, 69, 19, 0.15); color: var(--danger);{% endif %}">
+            {{ budget_status.status }}
+        </span>
+    </div>
+    <p style="font-size: 0.8rem; color: var(--text-secondary);">{{ budget_status.message }}</p>
+</div>
+{% endif %}
+
+<!-- Primary Goal -->
 {% if primary_goal %}
 <div class="section-label">Primary objective</div>
 <div class="glass-card" style="margin-bottom: 32px;">
@@ -71,6 +98,19 @@
 </div>
 {% endif %}
 
+<!-- If Nothing Changes -->
+{% if primary_goal and primary_goal.target_amount and primary_goal.monthly_allocation %}
+<div class="glass-card" style="margin-bottom: 32px; background: rgba(255,255,255,0.01);">
+    <div style="font-size: 0.75rem; color: var(--text-tertiary); font-style: italic;">
+        If nothing changes:
+        <a href="{{ url_for('pages.simulator_page') }}" style="color: var(--roman-gold);">
+            open the simulator to explore what could change →
+        </a>
+    </div>
+</div>
+{% endif %}
+
+<!-- Key Metrics -->
 <div class="grid-3" style="margin-bottom: 32px;">
     <div class="glass-card">
         <div class="metric-label">Money In</div>
@@ -86,6 +126,7 @@
     </div>
 </div>
 
+<!-- Recent Activity -->
 <div class="section-label">Recent Activity</div>
 <div class="glass-card">
     {% if recent_transactions | length > 0 %}
@@ -105,7 +146,7 @@
         </div>
     {% else %}
         <div class="empty-state">
-            No transactions yet. <a href="{{ url_for('pages.add_transaction') }}">Add your first one.</a>
+            No transactions yet. <a href="{{ url_for('pages.upload_statement') }}">Upload a statement</a> or <a href="{{ url_for('pages.add_transaction') }}">add one manually.</a>
         </div>
     {% endif %}
 </div>

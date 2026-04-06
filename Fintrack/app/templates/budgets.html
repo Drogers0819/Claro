@@ -1,0 +1,190 @@
+{% extends "base.html" %}
+{% block title %}Budgets — Claro{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div class="section-label">Spending Limits</div>
+    <h1 style="font-style: italic;">Your budgets</h1>
+    <p>{{ month_context.month_name }} {{ month_context.year }} · Day {{ month_context.day_of_month }} of {{ month_context.days_in_month }}</p>
+</div>
+
+<!-- Alerts -->
+{% if alerts | length > 0 %}
+<div style="margin-bottom: 24px;">
+    {% for alert in alerts %}
+    <div style="padding: 12px 16px; border-radius: 10px; margin-bottom: 8px;
+        {% if alert.severity == 'high' %}background: rgba(139, 69, 19, 0.1); border: 0.5px solid rgba(139, 69, 19, 0.25);
+        {% else %}background: var(--roman-gold-dim); border: 0.5px solid rgba(197, 163, 93, 0.2);{% endif %}">
+        <div style="font-size: 0.8rem;
+            {% if alert.severity == 'high' %}color: var(--danger);{% else %}color: var(--roman-gold);{% endif %}">
+            {{ alert.message }}
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+
+<!-- Summary -->
+{% if summary.budget_count > 0 %}
+<div class="grid-3" style="margin-bottom: 32px;">
+    <div class="glass-card">
+        <div class="metric-label">Total Budgeted</div>
+        <div class="metric-value" style="font-size: 1.5rem;">£{{ "%.2f" | format(summary.total_budgeted) }}</div>
+    </div>
+    <div class="glass-card">
+        <div class="metric-label">Total Spent</div>
+        <div class="metric-value" style="font-size: 1.5rem;">£{{ "%.2f" | format(summary.total_spent) }}</div>
+    </div>
+    <div class="glass-card">
+        <div class="metric-label">Remaining</div>
+        <div class="metric-value" style="font-size: 1.5rem;
+            {% if summary.total_remaining >= 0 %}color: var(--success);{% else %}color: var(--danger);{% endif %}">
+            £{{ "%.2f" | format(summary.total_remaining) }}
+        </div>
+    </div>
+</div>
+
+<!-- Overall progress -->
+<div class="glass-card" style="margin-bottom: 32px;">
+    <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 8px;">
+        <span class="metric-label" style="margin-bottom: 0;">Overall budget usage</span>
+        <span style="font-size: 0.8rem; color: var(--text-tertiary);">{{ summary.overall_percent }}% used</span>
+    </div>
+    <div style="height: 8px; background: rgba(255,255,255,0.05); border-radius: 4px; overflow: hidden; position: relative;">
+        <!-- Month progress marker -->
+        <div style="position: absolute; left: {{ month_context.progress_percent }}%; top: -2px; width: 2px; height: 12px; background: var(--text-tertiary); border-radius: 1px; z-index: 2;"></div>
+        <!-- Spending bar -->
+        <div style="height: 100%; width: {{ summary.overall_percent }}%; border-radius: 4px; transition: width 0.6s ease;
+            {% if summary.overall_percent > 100 %}background: var(--danger);
+            {% elif summary.overall_percent > 85 %}background: var(--roman-gold);
+            {% else %}background: var(--success);{% endif %}"></div>
+    </div>
+    <div style="display: flex; justify-content: space-between; font-size: 0.65rem; color: var(--text-tertiary); margin-top: 4px;">
+        <span>{{ summary.on_track_count }} on track</span>
+        <span>{{ summary.warning_count }} warning{{ "s" if summary.warning_count != 1 else "" }}</span>
+        <span>{{ summary.exceeded_count }} exceeded</span>
+    </div>
+</div>
+
+<!-- Individual budgets -->
+<div class="section-label">Category budgets</div>
+<div style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 32px;">
+    {% for b in budget_statuses %}
+    <div class="glass-card">
+        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px;">
+            <div style="display: flex; align-items: center; gap: 10px;">
+                <span style="font-size: 1.2rem;">{{ b.category_icon }}</span>
+                <div>
+                    <div style="font-size: 1rem; color: var(--text-primary);">{{ b.category_name }}</div>
+                    <div style="font-size: 0.7rem; color: var(--text-tertiary);">{{ b.transaction_count }} transaction{{ "s" if b.transaction_count != 1 else "" }}</div>
+                </div>
+            </div>
+            <span style="font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.1em; padding: 3px 8px; border-radius: 4px;
+                {% if b.status == 'exceeded' %}background: rgba(139, 69, 19, 0.15); color: var(--danger);
+                {% elif b.status == 'warning' %}background: var(--roman-gold-dim); color: var(--roman-gold);
+                {% elif b.status == 'ahead_of_pace' %}background: rgba(255,255,255,0.05); color: var(--text-secondary);
+                {% else %}background: rgba(45, 106, 79, 0.15); color: var(--success);{% endif %}">
+                {{ b.status | replace("_", " ") }}
+            </span>
+        </div>
+
+        <!-- Amounts -->
+        <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 8px;">
+            <span style="font-family: var(--font-serif); font-size: 1.3rem;">£{{ "%.2f" | format(b.spent) }}</span>
+            <span style="font-size: 0.8rem; color: var(--text-tertiary);">of £{{ "%.2f" | format(b.monthly_limit) }}</span>
+        </div>
+
+        <!-- Progress bar -->
+        <div style="height: 6px; background: rgba(255,255,255,0.05); border-radius: 3px; overflow: hidden; position: relative; margin-bottom: 8px;">
+            <div style="position: absolute; left: {{ month_context.progress_percent }}%; top: -1px; width: 1px; height: 8px; background: var(--text-tertiary); z-index: 2;"></div>
+            <div style="height: 100%; width: {{ [b.percent_used, 100] | min }}%; border-radius: 3px; transition: width 0.6s ease;
+                background: {{ b.category_colour }};
+                {% if b.status == 'exceeded' %}opacity: 1;
+                {% elif b.status == 'warning' %}opacity: 0.85;
+                {% else %}opacity: 0.7;{% endif %}"></div>
+        </div>
+
+        <!-- Bottom stats -->
+        <div style="display: flex; justify-content: space-between; font-size: 0.7rem; color: var(--text-tertiary);">
+            <span>{{ b.percent_used }}% used</span>
+            <span>£{{ "%.2f" | format(b.daily_remaining) }}/day for {{ month_context.days_remaining }} days</span>
+        </div>
+
+        <!-- Insight -->
+        <div style="font-size: 0.75rem; color: var(--text-secondary); font-style: italic; margin-top: 8px;">
+            {{ b.insight }}
+        </div>
+
+        {% if b.will_exceed and b.status != 'exceeded' %}
+        <div style="font-size: 0.7rem; color: var(--roman-gold); margin-top: 6px;">
+            Projected: £{{ "%.2f" | format(b.projected_total) }} (£{{ "%.2f" | format(b.projected_over) }} over)
+        </div>
+        {% endif %}
+
+        <!-- Actions -->
+        <div style="display: flex; gap: 8px; margin-top: 12px; padding-top: 12px; border-top: 0.5px solid rgba(255,255,255,0.05);">
+            <form action="{{ url_for('pages.delete_budget', budget_id=b.budget_id) }}" method="POST"
+                  onsubmit="return confirm('Remove this budget?')">
+                <button type="submit" class="btn-danger">Remove</button>
+            </form>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+{% else %}
+<div class="glass-card" style="margin-bottom: 32px;">
+    <div class="empty-state">
+        No budgets set. Create spending limits below to track your categories.
+    </div>
+</div>
+{% endif %}
+
+<!-- Create budget form -->
+<div class="section-label">Add a budget</div>
+<div class="glass-card" style="max-width: 560px; margin-bottom: 32px;">
+    <form method="POST" action="{{ url_for('pages.create_budget_page') }}">
+        <div class="grid-2">
+            <div class="form-group">
+                <label class="form-label">Category</label>
+                <select name="category_id" class="form-select" required>
+                    <option value="">Select category</option>
+                    {% for cat in available_categories %}
+                    <option value="{{ cat.id }}">{{ cat.icon }} {{ cat.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Monthly limit (£)</label>
+                <input type="number" name="monthly_limit" class="form-input" step="0.01" min="1" placeholder="e.g. 100" required>
+            </div>
+        </div>
+        <button type="submit" class="btn-gold">Set Budget</button>
+    </form>
+</div>
+
+<!-- Suggestions -->
+{% if suggestions | length > 0 %}
+<div class="section-label">Suggested budgets</div>
+<div class="glass-card" style="margin-bottom: 32px;">
+    <p style="font-size: 0.8rem; color: var(--text-tertiary); margin-bottom: 16px; font-style: italic;">
+        Based on your spending history. Limits are set 10% above your average to give breathing room.
+    </p>
+    {% for s in suggestions %}
+    <div style="display: flex; justify-content: space-between; align-items: center;
+        {% if not loop.last %}margin-bottom: 12px; padding-bottom: 12px; border-bottom: 0.5px solid rgba(255,255,255,0.05);{% endif %}">
+        <div>
+            <div style="font-size: 0.9rem; color: var(--text-primary);">{{ s.category }}</div>
+            <div style="font-size: 0.7rem; color: var(--text-tertiary);">
+                Avg £{{ "%.2f" | format(s.average_monthly) }}/month ({{ s.months_of_data }} month{{ "s" if s.months_of_data != 1 else "" }} of data)
+            </div>
+        </div>
+        <div style="text-align: right;">
+            <div style="font-family: var(--font-serif); font-size: 1.1rem; color: var(--roman-gold);">£{{ "%.0f" | format(s.suggested_limit) }}</div>
+            <div style="font-size: 0.6rem; color: var(--text-tertiary);">suggested</div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+{% endblock %}

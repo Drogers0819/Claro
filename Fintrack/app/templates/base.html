@@ -53,6 +53,9 @@
                 <a href="{{ url_for('pages.insights_page') }}" class="nav-link {% if request.endpoint == 'pages.insights_page' %}active{% endif %}">
                     <span class="nav-icon">◈</span> Insights
                 </a>
+                <a href="{{ url_for('pages.budgets_page') }}" class="nav-link {% if request.endpoint == 'pages.budgets_page' %}active{% endif %}">
+                    <span class="nav-icon">▣</span> Budgets
+                </a>
             </nav>
 
             <div class="sidebar-footer">
