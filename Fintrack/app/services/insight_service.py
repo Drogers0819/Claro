@@ -1,16 +1,24 @@
-from datetime import date, timedelta
-from collections import defaultdict
+from datetime import date
 import calendar
 
 
 def generate_page_insights(page, user_data):
     """
-    Generates contextual whisper text for each page based on
-    all available data. Returns 1-3 sentences of plain-language
-    insight relevant to what the user is looking at.
+    Generates a single contextual whisper for each page.
     
-    Every insight answers the implicit question:
-    "What do I need to know right now?"
+    9 core scenarios only:
+    1. Money left + daily rate
+    2. Budget approaching limit
+    3. Budget exceeded
+    4. Goal progress
+    5. Goal funding conflict
+    6. Unallocated surplus
+    7. Spending pace vs average
+    8. Recurring payments total
+    9. Month-end narrative summary
+    
+    No judgement. No lifestyle advice. Just the numbers
+    the user needs, written like a calm friend.
     """
     generators = {
         "overview": _overview_insight,
@@ -26,300 +34,255 @@ def generate_page_insights(page, user_data):
 
 def _overview_insight(data):
     """
-    Dashboard insight — the most important whisper.
-    Prioritises: money left, budget status, goal progress, anomalies.
+    Dashboard: money left, budget problems, goal progress.
+    Picks the most important thing and leads with it.
     """
-    parts = []
-    priority_insight = None
-
     money_left = data.get("money_left")
     days_remaining = data.get("days_remaining", 0)
-    predictions = data.get("predictions", {})
-    budget_status = data.get("budget_status", {})
+    budget_statuses = data.get("budget_statuses", [])
     primary_goal = data.get("primary_goal", {})
-    anomalies = data.get("anomalies", {})
 
     # Money left is always the lead
-    if money_left is not None:
-        if days_remaining > 0:
-            daily = round(money_left / days_remaining, 2)
-            if money_left > 0:
-                parts.append(f"You have £{money_left:,.2f} left to spend this month — that's £{daily:.2f} per day for {days_remaining} days.")
-            else:
-                parts.append(f"You've gone £{abs(money_left):,.2f} over your spending allowance this month with {days_remaining} days still to go.")
-                priority_insight = "overspending"
+    if money_left is not None and days_remaining > 0:
+        daily = round(money_left / days_remaining, 2)
 
-    # Budget status — only mention if there's a problem
-    status = budget_status.get("status", "")
-    if status == "overspending":
-        parts.append(budget_status.get("message", "Your predicted spending exceeds your income this month."))
-        priority_insight = "overspending"
-    elif status == "tight":
-        parts.append(budget_status.get("message", "Your spending is running close to your limits."))
+        if money_left > 0:
+            whisper = f"You've got £{money_left:,.2f} left for the next {days_remaining} days. That's about £{daily:.2f} a day."
+        else:
+            whisper = f"You've spent £{abs(money_left):,.2f} more than planned this month with {days_remaining} days still to go."
 
-    # Goal progress — if no problems, lead with something positive
-    if not priority_insight and primary_goal:
-        progress = primary_goal.get("progress_percent")
-        name = primary_goal.get("name", "your goal")
-        if progress is not None and progress > 0:
-            parts.append(f"Your {name} is {progress}% funded. Keep going.")
+        # Add budget problem if there is one
+        exceeded = [b for b in budget_statuses if b.get("status") == "exceeded"]
+        warning = [b for b in budget_statuses if b.get("status") == "warning"]
 
-    # Anomalies — flag the most important one
-    anomaly_list = anomalies.get("anomalies", [])
-    high_anomalies = [a for a in anomaly_list if a.get("severity") == "high"]
-    if high_anomalies:
-        parts.append(high_anomalies[0].get("message", ""))
+        if exceeded:
+            name = exceeded[0].get("category_name", "One category")
+            over = abs(exceeded[0].get("remaining", 0))
+            whisper += f" Your {name} budget is £{over:.2f} over."
+        elif warning:
+            name = warning[0].get("category_name", "One category")
+            left = warning[0].get("remaining", 0)
+            whisper += f" Your {name} budget has £{left:.2f} left."
 
-    # Quiet period — positive reinforcement
-    quiet = [a for a in anomaly_list if a.get("type") == "quiet_period"]
-    if quiet and not priority_insight:
-        parts.append(quiet[0].get("message", ""))
+        # Add goal progress if everything else is fine
+        if not exceeded and not warning and primary_goal:
+            progress = primary_goal.get("progress_percent")
+            name = primary_goal.get("name", "your goal")
+            if progress and progress > 0:
+                whisper += f" {name} is {progress}% done."
 
-    if not parts:
-        name = data.get("user_name", "")
-        parts.append(f"Welcome back{', ' + name if name else ''}. Upload a bank statement or add transactions to unlock your insights.")
+        return {"whisper": whisper, "page": "overview"}
 
+    # No financial profile yet
+    name = data.get("user_name", "")
     return {
-        "whisper": " ".join(parts[:3]),
-        "priority": priority_insight or "normal",
+        "whisper": f"Welcome{', ' + name if name else ''}. Complete your financial profile and upload a bank statement to get started.",
         "page": "overview"
     }
 
 
 def _my_money_insight(data):
     """
-    Transactions page insight — spending pace and category highlights.
+    Transactions page: spending pace vs your own average.
     """
-    parts = []
-
     predictions = data.get("predictions", {})
     spending = predictions.get("spending_so_far", {})
     comparison = predictions.get("comparison", {})
-    category_predictions = predictions.get("predictions", {}).get("by_category", [])
-    trends = data.get("trends", [])
 
     total_spent = spending.get("total", 0)
     txn_count = spending.get("transaction_count", 0)
 
-    if total_spent > 0:
-        parts.append(f"You've spent £{total_spent:,.2f} across {txn_count} transactions this month.")
+    if total_spent <= 0:
+        return {
+            "whisper": "Upload a bank statement and we'll show you exactly where your money is going. It takes about 30 seconds.",
+            "page": "my_money"
+        }
 
-    # Comparison to average
+    whisper = f"You've spent £{total_spent:,.2f} so far this month across {txn_count} transactions."
+
     comp_status = comparison.get("status", "")
-    if comp_status == "spending_high":
-        diff = comparison.get("difference", 0)
-        parts.append(f"That's £{diff:.2f} more than usual at this point in the month.")
-    elif comp_status == "spending_low":
-        diff = abs(comparison.get("difference", 0))
-        parts.append(f"That's £{diff:.2f} less than usual — you're under your average pace.")
+    diff = comparison.get("difference", 0)
 
-    # Biggest category change
-    if category_predictions:
-        above = [c for c in category_predictions if c.get("status") == "above_average"]
-        if above:
-            worst = max(above, key=lambda c: c.get("pace_vs_average", 0))
-            parts.append(f"Your {worst['category']} spending is {abs(worst['pace_vs_average']):.0f}% above average this month.")
+    if comp_status == "spending_high" and diff > 0:
+        whisper += f" That's £{diff:.2f} more than you'd normally spend by this point."
+    elif comp_status == "spending_low" and diff < 0:
+        whisper += f" That's £{abs(diff):.2f} less than usual — you're under your average pace."
 
-    # Trend from last month
-    if trends:
-        biggest = trends[0] if trends else None
-        if biggest and biggest.get("direction") == "up":
-            parts.append(f"{biggest['category']} is up {biggest['change_percent']:.0f}% compared to last month.")
-        elif biggest and biggest.get("direction") == "down":
-            parts.append(f"Good news: {biggest['category']} is down {abs(biggest['change_percent']):.0f}% compared to last month.")
-
-    if not parts:
-        parts.append("Upload a bank statement to see where your money is going this month.")
-
-    return {
-        "whisper": " ".join(parts[:3]),
-        "priority": "normal",
-        "page": "my_money"
-    }
+    return {"whisper": whisper, "page": "my_money"}
 
 
 def _my_goals_insight(data):
     """
-    Goals page insight — progress, timelines, and waterfall status.
+    Goals page: progress, conflicts, unallocated money.
     """
-    parts = []
-
     goals = data.get("goals", [])
     waterfall = data.get("waterfall", {})
     projections = data.get("projections", [])
 
-    active_goals = [g for g in goals if g.get("status") == "active"]
+    active = [g for g in goals if g.get("status") == "active"]
 
-    if not active_goals:
+    if not active:
         return {
-            "whisper": "You haven't set any financial goals yet. What are you working toward? A house deposit, a holiday, an emergency fund?",
-            "priority": "normal",
+            "whisper": "You haven't set any goals yet. What are you saving for — a holiday, a deposit, an emergency fund? Pick one and we'll show you when you'll get there.",
             "page": "my_goals"
         }
 
-    # Goal count and primary goal
-    count = len(active_goals)
-    parts.append(f"You have {count} active goal{'s' if count != 1 else ''}.")
+    parts = []
 
-    # Primary goal progress
-    primary = active_goals[0] if active_goals else None
-    if primary and primary.get("progress_percent") is not None:
-        parts.append(f"Your {primary['name']} is {primary['progress_percent']}% complete.")
+    # Goal count and primary progress
+    primary = active[0]
+    progress = primary.get("progress_percent")
+    name = primary.get("name", "your goal")
 
-    # Projections — nearest completion
+    if progress and progress > 0:
+        parts.append(f"{name} is {progress}% done.")
+    else:
+        parts.append(f"You have {len(active)} goal{'s' if len(active) != 1 else ''} in progress.")
+
+    # Nearest arrival date
     reachable = [p for p in projections if p.get("reachable") is True]
     if reachable:
         soonest = min(reachable, key=lambda p: p.get("months_to_target", 999))
-        parts.append(f"{soonest.get('goal_name', 'Your nearest goal')} arrives in {soonest.get('completion_date_human', 'the future')}.")
+        arrival = soonest.get("completion_date_human", "")
+        goal_name = soonest.get("goal_name", "Your nearest goal")
+        if arrival:
+            parts.append(f"{goal_name} arrives {arrival}.")
 
-    # Waterfall conflicts
+    # Conflicts
     conflicts = waterfall.get("conflicts", [])
     if conflicts:
-        parts.append(f"Your budget has {len(conflicts)} conflict{'s' if len(conflicts) != 1 else ''} — some goals may not be fully funded at current allocations.")
+        parts.append(f"Your goals add up to more than you have available — {len(conflicts)} goal{'s' if len(conflicts) != 1 else ''} won't get the full amount.")
 
     # Unallocated surplus
     unallocated = waterfall.get("unallocated", 0)
-    if unallocated > 10:
+    if unallocated > 10 and not conflicts:
         parts.append(f"You have £{unallocated:.2f}/month that isn't assigned to any goal.")
 
-    return {
-        "whisper": " ".join(parts[:3]),
-        "priority": "attention" if conflicts else "normal",
-        "page": "my_goals"
-    }
+    return {"whisper": " ".join(parts[:3]), "page": "my_goals"}
 
 
 def _my_budgets_insight(data):
     """
-    Budgets page insight — budget status, alerts, recurring costs.
+    Budgets page: budget status, recurring total.
     """
-    parts = []
-
     budget_statuses = data.get("budget_statuses", [])
     recurring = data.get("recurring", {})
-    savings = data.get("savings_opportunities", {})
     days_remaining = data.get("days_remaining", 0)
 
+    # No budgets set
     if not budget_statuses:
-        monthly_cost = recurring.get("total_monthly_cost", 0)
-        if monthly_cost > 0:
-            parts.append(f"You have {recurring.get('count', 0)} recurring payments totalling £{monthly_cost:.2f}/month. Set budgets to track your spending limits.")
-        else:
-            parts.append("Set spending budgets to keep your categories in check. We'll track them in real time.")
+        recurring_total = recurring.get("total_monthly_cost", 0)
+        recurring_count = recurring.get("count", 0)
+
+        if recurring_count > 0:
+            return {
+                "whisper": f"You have {recurring_count} regular payments totalling £{recurring_total:.2f}/month. Set spending budgets and we'll track them for you.",
+                "page": "my_budgets"
+            }
 
         return {
-            "whisper": " ".join(parts),
-            "priority": "normal",
+            "whisper": "Set a spending limit on a category and we'll let you know how you're tracking against it.",
             "page": "my_budgets"
         }
 
-    # Count statuses
-    exceeded = sum(1 for b in budget_statuses if b.get("status") == "exceeded")
-    warning = sum(1 for b in budget_statuses if b.get("status") == "warning")
-    on_track = sum(1 for b in budget_statuses if b.get("status") == "on_track")
+    exceeded = [b for b in budget_statuses if b.get("status") == "exceeded"]
+    warning = [b for b in budget_statuses if b.get("status") == "warning"]
+    on_track = [b for b in budget_statuses if b.get("status") in ("on_track", "ahead_of_pace")]
 
-    if exceeded > 0:
-        parts.append(f"{exceeded} budget{'s' if exceeded != 1 else ''} exceeded this month.")
-        priority = "high"
-    elif warning > 0:
-        parts.append(f"{warning} budget{'s' if warning != 1 else ''} approaching {'their' if warning > 1 else 'its'} limit.")
-        priority = "medium"
+    if exceeded:
+        b = exceeded[0]
+        name = b.get("category_name", "One budget")
+        over = abs(b.get("remaining", 0))
+        whisper = f"Your {name} budget is £{over:.2f} over this month."
+
+        if on_track:
+            whisper += f" Your other {len(on_track)} budget{'s are' if len(on_track) != 1 else ' is'} within limits."
+
+    elif warning:
+        b = warning[0]
+        name = b.get("category_name", "One budget")
+        left = b.get("remaining", 0)
+        daily = b.get("daily_remaining", 0)
+        whisper = f"Your {name} budget has £{left:.2f} left"
+        if daily > 0 and days_remaining > 0:
+            whisper += f" — about £{daily:.2f} a day for {days_remaining} days."
+        else:
+            whisper += "."
+
     else:
-        parts.append(f"All {on_track} budget{'s are' if on_track != 1 else ' is'} on track.")
-        priority = "normal"
+        count = len(on_track)
+        whisper = f"All {count} budget{'s are' if count != 1 else ' is'} on track this month."
 
-    # Most pressed budget
-    active_budgets = [b for b in budget_statuses if b.get("status") in ("exceeded", "warning")]
-    if active_budgets:
-        worst = max(active_budgets, key=lambda b: b.get("percent_used", 0))
-        parts.append(f"{worst['category_name']} is {worst['percent_used']:.0f}% used — £{worst.get('remaining', 0):.2f} left.")
+        # Add tightest budget detail
+        if on_track:
+            tightest = max(on_track, key=lambda b: b.get("percent_used", 0))
+            name = tightest.get("category_name", "")
+            left = tightest.get("remaining", 0)
+            daily = tightest.get("daily_remaining", 0)
+            if daily > 0 and days_remaining > 0:
+                whisper += f" Your tightest is {name} — £{left:.2f} left, about £{daily:.2f} a day."
 
-    # Savings opportunities
-    opp_count = savings.get("count", 0)
-    if opp_count > 0:
-        total_saving = savings.get("total_potential_annual_saving", 0)
-        parts.append(f"We spotted {opp_count} potential saving{'s' if opp_count != 1 else ''} worth up to £{total_saving:.2f}/year.")
-
-    # Recurring total
-    recurring_count = recurring.get("count", 0)
-    recurring_cost = recurring.get("total_monthly_cost", 0)
-    if recurring_count > 0 and not active_budgets:
-        parts.append(f"You have {recurring_count} regular payments totalling £{recurring_cost:.2f}/month.")
-
-    return {
-        "whisper": " ".join(parts[:3]),
-        "priority": priority,
-        "page": "my_budgets"
-    }
+    return {"whisper": whisper, "page": "my_budgets"}
 
 
 def _settings_insight(data):
-    """
-    Settings page — light, informational.
-    """
-    member_since = data.get("member_since", "")
+    """Settings: light, factual."""
     txn_count = data.get("total_transactions", 0)
-    goals_count = data.get("active_goals", 0)
+    goal_count = data.get("active_goals", 0)
 
-    parts = []
+    if txn_count > 0 and goal_count > 0:
+        whisper = f"You've recorded {txn_count} transactions and you're tracking {goal_count} goal{'s' if goal_count != 1 else ''}."
+    elif txn_count > 0:
+        whisper = f"You've recorded {txn_count} transactions so far."
+    else:
+        whisper = "Personalise your experience with a theme that suits you."
 
-    if txn_count > 0:
-        parts.append(f"You've recorded {txn_count} transactions so far.")
-
-    if goals_count > 0:
-        parts.append(f"You're tracking {goals_count} financial goal{'s' if goals_count != 1 else ''}.")
-
-    if not parts:
-        parts.append("Personalise your experience by choosing a theme that suits you.")
-
-    return {
-        "whisper": " ".join(parts),
-        "priority": "normal",
-        "page": "settings"
-    }
+    return {"whisper": whisper, "page": "settings"}
 
 
 def _fallback_insight(data):
-    """
-    Default insight when the page doesn't have a specific generator.
-    """
     return {
         "whisper": "Keep tracking your finances to unlock personalised insights.",
-        "priority": "normal",
         "page": "unknown"
     }
 
 
 def generate_daily_digest(user_data):
     """
-    Generates a comprehensive daily digest combining insights
-    from all services. Used by the companion and notifications.
+    Structured daily summary. Only includes sections
+    where there's something genuinely worth saying.
     """
     sections = []
 
-    # Money status
+    # Money left
     money_left = user_data.get("money_left")
     days_remaining = user_data.get("days_remaining", 0)
+
     if money_left is not None and days_remaining > 0:
         daily = round(money_left / days_remaining, 2)
         sections.append({
             "title": "Your money today",
-            "content": f"£{money_left:,.2f} left to spend. That's £{daily:.2f}/day for {days_remaining} days.",
-            "priority": "high" if money_left < 0 else "normal"
+            "content": f"£{money_left:,.2f} left. That's £{daily:.2f} a day for {days_remaining} days."
         })
 
-    # Budget alerts
+    # Budget problems only
     budget_statuses = user_data.get("budget_statuses", [])
-    alerts = [b for b in budget_statuses if b.get("status") in ("exceeded", "warning")]
-    if alerts:
-        alert_msgs = [f"{a['category_name']}: {a['insight']}" for a in alerts[:3]]
+    problems = [b for b in budget_statuses if b.get("status") in ("exceeded", "warning")]
+
+    if problems:
+        msgs = []
+        for b in problems[:2]:
+            name = b.get("category_name", "")
+            if b["status"] == "exceeded":
+                msgs.append(f"{name} is £{abs(b.get('remaining', 0)):.2f} over budget.")
+            else:
+                msgs.append(f"{name} has £{b.get('remaining', 0):.2f} left.")
         sections.append({
-            "title": "Budget alerts",
-            "content": " ".join(alert_msgs),
-            "priority": "high" if any(a["status"] == "exceeded" for a in alerts) else "medium"
+            "title": "Budget update",
+            "content": " ".join(msgs)
         })
 
-    # Goal updates
+    # Goal progress
     goals = user_data.get("goals", [])
     active = [g for g in goals if g.get("status") == "active"]
     if active:
@@ -327,41 +290,20 @@ def generate_daily_digest(user_data):
         progress = primary.get("progress_percent", 0)
         sections.append({
             "title": "Goal progress",
-            "content": f"{primary['name']}: {progress}% complete.",
-            "priority": "normal"
-        })
-
-    # Anomalies
-    anomalies = user_data.get("anomalies", {}).get("anomalies", [])
-    important = [a for a in anomalies if a.get("severity") in ("high", "medium")]
-    if important:
-        sections.append({
-            "title": "Unusual activity",
-            "content": important[0].get("message", ""),
-            "priority": important[0].get("severity", "medium")
-        })
-
-    # Positive reinforcement
-    quiet = [a for a in anomalies if a.get("type") == "quiet_period"]
-    if quiet:
-        sections.append({
-            "title": "Nice work",
-            "content": quiet[0].get("message", ""),
-            "priority": "positive"
+            "content": f"{primary.get('name', 'Your goal')}: {progress}% done."
         })
 
     return {
         "sections": sections,
         "section_count": len(sections),
-        "has_alerts": any(s["priority"] in ("high", "medium") for s in sections),
+        "has_alerts": any(b.get("status") == "exceeded" for b in budget_statuses),
         "generated_at": date.today().isoformat()
     }
 
 
 def generate_month_end_summary(user_data):
     """
-    Generates the end-of-month summary that feeds the monthly
-    narrative report. Pulls together the complete picture.
+    Month-end data for the narrative report.
     """
     predictions = user_data.get("predictions", {})
     spending = predictions.get("spending_so_far", {})
@@ -374,37 +316,33 @@ def generate_month_end_summary(user_data):
     hist_avg = comparison.get("historical_average", 0)
     diff = comparison.get("difference", 0)
 
-    # Spending summary
     if hist_avg > 0:
         if diff > 0:
             spending_verdict = f"You spent £{total_spent:,.2f} this month — £{diff:.2f} more than your average of £{hist_avg:,.2f}."
         elif diff < 0:
-            spending_verdict = f"You spent £{total_spent:,.2f} this month — £{abs(diff):.2f} less than your average of £{hist_avg:,.2f}. Well done."
+            spending_verdict = f"You spent £{total_spent:,.2f} this month — £{abs(diff):.2f} less than your average. A lighter month."
         else:
             spending_verdict = f"You spent £{total_spent:,.2f} this month — right on your average."
     else:
         spending_verdict = f"You spent £{total_spent:,.2f} this month."
 
-    # Goal progress
     active_goals = [g for g in goals if g.get("status") == "active"]
     goal_summaries = []
     for g in active_goals:
         progress = g.get("progress_percent")
         if progress is not None:
-            goal_summaries.append(f"{g['name']}: {progress}% complete")
+            goal_summaries.append(f"{g['name']}: {progress}% done")
 
-    # Budget performance
     exceeded = [b for b in budgets if b.get("status") == "exceeded"]
     on_track = [b for b in budgets if b.get("status") == "on_track"]
 
     if exceeded:
-        budget_verdict = f"{len(exceeded)} budget{'s' if len(exceeded) != 1 else ''} exceeded this month."
+        budget_verdict = f"{len(exceeded)} budget{'s' if len(exceeded) != 1 else ''} went over this month."
     elif on_track:
         budget_verdict = f"All {len(on_track)} budget{'s' if len(on_track) != 1 else ''} stayed on track."
     else:
         budget_verdict = None
 
-    # Recurring costs
     recurring_total = recurring.get("total_monthly_cost", 0)
 
     return {
