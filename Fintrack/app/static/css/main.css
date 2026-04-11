@@ -300,9 +300,7 @@ a:hover {
 
 .form-label {
     display: block;
-    font-size: 0.75rem;
-    text-transform: uppercase;
-    letter-spacing: 0.2em;
+    font-size: 0.8rem;
     color: var(--text-secondary);
     font-weight: 500;
     margin-bottom: 8px;
@@ -532,22 +530,12 @@ a:hover {
 }
 
 .section-label {
-    font-size: 0.75rem;
+    font-size: 0.7rem;
     text-transform: uppercase;
-    letter-spacing: 0.25em;
+    letter-spacing: 0.12em;
     color: var(--roman-gold);
     font-weight: 600;
     margin-bottom: 16px;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-}
-
-.section-label::before {
-    content: '';
-    width: 24px;
-    height: 1px;
-    background: rgba(197, 163, 93, 0.3);
 }
 
 .page-header {
@@ -993,7 +981,7 @@ input[type="range"]::-moz-range-thumb:hover {
 
     /* Section label */
     .section-label {
-        font-size: 0.6rem;
+        font-size: 0.65rem;
         margin-top: 20px;
         margin-bottom: 8px;
     }
