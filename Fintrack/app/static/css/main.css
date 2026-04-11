@@ -126,9 +126,18 @@ a:hover {
 }
 
 .nav-icon {
-    width: 20px;
-    text-align: center;
-    font-size: 1rem;
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.nav-icon svg {
+    width: 18px;
+    height: 18px;
+    stroke: currentColor;
 }
 
 .sidebar-footer {
