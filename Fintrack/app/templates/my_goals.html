@@ -1,57 +1,14 @@
 {% extends "base.html" %}
 {% block title %}My Goals — Claro{% endblock %}
 
-{% from 'macros.html' import whisper_card %}
 {% block content %}
 <div class="page-header">
     <h1>My Goals</h1>
 </div>
 
-{% if goals | length > 0 %}{{ whisper_card(whisper) }}{% endif %}
-
-<!-- How your money is divided -->
-{% if waterfall and not waterfall.error %}
-<div class="glass-card" style="margin-bottom: 24px;">
-    <div class="metric-label">How your £{{ "%.2f" | format(waterfall.total_income) }}/month is divided</div>
-
-    <div style="margin-top: 12px; padding: 8px 0; border-bottom: 0.5px solid rgba(255,255,255,0.05);">
-        <div style="display: flex; justify-content: space-between;">
-            <span style="font-size: 0.85rem; color: var(--text-tertiary);">Rent & bills</span>
-            <span style="font-size: 0.85rem;">£{{ "%.2f" | format(waterfall.total_commitments) }}</span>
-        </div>
-    </div>
-
-    {% for a in waterfall.allocations %}
-    <div style="padding: 8px 0; {% if not loop.last %}border-bottom: 0.5px solid rgba(255,255,255,0.05);{% endif %}">
-        <div style="display: flex; justify-content: space-between;">
-            <span style="font-size: 0.85rem;">{{ a.goal_name }}</span>
-            <span style="font-size: 0.85rem;
-                {% if a.status == 'funded' %}color: var(--text-primary);
-                {% elif a.status == 'partially_funded' %}color: var(--roman-gold);
-                {% else %}color: var(--text-tertiary);{% endif %}">
-                £{{ "%.2f" | format(a.allocated) }}/mo
-            </span>
-        </div>
-        {% if a.projection %}
-        <div style="font-size: 0.7rem; color: var(--roman-gold); margin-top: 2px;">
-            Reaches target {{ a.projection.projected_date }}
-        </div>
-        {% endif %}
-    </div>
-    {% endfor %}
-
-    {% if waterfall.unallocated > 0.01 %}
-    <div style="padding: 8px 0; font-size: 0.8rem; color: var(--roman-gold);">
-        £{{ "%.2f" | format(waterfall.unallocated) }}/month unassigned
-    </div>
-    {% endif %}
-</div>
-{% endif %}
-
-<!-- Goal cards -->
 {% if goals | length > 0 %}
 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
-    <span class="metric-label" style="margin-bottom: 0;">Your goals</span>
+    <span class="metric-label" style="margin-bottom: 0;">{{ goals | length }} active goal{{ "s" if goals | length != 1 else "" }}</span>
     <a href="{{ url_for('pages.add_goal') }}" class="btn-secondary btn-sm">+ Add goal</a>
 </div>
 
@@ -107,67 +64,6 @@
     <div style="margin-top: 4px;">
         <a href="{{ url_for('pages.add_goal') }}" class="btn-primary btn-sm">Set your first goal</a>
     </div>
-</div>
-{% endif %}
-
-{% if goals | length > 0 %}
-<!-- Planning tools — only shown when goals exist -->
-<div style="padding-top: 8px; border-top: 0.5px solid rgba(255,255,255,0.05); margin-bottom: 24px;">
-    <div style="font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.15em; color: var(--text-tertiary); font-weight: 600; margin-bottom: 16px;">Planning tools</div>
-</div>
-
-<!-- Habit cost calculator -->
-<div class="glass-card" style="margin-bottom: 24px;">
-    <div class="metric-label" style="margin-bottom: 12px;">What does your habit really cost?</div>
-    <p style="font-size: 0.8rem; color: var(--text-tertiary); margin-bottom: 16px;">
-        Enter a monthly spend to see what that money could become over time.
-    </p>
-    <form method="POST" action="{{ url_for('pages.my_goals') }}">
-        <input type="hidden" name="form_type" value="habit_cost">
-        <div class="grid-2">
-            <div class="form-group">
-                <input type="number" name="habit_amount" class="form-input" step="0.01" min="0.01"
-                       placeholder="Monthly amount (£)" value="{{ habit_amount if habit_amount else '' }}" required>
-            </div>
-            <div class="form-group">
-                <input type="text" name="habit_description" class="form-input"
-                       placeholder="e.g. Deliveroo" value="{{ habit_description if habit_description else '' }}">
-            </div>
-        </div>
-        <button type="submit" class="btn-secondary btn-sm">Show me</button>
-    </form>
-</div>
-
-{% if habit_result %}
-<div class="gold-card" style="margin-bottom: 24px;">
-    <div class="metric-value xs gold" style="margin-bottom: 8px;">
-        {{ habit_result.insight.headline }}
-    </div>
-    <p style="font-size: 0.8rem; color: var(--text-secondary); line-height: 1.7;">{{ habit_result.insight.detail }}</p>
-    <p style="font-size: 0.8rem; color: var(--roman-gold); font-style: italic; margin-top: 8px;">{{ habit_result.insight.reframe }}</p>
-</div>
-
-<div class="grid-3" style="margin-bottom: 24px;">
-    {% for key in ["5_year", "10_year", "20_year"] %}
-    {% set h = habit_result.horizons[key] %}
-    <div class="glass-card" style="text-align: center;">
-        <div class="metric-label">{{ h.years }} years</div>
-        <div class="metric-value xs">£{{ "{:,.0f}".format(h.opportunity_cost) }}</div>
-        <div style="font-size: 0.65rem; color: var(--success);">+£{{ "{:,.0f}".format(h.lost_growth) }} growth</div>
-    </div>
-    {% endfor %}
-</div>
-{% endif %}
-
-<!-- Scenario link -->
-<div class="glass-card">
-    <div class="metric-label" style="margin-bottom: 12px;">What if?</div>
-    <p style="font-size: 0.8rem; color: var(--text-tertiary); margin-bottom: 12px;">
-        Change your income, commitments, or goal amounts and see exactly how your future shifts.
-    </p>
-    <a href="{{ url_for('pages.scenario_page') }}" class="btn-secondary btn-sm">
-        Run a scenario <span aria-hidden="true">→</span>
-    </a>
 </div>
 {% endif %}
 {% endblock %}
