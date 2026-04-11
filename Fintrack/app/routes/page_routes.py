@@ -573,6 +573,36 @@ def my_goals():
     )
 
 
+# ─── PLAN ────────────────────────────────────────────────
+
+@page_bp.route("/plan", methods=["GET", "POST"])
+@login_required
+def plan():
+    data = _build_whisper_data()
+
+    habit_result = None
+    habit_amount = None
+    habit_description = None
+
+    if request.method == "POST" and request.form.get("form_type") == "habit_cost":
+        try:
+            habit_amount = round(float(request.form.get("habit_amount", 0)), 2)
+            habit_description = request.form.get("habit_description", "").strip() or "This habit"
+            if habit_amount > 0:
+                habit_result = calculate_cost_of_habit(habit_amount)
+                habit_result["description"] = habit_description
+        except (ValueError, TypeError):
+            flash("Invalid amount", "error")
+
+    return render_template("plan.html",
+        waterfall=data["waterfall"],
+        projections=data["projections"],
+        habit_result=habit_result,
+        habit_amount=habit_amount,
+        habit_description=habit_description
+    )
+
+
 # ─── MY BUDGETS ──────────────────────────────────────────
 
 @page_bp.route("/my-budgets")
