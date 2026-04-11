@@ -40,9 +40,39 @@ body.theme-rosso {
     background: radial-gradient(circle at top right, #3A1212, #0C0404);
 }
 
-body.theme-cobalt {
-    --racing-green: #0A1A3A;
-    background: radial-gradient(circle at top right, #0A1A3A, #020408);
+/* ===== ELECTRIC COBALT — Bold Modern ===== */
+.theme-cobalt {
+    /* Backgrounds */
+    --bg-primary: #0C0F14;
+    --bg-secondary: rgba(255, 255, 255, 0.03);
+    --bg-tertiary: #0A0D11;
+
+    /* Text */
+    --text-primary: #F0F2F5;
+    --text-secondary: rgba(240, 242, 245, 0.6);
+    --text-tertiary: rgba(240, 242, 245, 0.3);
+
+    /* Accent — Electric Blue */
+    --roman-gold: #63B3ED;
+    --roman-gold-dim: rgba(99, 179, 237, 0.08);
+
+    /* Glass */
+    --glass-bg: rgba(255, 255, 255, 0.03);
+    --glass-border: rgba(99, 179, 237, 0.12);
+    --glass-hover: rgba(255, 255, 255, 0.05);
+
+    /* Semantic */
+    --success: #48BB78;
+    --danger: #FC8181;
+    --warning: #F6AD55;
+
+    /* Sidebar */
+    --sidebar-bg: #080A0E;
+    --sidebar-border: rgba(99, 179, 237, 0.08);
+
+    /* Fonts — sans-serif throughout for modern feel */
+    --font-serif: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 }
 
 /* ===== LIGHT AURAS ===== */
@@ -360,4 +390,47 @@ body.theme-sage .flash-error,
 body.theme-lavender .flash-error,
 body.theme-mist .flash-error {
     color: #8B4513;
+}
+
+/* Cobalt-specific component overrides */
+.theme-cobalt .gold-card {
+    background: rgba(99, 179, 237, 0.06);
+    border-color: rgba(99, 179, 237, 0.15);
+}
+
+.theme-cobalt .ai-pulse {
+    background: #63B3ED;
+}
+
+.theme-cobalt .transaction-amount.income {
+    color: #48BB78;
+}
+
+.theme-cobalt .transaction-amount.expense {
+    color: #FC8181;
+}
+
+.theme-cobalt .btn-gold {
+    background: #63B3ED;
+    color: #0C0F14;
+    border-color: #63B3ED;
+}
+
+.theme-cobalt .btn-gold:hover {
+    background: #4299E1;
+    border-color: #4299E1;
+}
+
+.theme-cobalt input[type="range"]::-webkit-slider-thumb {
+    background: #63B3ED;
+    box-shadow: 0 0 12px rgba(99, 179, 237, 0.4);
+}
+
+.theme-cobalt input[type="range"]::-moz-range-thumb {
+    background: #63B3ED;
+}
+
+.theme-cobalt .nav-link.active {
+    color: #63B3ED;
+    border-color: #63B3ED;
 }
