@@ -70,6 +70,10 @@ body.theme-rosso {
     --sidebar-bg: #0A0E1C;
     --sidebar-border: rgba(99, 179, 237, 0.1);
 
+      /* Transaction semantics */                    
+    --income: #48BB78;                             
+    --spending: #FC8181; 
+
     /* Fonts — sans-serif for modern feel */
     --font-serif: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
