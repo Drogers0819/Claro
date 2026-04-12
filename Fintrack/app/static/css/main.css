@@ -1696,11 +1696,6 @@ body.theme-mist .budget-row-danger {
         font-size: 0.75rem;
     }
 
-    /* Goals sub-row: keep CTA clear of fixed avatar (36px wide + 16px right = 52px from edge) */
-    .goals-sub-row {
-        padding-right: 44px;
-    }
-
     /* Small-size buttons always stay compact */
     .btn-primary.btn-sm,
     .btn-secondary.btn-sm {
