@@ -3,15 +3,14 @@
 
 {% block content %}
 <div class="page-header">
-    <div class="section-label">Private Overview</div>
-    <h1>Good {{ greeting }}, {{ current_user.name }}.</h1>
+    <h1>Good {{ greeting }}, {{ current_user.name.split(' ')[0] }}.</h1>
 </div>
 
 <!-- Money Left — the most important number -->
 {% if money_left is not none %}
 <div class="gold-card" style="margin-bottom: 32px;">
     <div class="metric-label" style="color: var(--roman-gold);">Money left to spend this month</div>
-    <div class="metric-value gold" style="font-size: 2.5rem; margin: 8px 0;">
+    <div class="metric-value md gold" style="margin: 8px 0;">
         £{{ "%.2f" | format(money_left) }}
     </div>
     <p style="font-size: 0.8rem; color: var(--text-secondary); font-style: italic;">
@@ -27,17 +26,17 @@
 <div class="glass-card" style="margin-bottom: 32px;">
     <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
         <span class="ai-pulse"></span>
-        <span class="metric-label" style="margin-bottom: 0; color: var(--roman-gold);">Intelligence</span>
+        <span class="metric-label" style="margin-bottom: 0; color: var(--roman-gold);">Claro</span>
     </div>
     <p style="font-size: 0.85rem; font-style: italic; color: var(--text-secondary); line-height: 1.7;">
         {% if predictions and predictions.insight and predictions.insight.summary %}
             "{{ predictions.insight.summary }}"
         {% elif primary_goal and primary_goal.progress_percent %}
-            "{{ current_user.name }}, your {{ primary_goal.name }} is {{ primary_goal.progress_percent }}% funded. Keep building momentum."
+            "{{ current_user.name.split(' ')[0] }}, your {{ primary_goal.name }} is {{ primary_goal.progress_percent }}% funded. Keep building momentum."
         {% elif summary.transaction_count > 0 %}
-            "{{ current_user.name }}, you've recorded £{{ "%.2f" | format(summary.total_expenses) }} in expenses so far. Keep tracking to unlock spending insights."
+            "You've recorded £{{ "%.2f" | format(summary.total_expenses) }} in expenses so far. Keep tracking to unlock spending insights."
         {% else %}
-            "Welcome, {{ current_user.name }}. Start by uploading a bank statement or adding your first transaction."
+            "Welcome. Start by uploading a bank statement or adding your first transaction."
         {% endif %}
     </p>
 </div>
@@ -58,14 +57,14 @@
 
 <!-- Primary Goal -->
 {% if primary_goal %}
-<div class="section-label">Primary objective</div>
+<div class="section-label">Top goal</div>
 <div class="glass-card" style="margin-bottom: 32px;">
     <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 16px;">
         <div>
-            <div style="font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.15em; color: var(--roman-gold); font-weight: 600; margin-bottom: 4px;">
-                {% if primary_goal.type == "savings_target" %}Savings Target
-                {% elif primary_goal.type == "spending_allocation" %}Spending Allocation
-                {% else %}Accumulation{% endif %}
+            <div style="font-size: 0.65rem; color: var(--roman-gold); font-weight: 500; margin-bottom: 4px;">
+                {% if primary_goal.type == "savings_target" %}Saving toward a target
+                {% elif primary_goal.type == "spending_allocation" %}Monthly spending budget
+                {% else %}Building over time{% endif %}
             </div>
             <div style="font-size: 1.1rem; color: var(--text-primary);">{{ primary_goal.name }}</div>
         </div>
@@ -95,26 +94,26 @@
 </div>
 {% endif %}
 
-<!-- If Nothing Changes -->
+<!-- If Nothing Changes — bare teaser, no card -->
 {% if primary_goal and primary_goal.target_amount and primary_goal.monthly_allocation %}
-<div class="glass-card" style="margin-bottom: 32px; background: rgba(255,255,255,0.01);">
-    <div style="font-size: 0.75rem; color: var(--text-tertiary); font-style: italic;">
+<div style="margin-bottom: 32px;">
+    <span style="font-size: 0.75rem; color: var(--text-tertiary); font-style: italic;">
         If nothing changes:
-        <a href="{{ url_for('pages.my_goals') }}" style="color: var(--roman-gold);">
-            open the simulator to explore what could change <span aria-hidden="true">→</span>
-        </a>
-    </div>
+    </span>
+    <a href="{{ url_for('pages.my_goals') }}" style="font-size: 0.75rem; color: var(--roman-gold); text-decoration: none; margin-left: 4px;">
+        open the simulator to see what changes <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18l6-6-6-6"/></svg>
+    </a>
 </div>
 {% endif %}
 
 <!-- Key Metrics -->
 <div class="grid-3" style="margin-bottom: 32px;">
     <div class="glass-card">
-        <div class="metric-label">Money In</div>
+        <div class="metric-label">Money in</div>
         <div class="metric-value md">£{{ "%.2f" | format(summary.total_income) }}</div>
     </div>
     <div class="glass-card">
-        <div class="metric-label">Money Out</div>
+        <div class="metric-label">Money out</div>
         <div class="metric-value md">£{{ "%.2f" | format(summary.total_expenses) }}</div>
     </div>
     <div class="glass-card">
@@ -124,7 +123,7 @@
 </div>
 
 <!-- Recent Activity -->
-<div class="section-label">Recent Activity</div>
+<div class="section-label">Recent activity</div>
 <div class="glass-card">
     {% if recent_transactions | length > 0 %}
         {% for t in recent_transactions %}
@@ -134,7 +133,7 @@
                 <div class="transaction-meta">{{ t.date }} · {{ t.category }}</div>
             </div>
             <div class="transaction-amount {{ t.type }}">
-                {% if t.type == "income" %}+{% else %}-{% endif %}£{{ "%.2f" | format(t.amount) }}
+                {% if t.type == "income" %}+£{{ "%.2f" | format(t.amount) }}{% else %}−£{{ "%.2f" | format(t.amount) }}{% endif %}
             </div>
         </div>
         {% endfor %}

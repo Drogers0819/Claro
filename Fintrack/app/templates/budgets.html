@@ -3,7 +3,6 @@
 
 {% block content %}
 <div class="page-header">
-    <div class="section-label">Spending Limits</div>
     <h1>Your budgets</h1>
     <p>{{ month_context.month_name }} {{ month_context.year }} · Day {{ month_context.day_of_month }} of {{ month_context.days_in_month }}</p>
 </div>
@@ -28,17 +27,17 @@
 {% if summary.budget_count > 0 %}
 <div class="grid-3" style="margin-bottom: 32px;">
     <div class="glass-card">
-        <div class="metric-label">Total Budgeted</div>
+        <div class="metric-label">Total budgeted</div>
         <div class="metric-value md">£{{ "%.2f" | format(summary.total_budgeted) }}</div>
     </div>
     <div class="glass-card">
-        <div class="metric-label">Total Spent</div>
+        <div class="metric-label">Total spent</div>
         <div class="metric-value md">£{{ "%.2f" | format(summary.total_spent) }}</div>
     </div>
     <div class="glass-card">
         <div class="metric-label">Remaining</div>
         <div class="metric-value md {% if summary.total_remaining >= 0 %}success{% else %}danger{% endif %}">
-            £{{ "%.2f" | format(summary.total_remaining) }}
+            {% if summary.total_remaining < 0 %}−£{{ "%.2f" | format(summary.total_remaining | abs) }}{% else %}£{{ "%.2f" | format(summary.total_remaining) }}{% endif %}
         </div>
     </div>
 </div>
@@ -119,8 +118,11 @@
         <!-- Actions -->
         <div style="display: flex; gap: 8px; margin-top: 12px; padding-top: 12px; border-top: 0.5px solid rgba(255,255,255,0.05);">
             <form action="{{ url_for('pages.delete_budget', budget_id=b.budget_id) }}" method="POST"
-                  onsubmit="return confirm('Remove this budget?')">
-                <button type="submit" class="btn-destructive">Remove</button>
+                  style="margin: 0;"
+                  data-confirm-title="Remove budget?"
+                  data-confirm-body="This will permanently remove the {{ b.category_name }} budget. You can always set a new one."
+                  data-confirm-label="Remove">
+                <button type="submit" class="btn-destructive btn-sm">Remove</button>
             </form>
         </div>
     </div>
@@ -128,16 +130,14 @@
 </div>
 
 {% else %}
-<div class="glass-card" style="margin-bottom: 32px;">
-    <div class="empty-state">
-        No budgets set. Create spending limits below to track your categories.
-    </div>
+<div class="empty-state" style="margin-bottom: 32px;">
+    No spending limits set yet. Pick a category below to get started.
 </div>
 {% endif %}
 
 <!-- Create budget form -->
 <div class="section-label">Add a budget</div>
-<div class="glass-card" style="max-width: 560px; margin-bottom: 32px;">
+<div style="max-width: 560px; margin-bottom: 32px;">
     <form method="POST" action="{{ url_for('pages.create_budget_page') }}">
         <div class="grid-2">
             <div class="form-group">
@@ -145,7 +145,7 @@
                 <select name="category_id" class="form-select" required>
                     <option value="">Select category</option>
                     {% for cat in available_categories %}
-                    <option value="{{ cat.id }}">{{ cat.icon }} {{ cat.name }}</option>
+                    <option value="{{ cat.id }}">{{ cat.name }}</option>
                     {% endfor %}
                 </select>
             </div>
@@ -154,7 +154,7 @@
                 <input type="number" name="monthly_limit" class="form-input" step="0.01" min="1" placeholder="e.g. 100" required>
             </div>
         </div>
-        <button type="submit" class="btn-primary">Set Budget</button>
+        <button type="submit" class="btn-primary">Set budget</button>
     </form>
 </div>
 

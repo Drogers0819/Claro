@@ -219,7 +219,7 @@ def identify_potential_savings(recurring_transactions):
                 "merchant": r["merchant"],
                 "monthly_cost": r["monthly_cost"],
                 "type": "expensive_subscription",
-                "message": f"{r['merchant']} costs £{r['monthly_cost']:.2f}/month — worth reviewing if you're getting full value.",
+                "message": f"{r['merchant']} costs £{r['monthly_cost']:.2f}/month. Worth reviewing if you're getting full value.",
                 "annual_saving": round(r["monthly_cost"] * 12, 2)
             })
 

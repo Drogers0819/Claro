@@ -1,16 +1,15 @@
 {% extends "base.html" %}
-{% block title %}Transactions — FinTrack{% endblock %}
+{% block title %}Transactions — Claro{% endblock %}
 
 {% block content %}
 <div class="page-header">
-    <div class="section-label">Financial Record</div>
-    <h1>Your Transactions</h1>
+    <h1>Your transactions</h1>
     <p>{{ transactions | length }} transaction{{ "s" if transactions | length != 1 else "" }} recorded</p>
 </div>
 
 <div style="margin-bottom: 24px;">
     <a href="{{ url_for('pages.add_transaction') }}" class="btn-secondary">
-        + Add Transaction
+        + Add transaction
     </a>
 </div>
 
@@ -21,13 +20,16 @@
             <div class="transaction-info">
                 <div class="transaction-description">{{ t.description }}</div>
                 <div class="transaction-meta">
-                    {{ t.date }} · {{ t.category }}{% if t.merchant %} · {{ t.merchant }}{% endif %}
+                    {{ t.date.strftime('%-d %b') }} · {{ t.category }}{% if t.merchant %} · {{ t.merchant }}{% endif %}
                 </div>
             </div>
             <div class="transaction-amount {{ t.type }}">
-                {% if t.type == "income" %}+{% else %}-{% endif %}£{{ "%.2f" | format(t.amount) }}
+                {% if t.type == "income" %}+£{{ "%.2f" | format(t.amount) }}{% else %}−£{{ "%.2f" | format(t.amount) }}{% endif %}
             </div>
-            <form action="{{ url_for('pages.delete_transaction', transaction_id=t.id) }}" method="POST" style="margin-left: 12px; margin: 0;" onsubmit="return confirm('Delete this transaction?')">
+            <form action="{{ url_for('pages.delete_transaction', transaction_id=t.id) }}" method="POST" style="margin: 0;"
+                  data-confirm-title="Delete transaction?"
+                  data-confirm-body="This can't be undone. You can re-upload your statement if you need to recover it."
+                  data-confirm-label="Delete">
                 <button type="submit" class="transaction-delete" aria-label="Delete transaction">
                     <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
                 </button>
@@ -36,7 +38,7 @@
         {% endfor %}
     {% else %}
         <div class="empty-state">
-            No transactions yet. <a href="{{ url_for('pages.add_transaction') }}">Add your first one.</a>
+            No transactions yet. <a href="{{ url_for('pages.upload_statement') }}">Upload a statement</a> or <a href="{{ url_for('pages.add_transaction') }}">add one manually</a> to get started.
         </div>
     {% endif %}
 </div>

@@ -106,7 +106,7 @@ def _my_money_insight(data):
     if comp_status == "spending_high" and diff > 0:
         whisper += f" That's £{diff:.2f} more than you'd normally spend by this point."
     elif comp_status == "spending_low" and diff < 0:
-        whisper += f" That's £{abs(diff):.2f} less than usual — you're under your average pace."
+        whisper += f" That's £{abs(diff):.2f} less than usual, so you're under your average pace."
 
     return {"whisper": whisper, "page": "my_money"}
 
@@ -123,7 +123,7 @@ def _my_goals_insight(data):
 
     if not active:
         return {
-            "whisper": "You haven't set any goals yet. What are you saving for — a holiday, a deposit, an emergency fund? Pick one and we'll show you when you'll get there.",
+            "whisper": "You haven't set any goals yet. What are you saving for? A holiday, a deposit, an emergency fund? Pick one and we'll show you when you'll get there.",
             "page": "my_goals"
         }
 
@@ -151,7 +151,7 @@ def _my_goals_insight(data):
     # Conflicts
     conflicts = waterfall.get("conflicts", [])
     if conflicts:
-        parts.append(f"Your goals add up to more than you have available — {len(conflicts)} goal{'s' if len(conflicts) != 1 else ''} won't get the full amount.")
+        parts.append(f"Your goals add up to more than you have available. {len(conflicts)} goal{'s' if len(conflicts) != 1 else ''} won't get the full amount.")
 
     # Unallocated surplus
     unallocated = waterfall.get("unallocated", 0)
@@ -205,7 +205,7 @@ def _my_budgets_insight(data):
         daily = b.get("daily_remaining", 0)
         whisper = f"Your {name} budget has £{left:.2f} left"
         if daily > 0 and days_remaining > 0:
-            whisper += f" — about £{daily:.2f} a day for {days_remaining} days."
+            whisper += f", about £{daily:.2f} a day for {days_remaining} days."
         else:
             whisper += "."
 
@@ -220,7 +220,7 @@ def _my_budgets_insight(data):
             left = tightest.get("remaining", 0)
             daily = tightest.get("daily_remaining", 0)
             if daily > 0 and days_remaining > 0:
-                whisper += f" Your tightest is {name} — £{left:.2f} left, about £{daily:.2f} a day."
+                whisper += f" Your tightest is {name}: £{left:.2f} left, about £{daily:.2f} a day."
 
     return {"whisper": whisper, "page": "my_budgets"}
 

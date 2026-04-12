@@ -2,21 +2,31 @@
 {% block title %}Upload Statement — Claro{% endblock %}
 
 {% block content %}
+<a href="{{ url_for('pages.my_money') }}" style="display: inline-flex; align-items: center; gap: 6px; font-size: 0.75rem; color: var(--text-tertiary); text-decoration: none; margin-bottom: 16px;">
+    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+    Money
+</a>
 <div class="page-header">
     <h1>Upload bank statement</h1>
     <p>We'll detect your bank automatically and categorise your transactions.</p>
 </div>
 
-<div class="glass-card" style="max-width: 560px;">
-    <form method="POST" action="{{ url_for('pages.upload_statement') }}" enctype="multipart/form-data">
+<div style="max-width: 560px;">
+    <form method="POST" action="{{ url_for('pages.upload_statement') }}" enctype="multipart/form-data" novalidate>
         <div class="form-group">
             <label class="form-label">Bank statement (CSV)</label>
-            <input type="file" name="file" accept=".csv" class="form-input" required
-                   style="padding: 12px; cursor: pointer;">
+            <input type="file" name="file" accept=".csv" id="csv-upload" class="file-upload-input" required>
+            <label for="csv-upload" class="file-upload-zone" id="csv-upload-zone">
+                <svg class="file-upload-icon" xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/>
+                </svg>
+                <span class="file-upload-label-text">Click to choose your CSV file</span>
+                <span class="file-upload-filename" id="csv-filename">No file chosen</span>
+            </label>
         </div>
 
         <div style="margin-bottom: 24px; padding: 16px; border-radius: 12px; background: rgba(255,255,255,0.02); border: 0.5px solid rgba(255,255,255,0.05);">
-            <p class="metric-label" style="margin-bottom: 12px;">How to export your CSV</p>
+            <p style="font-size: 0.72rem; color: var(--text-tertiary); margin-bottom: 12px;">How to export your CSV</p>
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
                 <div style="font-size: 0.75rem;">
                     <div style="color: var(--text-primary); margin-bottom: 2px;">Monzo</div>
@@ -48,7 +58,7 @@
             </p>
         </div>
 
-        <button type="submit" class="btn-primary">Upload & Import</button>
+        <button type="submit" class="btn-primary">Upload & import</button>
     </form>
 </div>
 
@@ -64,9 +74,9 @@
         <div>
             <div style="font-size: 0.95rem; color: var(--text-primary); font-weight: 500;">
                 {% if result.bank_detected and result.bank_detected != "unknown" %}
-                    {{ result.created }} transactions from {{ result.bank_detected | capitalize }} — analysed.
+                    {{ result.created }} transactions from {{ result.bank_detected | capitalize }}: analysed.
                 {% else %}
-                    {{ result.created }} transactions imported — here's what Claro found.
+                    {{ result.created }} transactions imported. Here's what Claro found.
                 {% endif %}
             </div>
             {% if result.date_range %}
@@ -83,7 +93,7 @@
             <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--success)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0;"><polyline points="20 6 9 17 4 12"/></svg>
             <span style="font-size: 0.82rem; color: var(--text-secondary);">
                 <span style="color: var(--text-primary); font-weight: 500;">{{ result.auto_categorised }} transactions</span> auto-categorised
-                {% if result.auto_categorised > 0 %} — no manual sorting needed{% endif %}
+                {% if result.auto_categorised > 0 %}, no manual sorting needed{% endif %}
             </span>
         </div>
 
@@ -92,7 +102,7 @@
         <div style="display: flex; align-items: center; gap: 12px; padding: 12px 14px; border-radius: 10px; background: var(--roman-gold-dim); border: 0.5px solid rgba(197,163,93,0.2);">
             <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--roman-gold)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0;"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>
             <span style="font-size: 0.82rem; color: var(--text-secondary);">
-                <span style="color: var(--text-primary); font-weight: 500;">{{ result.recurring_count }} recurring payment{{ "s" if result.recurring_count != 1 else "" }}</span> detected — £{{ "%.2f" | format(result.recurring_total) }}/month
+                <span style="color: var(--text-primary); font-weight: 500;">{{ result.recurring_count }} recurring payment{{ "s" if result.recurring_count != 1 else "" }}</span> detected at £{{ "%.2f" | format(result.recurring_total) }}/month
             </span>
         </div>
         {% endif %}
@@ -137,4 +147,39 @@
     {% endif %}
 </div>
 {% endif %}
+
+<script>
+(function () {
+    var input = document.getElementById('csv-upload');
+    var zone  = document.getElementById('csv-upload-zone');
+    var label = document.getElementById('csv-filename');
+    if (!input) return;
+
+    function setFile(file) {
+        if (!file || !file.name.toLowerCase().endsWith('.csv')) return;
+        label.textContent = file.name;
+        zone.classList.add('has-file');
+    }
+
+    input.addEventListener('change', function () {
+        if (this.files.length) setFile(this.files[0]);
+        else { label.textContent = 'No file chosen'; zone.classList.remove('has-file'); }
+    });
+
+    zone.addEventListener('dragover',  function (e) { e.preventDefault(); zone.classList.add('drag-over'); });
+    zone.addEventListener('dragleave', function ()  { zone.classList.remove('drag-over'); });
+    zone.addEventListener('drop', function (e) {
+        e.preventDefault();
+        zone.classList.remove('drag-over');
+        var file = e.dataTransfer.files[0];
+        if (file) {
+            // Assign to the input for form submission
+            var dt = new DataTransfer();
+            dt.items.add(file);
+            input.files = dt.files;
+            setFile(file);
+        }
+    });
+})();
+</script>
 {% endblock %}

@@ -438,13 +438,13 @@ def overview():
     if primary_projection:
         trends = data.get("trends", [])
         if spending_direction == "spending_high" and spending_diff and spending_diff > 0:
-            timeline_note = f"Your current spending pace is pushing this date back."
+            timeline_note = f"You're spending a little more than usual. Ease off and you could pull this date forward."
         elif spending_direction == "spending_low" and spending_diff and spending_diff > 0:
-            timeline_note = f"You're under your usual pace — this could arrive sooner."
+            timeline_note = f"You're spending less than usual. At this rate you could hit this goal ahead of schedule."
         elif trends:
             top = trends[0]
             if top["direction"] == "up" and top["change_amount"] > 20:
-                timeline_note = f"Your {top['category'].lower()} spend is up this month — worth keeping an eye on."
+                timeline_note = f"Your {top['category'].lower()} spend is up this month. Worth a look."
 
     return render_template("overview.html",
         greeting=greeting,
@@ -503,13 +503,16 @@ def my_money():
         user_id=current_user.id
     ).order_by(Transaction.date.desc()).all()
 
+    all_categories = Category.query.order_by(Category.name).all()
+
     return render_template("my_money.html",
         whisper=whisper_result["whisper"],
         month_name=month_name,
         total_expenses=total_expenses,
         categories=categories,
         trends=data["trends"],
-        transactions=[t.to_dict() for t in all_transactions]
+        transactions=[t.to_dict() for t in all_transactions],
+        all_categories=all_categories
     )
 
 
@@ -912,6 +915,52 @@ def delete_goal(goal_id):
     return redirect(url_for("pages.my_goals"))
 
 
+@page_bp.route("/goal/<int:goal_id>/edit", methods=["GET", "POST"])
+@login_required
+def edit_goal(goal_id):
+    goal = Goal.query.filter_by(id=goal_id, user_id=current_user.id).first_or_404()
+
+    if request.method == "POST":
+        name = request.form.get("name", "").strip()
+        if not name:
+            flash("Goal name is required", "error")
+            return redirect(url_for("pages.edit_goal", goal_id=goal_id))
+
+        goal.name = name
+
+        val = request.form.get("target_amount", "").strip()
+        goal.target_amount = round(float(val), 2) if val else None
+
+        val = request.form.get("current_amount", "").strip()
+        if val:
+            try:
+                goal.current_amount = round(float(val), 2)
+            except ValueError:
+                pass
+
+        val = request.form.get("monthly_allocation", "").strip()
+        goal.monthly_allocation = round(float(val), 2) if val else None
+
+        val = request.form.get("deadline", "").strip()
+        if val:
+            try:
+                goal.deadline = date.fromisoformat(val)
+            except ValueError:
+                goal.deadline = None
+        else:
+            goal.deadline = None
+
+        priority = request.form.get("priority_rank", type=int)
+        if priority and priority >= 1:
+            goal.priority_rank = priority
+
+        db.session.commit()
+        flash("Goal updated", "success")
+        return redirect(url_for("pages.my_goals"))
+
+    return render_template("edit_goal.html", goal=goal)
+
+
 @page_bp.route("/simulator/goal/<int:goal_id>")
 @login_required
 def goal_detail(goal_id):
@@ -1114,7 +1163,7 @@ def analytics():
             change = current_total
             pct = 100.0
         trends.append({
-            "category": r.name, "icon": r.icon,
+            "category": r.name, "icon": r.icon, "colour": r.colour,
             "current_month": round(current_total, 2),
             "previous_month": round(prev_total, 2),
             "change_amount": round(change, 2),

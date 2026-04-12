@@ -2,6 +2,10 @@
 {% block title %}Settings — Claro{% endblock %}
 
 {% block content %}
+<a href="{{ url_for('pages.overview') }}" style="display: inline-flex; align-items: center; gap: 6px; font-size: 0.75rem; color: var(--text-tertiary); text-decoration: none; margin-bottom: 16px;">
+    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+    Overview
+</a>
 <div class="page-header">
     <h1>Settings</h1>
 </div>
@@ -18,7 +22,7 @@
 <div class="glass-card" style="margin-bottom: 12px;">
     <button class="settings-toggle" onclick="toggleSettings('profile')" aria-expanded="{% if current_user.factfind_completed %}true{% else %}false{% endif %}">
         <div style="display: flex; align-items: center; gap: 10px;">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="opacity: 0.5;"><path d="M20 7H4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="2"/><path d="M6 12h.01M18 12h.01"/></svg>
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="opacity: 0.5;"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>
             <span style="font-size: 0.9rem; color: var(--text-primary);">Financial profile</span>
         </div>
         <svg id="chevron-profile" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="opacity: 0.4; transition: transform 0.2s; {% if current_user.factfind_completed %}transform: rotate(90deg);{% endif %}"><path d="M9 18l6-6-6-6"/></svg>
@@ -32,19 +36,19 @@
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
             <div>
                 <div style="font-size: 0.7rem; color: var(--text-tertiary);">Take-home pay</div>
-                <div style="font-size: 0.9rem;">£{{ "%.2f" | format(current_user.monthly_income | float) }}/month</div>
+                <div style="font-size: 0.9rem;">£{{ "{:,.0f}".format(current_user.monthly_income | float) }}/month</div>
             </div>
             <div>
                 <div style="font-size: 0.7rem; color: var(--text-tertiary);">Rent/mortgage</div>
-                <div style="font-size: 0.9rem;">£{{ "%.2f" | format(current_user.rent_amount | float) }}/month</div>
+                <div style="font-size: 0.9rem;">£{{ "{:,.0f}".format(current_user.rent_amount | float) }}/month</div>
             </div>
             <div>
                 <div style="font-size: 0.7rem; color: var(--text-tertiary);">Bills</div>
-                <div style="font-size: 0.9rem;">£{{ "%.2f" | format(current_user.bills_amount | float) }}/month</div>
+                <div style="font-size: 0.9rem;">£{{ "{:,.0f}".format(current_user.bills_amount | float) }}/month</div>
             </div>
             <div>
                 <div style="font-size: 0.7rem; color: var(--text-tertiary);">Available for goals</div>
-                <div style="font-size: 0.9rem; color: var(--roman-gold);">£{{ "%.2f" | format(current_user.monthly_surplus) }}/month</div>
+                <div style="font-size: 0.9rem; color: var(--roman-gold);">£{{ "{:,.0f}".format(current_user.monthly_surplus) }}/month</div>
             </div>
         </div>
         {% else %}
@@ -121,7 +125,7 @@
             <span style="font-size: 0.85rem;">{{ current_user.created_at.strftime("%B %Y") if current_user.created_at else "—" }}</span>
         </div>
 
-        <div class="metric-label" style="margin-bottom: 12px; font-size: 0.7rem;">Change email</div>
+        <div style="font-size: 0.72rem; color: var(--text-tertiary); margin-bottom: 12px;">Change email</div>
         <form method="POST" action="{{ url_for('pages.update_account') }}" style="margin-bottom: 24px;">
             <input type="hidden" name="form_type" value="change_email">
             <div class="form-group" style="margin-bottom: 10px;">
@@ -132,7 +136,10 @@
                 <label class="form-label">Confirm your password</label>
                 <div style="position: relative;">
                     <input type="password" name="confirm_password_email" id="confirmPasswordEmail" class="form-input" placeholder="Your current password" required style="padding-right: 44px;">
-                    <button type="button" class="password-toggle" onclick="togglePassword('confirmPasswordEmail', this)" aria-label="Show password"></button>
+                    <button type="button" class="password-toggle" onclick="togglePassword('confirmPasswordEmail', this)" aria-label="Show password">
+                        <svg class="eye-on" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                        <svg class="eye-off" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="display:none;"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+                    </button>
                 </div>
             </div>
             <button type="submit" class="btn-primary btn-sm">Update email</button>
@@ -150,28 +157,37 @@
         <svg id="chevron-security" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="opacity: 0.4; transition: transform 0.2s;"><path d="M9 18l6-6-6-6"/></svg>
     </button>
     <div id="panel-security" hidden style="padding-top: 16px; border-top: 0.5px solid rgba(255,255,255,0.05); margin-top: 12px;">
-        <div class="metric-label" style="margin-bottom: 12px; font-size: 0.7rem;">Change password</div>
+        <div style="font-size: 0.72rem; color: var(--text-tertiary); margin-bottom: 12px;">Change password</div>
         <form method="POST" action="{{ url_for('pages.update_account') }}">
             <input type="hidden" name="form_type" value="change_password">
             <div class="form-group" style="margin-bottom: 10px;">
                 <label class="form-label">Current password</label>
                 <div style="position: relative;">
                     <input type="password" name="current_password" id="currentPassword" class="form-input" placeholder="Your current password" required style="padding-right: 44px;">
-                    <button type="button" class="password-toggle" onclick="togglePassword('currentPassword', this)" aria-label="Show password"></button>
+                    <button type="button" class="password-toggle" onclick="togglePassword('currentPassword', this)" aria-label="Show password">
+                        <svg class="eye-on" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                        <svg class="eye-off" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="display:none;"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+                    </button>
                 </div>
             </div>
             <div class="form-group" style="margin-bottom: 10px;">
                 <label class="form-label">New password</label>
                 <div style="position: relative;">
                     <input type="password" name="new_password" id="newPassword" class="form-input" placeholder="At least 8 characters" required style="padding-right: 44px;">
-                    <button type="button" class="password-toggle" onclick="togglePassword('newPassword', this)" aria-label="Show password"></button>
+                    <button type="button" class="password-toggle" onclick="togglePassword('newPassword', this)" aria-label="Show password">
+                        <svg class="eye-on" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                        <svg class="eye-off" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="display:none;"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+                    </button>
                 </div>
             </div>
             <div class="form-group" style="margin-bottom: 16px;">
                 <label class="form-label">Confirm new password</label>
                 <div style="position: relative;">
                     <input type="password" name="confirm_password" id="confirmPassword" class="form-input" placeholder="Repeat new password" required style="padding-right: 44px;">
-                    <button type="button" class="password-toggle" onclick="togglePassword('confirmPassword', this)" aria-label="Show password"></button>
+                    <button type="button" class="password-toggle" onclick="togglePassword('confirmPassword', this)" aria-label="Show password">
+                        <svg class="eye-on" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                        <svg class="eye-off" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="display:none;"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+                    </button>
                 </div>
             </div>
             <button type="submit" class="btn-primary btn-sm">Update password</button>

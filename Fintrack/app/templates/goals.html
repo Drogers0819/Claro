@@ -3,14 +3,13 @@
 
 {% block content %}
 <div class="page-header">
-    <div class="section-label">Financial Objectives</div>
-    <h1>Your Goals</h1>
+    <h1>Your goals</h1>
     <p>{{ goals | length }} active goal{{ "s" if goals | length != 1 else "" }}</p>
 </div>
 
 <div style="margin-bottom: 24px;">
     <a href="{{ url_for('pages.add_goal') }}" class="btn-secondary">
-        + Add Goal
+        + Add goal
     </a>
 </div>
 
@@ -20,10 +19,10 @@
     <div class="glass-card">
         <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 16px;">
             <div>
-                <div style="font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.15em; color: var(--roman-gold); font-weight: 600; margin-bottom: 4px;">
-                    {% if g.type == "savings_target" %}Savings Target
-                    {% elif g.type == "spending_allocation" %}Spending Allocation
-                    {% else %}Accumulation{% endif %}
+                <div style="font-size: 0.65rem; color: var(--roman-gold); font-weight: 500; margin-bottom: 4px;">
+                    {% if g.type == "savings_target" %}Saving toward a target
+                    {% elif g.type == "spending_allocation" %}Monthly spending budget
+                    {% else %}Building over time{% endif %}
                 </div>
                 <div style="font-size: 1.1rem; color: var(--text-primary);">{{ g.name }}</div>
             </div>
@@ -56,7 +55,7 @@
             {% if g.monthly_allocation %}
             <div>
                 <div class="metric-label">Monthly</div>
-                <div class="serif" style="font-size: 1rem;">£{{ "%.2f" | format(g.monthly_allocation) }}</div>
+                <div style="font-size: 1rem; font-variant-numeric: tabular-nums;">£{{ "%.2f" | format(g.monthly_allocation) }}</div>
             </div>
             {% endif %}
             {% if g.deadline %}
@@ -68,18 +67,21 @@
         </div>
 
         <div style="display: flex; gap: 8px; margin-top: 16px;">
-            <form action="{{ url_for('pages.delete_goal', goal_id=g.id) }}" method="POST" onsubmit="return confirm('Delete this goal?')">
-                <button type="submit" class="btn-destructive">Delete</button>
+            <a href="{{ url_for('pages.edit_goal', goal_id=g.id) }}" class="btn-secondary btn-sm">Edit</a>
+            <form action="{{ url_for('pages.delete_goal', goal_id=g.id) }}" method="POST"
+                  style="margin: 0;"
+                  data-confirm-title="Delete goal?"
+                  data-confirm-body="This will permanently remove {{ g.name }}. Your saved amount won't be affected."
+                  data-confirm-label="Delete">
+                <button type="submit" class="btn-destructive btn-sm">Delete</button>
             </form>
         </div>
     </div>
     {% endfor %}
 </div>
 {% else %}
-<div class="glass-card">
-    <div class="empty-state">
-        No goals yet. <a href="{{ url_for('pages.add_goal') }}">Set your first financial goal.</a>
-    </div>
+<div class="empty-state">
+    What are you working toward? A house deposit, a holiday, an emergency fund? <a href="{{ url_for('pages.add_goal') }}">Set your first goal.</a>
 </div>
 {% endif %}
 {% endblock %}

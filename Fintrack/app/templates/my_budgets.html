@@ -14,83 +14,113 @@
 </a>
 {% endif %}
 
-<!-- 1 · Your budgets — current status -->
-{% if budget_statuses | length > 0 %}
-<div style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 24px;">
-    {% for b in budget_statuses %}
-    <div class="glass-card">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-            <span style="font-size: 1rem;">{{ b.category_icon }} {{ b.category_name }}</span>
-            <span class="badge {% if b.status == 'exceeded' %}badge-danger{% elif b.status == 'warning' %}badge-warning{% else %}badge-success{% endif %}">
-                {% if b.status == 'exceeded' %}over budget
-                {% elif b.status == 'warning' %}close to limit
-                {% elif b.status == 'ahead_of_pace' %}slightly ahead
-                {% else %}on track{% endif %}
-            </span>
-        </div>
-
-        <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 6px;">
-            <span class="metric-value sm">£{{ "%.2f" | format(b.spent) }}</span>
-            <span style="font-size: 0.8rem; color: var(--text-tertiary);">of £{{ "%.2f" | format(b.monthly_limit) }}</span>
-        </div>
-
-        <div class="progress-track" style="position: relative; margin-bottom: 6px;">
-            <div style="position: absolute; left: {{ month_progress }}%; top: -1px; width: 1px; height: 7px; background: var(--text-tertiary); z-index: 2;"></div>
-            <div class="progress-fill {% if b.status == 'exceeded' %}danger{% elif b.status == 'warning' %}warning{% endif %}"
-                 style="width: {{ [b.percent_used, 100] | min }}%; background: {{ b.category_colour }}; opacity: {% if b.status == 'exceeded' %}1{% else %}0.8{% endif %};"></div>
-        </div>
-
-        <div style="font-size: 0.75rem; color: var(--text-secondary); font-style: italic;">
-            {% if b.status == 'exceeded' %}
-                £{{ "%.2f" | format(b.remaining | abs) }} over budget
-            {% elif b.daily_remaining > 0 %}
-                £{{ "%.2f" | format(b.daily_remaining) }}/day for {{ days_remaining }} days
-            {% endif %}
-        </div>
-
-        <div style="margin-top: 8px;">
-            <form action="{{ url_for('pages.delete_budget', budget_id=b.budget_id) }}" method="POST" style="margin: 0;">
-                <button type="submit" class="transaction-delete" aria-label="Remove budget">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
-                </button>
-            </form>
-        </div>
-    </div>
-    {% endfor %}
-</div>
-{% endif %}
-
-<!-- 2 · Potential savings — motivation before action -->
+<!-- Worth a Look — always at top when data exists, not pushed down by growing list -->
 {% if savings.count > 0 %}
 <div class="gold-card" style="margin-bottom: 24px;">
-    <span class="metric-label" style="color: var(--roman-gold);">Potential savings spotted</span>
-    <p style="font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 12px;">
-        Up to <span style="color: var(--roman-gold); font-weight: 600;">£{{ "%.2f" | format(savings.total_potential_annual_saving) }}/year</span>
-    </p>
+    <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 12px;">
+        <span class="ai-pulse"></span>
+        <span class="metric-label" style="margin-bottom: 0; color: var(--roman-gold);">Worth a look</span>
+    </div>
+    <div style="display: flex; align-items: baseline; gap: 6px; margin-bottom: 4px;">
+        <div class="metric-value sm gold">£{{ "%.0f" | format(savings.total_potential_annual_saving) }}</div>
+        <span style="font-size: 0.75rem; color: var(--text-tertiary);">/ year</span>
+    </div>
+    <div style="font-size: 0.75rem; color: var(--text-tertiary); margin-bottom: 16px;">potential saving on your subscriptions each year</div>
     {% for s in savings.opportunities[:3] %}
-    <div style="font-size: 0.8rem; color: var(--text-secondary); padding: 6px 0;
-        {% if not loop.last %}border-bottom: 0.5px solid rgba(255,255,255,0.05);{% endif %}">
-        {{ s.message }}
+    <div style="display: flex; justify-content: space-between; align-items: center; padding: 8px 0;
+        {% if not loop.last %}border-bottom: 0.5px solid rgba(255,255,255,0.06);{% endif %}">
+        <span style="font-size: 0.85rem; color: var(--text-primary); text-transform: capitalize;">{{ s.merchant }}</span>
+        <span style="font-size: 0.8rem; color: var(--text-secondary);">£{{ "%.0f" | format(s.monthly_cost) }}/mo</span>
     </div>
     {% endfor %}
 </div>
 {% endif %}
 
-<!-- 3 · Set a spending limit — primary action -->
-<div class="glass-card" style="margin-bottom: 24px;">
-    {% if budget_statuses | length == 0 %}
-    <div class="empty-state" style="padding: 0 0 16px; text-align: left; color: var(--text-secondary); font-size: 0.85rem;">
-        No spending limits set yet. Pick a category and set a monthly cap to stay on track.
+<!-- Your budgets -->
+{% if budget_statuses | length > 0 %}
+<div class="glass-card" style="padding: 0; overflow: hidden; margin-bottom: 28px;">
+    {% for b in budget_statuses %}
+    <div class="budget-row {% if b.status == 'exceeded' %}budget-row-danger{% endif %}"
+         style="{% if not loop.last %}border-bottom: 0.5px solid var(--glass-border);{% endif %}">
+
+        <!-- Line 1: name [left] · spent/limit + edit + delete [right] -->
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+            <span style="font-size: 0.875rem; color: var(--text-primary); font-weight: 500;">{{ b.category_name }}</span>
+            <div style="display: flex; align-items: center; gap: 6px;">
+                <!-- Spent / limit -->
+                <span style="font-size: 0.8rem; color: {% if b.status == 'exceeded' %}var(--danger){% else %}var(--text-secondary){% endif %};">
+                    £{{ "{:,.0f}".format(b.spent) }}
+                </span>
+                <span id="limit-display-{{ b.budget_id }}" style="font-size: 0.8rem; color: var(--text-tertiary);">/ £{{ "{:,.0f}".format(b.monthly_limit) }}</span>
+                <span id="limit-edit-{{ b.budget_id }}" style="display: none; align-items: center; gap: 4px;">
+                    <input type="number" id="limit-input-{{ b.budget_id }}"
+                           step="1" min="1"
+                           style="width: 64px; padding: 2px 6px; font-size: 0.8rem; background: var(--glass); border: 0.5px solid var(--glass-border); border-radius: 6px; color: var(--text-primary); font-family: var(--font-sans);"
+                           onkeydown="if(event.key==='Escape')cancelBudgetEdit({{ b.budget_id }});if(event.key==='Enter')saveBudgetLimit({{ b.budget_id }})">
+                    <button type="button" class="btn-primary btn-sm" style="padding: 2px 8px; font-size: 0.7rem;"
+                            onclick="saveBudgetLimit({{ b.budget_id }})">Save</button>
+                    <button type="button" class="transaction-delete" style="opacity: 1;"
+                            onclick="cancelBudgetEdit({{ b.budget_id }})" aria-label="Cancel">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                    </button>
+                </span>
+                <!-- Edit limit pencil -->
+                <button type="button" class="transaction-delete" style="padding: 2px;"
+                        onclick="startBudgetEdit({{ b.budget_id }}, {{ b.monthly_limit }})"
+                        aria-label="Edit limit">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                </button>
+                <!-- Delete -->
+                <form action="{{ url_for('pages.delete_budget', budget_id=b.budget_id) }}" method="POST"
+                      style="margin: 0; display: flex;"
+                      data-confirm-title="Remove budget?"
+                      data-confirm-body="This will permanently remove the {{ b.category_name }} budget. You can always set a new one."
+                      data-confirm-label="Remove">
+                    <button type="submit" class="transaction-delete" aria-label="Remove budget">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Line 2: progress bar with pace marker -->
+        <div class="progress-track" style="position: relative; height: 4px; margin-bottom: {% if b.status == 'exceeded' or (b.status == 'warning') or b.daily_remaining > 0 %}6px{% else %}0{% endif %};">
+            <div style="position: absolute; left: {{ month_progress }}%; top: -2px; width: 1.5px; height: 8px; background: var(--text-secondary); z-index: 2; border-radius: 1px;"></div>
+            <div class="progress-fill"
+                 style="width: {{ [b.percent_used, 100] | min }}%;
+                        background: {% if b.status == 'exceeded' %}var(--danger){% elif b.status == 'warning' %}var(--warning){% else %}{{ b.category_colour }}{% endif %};
+                        opacity: {% if b.status == 'exceeded' %}1{% else %}0.8{% endif %};"></div>
+        </div>
+
+        <!-- Line 3: status text — only when it adds information -->
+        {% if b.status == 'exceeded' %}
+        <div style="font-size: 0.72rem; color: var(--danger);">£{{ "{:,.0f}".format(b.remaining | abs) }} over budget</div>
+        {% elif b.status == 'warning' %}
+        <div style="font-size: 0.72rem; color: var(--warning);">Close to limit · £{{ "%.2f" | format(b.daily_remaining) }}/day left</div>
+        {% elif b.daily_remaining > 0 %}
+        <div style="font-size: 0.72rem; color: var(--text-tertiary);">£{{ "%.2f" | format(b.daily_remaining) }}/day for {{ days_remaining }} days</div>
+        {% endif %}
+
     </div>
+    {% endfor %}
+</div>
+{% endif %}
+
+<!-- Set a spending limit -->
+<div style="{% if budget_statuses | length > 0 %}padding-top: 4px; border-top: 0.5px solid var(--glass-border);{% endif %}">
+    {% if budget_statuses | length == 0 %}
+    <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 16px;">
+        No spending limits set yet. Pick a category and set a monthly cap to stay on track.
+    </p>
     {% endif %}
-    <div class="metric-label" style="margin-bottom: 16px;">Set a spending limit</div>
+    <div style="font-size: 0.72rem; color: var(--text-tertiary); margin-bottom: 16px; {% if budget_statuses | length > 0 %}margin-top: 20px;{% endif %}">Set a spending limit</div>
     <form method="POST" action="{{ url_for('pages.create_budget_page') }}">
         <div class="grid-2">
             <div class="form-group" style="margin-bottom: 0;">
                 <select name="category_id" class="form-select" required>
                     <option value="">Choose category</option>
                     {% for cat in available_categories %}
-                    <option value="{{ cat.id }}">{{ cat.icon }} {{ cat.name }}</option>
+                    <option value="{{ cat.id }}">{{ cat.name }}</option>
                     {% endfor %}
                 </select>
             </div>
@@ -102,26 +132,40 @@
             <button type="submit" class="btn-primary btn-sm">Set budget</button>
         </div>
     </form>
+    <p style="font-size: 0.72rem; color: var(--text-tertiary); margin-top: 16px; margin-bottom: 0;">
+        See your regular payments under <a href="{{ url_for('pages.recurring') }}" style="color: var(--roman-gold); text-decoration: none;">Recurring payments</a>
+    </p>
 </div>
 
-<!-- 4 · Regular payments — context -->
-{% if recurring.count > 0 %}
-<div class="glass-card">
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
-        <span class="metric-label" style="margin-bottom: 0;">Regular payments</span>
-        <span class="serif" style="font-size: 1rem;">£{{ "%.2f" | format(recurring.total_monthly_cost) }}/mo</span>
-    </div>
+{% endblock %}
 
-    {% for r in recurring.recurring[:8] %}
-    <div style="display: flex; justify-content: space-between; align-items: center; padding: 6px 0;
-        {% if not loop.last %}border-bottom: 0.5px solid rgba(255,255,255,0.05);{% endif %}">
-        <div>
-            <span style="font-size: 0.85rem; text-transform: capitalize;">{{ r.merchant }}</span>
-            <span style="font-size: 0.65rem; color: var(--text-tertiary); margin-left: 6px;">{{ r.frequency_label }}</span>
-        </div>
-        <span style="font-size: 0.85rem;">£{{ "%.2f" | format(r.avg_amount) }}</span>
-    </div>
-    {% endfor %}
-</div>
-{% endif %}
+{% block scripts %}
+<script>
+function startBudgetEdit(id, current) {
+    document.getElementById('limit-display-' + id).style.display = 'none';
+    var editEl = document.getElementById('limit-edit-' + id);
+    editEl.style.display = 'flex';
+    var input = document.getElementById('limit-input-' + id);
+    input.value = Math.round(current);
+    input.focus();
+    input.select();
+}
+
+function cancelBudgetEdit(id) {
+    document.getElementById('limit-display-' + id).style.display = '';
+    document.getElementById('limit-edit-' + id).style.display = 'none';
+}
+
+function saveBudgetLimit(id) {
+    var input = document.getElementById('limit-input-' + id);
+    var newLimit = parseFloat(input.value);
+    if (!newLimit || newLimit <= 0) return;
+    fetch('/api/budgets/' + id, {
+        method: 'PUT',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({monthly_limit: newLimit})
+    }).then(function() { window.location.reload(); })
+      .catch(function() { window.location.reload(); });
+}
+</script>
 {% endblock %}

@@ -85,7 +85,7 @@ def _detect_large_transactions(transactions, current_date):
                 "amount": round(amount, 2),
                 "average_amount": round(avg, 2),
                 "multiplier": multiplier,
-                "message": f"£{amount:.2f} at {t.get('description', 'unknown')} — that's {multiplier}x your average transaction of £{avg:.2f}."
+                "message": f"£{amount:.2f} at {t.get('description', 'unknown')}: that's {multiplier}x your average transaction of £{avg:.2f}."
             })
 
     return anomalies
@@ -157,7 +157,7 @@ def _detect_category_spikes(transactions, current_date):
                 "historical_average": round(hist_avg, 2),
                 "deviation_percent": round(deviation, 1),
                 "date": current_date.isoformat(),
-                "message": f"Your {category} spending is on track to hit £{projected:.2f} this month — {deviation:.0f}% above your average of £{hist_avg:.2f}."
+                "message": f"Your {category} spending is on track to hit £{projected:.2f} this month, {deviation:.0f}% above your average of £{hist_avg:.2f}."
             })
 
     return anomalies
@@ -205,7 +205,7 @@ def _detect_new_merchants(transactions, current_date):
                 "merchant": t.get("merchant", t.get("description", "")),
                 "amount": round(amount, 2),
                 "category": t.get("category", "Other"),
-                "message": f"First time spending at {t.get('description', 'this merchant')} — £{amount:.2f}. New subscription?"
+                "message": f"First time spending at {t.get('description', 'this merchant')}: £{amount:.2f}. New subscription?"
             })
 
     return anomalies
@@ -254,7 +254,7 @@ def _detect_frequency_changes(transactions, current_date):
             "recent_count": recent_count,
             "average_weekly": round(avg_weekly, 1),
             "date": current_date.isoformat(),
-            "message": f"You've made {recent_count} transactions this week — your average is {avg_weekly:.0f}. More frequent spending than usual."
+            "message": f"You've made {recent_count} transactions this week, vs your usual {avg_weekly:.0f}. More frequent than normal."
         })
 
     return anomalies
@@ -306,7 +306,7 @@ def _detect_quiet_periods(transactions, current_date):
             "average_weekly": round(avg_weekly, 2),
             "saved_amount": round(savings_amount, 2),
             "date": current_date.isoformat(),
-            "message": f"You've spent £{recent_total:.2f} this week — £{savings_amount:.2f} less than your usual £{avg_weekly:.2f}. Nice restraint."
+            "message": f"You've spent £{recent_total:.2f} this week, £{savings_amount:.2f} less than your usual £{avg_weekly:.2f}. Nice restraint."
         })
 
     return anomalies

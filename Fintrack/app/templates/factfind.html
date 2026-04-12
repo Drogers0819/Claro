@@ -2,45 +2,50 @@
 {% block title %}Your Financial Profile — Claro{% endblock %}
 
 {% block content %}
+<div style="max-width: 560px;">
+
+<a href="{{ url_for('pages.settings') }}" style="display: inline-flex; align-items: center; gap: 6px; font-size: 0.75rem; color: var(--text-tertiary); text-decoration: none; margin-bottom: 16px;">
+    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+    Settings
+</a>
 <div class="page-header">
     <h1>Your financial profile</h1>
     <p>This takes about 60 seconds. We use this to show you where your money goes and where it could take you.</p>
 </div>
 
-<div class="glass-card" style="max-width: 560px;">
-    <form method="POST" action="{{ url_for('pages.factfind') }}">
+<form method="POST" action="{{ url_for('pages.factfind') }}">
 
-        <div class="metric-label" style="margin-bottom: 16px;">Income</div>
+        <div class="section-label" style="margin-top: 0; margin-bottom: 16px;">Income</div>
 
         <div class="grid-2">
             <div class="form-group" style="margin-bottom: 0;">
                 <label class="form-label">Monthly take-home pay (£)</label>
                 <input type="number" name="monthly_income" class="form-input" step="0.01" min="0.01"
                        placeholder="e.g. 1700" required
-                       value="{{ profile.monthly_income if profile.monthly_income else '' }}">
+                       value="{{ '%g' | format(profile.monthly_income) if profile.monthly_income else '' }}">
             </div>
             <div class="form-group" style="margin-bottom: 0;">
                 <label class="form-label">Pay day (day of month)</label>
                 <input type="number" name="income_day" class="form-input" min="1" max="31"
                        placeholder="e.g. 25"
-                       value="{{ profile.income_day if profile.income_day else '' }}">
+                       value="{{ profile.income_day | int if profile.income_day else '' }}">
             </div>
         </div>
 
-        <div class="metric-label" style="margin-top: 28px; margin-bottom: 16px;">Commitments</div>
+        <div class="section-label" style="margin-top: 28px; margin-bottom: 16px;">Commitments</div>
 
         <div class="grid-2">
             <div class="form-group" style="margin-bottom: 0;">
                 <label class="form-label">Monthly rent or mortgage (£)</label>
                 <input type="number" name="rent_amount" class="form-input" step="0.01" min="0"
                        placeholder="e.g. 800" required
-                       value="{{ profile.rent_amount if profile.rent_amount else '' }}">
+                       value="{{ '%g' | format(profile.rent_amount) if profile.rent_amount else '' }}">
             </div>
             <div class="form-group" style="margin-bottom: 0;">
                 <label class="form-label">Monthly bills combined (£)</label>
                 <input type="number" name="bills_amount" class="form-input" step="0.01" min="0"
                        placeholder="e.g. 150" required
-                       value="{{ profile.bills_amount if profile.bills_amount else '' }}">
+                       value="{{ '%g' | format(profile.bills_amount) if profile.bills_amount else '' }}">
             </div>
         </div>
 
@@ -52,7 +57,7 @@
         <div style="padding: 16px; border-radius: 12px; background: var(--roman-gold-dim); margin-bottom: 24px;">
             <div class="metric-label" style="color: var(--roman-gold);">Available for your goals</div>
             <div class="metric-value md gold">
-                £{{ "%.2f" | format(profile.monthly_surplus) }}/month
+                £{{ "{:,.0f}".format(profile.monthly_surplus) }}/month
             </div>
             <p style="font-size: 0.75rem; color: var(--text-secondary); margin-top: 4px;">
                 After rent and bills.
@@ -66,19 +71,12 @@
         </p>
         <button type="submit" class="btn-primary">
             {% if profile.factfind_completed %}
-                Update Profile
+                Update profile
             {% else %}
                 Save & Continue
             {% endif %}
         </button>
     </form>
-</div>
 
-{% if profile.factfind_completed %}
-<div style="text-align: center; margin-top: 16px;">
-    <a href="{{ url_for('pages.settings') }}" style="font-size: 0.75rem; color: var(--text-tertiary); text-decoration: none;">
-        ← Back to Settings
-    </a>
 </div>
-{% endif %}
 {% endblock %}

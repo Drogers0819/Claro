@@ -2,10 +2,13 @@
 {% block title %}Simulator — Claro{% endblock %}
 
 {% block content %}
+<a href="{{ url_for('pages.plan') }}" style="display: inline-flex; align-items: center; gap: 6px; font-size: 0.75rem; color: var(--text-tertiary); text-decoration: none; margin-bottom: 16px;">
+    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+    Plan
+</a>
 <div class="page-header">
-    <div class="section-label">Financial Consequence Engine</div>
-    <h1>Where your habits take you</h1>
-    <p>See the real cost of today's decisions on tomorrow's goals.</p>
+    <h1>See where you're headed</h1>
+    <p>See how today's choices affect your future goals.</p>
 </div>
 
 <!-- Goal Projections -->
@@ -16,7 +19,7 @@
     <div class="glass-card">
         <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 16px;">
             <div>
-                <div style="font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.15em; color: var(--roman-gold); font-weight: 600; margin-bottom: 4px;">
+                <div style="font-size: 0.65rem; color: var(--roman-gold); font-weight: 500; margin-bottom: 4px;">
                     {{ p.goal_type | default("savings_target") | replace("_", " ") | title }}
                 </div>
                 <div style="font-size: 1.1rem; color: var(--text-primary);">{{ p.goal_name }}</div>
@@ -51,7 +54,7 @@
             <div style="display: flex; gap: 16px; flex-wrap: wrap;">
                 {% for m in p.milestones %}
                 <div style="font-size: 0.75rem; color: var(--text-secondary);">
-                    <span style="color: var(--roman-gold); font-weight: 600;">{{ m.percent }}%</span> — {{ m.date }}
+                    <span style="color: var(--roman-gold); font-weight: 600;">{{ m.percent }}%</span> · {{ m.date }}
                 </div>
                 {% endfor %}
             </div>
@@ -64,25 +67,23 @@
 
         <div style="margin-top: 16px;">
             <a href="{{ url_for('pages.goal_detail', goal_id=p.goal_id) }}" class="btn-secondary btn-sm">
-                Open projection <span aria-hidden="true">→</span>
+                Open projection <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18l6-6-6-6"/></svg>
             </a>
         </div>
     </div>
     {% endfor %}
 </div>
 {% else %}
-<div class="glass-card" style="margin-bottom: 32px;">
-    <div class="empty-state">
-        No goals to project. <a href="{{ url_for('pages.add_goal') }}">Create a goal</a> to see your timeline.
-    </div>
+<div class="empty-state" style="margin-bottom: 32px;">
+    No goals set yet. <a href="{{ url_for('pages.add_goal') }}">Add your first goal</a> and we'll show you exactly when you'll get there.
 </div>
 {% endif %}
 
 <!-- Habit Cost Calculator -->
 <div class="section-label">What does your habit actually cost?</div>
-<div class="glass-card" style="max-width: 560px; margin-bottom: 24px;">
+<div style="max-width: 560px; margin-bottom: 24px;">
     <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 16px; font-style: italic;">
-        Enter a monthly spending habit to see its true cost over time — including the growth you miss out on.
+        Enter a monthly spending habit to see its true cost over time, including the growth you miss out on.
     </p>
     <form method="POST" action="{{ url_for('pages.my_goals') }}">
         <input type="hidden" name="form_type" value="habit_cost">
@@ -131,17 +132,17 @@
     <div class="glass-card">
         <div class="metric-label">{{ h.years }} years</div>
         <div class="metric-value sm" style="margin-bottom: 4px;">
-            £{{ "{:,.2f}".format(h.opportunity_cost) }}
+            £{{ "{:,.0f}".format(h.opportunity_cost) }}
         </div>
         <div style="font-size: 0.7rem; color: var(--text-tertiary); margin-bottom: 8px;">
-            opportunity cost
+            what you give up
         </div>
         <div style="padding-top: 8px; border-top: 0.5px solid rgba(255,255,255,0.05);">
             <div style="font-size: 0.75rem; color: var(--text-secondary);">
-                Spent: £{{ "{:,.2f}".format(h.simple_cost) }}
+                Spent: £{{ "{:,.0f}".format(h.simple_cost) }}
             </div>
-            <div style="font-size: 0.75rem; color: var(--success);">
-                Lost growth: +£{{ "{:,.2f}".format(h.lost_growth) }}
+            <div style="font-size: 0.75rem; color: var(--text-tertiary);">
+                incl. £{{ "{:,.0f}".format(h.lost_growth) }} growth missed
             </div>
         </div>
     </div>
@@ -157,14 +158,14 @@
 </script>
 {% endif %}
 
-<!-- Scenario Link -->
+<!-- Scenario Link — bare teaser, no card -->
 <div class="section-label">What if?</div>
-<div class="glass-card" style="max-width: 560px;">
+<div style="max-width: 560px; margin-bottom: 32px;">
     <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 16px; font-style: italic;">
         See how changing your spending, income, or goals shifts your entire financial future.
     </p>
     <a href="{{ url_for('pages.scenario_page') }}" class="btn-secondary">
-        Run a scenario <span aria-hidden="true">→</span>
+        Run a scenario <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18l6-6-6-6"/></svg>
     </a>
 </div>
 {% endblock %}

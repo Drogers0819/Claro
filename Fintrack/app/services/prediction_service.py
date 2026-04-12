@@ -313,13 +313,13 @@ def _compare_to_average(current_spent, day_of_month, days_in_month, historical):
 
     if percent_difference > 15:
         status = "spending_high"
-        message = f"You've spent £{current_spent:.2f} so far — that's £{difference:.2f} more than usual at this point in the month."
+        message = f"You've spent £{current_spent:.2f} so far, which is £{difference:.2f} more than usual at this point in the month."
     elif percent_difference < -15:
         status = "spending_low"
-        message = f"You've spent £{current_spent:.2f} so far — that's £{abs(difference):.2f} less than usual. You're under budget."
+        message = f"You've spent £{current_spent:.2f} so far, which is £{abs(difference):.2f} less than usual. You're under budget."
     else:
         status = "on_track"
-        message = f"You've spent £{current_spent:.2f} so far — right in line with your usual pace."
+        message = f"You've spent £{current_spent:.2f} so far, right in line with your usual pace."
 
     return {
         "status": status,
@@ -349,7 +349,7 @@ def _generate_prediction_insight(current_spent, blended, comparison, day_of_mont
         parts.append(f"That's £{diff:.2f} above your usual pace at this point.")
     elif comp_status == "spending_low":
         diff = abs(comparison.get("difference", 0))
-        parts.append(f"You're £{diff:.2f} under your usual pace — nice work.")
+        parts.append(f"You're £{diff:.2f} under your usual pace. Nice work.")
 
     # Find the category furthest above average
     above_avg = [p for p in category_predictions if p["status"] == "above_average"]
@@ -396,14 +396,14 @@ def calculate_budget_status(predictions, user_profile, goals_data):
 
     if surplus_after_goals >= 0:
         status = "healthy"
-        message = f"At your current pace, you'll have £{surplus_after_goals:.2f} left after all goal allocations this month."
+        message = f"On track — you'll have £{surplus_after_goals:.0f} left after all your goals this month."
     elif predicted_surplus >= 0:
         status = "tight"
         shortfall = abs(surplus_after_goals)
-        message = f"At your current pace, you'll be £{shortfall:.2f} short of fully funding your goals this month."
+        message = f"A little tight — you're about £{shortfall:.0f} short of fully funding your goals this month."
     else:
-        status = "overspending"
-        message = f"At your current pace, your spending will exceed your disposable income by £{abs(predicted_surplus):.2f}."
+        status = "over budget"
+        message = f"You're on track to overspend by £{abs(predicted_surplus):.0f} this month. Small cuts now will help."
 
     return {
         "status": status,

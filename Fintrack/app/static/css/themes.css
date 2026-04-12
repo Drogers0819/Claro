@@ -10,8 +10,8 @@ body.theme-racing-green {
     --glass: rgba(255, 255, 255, 0.03);
     --glass-border: rgba(197, 163, 93, 0.12);
     --text-primary: rgba(255, 255, 255, 0.9);
-    --text-secondary: rgba(255, 255, 255, 0.5);
-    --text-tertiary: rgba(255, 255, 255, 0.3);
+    --text-secondary: rgba(255, 255, 255, 0.65);
+    --text-tertiary: rgba(255, 255, 255, 0.5);
     background: radial-gradient(circle at top right, #0A2A22, #020408);
 }
 
@@ -49,8 +49,8 @@ body.theme-rosso {
 
     /* Text — warm neutral, NOT blue */
     --text-primary: #E6E8F0;
-    --text-secondary: rgba(230, 232, 240, 0.55);
-    --text-tertiary: rgba(230, 232, 240, 0.3);
+    --text-secondary: rgba(230, 232, 240, 0.7);
+    --text-tertiary: rgba(230, 232, 240, 0.5);
 
     /* Accent — blue for interactive elements only */
     --roman-gold: #63B3ED;
@@ -91,8 +91,8 @@ body.theme-ivory {
     --glass: rgba(255, 255, 255, 0.4);
     --glass-border: rgba(139, 115, 64, 0.18);
     --text-primary: #1A1A18;
-    --text-secondary: rgba(26, 26, 24, 0.6);
-    --text-tertiary: rgba(26, 26, 24, 0.4);
+    --text-secondary: rgba(26, 26, 24, 0.75);
+    --text-tertiary: rgba(26, 26, 24, 0.7);
     --danger: #C53030;
     --success: #276749;
     background: linear-gradient(135deg, #F0EBE2, #E4DDD0);
@@ -135,8 +135,8 @@ body.theme-pearl {
     --glass: rgba(255, 255, 255, 0.4);
     --glass-border: rgba(74, 111, 165, 0.16);
     --text-primary: #1A1D24;
-    --text-secondary: rgba(26, 29, 36, 0.6);
-    --text-tertiary: rgba(26, 29, 36, 0.4);
+    --text-secondary: rgba(26, 29, 36, 0.75);
+    --text-tertiary: rgba(26, 29, 36, 0.7);
     --danger: #C53030;
     --success: #276749;
     background: linear-gradient(135deg, #E4E8F0, #D6DCE8);
@@ -179,8 +179,8 @@ body.theme-sandstone {
     --glass: rgba(255, 255, 255, 0.4);
     --glass-border: rgba(139, 109, 71, 0.15);
     --text-primary: #2C2418;
-    --text-secondary: rgba(44, 36, 24, 0.6);
-    --text-tertiary: rgba(44, 36, 24, 0.4);
+    --text-secondary: rgba(44, 36, 24, 0.75);
+    --text-tertiary: rgba(44, 36, 24, 0.7);
     --danger: #C53030;
     --success: #276749;
     background: linear-gradient(135deg, #ECE4D6, #DED4C2);
@@ -223,8 +223,8 @@ body.theme-sage {
     --glass: rgba(255, 255, 255, 0.4);
     --glass-border: rgba(74, 115, 88, 0.14);
     --text-primary: #1A241C;
-    --text-secondary: rgba(26, 36, 28, 0.6);
-    --text-tertiary: rgba(26, 36, 28, 0.4);
+    --text-secondary: rgba(26, 36, 28, 0.75);
+    --text-tertiary: rgba(26, 36, 28, 0.7);
     --danger: #C53030;
     --success: #276749;
     background: linear-gradient(135deg, #E0E8DC, #D0DCC8);
@@ -267,8 +267,8 @@ body.theme-lavender {
     --glass: rgba(255, 255, 255, 0.4);
     --glass-border: rgba(107, 91, 138, 0.14);
     --text-primary: #201C28;
-    --text-secondary: rgba(32, 28, 40, 0.6);
-    --text-tertiary: rgba(32, 28, 40, 0.4);
+    --text-secondary: rgba(32, 28, 40, 0.75);
+    --text-tertiary: rgba(32, 28, 40, 0.7);
     --danger: #C53030;
     --success: #276749;
     background: linear-gradient(135deg, #E4DFF0, #D6CEE4);
@@ -311,8 +311,8 @@ body.theme-mist {
     --glass: rgba(255, 255, 255, 0.4);
     --glass-border: rgba(107, 107, 101, 0.16);
     --text-primary: #1C1C1A;
-    --text-secondary: rgba(28, 28, 26, 0.6);
-    --text-tertiary: rgba(28, 28, 26, 0.4);
+    --text-secondary: rgba(28, 28, 26, 0.75);
+    --text-tertiary: rgba(28, 28, 26, 0.7);
     --danger: #C53030;
     --success: #276749;
     background: linear-gradient(135deg, #E2E2DE, #D4D4CE);

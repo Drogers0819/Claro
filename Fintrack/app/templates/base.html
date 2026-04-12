@@ -13,6 +13,7 @@
     <link rel="apple-touch-icon" href="{{ url_for('static', filename='images/logo.png') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/themes.css') }}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 </head>
 <body class="{% if current_user.is_authenticated %}theme-{{ current_user.theme }}{% else %}theme-racing-green{% endif %}">
     {% if current_user.is_authenticated %}
@@ -39,10 +40,8 @@
                 <a href="{{ url_for('pages.my_budgets') }}" class="nav-link {% if request.endpoint == 'pages.my_budgets' %}active{% endif %}">
                     <span class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" x2="18" y1="20" y2="10"/><line x1="12" x2="12" y1="20" y2="4"/><line x1="6" x2="6" y1="20" y2="14"/></svg></span> Budgets
                 </a>
-                <a href="{{ url_for('pages.settings') }}" class="nav-link mobile-profile-tab {% if request.endpoint == 'pages.settings' %}active{% endif %}">
-                    <span class="nav-icon">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-                    </span> Profile
+                <a href="{{ url_for('pages.settings') }}" class="nav-link nav-link-mobile-only {% if request.endpoint == 'pages.settings' %}active{% endif %}" aria-label="Profile &amp; settings">
+                    <span class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg></span>
                 </a>
             </nav>
 
@@ -51,7 +50,7 @@
                    class="sidebar-profile-link {% if request.endpoint == 'pages.settings' %}active{% endif %}">
                     <div class="user-avatar" style="flex-shrink: 0;">{{ current_user.name[0:2] | upper }}</div>
                     <div style="flex: 1; min-width: 0;">
-                        <div class="user-name" style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{ current_user.name }}</div>
+                        <div class="user-name" style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{ current_user.name.split()[0] }}</div>
                         <div class="user-tier">{{ current_user.tier }}</div>
                     </div>
                     <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="profile-settings-icon"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
@@ -62,17 +61,18 @@
             </div>
         </aside>
 
+
         <main class="main-content">
             {% with messages = get_flashed_messages(with_categories=true) %}
                 {% for category, message in messages %}
                     <div class="flash-message flash-{{ category }}" role="alert">
                         {% if category == 'success' %}
-                        <svg class="flash-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                        <svg class="flash-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
                         {% else %}
-                        <svg class="flash-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                        <svg class="flash-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
                         {% endif %}
                         <span class="flash-text">{{ message }}</span>
-                        <button class="flash-dismiss" aria-label="Dismiss" onclick="this.closest('.flash-message').remove()">×</button>
+                        <button class="flash-dismiss" aria-label="Dismiss" onclick="this.closest('.flash-message').remove()"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
                     </div>
                 {% endfor %}
             {% endwith %}
@@ -86,12 +86,12 @@
             {% for category, message in messages %}
                 <div class="flash-message flash-{{ category }}" role="alert" style="max-width: 420px; margin: 20px auto;">
                     {% if category == 'success' %}
-                    <svg class="flash-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                    <svg class="flash-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
                     {% else %}
-                    <svg class="flash-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                    <svg class="flash-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
                     {% endif %}
                     <span class="flash-text">{{ message }}</span>
-                    <button class="flash-dismiss" aria-label="Dismiss" onclick="this.closest('.flash-message').remove()">×</button>
+                    <button class="flash-dismiss" aria-label="Dismiss" onclick="this.closest('.flash-message').remove()"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
                 </div>
             {% endfor %}
         {% endwith %}
@@ -100,7 +100,21 @@
     </div>
     {% endif %}
 
+    <!-- Confirm dialog -->
+    <div id="confirm-overlay" class="confirm-overlay" hidden>
+        <div class="confirm-modal" role="dialog" aria-modal="true" aria-labelledby="confirm-title">
+            <div class="confirm-title" id="confirm-title">Are you sure?</div>
+            <div class="confirm-body" id="confirm-body"></div>
+            <div class="confirm-actions">
+                <button class="btn-secondary btn-sm" id="confirm-cancel">Cancel</button>
+                <button class="btn-danger btn-sm" id="confirm-ok">Delete</button>
+            </div>
+        </div>
+    </div>
+
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="{{ url_for('static', filename='js/custom-select.js') }}"></script>
     <script>
         function togglePassword(inputId, btn) {
             var input = document.getElementById(inputId);
@@ -108,6 +122,123 @@
             input.type = showing ? 'text' : 'password';
             btn.setAttribute('aria-label', showing ? 'Hide password' : 'Show password');
         }
+
+        // ── Custom form validation — replaces native browser tooltip ──
+        document.addEventListener('DOMContentLoaded', function () {
+            document.querySelectorAll('form').forEach(function (form) {
+                form.setAttribute('novalidate', '');
+                form.addEventListener('submit', function (e) {
+                    // Clear previous errors
+                    form.querySelectorAll('.field-error-msg').forEach(function (el) { el.remove(); });
+                    form.querySelectorAll('.field-invalid').forEach(function (el) { el.classList.remove('field-invalid'); });
+
+                    var firstError = null;
+
+                    form.querySelectorAll('[required]').forEach(function (el) {
+                        var isEmpty = el.type === 'file'
+                            ? (!el.files || el.files.length === 0)
+                            : !el.value || !el.value.trim();
+
+                        if (!isEmpty) return;
+
+                        var visualEl = el;
+                        var csWrapper = el.closest('.cs-wrapper');
+
+                        if (csWrapper) {
+                            csWrapper.classList.add('field-invalid');
+                            visualEl = csWrapper.querySelector('.cs-trigger');
+                        } else if (el.classList.contains('date-picker')) {
+                            // Flatpickr hides original — highlight the alt input
+                            var altInput = el.parentNode.querySelector('.date-picker-display');
+                            if (altInput) { altInput.classList.add('field-invalid'); visualEl = altInput; }
+                            else { el.classList.add('field-invalid'); }
+                        } else {
+                            el.classList.add('field-invalid');
+                        }
+
+                        var group = el.closest('.form-group') || el.parentNode;
+                        var msg = document.createElement('span');
+                        msg.className = 'field-error-msg';
+                        msg.textContent = el.dataset.errorMsg || 'Required';
+                        group.appendChild(msg);
+
+                        if (!firstError) firstError = visualEl;
+                    });
+
+                    if (firstError) {
+                        e.preventDefault();
+                        firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    }
+                });
+            });
+        });
+
+        // ── Initialise Flatpickr on date picker inputs ──
+        document.addEventListener('DOMContentLoaded', function () {
+            var sharedConfig = {
+                dateFormat: 'Y-m-d',
+                altInput: true,
+                altFormat: 'j M Y',
+                altInputClass: 'form-input date-picker-display',
+                disableMobile: true,
+                allowInput: false
+            };
+            document.querySelectorAll('.date-picker').forEach(function (el) {
+                var cfg = Object.assign({}, sharedConfig);
+                if (el.required) cfg.defaultDate = 'today';
+                flatpickr(el, cfg);
+            });
+        });
+
+        // ── Custom confirm dialog ──
+        (function () {
+            var overlay = document.getElementById('confirm-overlay');
+            if (!overlay) return;
+            var titleEl = document.getElementById('confirm-title');
+            var bodyEl  = document.getElementById('confirm-body');
+            var cancelBtn = document.getElementById('confirm-cancel');
+            var okBtn     = document.getElementById('confirm-ok');
+            var pending   = null;
+
+            function showConfirm(opts) {
+                titleEl.textContent  = opts.title  || 'Are you sure?';
+                bodyEl.textContent   = opts.body   || '';
+                okBtn.textContent    = opts.label  || 'Delete';
+                pending = opts.onConfirm;
+                overlay.hidden = false;
+                cancelBtn.focus();
+            }
+
+            function close() { overlay.hidden = true; pending = null; }
+
+            cancelBtn.addEventListener('click', close);
+            overlay.addEventListener('click', function (e) { if (e.target === overlay) close(); });
+            document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !overlay.hidden) close(); });
+
+            okBtn.addEventListener('click', function () {
+                var fn = pending;
+                close();
+                if (fn) fn();
+            });
+
+            // Wire forms with data-confirm-title or data-confirm-body attributes
+            document.addEventListener('submit', function (e) {
+                var form = e.target;
+                var title = form.dataset.confirmTitle;
+                var body  = form.dataset.confirmBody;
+                var label = form.dataset.confirmLabel;
+                if (!title && !body) return;
+                if (form._confirmed) { form._confirmed = false; return; }
+                e.preventDefault();
+                showConfirm({
+                    title: title,
+                    body:  body  || '',
+                    label: label || 'Delete',
+                    onConfirm: function () { form._confirmed = true; form.submit(); }
+                });
+            });
+        })();
     </script>
+    {% block scripts %}{% endblock %}
 </body>
 </html>

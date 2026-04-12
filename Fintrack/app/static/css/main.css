@@ -9,8 +9,8 @@
     --glass: rgba(255, 255, 255, 0.03);
     --glass-border: rgba(197, 163, 93, 0.12);
     --text-primary: rgba(255, 255, 255, 0.9);
-    --text-secondary: rgba(255, 255, 255, 0.5);
-    --text-tertiary: rgba(255, 255, 255, 0.3);
+    --text-secondary: rgba(255, 255, 255, 0.65);
+    --text-tertiary: rgba(255, 255, 255, 0.5);
     --danger: #FC8181;
     --success: #68D391;
     --font-serif: 'Cormorant Garamond', Georgia, serif;
@@ -93,8 +93,7 @@ a:hover {
 .sidebar {
     width: 260px;
     padding: 40px 24px;
-    border-right: 0.5px solid var(--glass-border);
-    border-right-color: var(--sidebar-border);
+    border-right: 0.5px solid var(--sidebar-border, var(--glass-border, rgba(255, 255, 255, 0.08)));
     background: var(--sidebar-bg);
     backdrop-filter: blur(10px);
     position: fixed;
@@ -199,15 +198,20 @@ a:hover {
 }
 
 .user-tier {
-    font-size: 0.75rem;
+    font-size: 0.65rem;
     text-transform: uppercase;
-    letter-spacing: 0.15em;
-    color: var(--roman-gold);
+    letter-spacing: 0.12em;
+    color: var(--text-tertiary);
     font-weight: 600;
 }
 
-/* Profile tab — hidden on desktop, shown as 5th tab on mobile */
-.mobile-profile-tab {
+/* Floating avatar — mobile only, always reachable from any screen */
+.mobile-avatar-float {
+    display: none;
+}
+
+/* Profile tab: hidden on desktop (sidebar footer handles it), shown in mobile bottom nav */
+.nav-link-mobile-only {
     display: none;
 }
 
@@ -299,11 +303,11 @@ a:hover {
     color: var(--text-primary);
 }
 
-/* Size scale */
+/* Size scale — hero stays serif (display scale); data sizes use sans */
 .metric-value.hero { font-size: 2.8rem; }
-.metric-value.md   { font-size: 1.5rem; }
-.metric-value.sm   { font-size: 1.3rem; }
-.metric-value.xs   { font-size: 1.2rem; }
+.metric-value.md   { font-size: 1.5rem; font-family: var(--font-sans); font-variant-numeric: tabular-nums; }
+.metric-value.sm   { font-size: 1.3rem; font-family: var(--font-sans); font-variant-numeric: tabular-nums; }
+.metric-value.xs   { font-size: 1.2rem; font-family: var(--font-sans); font-variant-numeric: tabular-nums; }
 
 /* Colour modifiers */
 .metric-value.gold    { color: var(--roman-gold); }
@@ -340,26 +344,28 @@ a:hover {
 
 /* Shared base */
 .btn-primary,
-.btn-secondary {
+.btn-secondary,
+.btn-danger {
     display: inline-flex;
     align-items: center;
     justify-content: center;
     gap: 6px;
     padding: 10px 20px;
-    border-radius: 10px;
+    border-radius: 8px;
     font-family: var(--font-sans);
     font-size: 0.8rem;
     letter-spacing: 0.01em;
     cursor: pointer;
     text-decoration: none;
     white-space: nowrap;
+    box-sizing: border-box;
     transition: filter 0.2s ease, box-shadow 0.2s ease;
 }
 
 .btn-primary {
     background: var(--roman-gold);
     color: var(--obsidian);
-    border: none;
+    border: 1px solid transparent; /* same box model as btn-secondary — prevents height mismatch */
     font-weight: 600;
 }
 
@@ -371,7 +377,7 @@ a:hover {
 .btn-secondary {
     background: transparent;
     color: var(--roman-gold);
-    border: 0.5px solid rgba(197, 163, 93, 0.3);
+    border: 1px solid rgba(197, 163, 93, 0.3);
     font-weight: 500;
     transition: all 0.2s ease;
 }
@@ -381,9 +387,22 @@ a:hover {
     border-color: var(--roman-gold);
 }
 
+.btn-danger {
+    background: rgba(252, 129, 129, 0.12);
+    color: var(--danger);
+    border: 1px solid rgba(252, 129, 129, 0.2);
+    font-weight: 500;
+}
+
+.btn-danger:hover {
+    background: rgba(252, 129, 129, 0.2);
+    border-color: rgba(252, 129, 129, 0.4);
+}
+
 /* Size modifiers */
 .btn-primary.btn-sm,
-.btn-secondary.btn-sm {
+.btn-secondary.btn-sm,
+.btn-danger.btn-sm {
     padding: 6px 14px;
     font-size: 0.75rem;
 }
@@ -419,6 +438,19 @@ a:hover {
     font-weight: 300;
     transition: border-color 0.3s ease;
     outline: none;
+    box-sizing: border-box;
+    min-height: 52px;
+}
+
+/* Normalise native select appearance so it matches text inputs exactly */
+.form-select {
+    appearance: none;
+    -webkit-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23888' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+    padding-right: 40px;
+    cursor: pointer;
 }
 
 .form-input:focus, .form-select:focus {
@@ -426,9 +458,111 @@ a:hover {
     box-shadow: 0 0 0 1px rgba(197, 163, 93, 0.1);
 }
 
+/* Hide number spinner arrows — cleaner look across all browsers */
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+input[type="number"] {
+    -moz-appearance: textfield;
+    appearance: textfield;
+}
+
 .form-input::placeholder {
     color: var(--text-tertiary);
     font-style: italic;
+}
+
+/* Remove native number spinners — use plain text field appearance */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+input[type="number"] {
+    -moz-appearance: textfield;
+    appearance: textfield;
+}
+
+/* Validation error states */
+.form-input.field-invalid {
+    border-color: var(--danger) !important;
+}
+.cs-wrapper.field-invalid .cs-trigger {
+    border-color: var(--danger) !important;
+}
+.field-error-msg {
+    font-size: 0.72rem;
+    color: var(--danger);
+    margin-top: 5px;
+    display: block;
+}
+
+/* ===== FILE UPLOAD ===== */
+.file-upload-input {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+    overflow: hidden;
+}
+
+.file-upload-zone {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 32px 24px;
+    border: 0.5px dashed rgba(255, 255, 255, 0.15);
+    border-radius: 10px;
+    cursor: pointer;
+    transition: border-color 0.2s ease, background 0.2s ease;
+    text-align: center;
+}
+
+.file-upload-zone:hover {
+    border-color: rgba(197, 163, 93, 0.4);
+    background: rgba(197, 163, 93, 0.02);
+}
+
+.file-upload-zone.has-file {
+    border-color: rgba(197, 163, 93, 0.35);
+    background: rgba(197, 163, 93, 0.04);
+}
+
+.file-upload-icon {
+    color: var(--text-tertiary);
+    transition: color 0.2s ease;
+}
+
+.file-upload-zone:hover .file-upload-icon,
+.file-upload-zone.has-file .file-upload-icon {
+    color: var(--roman-gold);
+}
+
+.file-upload-label-text {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+}
+
+.file-upload-filename {
+    font-size: 0.78rem;
+    color: var(--text-tertiary);
+    font-style: italic;
+}
+
+.file-upload-zone.has-file .file-upload-filename {
+    color: var(--roman-gold);
+    font-style: normal;
+    font-weight: 500;
+}
+
+.file-upload-zone.drag-over {
+    border-color: var(--roman-gold);
+    background: rgba(197, 163, 93, 0.05);
 }
 
 .password-field {
@@ -486,10 +620,320 @@ a:hover {
     color: var(--text-primary);
 }
 
+/* ===== CUSTOM SELECT COMPONENT ===== */
+.cs-wrapper {
+    position: relative;
+    width: 100%;
+}
+
+.cs-trigger {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    width: 100%;
+    background: rgba(255, 255, 255, 0.03);
+    border: 0.5px solid var(--glass-border);
+    border-radius: 10px;
+    padding: 14px 14px 14px 18px;
+    color: var(--text-primary);
+    font-family: var(--font-sans);
+    font-size: 0.9rem;
+    font-weight: 300;
+    cursor: pointer;
+    transition: border-color 0.2s ease;
+    user-select: none;
+    box-sizing: border-box;
+    min-height: 52px;
+}
+
+.cs-trigger:hover,
+.cs-wrapper.cs-open .cs-trigger {
+    border-color: var(--roman-gold);
+}
+
+.cs-value {
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    color: var(--text-tertiary);
+}
+
+.cs-chevron {
+    color: var(--text-tertiary);
+    flex-shrink: 0;
+    transition: transform 0.2s ease;
+}
+
+.cs-wrapper.cs-open .cs-chevron {
+    transform: rotate(180deg);
+}
+
+.cs-options {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: calc(100% + 4px);
+    background: var(--bg-primary, #0d1a14);
+    border: 0.5px solid var(--glass-border);
+    border-radius: 10px;
+    overflow: hidden;
+    z-index: 200;
+    display: none;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
+    max-height: 240px;
+    overflow-y: auto;
+}
+
+.cs-wrapper.cs-open .cs-options {
+    display: block;
+}
+
+.cs-option {
+    padding: 12px 18px;
+    font-size: 0.875rem;
+    color: var(--text-primary);
+    cursor: pointer;
+    transition: background 0.12s ease;
+}
+
+.cs-option + .cs-option {
+    border-top: 0.5px solid rgba(255, 255, 255, 0.04);
+}
+
+.cs-option:hover {
+    background: rgba(255, 255, 255, 0.04);
+}
+
+.cs-option--selected {
+    color: var(--roman-gold);
+}
+
+.cs-option--placeholder {
+    color: var(--text-tertiary);
+    font-style: italic;
+    cursor: default;
+    pointer-events: none;
+    opacity: 0.6;
+}
+
+/* ===== FLATPICKR DARK THEME ===== */
+.flatpickr-calendar {
+    background: var(--bg-primary, #081210) !important;
+    border: 0.5px solid rgba(255, 255, 255, 0.1) !important;
+    border-radius: 12px !important;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6) !important;
+    font-family: var(--font-sans) !important;
+    color: var(--text-primary) !important;
+}
+
+.flatpickr-months {
+    border-bottom: 0.5px solid rgba(255, 255, 255, 0.06) !important;
+    padding-bottom: 8px;
+}
+
+.flatpickr-months .flatpickr-month {
+    background: transparent !important;
+    color: var(--text-primary) !important;
+}
+
+.flatpickr-current-month {
+    color: var(--text-primary) !important;
+    font-size: 0.875rem !important;
+}
+
+.flatpickr-current-month .flatpickr-monthDropdown-months {
+    background: transparent !important;
+    color: var(--text-primary) !important;
+    font-size: 0.875rem !important;
+}
+
+.flatpickr-current-month input.cur-year {
+    color: var(--text-primary) !important;
+    font-size: 0.875rem !important;
+}
+
+.flatpickr-months .flatpickr-prev-month,
+.flatpickr-months .flatpickr-next-month {
+    color: var(--text-secondary) !important;
+    fill: var(--text-secondary) !important;
+}
+
+.flatpickr-months .flatpickr-prev-month:hover,
+.flatpickr-months .flatpickr-next-month:hover {
+    color: var(--roman-gold) !important;
+    fill: var(--roman-gold) !important;
+}
+
+.flatpickr-months .flatpickr-prev-month svg,
+.flatpickr-months .flatpickr-next-month svg {
+    fill: inherit !important;
+}
+
+.flatpickr-weekday {
+    background: transparent !important;
+    color: var(--text-tertiary) !important;
+    font-size: 0.7rem !important;
+    font-weight: 500 !important;
+    letter-spacing: 0.04em !important;
+}
+
+.flatpickr-weekdays {
+    background: transparent !important;
+}
+
+.flatpickr-days {
+    border-color: transparent !important;
+}
+
+.flatpickr-day {
+    color: var(--text-primary) !important;
+    border-radius: 6px !important;
+    font-size: 0.8rem !important;
+}
+
+.flatpickr-day:hover {
+    background: rgba(255, 255, 255, 0.07) !important;
+    border-color: transparent !important;
+}
+
+.flatpickr-day.selected,
+.flatpickr-day.selected:hover,
+.flatpickr-day.startRange,
+.flatpickr-day.endRange {
+    background: var(--roman-gold) !important;
+    border-color: var(--roman-gold) !important;
+    color: #000 !important;
+    font-weight: 500 !important;
+}
+
+.flatpickr-day.today {
+    border-color: rgba(197, 163, 93, 0.35) !important;
+    color: var(--roman-gold) !important;
+}
+
+.flatpickr-day.today:hover {
+    background: rgba(197, 163, 93, 0.1) !important;
+}
+
+.flatpickr-day.prevMonthDay,
+.flatpickr-day.nextMonthDay {
+    color: var(--text-tertiary) !important;
+    opacity: 0.35;
+}
+
+.flatpickr-day.flatpickr-disabled,
+.flatpickr-day.flatpickr-disabled:hover {
+    color: var(--text-tertiary) !important;
+    opacity: 0.2;
+}
+
+.numInputWrapper span {
+    border-color: rgba(255, 255, 255, 0.08) !important;
+}
+
+.numInputWrapper span.arrowUp::after {
+    border-bottom-color: var(--text-secondary) !important;
+}
+
+.numInputWrapper span.arrowDown::after {
+    border-top-color: var(--text-secondary) !important;
+}
+
+/* Alt input — styled to match .form-input */
+.flatpickr-input.form-input {
+    cursor: pointer;
+}
+
+/* ── Transaction section header ── */
+.tx-section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+.tx-section-header .metric-label {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    margin-bottom: 0;
+    flex-shrink: 1;
+}
+
+.tx-section-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+}
+
+.tx-action-primary {
+    font-size: 0.75rem;
+    color: var(--roman-gold);
+    text-decoration: none;
+    font-weight: 500;
+    white-space: nowrap;
+}
+
+.tx-action-sep {
+    color: rgba(255, 255, 255, 0.2);
+    font-size: 0.7rem;
+}
+
+.tx-action-secondary {
+    font-size: 0.75rem;
+    color: var(--text-tertiary);
+    text-decoration: none;
+    white-space: nowrap;
+}
+
+/* ── Transaction category inline edit ── */
+.tx-cat-btn {
+    background: none;
+    border: none;
+    padding: 0;
+    font-size: inherit;
+    color: inherit;
+    cursor: pointer;
+    font-family: inherit;
+    text-decoration: underline dotted;
+    text-underline-offset: 2px;
+    opacity: 0.7;
+}
+
+.tx-cat-btn:hover {
+    opacity: 1;
+    color: var(--roman-gold);
+}
+
+.tx-cat-select {
+    background: var(--glass);
+    border: 0.5px solid var(--glass-border);
+    border-radius: 6px;
+    color: var(--text-primary);
+    font-size: 0.72rem;
+    font-family: var(--font-sans);
+    padding: 2px 4px;
+    outline: none;
+}
+
+/* ── Transaction row ── */
+.tx-delete-form {
+    margin: 0;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+}
+
 .transaction-row {
     display: flex;
     align-items: center;
     justify-content: space-between;
+    gap: 12px;
     padding: 16px 0;
     border-bottom: 0.5px solid rgba(255, 255, 255, 0.05);
 }
@@ -519,7 +963,8 @@ a:hover {
     transition: opacity 0.15s ease, color 0.15s ease, background 0.15s ease;
 }
 
-.transaction-row:hover .transaction-delete {
+.transaction-row:hover .transaction-delete,
+.glass-card:hover .transaction-delete {
     opacity: 1;
 }
 
@@ -550,9 +995,11 @@ a:hover {
 }
 
 .transaction-amount {
-    font-family: var(--font-serif);
-    font-size: 1.1rem;
-    margin-right: 16px;
+    font-family: var(--font-sans);
+    font-size: 0.9rem;
+    font-variant-numeric: tabular-nums;
+    flex-shrink: 0;
+    white-space: nowrap;
 }
 
 .transaction-amount.income {
@@ -717,8 +1164,6 @@ a:hover {
     align-items: center;
     font-size: 0.65rem;
     font-weight: 500;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
     padding: 3px 8px;
     border-radius: 6px;
     white-space: nowrap;
@@ -931,6 +1376,103 @@ input[type="range"]::-moz-range-thumb:hover {
     50% { opacity: 1; transform: scale(1.2); }
 }
 
+/* ===== GLASS CARD — DANGER STATE ===== */
+.glass-card.card-danger {
+    border-color: rgba(252, 129, 129, 0.28);
+    background: rgba(252, 129, 129, 0.03);
+}
+
+.glass-card.card-danger:hover {
+    border-color: rgba(252, 129, 129, 0.4);
+}
+
+/* Light themes — darker danger border */
+body.theme-ivory .glass-card.card-danger,
+body.theme-pearl .glass-card.card-danger,
+body.theme-sandstone .glass-card.card-danger,
+body.theme-sage .glass-card.card-danger,
+body.theme-lavender .glass-card.card-danger,
+body.theme-mist .glass-card.card-danger {
+    border-color: rgba(197, 48, 48, 0.25);
+    background: rgba(197, 48, 48, 0.04);
+}
+
+/* ===== BUDGET ROWS (inside single glass-card container) ===== */
+.budget-row {
+    padding: 14px 20px;
+    transition: background 0.15s ease;
+}
+
+.budget-row:last-child {
+    border-bottom: none !important;
+}
+
+.budget-row:hover .transaction-delete {
+    opacity: 1;
+}
+
+/* Exceeded state — left accent line, very subtle bg tint */
+.budget-row-danger {
+    border-left: 2px solid rgba(252, 129, 129, 0.6);
+    padding-left: 18px; /* compensate for border */
+    background: rgba(252, 129, 129, 0.02);
+}
+
+body.theme-ivory .budget-row-danger,
+body.theme-pearl .budget-row-danger,
+body.theme-sandstone .budget-row-danger,
+body.theme-sage .budget-row-danger,
+body.theme-lavender .budget-row-danger,
+body.theme-mist .budget-row-danger {
+    border-left-color: rgba(197, 48, 48, 0.35);
+    background: rgba(197, 48, 48, 0.03);
+}
+
+/* ===== CONFIRM DIALOG ===== */
+.confirm-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.55);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+}
+
+.confirm-overlay[hidden] { display: none; }
+
+.confirm-modal {
+    background: var(--glass, rgba(255, 255, 255, 0.04));
+    border: 0.5px solid var(--glass-border, rgba(255, 255, 255, 0.1));
+    border-radius: 16px;
+    padding: 24px;
+    max-width: 340px;
+    width: 100%;
+}
+
+.confirm-title {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 8px;
+}
+
+.confirm-body {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    line-height: 1.6;
+    margin-bottom: 20px;
+}
+
+.confirm-actions {
+    display: flex;
+    gap: 8px;
+    justify-content: flex-end;
+}
+
 /* ===== GOLD CARD ===== */
 .gold-card {
     padding: 20px 24px;
@@ -961,6 +1503,7 @@ input[type="range"]::-moz-range-thumb:hover {
         padding: 0;
         display: flex;
         flex-direction: column;
+        overflow: hidden;
         border-top: 0.5px solid rgba(197, 163, 93, 0.12);
         border-right: none;
         background: var(--bg-primary, #020408);
@@ -972,7 +1515,7 @@ input[type="range"]::-moz-range-thumb:hover {
     .sidebar-logo,
     .sidebar-subtitle,
     .sidebar-footer {
-        display: none;
+        display: none !important;
     }
 
     .sidebar-nav {
@@ -990,10 +1533,10 @@ input[type="range"]::-moz-range-thumb:hover {
         display: flex;
         flex-direction: column;
         align-items: center;
-        gap: 3px;
+        gap: 0;
         padding: 4px 4px;
-        font-size: 0.6rem;
-        letter-spacing: 0.02em;
+        font-size: 0;
+        letter-spacing: 0;
         text-transform: none;
         line-height: 1;
         flex: 1;
@@ -1021,7 +1564,8 @@ input[type="range"]::-moz-range-thumb:hover {
         margin: 0;
     }
 
-    .mobile-profile-tab {
+    /* Profile tab shown in mobile bottom nav only */
+    .nav-link-mobile-only {
         display: flex;
     }
 
@@ -1117,6 +1661,25 @@ input[type="range"]::-moz-range-thumb:hover {
         border-radius: 10px;
         -webkit-tap-highlight-color: transparent;
     }
+
+    /* Header-inline buttons stay compact — never full width */
+    .page-header .btn-primary,
+    .page-header .btn-secondary {
+        width: auto;
+        min-height: unset;
+        padding: 6px 14px;
+        font-size: 0.75rem;
+    }
+
+    /* Small-size buttons always stay compact */
+    .btn-primary.btn-sm,
+    .btn-secondary.btn-sm {
+        width: auto;
+        min-height: unset;
+        padding: 6px 14px;
+        font-size: 0.75rem;
+    }
+
 
     /* Transaction rows: taller touch targets */
     .transaction-row {
@@ -1300,6 +1863,7 @@ input[type="range"]::-moz-range-thumb:hover {
 
     .main-content {
         padding: 28px 24px;
+        margin-left: 200px;
     }
 
     .grid-3 {

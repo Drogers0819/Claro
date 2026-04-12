@@ -85,7 +85,7 @@ def project_goal_timeline(goal_data, monthly_contribution, growth_rate=None):
             "final_balance": round(balance, 2),
             "target_amount": round(target, 2),
             "shortfall": round(target - balance, 2),
-            "message": f"At current rate, you'll reach £{round(balance, 2):,.2f} in {months} months — still £{round(target - balance, 2):,.2f} short."
+            "message": f"At current rate, you'll reach £{round(balance, 2):,.2f} in {months} months, still £{round(target - balance, 2):,.2f} short of your target."
         }
 
 
@@ -158,9 +158,9 @@ def _generate_habit_insight(monthly_spend, horizons):
         return None
 
     return {
-        "headline": f"£{monthly_spend:,.2f}/month costs you £{ten_year['opportunity_cost']:,.2f} over 10 years",
-        "detail": f"That's not just £{ten_year['simple_cost']:,.2f} spent — it's £{ten_year['lost_growth']:,.2f} in growth you never earned.",
-        "reframe": f"Redirecting even half (£{monthly_spend/2:,.2f}/month) would grow to £{ten_year['opportunity_cost']/2:,.2f} in 10 years."
+        "headline": f"£{monthly_spend:,.0f}/month costs you £{ten_year['opportunity_cost']:,.0f} over 10 years",
+        "detail": f"That's not just £{ten_year['simple_cost']:,.0f} spent. It's also £{ten_year['lost_growth']:,.0f} in growth you never earned.",
+        "reframe": f"Put £{monthly_spend/2:,.0f} of that into savings each month and it becomes £{ten_year['opportunity_cost']/2:,.0f} in 10 years."
     }
 
 
@@ -292,7 +292,7 @@ def _generate_scenario_insight(comparisons):
         parts.append(f"Trade-off: {worst['impact']}.")
 
     if not accelerated and not delayed:
-        parts.append("This change doesn't significantly affect your goal timelines.")
+        parts.append("Your goal dates stay the same with these numbers.")
 
     return " ".join(parts)
 

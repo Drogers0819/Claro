@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% block title %}Edit Goal — Claro{% endblock %}
+
+{% block content %}
+<a href="{{ url_for('pages.my_goals') }}" style="display: inline-flex; align-items: center; gap: 6px; font-size: 0.75rem; color: var(--text-tertiary); text-decoration: none; margin-bottom: 16px;">
+    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+    Goals
+</a>
+<div class="page-header">
+    <h1>Edit goal</h1>
+</div>
+
+<div style="max-width: 560px;">
+    <form method="POST" action="{{ url_for('pages.edit_goal', goal_id=goal.id) }}">
+        <div class="form-group">
+            <label class="form-label">What's this goal called?</label>
+            <input type="text" name="name" class="form-input" value="{{ goal.name }}" required>
+        </div>
+
+        <div class="grid-2">
+            <div class="form-group">
+                <label class="form-label">Target amount (£)</label>
+                <input type="number" name="target_amount" class="form-input" step="0.01" min="0"
+                       value="{{ '%.2f' | format(goal.target_amount) if goal.target_amount else '' }}"
+                       placeholder="e.g. 10000">
+            </div>
+            <div class="form-group">
+                <label class="form-label">Already saved (£)</label>
+                <input type="number" name="current_amount" class="form-input" step="0.01" min="0"
+                       value="{{ '%.2f' | format(goal.current_amount) if goal.current_amount else '0' }}">
+            </div>
+        </div>
+
+        <div class="grid-2">
+            <div class="form-group">
+                <label class="form-label">Monthly contribution (£)</label>
+                <input type="number" name="monthly_allocation" class="form-input" step="0.01" min="0"
+                       value="{{ '%.2f' | format(goal.monthly_allocation) if goal.monthly_allocation else '' }}"
+                       placeholder="e.g. 412">
+            </div>
+            <div class="form-group">
+                <label class="form-label">Target date (optional)</label>
+                <input type="text" name="deadline" class="form-input date-picker"
+                       value="{{ goal.deadline.isoformat() if goal.deadline else '' }}"
+                       placeholder="Select date">
+            </div>
+        </div>
+
+        <div class="form-group" style="margin-bottom: 24px;">
+            <label class="form-label">Priority (1 = most important)</label>
+            <input type="number" name="priority_rank" class="form-input" min="1"
+                   value="{{ goal.priority_rank }}" required>
+        </div>
+
+        <div style="display: flex; gap: 10px; align-items: center;">
+            <button type="submit" class="btn-primary btn-sm">Save changes</button>
+            <a href="{{ url_for('pages.my_goals') }}" class="btn-secondary btn-sm">Cancel</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

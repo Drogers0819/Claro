@@ -16,7 +16,7 @@
 
 {% if summary.total_income == 0 and summary.total_expenses == 0 %}
 <!-- ──── EMPTY STATE ──── -->
-<div class="glass-card" style="padding: 40px 32px; text-align: center;">
+<div style="padding: 40px 0; text-align: center;">
     <div style="width: 48px; height: 48px; border-radius: 50%; background: var(--roman-gold-dim); border: 0.5px solid rgba(197,163,93,0.3); display: flex; align-items: center; justify-content: center; margin: 0 auto 20px;">
         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--roman-gold)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" y2="10"/></svg>
     </div>
@@ -38,7 +38,7 @@
 <div class="glass-card" style="margin-bottom: 24px;">
     <div class="metric-label">Left to spend this month</div>
     <div class="metric-value hero {% if money_left >= 0 %}gold{% else %}danger{% endif %}" style="margin: 6px 0 4px;">
-        £{{ "%.2f" | format(money_left) }}
+        {% if money_left < 0 %}−£{{ "{:,.2f}".format(money_left | abs) }}{% else %}£{{ "{:,.2f}".format(money_left) }}{% endif %}
     </div>
 
     {% if money_left > 0 and days_remaining > 0 %}
@@ -47,7 +47,7 @@
     </div>
     {% elif money_left < 0 %}
     <div style="font-size: 0.8rem; color: var(--danger);">
-        You've gone over your spending allowance this month.
+        You're over budget this month. Pause non-essentials where you can.
     </div>
     {% endif %}
 
@@ -67,7 +67,7 @@
 <div class="glass-card" style="margin-bottom: 24px; border-left: 3px solid var(--roman-gold); padding-left: 20px;">
     <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px;">
         <div>
-            <div class="metric-label" style="font-size: 0.7rem; letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 2px;">Goal</div>
+            <div class="metric-label" style="font-size: 0.7rem; margin-bottom: 2px;">Goal</div>
             <div style="font-size: 0.95rem; color: var(--text-primary); font-weight: 500;">{{ primary_goal.name }}</div>
         </div>
         {% if active_goals_count > 1 %}
@@ -78,11 +78,11 @@
     </div>
 
     <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 10px;">
-        <span class="metric-value gold" style="font-size: 1.8rem;">
-            £{{ "%.2f" | format(primary_goal.current_amount) }}
+        <span class="metric-value md gold">
+            £{{ "{:,.2f}".format(primary_goal.current_amount) }}
         </span>
         <span style="font-size: 0.8rem; color: var(--text-tertiary);">
-            of £{{ "%.2f" | format(primary_goal.target_amount) }}
+            of £{{ "{:,.2f}".format(primary_goal.target_amount) }}
         </span>
     </div>
 
@@ -93,7 +93,7 @@
     {% if primary_projection %}
     <div style="margin-top: 14px; padding-top: 14px; border-top: 0.5px solid rgba(255,255,255,0.06);">
         <div style="font-size: 1rem; color: var(--text-primary); font-weight: 500; margin-bottom: 4px;">
-            At your current rate — <span style="color: var(--roman-gold);">{{ primary_projection.completion_date_human }}</span>
+            On track for <span style="color: var(--roman-gold);">{{ primary_projection.completion_date_human }}</span>
         </div>
         {% if timeline_note %}
         <div style="font-size: 0.8rem; color: var(--text-secondary); line-height: 1.5;">{{ timeline_note }}</div>
@@ -102,7 +102,7 @@
     {% else %}
     <div style="font-size: 0.73rem; color: var(--text-tertiary); margin-top: 6px;">
         {{ primary_goal.progress_percent if primary_goal.progress_percent else 0 }}% there
-        {% if primary_goal.progress_percent and primary_goal.progress_percent >= 90 %} — almost there{% elif primary_goal.progress_percent and primary_goal.progress_percent >= 50 %} — over halfway{% endif %}
+        {% if primary_goal.progress_percent and primary_goal.progress_percent >= 90 %} · almost there{% elif primary_goal.progress_percent and primary_goal.progress_percent >= 50 %} · over halfway{% endif %}
     </div>
     {% endif %}
 </div>
@@ -118,10 +118,10 @@
     <div class="transaction-row">
         <div class="transaction-info">
             <div class="transaction-description">{{ t.description }}</div>
-            <div class="transaction-meta">{{ t.date }} · {{ t.category }}</div>
+            <div class="transaction-meta">{{ t.date_display }} · {{ t.category }}</div>
         </div>
         <div class="transaction-amount {{ t.type }}">
-            {% if t.type == "income" %}+{% else %}-{% endif %}£{{ "%.2f" | format(t.amount) }}
+            {% if t.type == "income" %}+£{{ "%.2f" | format(t.amount) }}{% else %}−£{{ "%.2f" | format(t.amount) }}{% endif %}
         </div>
     </div>
     {% endfor %}

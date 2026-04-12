@@ -2,8 +2,63 @@
 {% block title %}My Money — Claro{% endblock %}
 
 {% block content %}
+
+{% macro category_icon(name, colour) %}
+<svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none"
+     stroke="{{ colour }}" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"
+     style="flex-shrink: 0; opacity: 0.85;">
+{% if name == 'Bills' or name == 'Housing' %}
+    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>
+{% elif name == 'Food' or name == 'Eating Out' %}
+    <path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"/><path d="M7 2v20"/><path d="M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3z"/><path d="M21 15v7"/>
+{% elif name == 'Shopping' %}
+    <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/>
+{% elif name == 'Transport' or name == 'Travel' %}
+    <rect x="1" y="3" width="15" height="13" rx="2"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/>
+{% elif name == 'Health' %}
+    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+{% elif name == 'Subscriptions' %}
+    <polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/>
+{% elif name == 'Entertainment' %}
+    <polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/>
+{% elif name == 'Savings' or name == 'Investments' %}
+    <line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+{% else %}
+    <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/>
+{% endif %}
+</svg>
+{% endmacro %}
+
 <div class="page-header">
     <h1>My Money</h1>
+</div>
+
+<!-- Sub-section navigation -->
+<div style="margin-bottom: 28px; border-radius: 12px; overflow: hidden; border: 0.5px solid rgba(255,255,255,0.07);">
+    <a href="{{ url_for('pages.insights') }}" style="display: flex; align-items: center; gap: 12px; padding: 13px 16px; background: rgba(255,255,255,0.02); text-decoration: none; border-bottom: 0.5px solid rgba(255,255,255,0.05);">
+        <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--roman-gold)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;"><path d="M2 20h.01"/><path d="M7 20v-4"/><path d="M12 20v-8"/><path d="M17 20V8"/><path d="M22 4v16"/></svg>
+        <div style="flex: 1;">
+            <div style="font-size: 0.85rem; color: var(--text-primary);">Monthly outlook</div>
+            <div style="font-size: 0.72rem; color: var(--text-tertiary); margin-top: 1px;">Predictions, patterns, AI insights</div>
+        </div>
+        <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--text-tertiary)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
+    </a>
+    <a href="{{ url_for('pages.recurring') }}" style="display: flex; align-items: center; gap: 12px; padding: 13px 16px; background: rgba(255,255,255,0.02); text-decoration: none; border-bottom: 0.5px solid rgba(255,255,255,0.05);">
+        <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--roman-gold)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>
+        <div style="flex: 1;">
+            <div style="font-size: 0.85rem; color: var(--text-primary);">Recurring payments</div>
+            <div style="font-size: 0.72rem; color: var(--text-tertiary); margin-top: 1px;">Subscriptions and regular bills</div>
+        </div>
+        <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--text-tertiary)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
+    </a>
+    <a href="{{ url_for('pages.analytics') }}" style="display: flex; align-items: center; gap: 12px; padding: 13px 16px; background: rgba(255,255,255,0.02); text-decoration: none;">
+        <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--roman-gold)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <div style="flex: 1;">
+            <div style="font-size: 0.85rem; color: var(--text-primary);">Spending breakdown</div>
+            <div style="font-size: 0.72rem; color: var(--text-tertiary); margin-top: 1px;">Where your money goes, by category</div>
+        </div>
+        <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--text-tertiary)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
+    </a>
 </div>
 
 {% if not current_user.factfind_completed %}
@@ -14,66 +69,109 @@
 </a>
 {% endif %}
 
-<!-- Spending breakdown — categories with inline trends -->
+<!-- Spending breakdown -->
 {% if categories | length > 0 %}
 {% set trend_map = namespace(data={}) %}
 {% for t in trends %}{% set trend_map.data = dict(trend_map.data, **{t.category: t}) %}{% endfor %}
-<div class="glass-card" style="margin-bottom: 24px;">
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
-        <span class="metric-label" style="margin-bottom: 0;">Where your money goes — {{ month_name }}</span>
-        <span class="serif" style="font-size: 1.1rem;">£{{ "%.2f" | format(total_expenses) }}</span>
+
+<div style="margin-bottom: 36px;">
+
+    <!-- Section header -->
+    <div style="margin-bottom: 24px;">
+        <div class="metric-label" style="margin-bottom: 6px;">{{ month_name }} spending</div>
+        <div style="display: flex; justify-content: space-between; align-items: baseline;">
+            <span class="serif" style="font-size: 2rem; color: var(--text-primary); letter-spacing: -0.01em;">£{{ "{:,.2f}".format(total_expenses) }}</span>
+            <span style="font-size: 0.7rem; color: var(--text-tertiary);">% share &nbsp;·&nbsp; ↑↓ vs last month</span>
+        </div>
     </div>
 
+    <!-- Category rows -->
     {% for cat in categories %}
     {% set t = trend_map.data.get(cat.name) %}
-    <div style="margin-bottom: 14px;">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
-            <span style="font-size: 0.85rem; color: var(--text-primary);">{{ cat.icon }} {{ cat.name }}</span>
-            <span style="display: flex; align-items: baseline; gap: 8px;">
-                <span style="font-size: 0.85rem;">£{{ "%.2f" | format(cat.total) }} <span style="color: var(--text-tertiary); font-size: 0.7rem;">{{ cat.percentage }}%</span></span>
-                {% if t and t.direction != 'flat' %}
-                <span style="font-size: 0.7rem; {% if t.direction == 'up' %}color: var(--danger);{% else %}color: var(--success);{% endif %}">
-                    {% if t.direction == 'up' %}↑{% else %}↓{% endif %}{{ t.change_percent | abs }}%
+    <div style="padding: 13px 0; {% if not loop.last %}border-bottom: 0.5px solid rgba(255,255,255,0.05);{% endif %}">
+
+        <!-- Name + amount row -->
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+
+            <!-- Left: icon + name -->
+            <div style="display: flex; align-items: center; gap: 9px;">
+                {{ category_icon(cat.name, cat.colour) }}
+                <span style="font-size: 0.85rem; color: var(--text-primary); letter-spacing: 0.01em;">{{ cat.name }}</span>
+            </div>
+
+            <!-- Right: amount + share + trend -->
+            <div style="display: flex; align-items: center; gap: 10px;">
+                <span style="font-size: 0.85rem; color: var(--text-primary); font-variant-numeric: tabular-nums;">
+                    £{{ "{:,.2f}".format(cat.total) }}
                 </span>
-                {% endif %}
-            </span>
+                <span style="font-size: 0.72rem; color: var(--text-tertiary); min-width: 34px; text-align: right; font-variant-numeric: tabular-nums;">
+                    {{ cat.percentage }}%
+                </span>
+                <span style="width: 12px; text-align: center; font-size: 0.75rem; line-height: 1;">
+                    {% if t and t.direction == 'up' %}
+                    <span style="color: var(--danger);">↑</span>
+                    {% elif t and t.direction == 'down' %}
+                    <span style="color: var(--success);">↓</span>
+                    {% endif %}
+                </span>
+            </div>
+
         </div>
-        <div class="progress-track">
-            <div class="progress-fill" style="width: {{ cat.percentage }}%; background: {{ cat.colour }};"></div>
+
+        <!-- Progress bar -->
+        <div class="progress-track" style="height: 3px; border-radius: 2px;">
+            <div class="progress-fill" style="width: {{ cat.percentage }}%; height: 3px; border-radius: 2px; background: {{ cat.colour }};"></div>
         </div>
+
     </div>
     {% endfor %}
+
 </div>
 {% endif %}
 
 <!-- All transactions -->
 <div class="glass-card">
     {% if transactions | length > 0 %}
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+    <div class="tx-section-header">
         <span class="metric-label" style="margin-bottom: 0;">All transactions</span>
-        <div style="display: flex; align-items: center; gap: 12px;">
-            <a href="{{ url_for('pages.upload_statement') }}" style="font-size: 0.75rem; color: var(--roman-gold); text-decoration: none;">Upload</a>
-            <a href="{{ url_for('pages.add_transaction') }}" style="font-size: 0.75rem; color: var(--roman-gold); text-decoration: none;">Add manually</a>
+        <div class="tx-section-actions">
+            <a href="{{ url_for('pages.upload_statement') }}" class="tx-action-primary">Upload statement</a>
+            <span class="tx-action-sep">·</span>
+            <a href="{{ url_for('pages.add_transaction') }}" class="tx-action-secondary">Add manually</a>
         </div>
     </div>
-        {% for t in transactions %}
-        <div class="transaction-row">
-            <div class="transaction-info">
-                <div class="transaction-description">{{ t.description }}</div>
-                <div class="transaction-meta">{{ t.date }} · {{ t.category }}</div>
-            </div>
-            <div style="display: flex; align-items: center; gap: 12px;">
-                <div class="transaction-amount {{ t.type }}">
-                    {% if t.type == "income" %}+{% else %}-{% endif %}£{{ "%.2f" | format(t.amount) }}
-                </div>
-                <form action="{{ url_for('pages.delete_transaction', transaction_id=t.id) }}" method="POST" style="margin: 0;">
-                    <button type="submit" class="transaction-delete" aria-label="Delete transaction">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
-                    </button>
-                </form>
+    {% for t in transactions %}
+    <div class="transaction-row">
+        <div class="transaction-info">
+            <div class="transaction-description">{{ t.description }}</div>
+            <div class="transaction-meta">
+                {{ t.date_display }} ·
+                <button type="button" id="cat-label-{{ t.id }}"
+                        class="tx-cat-btn"
+                        onclick="openCatEdit({{ t.id }})"
+                        title="Change category">{{ t.category }}</button>
+                <span id="cat-select-{{ t.id }}" style="display:none;">
+                    <select class="tx-cat-select" onchange="saveCategory({{ t.id }}, this)" onblur="closeCatEdit({{ t.id }})">
+                        {% for cat in all_categories %}
+                        <option value="{{ cat.id }}" {% if cat.id == t.category_id %}selected{% endif %}>{{ cat.name }}</option>
+                        {% endfor %}
+                    </select>
+                </span>
             </div>
         </div>
-        {% endfor %}
+        <span class="transaction-amount {{ t.type }}">
+            {% if t.type == "income" %}+£{{ "%.2f" | format(t.amount) }}{% else %}−£{{ "%.2f" | format(t.amount) }}{% endif %}
+        </span>
+        <form action="{{ url_for('pages.delete_transaction', transaction_id=t.id) }}" method="POST" class="tx-delete-form"
+              data-confirm-title="Delete transaction?"
+              data-confirm-body="This can't be undone. You can re-upload your statement if you need to recover it."
+              data-confirm-label="Delete">
+            <button type="submit" class="transaction-delete" aria-label="Delete transaction">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
+            </button>
+        </form>
+    </div>
+    {% endfor %}
     {% else %}
     <div class="metric-label" style="margin-bottom: 8px;">All transactions</div>
     <div class="empty-state" style="padding: 4px 0 12px; text-align: left;">
@@ -87,4 +185,36 @@
     </div>
     {% endif %}
 </div>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+function openCatEdit(id) {
+    document.getElementById('cat-label-' + id).style.display = 'none';
+    var wrap = document.getElementById('cat-select-' + id);
+    wrap.style.display = 'inline';
+    wrap.querySelector('select').focus();
+}
+function closeCatEdit(id) {
+    setTimeout(function() {
+        document.getElementById('cat-label-' + id).style.display = '';
+        document.getElementById('cat-select-' + id).style.display = 'none';
+    }, 150);
+}
+function saveCategory(id, select) {
+    var catId = parseInt(select.value);
+    var catName = select.options[select.selectedIndex].text;
+    fetch('/api/transactions/' + id + '/categorise', {
+        method: 'PUT',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({category_id: catId})
+    }).then(function(res) {
+        if (res.ok) {
+            document.getElementById('cat-label-' + id).textContent = catName;
+        }
+        closeCatEdit(id);
+    }).catch(function() { closeCatEdit(id); });
+}
+</script>
 {% endblock %}

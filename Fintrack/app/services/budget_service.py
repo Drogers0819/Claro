@@ -167,7 +167,7 @@ def _generate_budget_insight(category, spent, limit, remaining, percent_used, da
     elif status == "warning":
         return f"You have £{remaining:.2f} left for {category} with {days_remaining} days to go. That's £{daily_remaining:.2f}/day."
     elif will_exceed:
-        return f"At your current pace, you'll spend £{projected_total:.2f} on {category} — £{projected_total - limit:.2f} over budget."
+        return f"At your current pace, you'll spend £{projected_total:.2f} on {category}, £{projected_total - limit:.2f} over your limit."
     elif status == "ahead_of_pace":
         return f"Your {category} spending is slightly ahead of pace but still within budget. £{remaining:.2f} remaining."
     else:

@@ -2,8 +2,11 @@
 {% block title %}Budget Waterfall — Claro{% endblock %}
 
 {% block content %}
+<a href="{{ url_for('pages.my_budgets') }}" style="display: inline-flex; align-items: center; gap: 6px; font-size: 0.75rem; color: var(--text-tertiary); text-decoration: none; margin-bottom: 16px;">
+    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+    Budgets
+</a>
 <div class="page-header">
-    <div class="section-label">Budget Architecture</div>
     <h1>Your money flow</h1>
     <p>How your £{{ "%.2f" | format(waterfall.total_income) }} is divided each month</p>
 </div>
@@ -32,7 +35,7 @@
 
 {% if waterfall.has_conflicts %}
 <div style="padding: 16px 20px; border-radius: 12px; background: rgba(252, 129, 129, 0.08); border: 0.5px solid rgba(252, 129, 129, 0.2); margin-bottom: 24px;">
-    <div style="font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.15em; color: var(--danger); font-weight: 600; margin-bottom: 8px;">
+    <div style="font-size: 0.75rem; color: var(--danger); font-weight: 500; margin-bottom: 8px;">
         {{ waterfall.conflict_count }} conflict{{ "s" if waterfall.conflict_count != 1 else "" }} detected
     </div>
     {% for c in waterfall.conflicts %}
@@ -59,7 +62,7 @@
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
             <div>
                 <div style="font-size: 0.85rem; color: var(--text-primary);">{{ a.goal_name }}</div>
-                <div style="font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.1em;
+                <div style="font-size: 0.65rem;
                     {% if a.status == 'funded' %}color: var(--success);
                     {% elif a.status == 'partially_funded' %}color: var(--danger);
                     {% else %}color: var(--text-tertiary);{% endif %}">

@@ -2,8 +2,11 @@
 {% block title %}{{ goal.name }} — Claro{% endblock %}
 
 {% block content %}
+<a href="{{ url_for('pages.my_goals') }}" style="display: inline-flex; align-items: center; gap: 6px; font-size: 0.75rem; color: var(--text-tertiary); text-decoration: none; margin-bottom: 16px;">
+    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+    Goals
+</a>
 <div class="page-header">
-    <div class="section-label">Goal Projection</div>
     <h1>{{ goal.name }}</h1>
 </div>
 
@@ -26,7 +29,7 @@
 
 <!-- The slider — THE moment -->
 <div class="glass-card" style="margin-bottom: 32px;">
-    <div class="section-label" style="margin-top: 0;">What if you changed your contribution?</div>
+    <div style="font-size: 0.72rem; color: var(--text-tertiary); margin-bottom: 8px;">What if you changed your contribution?</div>
     <p style="font-size: 0.8rem; color: var(--text-tertiary); margin-bottom: 16px; font-style: italic;">
         Move the slider to see your future change in real time.
     </p>
@@ -56,22 +59,13 @@
     <div style="height: 320px; position: relative;">
         <canvas id="projection-chart"></canvas>
     </div>
-</div>
-
-<!-- Key metrics — update with slider -->
-<div class="grid-3" style="margin-bottom: 32px;">
-    <div class="glass-card">
-        <div class="metric-label">Target</div>
-        <div class="metric-value sm">£{{ "{:,.2f}".format(projection.target_amount) }}</div>
+    {% if projection.total_interest_earned > 0 %}
+    <div style="display: flex; align-items: center; gap: 6px; margin-top: 12px; padding-top: 12px; border-top: 0.5px solid rgba(255,255,255,0.05);">
+        <span style="font-size: 0.75rem; color: var(--text-tertiary);">Investment growth adds</span>
+        <span id="interest-total" style="font-size: 0.8rem; color: var(--success); font-weight: 500;">+£{{ "{:,.0f}".format(projection.total_interest_earned) }}</span>
+        <span style="font-size: 0.75rem; color: var(--text-tertiary);">to your total</span>
     </div>
-    <div class="glass-card">
-        <div class="metric-label">You'll contribute</div>
-        <div id="contribution-total" class="metric-value sm">£{{ "{:,.2f}".format(projection.total_contributed) }}</div>
-    </div>
-    <div class="glass-card">
-        <div class="metric-label">Growth earns you</div>
-        <div id="interest-total" class="metric-value sm success">+£{{ "{:,.2f}".format(projection.total_interest_earned) }}</div>
-    </div>
+    {% endif %}
 </div>
 
 <!-- Progress bar -->
@@ -89,79 +83,32 @@
 
 <!-- Milestones -->
 {% if projection.milestones %}
-<div class="section-label">Milestones</div>
 <div class="glass-card" style="margin-bottom: 32px;">
+    <div class="section-label" style="margin-top: 0;">Milestones</div>
     {% for m in projection.milestones %}
-    <div style="display: flex; justify-content: space-between; align-items: center;
-        {% if not loop.last %}margin-bottom: 16px; padding-bottom: 16px; border-bottom: 0.5px solid rgba(255,255,255,0.05);{% endif %}">
-        <div style="display: flex; align-items: center; gap: 12px;">
-            <div style="width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
-                font-size: 0.7rem; font-weight: 600;
-                {% if m.percent == 100 %}background: var(--roman-gold-dim); color: var(--roman-gold);
-                {% else %}background: rgba(255,255,255,0.05); color: var(--text-secondary);{% endif %}">
-                {{ m.percent }}%
-            </div>
-            <div>
-                <div style="font-size: 0.85rem; color: var(--text-primary);">£{{ "{:,.2f}".format(m.balance) }}</div>
-                <div style="font-size: 0.7rem; color: var(--text-tertiary);">Month {{ m.month }}</div>
-            </div>
+    <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px 0;
+        {% if not loop.last %}border-bottom: 0.5px solid rgba(255,255,255,0.05);{% endif %}">
+        <div style="display: flex; align-items: center; gap: 10px;">
+            <span style="font-size: 0.7rem; font-weight: 600; {% if m.percent == 100 %}color: var(--roman-gold);{% else %}color: var(--text-tertiary);{% endif %}">{{ m.percent }}%</span>
+            <span style="font-size: 0.85rem; color: var(--text-primary);">£{{ "{:,.0f}".format(m.balance) }}</span>
         </div>
-        <div style="font-size: 0.85rem; color: var(--text-secondary);">{{ m.date }}</div>
+        <span style="font-size: 0.8rem; color: var(--text-tertiary);">{{ m.date }}</span>
     </div>
     {% endfor %}
 </div>
 {% endif %}
 
-<!-- Multi-horizon table -->
-{% if multi_horizon %}
-<div class="section-label">Growth scenarios</div>
-<div class="glass-card" style="margin-bottom: 32px; overflow-x: auto;">
-    <table style="width: 100%; border-collapse: collapse; font-size: 0.85rem;">
-        <thead>
-            <tr style="border-bottom: 0.5px solid rgba(255,255,255,0.08);">
-                <th style="text-align: left; padding: 8px 12px; color: var(--text-tertiary); font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.1em; font-weight: 400;">Horizon</th>
-                <th style="text-align: right; padding: 8px 12px; color: var(--text-tertiary); font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.1em; font-weight: 400;">Conservative (2%)</th>
-                <th style="text-align: right; padding: 8px 12px; color: var(--roman-gold); font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.1em; font-weight: 400;">Moderate (4%)</th>
-                <th style="text-align: right; padding: 8px 12px; color: var(--text-tertiary); font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.1em; font-weight: 400;">Optimistic (6%)</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for horizon_key in ["5_year", "10_year", "20_year"] %}
-            {% set horizon = multi_horizon[horizon_key] %}
-            <tr style="{% if not loop.last %}border-bottom: 0.5px solid rgba(255,255,255,0.05);{% endif %}">
-                <td style="padding: 12px; color: var(--text-secondary);">
-                    {{ horizon_key | replace("_", " ") | title }}
-                </td>
-                <td class="serif" style="padding: 12px; text-align: right;">
-                    £{{ "{:,.2f}".format(horizon.conservative.final_balance) }}
-                </td>
-                <td class="serif" style="padding: 12px; text-align: right; color: var(--roman-gold);">
-                    £{{ "{:,.2f}".format(horizon.moderate.final_balance) }}
-                </td>
-                <td class="serif" style="padding: 12px; text-align: right;">
-                    £{{ "{:,.2f}".format(horizon.optimistic.final_balance) }}
-                </td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-</div>
-{% endif %}
 
 {% elif projection.reachable is defined and not projection.reachable %}
-<div class="glass-card" style="margin-bottom: 32px;">
-    <p style="font-size: 0.9rem; color: var(--text-secondary); font-style: italic;">{{ projection.message }}</p>
-    <a href="{{ url_for('pages.my_goals') }}" style="display: inline-block; margin-top: 12px; font-size: 0.75rem; color: var(--roman-gold); text-decoration: none;">
+<div style="margin-bottom: 32px;">
+    <p class="empty-state" style="margin-bottom: 12px;">{{ projection.message }}</p>
+    <a href="{{ url_for('pages.my_goals') }}" style="display: inline-flex; align-items: center; gap: 5px; font-size: 0.75rem; color: var(--roman-gold); text-decoration: none;">
         Adjust this goal
+        <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
     </a>
 </div>
 {% endif %}
 
-<div style="text-align: center; margin-top: 16px;">
-    <a href="{{ url_for('pages.my_goals') }}" style="font-size: 0.75rem; color: var(--text-tertiary); text-decoration: none;">
-        ← Back to My Goals
-    </a>
-</div>
 
 <script src="{{ url_for('static', filename='js/simulator.js') }}"></script>
 <script>

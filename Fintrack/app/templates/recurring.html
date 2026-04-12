@@ -2,10 +2,13 @@
 {% block title %}Recurring Payments — Claro{% endblock %}
 
 {% block content %}
+<a href="{{ url_for('pages.my_money') }}" style="display: inline-flex; align-items: center; gap: 6px; font-size: 0.75rem; color: var(--text-tertiary); text-decoration: none; margin-bottom: 16px;">
+    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+    Money
+</a>
 <div class="page-header">
-    <div class="section-label">Pattern Intelligence</div>
-    <h1>Your recurring payments</h1>
-    <p>Detected from your transaction history.</p>
+    <h1>Recurring payments</h1>
+    <p>Regular outgoings spotted from your transaction history.</p>
 </div>
 
 {% if recurring.count > 0 %}
@@ -70,7 +73,7 @@
             </div>
             <div style="text-align: right; min-width: 100px;">
                 <div class="metric-value xs {% if r.transaction_type == 'income' %}success{% endif %}">
-                    {% if r.transaction_type == 'income' %}+{% else %}-{% endif %}£{{ "%.2f" | format(r.avg_amount) }}
+                    {% if r.transaction_type == 'income' %}+£{{ "%.2f" | format(r.avg_amount) }}{% else %}−£{{ "%.2f" | format(r.avg_amount) }}{% endif %}
                 </div>
                 <div style="font-size: 0.7rem; color: var(--text-tertiary);">
                     £{{ "%.2f" | format(r.monthly_cost) }}/month
@@ -93,10 +96,8 @@
 </div>
 
 {% else %}
-<div class="glass-card">
-    <div class="empty-state">
-        {{ recurring.message if recurring.message else "No recurring patterns detected yet. Upload more transaction history for better detection." }}
-    </div>
+<div class="empty-state">
+    {{ recurring.message if recurring.message else "No regular payments spotted yet. Upload a few months of transactions and we'll find the patterns." }}
 </div>
 {% endif %}
 {% endblock %}
