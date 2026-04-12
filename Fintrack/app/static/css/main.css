@@ -1755,11 +1755,6 @@ body.theme-mist .budget-row-danger {
         padding: 12px 16px;
     }
 
-    /* Action button rows */
-    [style*="display: flex"][style*="gap: 12px"] {
-        flex-direction: column;
-    }
-
     /* Slider: bigger thumb for touch */
     input[type="range"] {
         height: 8px;
