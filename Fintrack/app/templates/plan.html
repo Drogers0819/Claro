@@ -4,14 +4,13 @@
 {% block content %}
 <div class="page-header">
     <h1>Plan</h1>
-    <p>Pick any monthly spend and see its true cost over 5, 10, and 20 years.</p>
 </div>
 
 <!-- 1 · Spend cost calculator — primary action -->
-<div style="margin-bottom: 28px;">
+<div style="margin-bottom: 36px;">
     <div style="margin-bottom: 16px;">
-        <div style="font-size: 1.05rem; color: var(--text-primary); font-weight: 500; margin-bottom: 4px;">What's this really costing you?</div>
-        <div style="font-size: 0.8rem; color: var(--text-tertiary);">Coffee, takeaways, subscriptions. Enter the monthly cost and see what it grows into if invested instead.</div>
+        <div class="section-label" style="margin-bottom: 6px;">Habit cost</div>
+        <div style="font-size: 0.85rem; color: var(--text-secondary);">Coffee, takeaways, subscriptions — enter the monthly cost and see what it grows into if invested instead.</div>
     </div>
     <form method="POST" action="{{ url_for('pages.plan') }}">
         <input type="hidden" name="form_type" value="habit_cost">
@@ -96,9 +95,9 @@
 {% endif %}
 
 <!-- 3 · What if? — secondary tool -->
-<div style="padding-top: 4px;">
-    <div style="font-size: 0.95rem; color: var(--text-primary); font-weight: 500; margin-bottom: 4px;">What if?</div>
-    <p style="font-size: 0.8rem; color: var(--text-tertiary); margin-bottom: 12px;">Change your income, rent, or goal contributions and see the exact impact on your goal timelines.</p>
+<div style="padding-top: 32px; margin-top: 8px; border-top: 0.5px solid rgba(255,255,255,0.06);">
+    <div class="section-label" style="margin-bottom: 6px;">Scenario</div>
+    <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 12px;">Change your income, rent, or goal contributions and see the exact impact on your goal timelines.</p>
     <a href="{{ url_for('pages.scenario_page') }}" class="btn-secondary btn-sm">
         Run the numbers <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18l6-6-6-6"/></svg>
     </a>
