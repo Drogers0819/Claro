@@ -202,7 +202,7 @@ class TestBudgetStatus:
         goals = [{"id": 1, "name": "Savings", "monthly_allocation": 400}]
 
         result = calculate_budget_status(predictions, user_profile, goals)
-        assert result["status"] == "overspending"
+        assert result["status"] == "over budget"
 
     def test_no_goals(self):
         predictions = {

@@ -25,7 +25,7 @@ class Transaction(db.Model):
             "category": self.category_rel.name if self.category_rel else "Other",
             "type": self.type,
             "date": self.date.isoformat(),
-            "date_display": self.date.strftime("%-d %b"),
+            "date_display": str(self.date.day) + self.date.strftime(" %b"),
             "merchant": self.merchant,
             "is_recurring": self.is_recurring,
             "created_at": self.created_at.isoformat() if self.created_at else None
