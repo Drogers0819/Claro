@@ -280,7 +280,13 @@ def _find_goal_id(goals, goal_type):
 # ─── ALLOCATION CALCULATION ──────────────────────────────────
 
 def _calculate_allocations(pots, surplus):
-    """Calculate optimal monthly allocation for each pot."""
+    """Calculate optimal monthly allocation for each pot.
+    
+    Every active goal gets a share. Higher priority goals get more,
+    but no goal gets zero. This mirrors how a real financial adviser
+    would split your money — emergency fund gets the biggest chunk,
+    but your house deposit still moves forward.
+    """
     # Reserve lifestyle and buffer first
     lifestyle_amount = max(round(surplus * LIFESTYLE_PERCENT, 2), LIFESTYLE_MIN)
     buffer_amount = max(round(surplus * BUFFER_PERCENT, 2), BUFFER_MIN)
@@ -293,7 +299,6 @@ def _calculate_allocations(pots, surplus):
     available_for_goals = surplus - lifestyle_amount - buffer_amount
 
     if available_for_goals <= 0:
-        # Surplus too small — just split it
         for pot in pots:
             if pot["type"] == "lifestyle":
                 pot["monthly_amount"] = max(surplus * 0.60, 0)
@@ -308,17 +313,16 @@ def _calculate_allocations(pots, surplus):
         elif pot["type"] == "buffer":
             pot["monthly_amount"] = buffer_amount
 
-    # Allocate to goal pots
+    # Get active goal pots
     goal_pots = [p for p in pots if p["type"] not in ("lifestyle", "buffer") and not p["completed"]]
 
     if not goal_pots:
-        # No goals — everything to lifestyle
         for pot in pots:
             if pot["type"] == "lifestyle":
                 pot["monthly_amount"] += available_for_goals
         return pots
 
-    # Calculate ideal monthly amount for each goal based on deadline
+    # Calculate ideal monthly amount for each goal
     for pot in goal_pots:
         remaining = pot["target"] - pot["current"] if pot["target"] else 0
         if remaining <= 0:
@@ -327,52 +331,65 @@ def _calculate_allocations(pots, surplus):
             continue
 
         if pot["type"] == "debt":
-            # Debts: pay off as fast as possible, minimum 2x min payment
             pot["ideal_monthly"] = max(pot.get("min_payment", 0) * 2, remaining / 6)
         elif pot.get("months_until_deadline") and pot["months_until_deadline"] > 0:
-            # Goal with deadline: calculate exact amount needed
             pot["ideal_monthly"] = remaining / pot["months_until_deadline"]
         elif pot["type"] == "emergency":
-            # Emergency: target 6-9 months to fill
             pot["ideal_monthly"] = remaining / 7
         else:
-            # No deadline: spread over 24 months default
             pot["ideal_monthly"] = remaining / 24 if remaining > 0 else 0
 
-    # Sort by priority (debts first, then emergency, then deadline urgency)
-    goal_pots.sort(key=lambda p: p["priority"])
+    # Remove completed pots
+    active_pots = [p for p in goal_pots if not p.get("completed") and p.get("ideal_monthly", 0) > 0]
 
-    # Allocate available money to goals in priority order
-    remaining_budget = available_for_goals
+    if not active_pots:
+        for pot in pots:
+            if pot["type"] == "lifestyle":
+                pot["monthly_amount"] = round(pot["monthly_amount"] + available_for_goals, 2)
+        return pots
 
-    for pot in goal_pots:
-        if pot.get("completed"):
-            continue
+    # Priority-weighted proportional allocation
+    # Higher priority (lower number) gets a bigger weight
+    total_ideal = sum(p["ideal_monthly"] for p in active_pots)
 
-        ideal = pot.get("ideal_monthly", 0)
-        if ideal <= 0:
-            continue
-
-        allocated = min(ideal, remaining_budget)
-        pot["monthly_amount"] = round(allocated, 2)
-        remaining_budget -= allocated
-
-        if remaining_budget <= 0:
-            break
-
-    # If there's money left over, distribute to goals proportionally
-    if remaining_budget > 1:
-        active_pots = [p for p in goal_pots if p["monthly_amount"] > 0 and not p.get("completed")]
-        if active_pots:
-            # Give extra to the highest priority pot
+    if total_ideal <= available_for_goals:
+        # Enough money for everyone's ideal — allocate ideals and distribute remainder
+        for pot in active_pots:
+            pot["monthly_amount"] = round(pot["ideal_monthly"], 2)
+        remainder = available_for_goals - total_ideal
+        if remainder > 1 and active_pots:
+            # Give extra to highest priority
             active_pots[0]["monthly_amount"] = round(
-                active_pots[0]["monthly_amount"] + remaining_budget, 2
+                active_pots[0]["monthly_amount"] + remainder, 2
             )
-        else:
-            # No active goals — add to lifestyle
-            for pot in pots:
-                if pot["type"] == "lifestyle":
-                    pot["monthly_amount"] = round(pot["monthly_amount"] + remaining_budget, 2)
+    else:
+        # Not enough for everyone — split proportionally with priority weighting
+        # Priority weights: debt=4x, emergency=3x, deadline goals=2x, no deadline=1x
+        for pot in active_pots:
+            if pot["type"] == "debt":
+                pot["priority_weight"] = 4.0
+            elif pot["type"] == "emergency":
+                pot["priority_weight"] = 3.0
+            elif pot.get("months_until_deadline"):
+                pot["priority_weight"] = 2.0
+            else:
+                pot["priority_weight"] = 1.0
+
+        # Weighted ideal = ideal * weight
+        weighted_totals = sum(p["ideal_monthly"] * p["priority_weight"] for p in active_pots)
+
+        for pot in active_pots:
+            if weighted_totals > 0:
+                share = (pot["ideal_monthly"] * pot["priority_weight"]) / weighted_totals
+                pot["monthly_amount"] = round(available_for_goals * share, 2)
+            else:
+                pot["monthly_amount"] = round(available_for_goals / len(active_pots), 2)
+
+    # Ensure allocations don't exceed available (rounding fix)
+    total_allocated = sum(p["monthly_amount"] for p in active_pots)
+    if total_allocated > available_for_goals + 0.01:
+        diff = total_allocated - available_for_goals
+        active_pots[-1]["monthly_amount"] = round(active_pots[-1]["monthly_amount"] - diff, 2)
 
     return pots
 
