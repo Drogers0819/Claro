@@ -115,13 +115,7 @@
 {% if smart_plan.alerts %}
 <div style="margin-bottom: 24px;">
     {% for alert in smart_plan.alerts %}
-    {% if alert.severity == 'warning' %}
-    <div style="padding: 10px 14px; margin-bottom: 6px; border-radius: 10px; background: rgba(246,173,85,0.06); border: 0.5px solid rgba(246,173,85,0.2);">
-        <p style="font-size: 0.8rem; color: rgba(246,173,85,0.9); line-height: 1.5; margin: 0;">{{ alert.message }}</p>
-    </div>
-    {% else %}
     <p style="font-size: 0.8rem; color: var(--text-secondary); line-height: 1.6; margin-bottom: 6px;">{{ alert.message }}</p>
-    {% endif %}
     {% endfor %}
 </div>
 {% endif %}

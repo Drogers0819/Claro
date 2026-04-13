@@ -76,14 +76,17 @@
     <div style="font-size: 0.72rem; color: var(--text-tertiary); margin-bottom: 14px; text-transform: uppercase; letter-spacing: 0.06em;">Your plan phases</div>
 
     {% for phase in smart_plan.phases %}
-    <div style="padding: 14px 16px; margin-bottom: 8px; border-radius: 12px; background: {% if loop.first %}var(--roman-gold-dim){% else %}var(--glass-bg){% endif %}; border: 0.5px solid {% if loop.first %}var(--glass-border){% else %}rgba(255,255,255,0.04){% endif %};">
+    <div style="padding: 12px 0; {% if not loop.last %}border-bottom: 0.5px solid rgba(255,255,255,0.06);{% endif %}">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
-            <span style="font-size: 0.8rem; font-weight: 500; color: {% if loop.first %}var(--text-primary){% else %}var(--text-secondary){% endif %};">Phase {{ phase.phase }}</span>
+            <div style="display: flex; align-items: center; gap: 8px;">
+                <span style="font-size: 0.85rem; font-weight: 500; color: {% if loop.first %}var(--text-primary){% else %}var(--text-tertiary){% endif %};">Phase {{ phase.phase }}</span>
+                {% if loop.first %}<span style="font-size: 0.6rem; padding: 1px 7px; border-radius: 4px; background: rgba(255,255,255,0.06); color: var(--text-tertiary);">current</span>{% endif %}
+            </div>
             <span style="font-size: 0.7rem; color: var(--text-tertiary);">{{ phase.duration_months }} month{{ 's' if phase.duration_months != 1 else '' }}</span>
         </div>
-        <p style="font-size: 0.8rem; color: var(--text-secondary); line-height: 1.5;">{{ phase.description }}</p>
+        <p style="font-size: 0.8rem; color: {% if loop.first %}var(--text-secondary){% else %}var(--text-tertiary){% endif %}; line-height: 1.5; margin-bottom: {% if phase.completed_pots %}8px{% else %}0{% endif %};">{{ phase.description }}</p>
         {% if phase.completed_pots %}
-        <div style="margin-top: 6px;">
+        <div>
             {% for name in phase.completed_pots %}
             <span style="font-size: 0.65rem; padding: 2px 8px; border-radius: 4px; background: rgba(72,187,120,0.08); color: rgba(72,187,120,0.7); margin-right: 4px;">{{ name }} · done</span>
             {% endfor %}
@@ -94,17 +97,11 @@
 </div>
 {% endif %}
 
-<!-- Alerts -->
+<!-- Alerts — plain text only, no card treatment -->
 {% if smart_plan.alerts %}
 <div style="margin-bottom: 32px;">
     {% for alert in smart_plan.alerts %}
-    {% if alert.severity == 'warning' %}
-    <div style="padding: 12px 16px; margin-bottom: 8px; border-radius: 10px; background: rgba(246,173,85,0.06); border: 0.5px solid rgba(246,173,85,0.2);">
-        <p style="font-size: 0.8rem; color: rgba(246,173,85,0.9); line-height: 1.5;">{{ alert.message }}</p>
-    </div>
-    {% else %}
-    <p style="font-size: 0.8rem; color: var(--text-secondary); line-height: 1.6; margin-bottom: 8px;">{{ alert.message }}</p>
-    {% endif %}
+    <p style="font-size: 0.8rem; color: var(--text-secondary); line-height: 1.6; margin-bottom: 6px;">{{ alert.message }}</p>
     {% endfor %}
 </div>
 {% endif %}
