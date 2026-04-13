@@ -40,8 +40,8 @@
     <!-- Hero metric -->
     <div class="glass-card" style="margin-bottom: 12px; border-left: 3px solid var(--roman-gold); padding-left: 20px;">
         <div class="metric-label">Predicted total</div>
-        <div class="metric-value hero gold" style="margin: 4px 0;">£{{ "{:,.2f}".format(predictions.predictions.blended.predicted_total) }}</div>
-        <div style="font-size: 0.75rem; color: var(--text-tertiary);">{{ (predictions.predictions.blended.confidence * 100) | int }}% confidence</div>
+        <div class="metric-value hero" style="margin: 4px 0;">£{{ "{:,.2f}".format(predictions.predictions.blended.predicted_total) }}</div>
+        <div style="font-size: 0.75rem; color: var(--text-tertiary);">based on {{ predictions.spending_so_far.transaction_count }} transactions</div>
     </div>
     <!-- Supporting stats -->
     <div class="grid-2">
