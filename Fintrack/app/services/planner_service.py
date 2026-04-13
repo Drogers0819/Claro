@@ -377,56 +377,83 @@ def _staged_allocation(pots, surplus, essentials):
 
 
 def _distribute_by_deadline(goal_pots, available):
+    """Distribute available money across goals.
+    
+    Professional approach: deadline goals get funded first by urgency.
+    No-deadline goals get whatever remains.
+    """
     if not goal_pots or available <= 0:
         return
 
-    for pot in goal_pots:
+    # Split into deadline and no-deadline groups
+    deadline_pots = [p for p in goal_pots if p.get("months_until_deadline") and p["months_until_deadline"] > 0]
+    open_pots = [p for p in goal_pots if not p.get("months_until_deadline") or p["months_until_deadline"] is None]
+
+    # Calculate what deadline goals need per month
+    for pot in deadline_pots:
         remaining = pot.get("_remaining", pot.get("target", 0) - pot.get("current", 0))
         if remaining <= 0:
             pot["_ideal"] = 0
             continue
+        pot["_ideal"] = remaining / pot["months_until_deadline"]
 
-        if pot.get("months_until_deadline") and pot["months_until_deadline"] > 0:
-            pot["_ideal"] = remaining / pot["months_until_deadline"]
-        else:
-            pot["_ideal"] = remaining / 24 if remaining > 0 else 0
-
-        if pot.get("months_until_deadline") and pot["months_until_deadline"] <= 6:
+        # Urgency weight
+        if pot["months_until_deadline"] <= 6:
             pot["_weight"] = 4.0
-        elif pot.get("months_until_deadline") and pot["months_until_deadline"] <= 12:
+        elif pot["months_until_deadline"] <= 12:
             pot["_weight"] = 2.5
-        elif pot.get("months_until_deadline") and pot["months_until_deadline"] <= 24:
+        elif pot["months_until_deadline"] <= 24:
             pot["_weight"] = 1.5
         else:
             pot["_weight"] = 1.0
 
-    active = [p for p in goal_pots if p.get("_ideal", 0) > 0]
-    if not active:
-        return
+    active_deadline = [p for p in deadline_pots if p.get("_ideal", 0) > 0]
+    total_ideal = sum(p["_ideal"] for p in active_deadline)
 
-    total_ideal = sum(p["_ideal"] for p in active)
+    # Fund deadline goals first
+    if active_deadline:
+        if total_ideal <= available:
+            # Enough for all deadline goals at their ideal
+            for pot in active_deadline:
+                pot["monthly_amount"] = round(pot.get("monthly_amount", 0) + pot["_ideal"], 2)
+            available -= total_ideal
+        else:
+            # Not enough — split by urgency weighting
+            weighted_total = sum(p["_ideal"] * p["_weight"] for p in active_deadline)
+            for pot in active_deadline:
+                if weighted_total > 0:
+                    share = (pot["_ideal"] * pot["_weight"]) / weighted_total
+                    pot["monthly_amount"] = round(pot.get("monthly_amount", 0) + available * share, 2)
+                else:
+                    pot["monthly_amount"] = round(
+                        pot.get("monthly_amount", 0) + available / len(active_deadline), 2
+                    )
+            available = 0
 
-    if total_ideal <= available:
-        for pot in active:
-            pot["monthly_amount"] = round(pot.get("monthly_amount", 0) + pot["_ideal"], 2)
-        remainder = available - total_ideal
-        if remainder > 1 and active:
-            active[0]["monthly_amount"] = round(active[0]["monthly_amount"] + remainder, 2)
-    else:
-        weighted_total = sum(p["_ideal"] * p["_weight"] for p in active)
-        for pot in active:
-            if weighted_total > 0:
-                share = (pot["_ideal"] * pot["_weight"]) / weighted_total
+    # Remaining goes to no-deadline goals
+    if available > 0 and open_pots:
+        # Spread evenly or by remaining amount
+        total_remaining = sum(
+            max(p.get("_remaining", p.get("target", 0) - p.get("current", 0)), 0)
+            for p in open_pots
+        )
+        for pot in open_pots:
+            remaining = max(pot.get("_remaining", pot.get("target", 0) - pot.get("current", 0)), 0)
+            if total_remaining > 0 and remaining > 0:
+                share = remaining / total_remaining
                 pot["monthly_amount"] = round(pot.get("monthly_amount", 0) + available * share, 2)
-            else:
+            elif open_pots:
                 pot["monthly_amount"] = round(
-                    pot.get("monthly_amount", 0) + available / len(active), 2
+                    pot.get("monthly_amount", 0) + available / len(open_pots), 2
                 )
 
-    total_given = sum(p.get("monthly_amount", 0) for p in active)
-    if total_given > available + 0.01:
-        diff = total_given - available
-        active[-1]["monthly_amount"] = round(active[-1]["monthly_amount"] - diff, 2)
+    # Fix rounding across all pots
+    all_active = [p for p in goal_pots if p.get("monthly_amount", 0) > 0]
+    total_given = sum(p["monthly_amount"] for p in all_active)
+    original_available = sum(p["monthly_amount"] for p in goal_pots)
+    if all_active and total_given > original_available + 0.01:
+        diff = total_given - original_available
+        all_active[-1]["monthly_amount"] = round(all_active[-1]["monthly_amount"] - diff, 2)
 
 
 # ─── PHASE SIMULATION ────────────────────────────────────────
