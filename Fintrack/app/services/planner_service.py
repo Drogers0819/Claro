@@ -291,15 +291,25 @@ def _staged_allocation(pots, surplus, essentials):
 
     # ── STAGE 1: Mini emergency buffer ──
     mini_target = MINI_EMERGENCY
+    has_debt = len(debt_pots) > 0
 
     if emergency and emergency["current"] < mini_target and not emergency["completed"]:
         mini_needed = mini_target - emergency["current"]
-        mini_allocation = min(mini_needed, available)
+
+        if has_debt and mini_needed > available * 0.5:
+            # Debt is waiting — build mini buffer in 2 months, give rest to debt
+            mini_allocation = round(min(mini_needed / 2, available * 0.5), 2)
+        else:
+            mini_allocation = min(mini_needed, available)
+
         emergency["monthly_amount"] = round(mini_allocation, 2)
         emergency["_stage"] = "mini"
         available -= mini_allocation
+
         if available <= 0:
             return pots
+
+    # ── STAGE 2: Clear ALL debt ──
 
     # ── STAGE 2: Clear ALL debt ──
     total_debt_remaining = sum(p["_remaining"] for p in debt_pots)
