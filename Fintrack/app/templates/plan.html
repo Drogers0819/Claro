@@ -107,7 +107,7 @@
 
 <!-- Can I afford this? -->
 <div style="margin-bottom: 32px; padding-top: 16px; border-top: 0.5px solid rgba(255,255,255,0.06);">
-    <div class="section-label" style="margin-bottom: 6px;">Can I afford this?</div>
+    <div style="font-size: 0.72rem; color: var(--text-tertiary); margin-bottom: 6px;">Can I afford this?</div>
     <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 12px;">Check a one-off expense against your plan.</p>
     <form method="POST" action="{{ url_for('pages.plan') }}">
         <input type="hidden" name="form_type" value="afford_check">
@@ -196,7 +196,7 @@
 
 <!-- Scenario link -->
 <div style="padding-top: 32px; margin-top: 8px; border-top: 0.5px solid rgba(255,255,255,0.06);">
-    <div class="section-label" style="margin-bottom: 6px;">What if?</div>
+    <div style="font-size: 0.72rem; color: var(--text-tertiary); margin-bottom: 6px;">What if?</div>
     <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 12px;">Change your income, rent, or goal contributions and see the exact impact.</p>
     <a href="{{ url_for('pages.scenario_page') }}" class="btn-secondary btn-sm">
         Run a scenario <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>

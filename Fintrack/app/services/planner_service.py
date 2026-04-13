@@ -680,7 +680,7 @@ def can_i_afford(plan, expense_name, amount, target_month=None):
             "source": "Lifestyle & family pot",
             "balance_before": round(lifestyle_balance, 2),
             "balance_after": round(remaining_after, 2),
-            "message": f"Yes — your lifestyle pot will have £{lifestyle_balance:,.0f} by then. "
+            "message": f"Yes, your lifestyle pot will have £{lifestyle_balance:,.0f} by then. "
                       f"After the {expense_name} you'll have £{remaining_after:,.0f} left.",
             "impact": "none"
         }
@@ -704,9 +704,8 @@ def can_i_afford(plan, expense_name, amount, target_month=None):
             "amount": round(amount, 2),
             "balance_available": round(lifestyle_balance, 2),
             "shortfall": round(amount - lifestyle_balance, 2),
-            "message": f"The {expense_name} (£{amount:,.0f}) exceeds your lifestyle pot "
-                      f"(£{lifestyle_balance:,.0f}). You'd need to pause a goal contribution "
-                      f"for a month to cover the difference.",
+            "message": f"{expense_name} costs £{amount:,.0f} and your lifestyle pot has £{lifestyle_balance:,.0f}. "
+                      f"You'd need to pause a goal contribution for a month to cover the £{amount - lifestyle_balance:,.0f} gap.",
             "impact": "significant"
         }
 
@@ -792,7 +791,7 @@ def get_plan_summary(plan):
     else:
         focus = "your goals"
 
-    summary = f"Phase {phase_num} of {total_phases} — building {focus}."
+    summary = f"Phase {phase_num} of {total_phases}, building {focus}."
 
     if completed:
         summary += f" {' and '.join(completed)} will be done in {duration} month{'s' if duration != 1 else ''}."
