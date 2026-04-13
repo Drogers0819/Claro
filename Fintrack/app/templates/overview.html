@@ -50,7 +50,7 @@
 {% if goal_pots %}
 <div class="glass-card" style="margin-bottom: 24px;">
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
-        <span class="metric-label" style="margin-bottom: 0;">Your pots</span>
+        <span class="section-label" style="margin-bottom: 0;">Your pots</span>
         <a href="{{ url_for('pages.my_goals') }}" style="font-size: 0.75rem; color: var(--roman-gold); text-decoration: none;">
             {% if active_goals_count > 0 %}{{ active_goals_count }} goal{{ 's' if active_goals_count != 1 else '' }}{% endif %}
         </a>

@@ -21,7 +21,7 @@
 
 <!-- Monthly breakdown -->
 <div style="margin-bottom: 32px;">
-    <div style="font-size: 0.72rem; color: var(--text-tertiary); margin-bottom: 14px; text-transform: uppercase; letter-spacing: 0.06em;">How your £{{ "{:,.0f}".format(smart_plan.income) }}/month is divided</div>
+    <div class="section-label" style="margin-bottom: 14px;">Monthly breakdown</div>
 
     <div style="padding: 8px 0; border-bottom: 0.5px solid var(--glass-border);">
         <div style="display: flex; justify-content: space-between;">
@@ -65,7 +65,7 @@
     <div style="padding: 10px 0; margin-top: 4px;">
         <div style="display: flex; justify-content: space-between;">
             <span style="font-size: 0.8rem; color: var(--text-tertiary); font-weight: 500;">Surplus</span>
-            <span style="font-size: 0.8rem; color: var(--roman-gold); font-weight: 500;">£{{ "{:,.0f}".format(smart_plan.surplus) }}/mo</span>
+            <span style="font-size: 0.8rem; color: var(--text-secondary); font-weight: 500;">£{{ "{:,.0f}".format(smart_plan.surplus) }}/mo</span>
         </div>
     </div>
 </div>
