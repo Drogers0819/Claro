@@ -276,12 +276,35 @@ def _staged_allocation(pots, surplus, essentials):
     if available <= 0:
         return pots
 
+    # ── STAGE 0: Must-hit deadline goals (funded before everything) ──
+    funded_must_hits = set()
+    must_hit_pots = [p for p in pots if "(must-hit)" in p.get("name", "").lower()
+                     and p.get("deadline") and p.get("_remaining", 0) > 0]
+    for pot in must_hit_pots:
+        remaining = pot["target"] - pot["current"]
+        if remaining <= 0:
+            continue
+        months_left = pot.get("months_until_deadline") or 1
+        months_left = max(months_left, 1)
+        needed = round(remaining / months_left, 2)
+        allocation = min(needed, available)
+        if allocation > 0:
+            pot["monthly_amount"] = round(pot.get("monthly_amount", 0) + allocation, 2)
+            pot["months_to_target"] = months_left
+            pot["name"] = pot["name"].replace(" (must-hit)", "").replace(" (Must-hit)", "")
+            pot["_stage"] = "must_hit"
+            available -= allocation
+            funded_must_hits.add(pot.get("goal_id"))
+    if available <= 0:
+        return pots
+
     emergency = next((p for p in pots if p["type"] == "emergency" and not p["completed"]), None)
     debt_pots = [p for p in pots if (p["type"] == "debt" or _is_debt_goal(p.get("name", "")))
                  and not p.get("completed") and p["type"] not in ("lifestyle", "buffer", "emergency")]
     goal_pots = [p for p in pots if p["type"] not in ("lifestyle", "buffer", "emergency", "debt")
                  and not _is_debt_goal(p.get("name", ""))
-                 and not p.get("completed")]
+                 and not p.get("completed")
+                 and p.get("goal_id") not in funded_must_hits]
 
     for pot in debt_pots + ([emergency] if emergency else []) + goal_pots:
         if pot and pot.get("target"):

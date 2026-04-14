@@ -45,14 +45,24 @@
                 </div>
             </div>
 
+            <div id="holiday-mustHit" style="display: none; margin-top: 12px; padding: 10px 14px; border-radius: 8px; background: rgba(197,163,93,0.04); border: 0.5px solid rgba(197,163,93,0.1);">
+                        <label style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
+                            <input type="checkbox" name="holiday_must_hit" value="1" style="accent-color: var(--roman-gold); width: 16px; height: 16px;">
+                            <div>
+                                <span style="font-size: 0.8rem; color: var(--text-primary);">This trip is booked — I have to go</span>
+                                <span style="display: block; font-size: 0.7rem; color: var(--text-tertiary); margin-top: 2px;">We'll make sure this gets funded first, even before the emergency fund</span>
+                            </div>
+                        </label>
+                    </div>
+
             <div class="goal-detail" id="detail-holiday" style="display: none;">
                 <div class="glass-card" style="padding: 16px 20px;">
                     <div style="font-size: 0.85rem; color: var(--text-primary); margin-bottom: 10px;">✈️ Holiday — when and how much?</div>
                     <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 10px;">
-                        <label class="amt-opt"><input type="radio" name="holiday_timeline" value="3" style="display:none;" onchange="selOpt(this)"><span>3 months</span></label>
-                        <label class="amt-opt"><input type="radio" name="holiday_timeline" value="6" style="display:none;" onchange="selOpt(this)"><span>6 months</span></label>
-                        <label class="amt-opt"><input type="radio" name="holiday_timeline" value="12" style="display:none;" onchange="selOpt(this)"><span>1 year</span></label>
-                        <label class="amt-opt"><input type="radio" name="holiday_timeline" value="0" style="display:none;" onchange="selOpt(this)"><span>No rush</span></label>
+                        <label class="amt-opt"><input type="radio" name="holiday_timeline" value="3" style="display:none;" onchange="selOpt(this); showMustHit('holiday')"><span>3 months</span></label>
+                        <label class="amt-opt"><input type="radio" name="holiday_timeline" value="6" style="display:none;" onchange="selOpt(this); showMustHit('holiday')"><span>6 months</span></label>
+                        <label class="amt-opt"><input type="radio" name="holiday_timeline" value="12" style="display:none;" onchange="selOpt(this); hideMustHit('holiday')"><span>1 year</span></label>
+                        <label class="amt-opt"><input type="radio" name="holiday_timeline" value="0" style="display:none;" onchange="selOpt(this); hideMustHit('holiday')"><span>No rush</span></label>
                     </div>
                     <input type="number" name="holiday_amount" class="form-input" placeholder="Budget (£) e.g. 2000" step="100" min="100">
                 </div>
@@ -147,6 +157,7 @@
 .amt-opt input:checked+span{border-color:var(--roman-gold);background:rgba(197,163,93,0.1);color:var(--roman-gold);}
 </style>
 
+
 <script>
 function toggleChip(cb){
     var chip=document.getElementById('chip-'+cb.value);
@@ -159,6 +170,15 @@ function selOpt(r){}
 function updateBtn(){
     var c=document.querySelectorAll('input[name="goals"]:checked');
     document.getElementById('buildBtn').style.display=c.length>0?'block':'none';
+}
+
+function showMustHit(goal) {
+    var el = document.getElementById(goal + '-mustHit');
+    if (el) el.style.display = 'block';
+}
+function hideMustHit(goal) {
+    var el = document.getElementById(goal + '-mustHit');
+    if (el) { el.style.display = 'none'; el.querySelector('input[type="checkbox"]').checked = false; }
 }
 </script>
 {% endblock %}
