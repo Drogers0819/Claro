@@ -183,7 +183,7 @@ class TestBudgetStatus:
     def test_tight_status(self):
         predictions = {
             "predictions": {
-                "blended": {"predicted_total": 500}
+                "blended": {"predicted_total": 1300}
             }
         }
         user_profile = {"monthly_income": 1700, "fixed_commitments": 800}
@@ -195,7 +195,7 @@ class TestBudgetStatus:
     def test_overspending_status(self):
         predictions = {
             "predictions": {
-                "blended": {"predicted_total": 1200}
+                "blended": {"predicted_total": 1800}
             }
         }
         user_profile = {"monthly_income": 1700, "fixed_commitments": 800}

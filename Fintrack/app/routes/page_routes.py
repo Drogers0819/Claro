@@ -8,6 +8,7 @@ from app.models.goal import Goal
 from app.models.budget import Budget
 from sqlalchemy import func, extract
 from datetime import date, datetime
+from dateutil.relativedelta import relativedelta
 from app.services.csv_parser import extract_transactions_from_csv, CSVParseError
 from app.services.categoriser_service import categorise_transactions, build_categoriser_for_user
 from app.services.allocator_service import generate_waterfall_summary
@@ -386,8 +387,7 @@ def register():
         db.session.commit()
 
         login_user(user)
-        flash("Account created successfully", "success")
-        return redirect(url_for("pages.welcome"))
+        return redirect(url_for("pages.factfind"))
 
     return render_template("register.html")
 
@@ -792,6 +792,122 @@ def checkin():
         past_checkins=[c.to_dict() for c in past_checkins]
     )
 
+# ─── GOAL CHIPS (Onboarding) ─────────────────────────────────
+# Add this to app/routes/page_routes.py
+
+@page_bp.route("/goals/choose", methods=["GET", "POST"])
+@login_required
+def goal_chips():
+    if not current_user.factfind_completed:
+        return redirect(url_for("pages.factfind"))
+
+    if request.method == "POST":
+        selected = request.form.getlist("goals")
+        today = date.today()
+
+        for chip in selected:
+            name = None
+            target = None
+            deadline = None
+
+            if chip == "house":
+                name = "House deposit"
+                target = request.form.get("house_custom") or request.form.get("house_amount")
+
+            elif chip == "holiday":
+                name = "Holiday"
+                target = request.form.get("holiday_amount")
+                months = request.form.get("holiday_timeline", type=int)
+                if months and months > 0:
+                    deadline = today + relativedelta(months=months)
+
+            elif chip == "baby":
+                name = "Baby fund"
+                target = request.form.get("baby_amount")
+                months = request.form.get("baby_timeline", type=int)
+                if months and months > 0:
+                    deadline = today + relativedelta(months=months)
+
+            elif chip == "debt":
+                name = request.form.get("debt_name", "").strip()
+                if not name:
+                    name = "Pay off debt"
+                elif not any(w in name.lower() for w in ["pay off", "clear", "debt", "loan", "credit", "overdraft"]):
+                    name = f"Pay off {name}"
+                target = request.form.get("debt_amount")
+
+            elif chip == "car":
+                name = "Car"
+                target = request.form.get("car_amount")
+
+            elif chip == "wedding":
+                name = "Wedding"
+                target = request.form.get("wedding_custom") or request.form.get("wedding_amount")
+                months = request.form.get("wedding_timeline", type=int)
+                if months and months > 0:
+                    deadline = today + relativedelta(months=months)
+
+            elif chip == "student":
+                name = "Pay off student loan"
+                target = request.form.get("student_amount")
+
+            elif chip == "purchase":
+                name = request.form.get("purchase_name", "").strip() or "New purchase"
+                target = request.form.get("purchase_amount")
+                months = request.form.get("purchase_timeline", type=int)
+                if months and months > 0:
+                    deadline = today + relativedelta(months=months)
+
+            elif chip == "custom":
+                name = request.form.get("custom_name", "").strip() or "Custom goal"
+                target = request.form.get("custom_amount")
+
+            if name and target:
+                try:
+                    target_amount = round(float(target), 2)
+                    if target_amount > 0:
+                        goal = Goal(
+                            user_id=current_user.id,
+                            name=name,
+                            type="savings_target",
+                            target_amount=target_amount,
+                            current_amount=0,
+                            deadline=deadline,
+                            priority_rank=len(selected)
+                        )
+                        db.session.add(goal)
+                except (ValueError, TypeError):
+                    pass
+
+        db.session.commit()
+        return redirect(url_for("pages.plan_reveal"))
+
+    return render_template("goal_chips.html")
+
+
+# ─── PLAN REVEAL (Onboarding) ────────────────────────────────
+
+@page_bp.route("/plan-reveal")
+@login_required
+def plan_reveal():
+    if not current_user.factfind_completed:
+        return redirect(url_for("pages.factfind"))
+
+    _ensure_emergency_goal()
+
+    user_profile = current_user.profile_dict()
+    goals_data = [g.to_dict() for g in Goal.query.filter_by(
+        user_id=current_user.id, status="active"
+    ).order_by(Goal.priority_rank.asc()).all()]
+
+    plan = generate_financial_plan(user_profile, goals_data)
+    summary = get_plan_summary(plan) if "error" not in plan else plan.get("error", "")
+
+    return render_template("plan_reveal.html",
+        plan=plan,
+        summary=summary
+    )
+
 # ─── SETTINGS ────────────────────────────────────────────
 
 @page_bp.route("/settings")
@@ -865,7 +981,7 @@ def factfind():
 
         db.session.commit()
         flash("Financial profile saved", "success")
-        return redirect(url_for("pages.overview"))
+        return redirect(url_for("pages.goal_chips"))
 
     return render_template("factfind.html", profile=current_user.profile_dict())
 

@@ -1,0 +1,121 @@
+{% extends "base.html" %}
+{% block title %}Your plan – Claro{% endblock %}
+
+{% block content %}
+<div style="max-width: 560px; margin: 0 auto;">
+
+    <div class="page-header" style="text-align: center;">
+        <h1 style="font-size: 1.6rem;">Here's your plan.</h1>
+    </div>
+
+    <!-- Income breakdown -->
+    <div class="reveal-section" style="animation: fadeUp 0.6s ease 0.2s both;">
+        <div style="display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 0.5px solid rgba(255,255,255,0.06);">
+            <span style="font-size: 0.85rem; color: var(--text-tertiary);">Your income</span>
+            <span style="font-size: 0.85rem; color: var(--text-primary); font-weight: 500;">£{{ "{:,.0f}".format(plan.income) }}/month</span>
+        </div>
+        <div style="display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 0.5px solid rgba(255,255,255,0.06);">
+            <span style="font-size: 0.85rem; color: var(--text-tertiary);">Essentials</span>
+            <span style="font-size: 0.85rem; color: var(--text-secondary);">−£{{ "{:,.0f}".format(plan.essentials) }}</span>
+        </div>
+        <div style="display: flex; justify-content: space-between; padding: 14px 0;">
+            <span style="font-size: 0.95rem; color: var(--text-primary); font-weight: 500;">Available for your goals</span>
+            <span style="font-size: 0.95rem; color: var(--roman-gold); font-weight: 500;">£{{ "{:,.0f}".format(plan.surplus) }}/month</span>
+        </div>
+    </div>
+
+    <!-- Where it goes -->
+    <div style="margin-top: 28px; animation: fadeUp 0.6s ease 0.6s both;">
+        <div style="font-size: 0.7rem; color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 14px;">Where it goes</div>
+
+        {% for pot in plan.pots %}
+        {% if pot.monthly_amount > 0 %}
+        <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px 0; {% if not loop.last %}border-bottom: 0.5px solid rgba(255,255,255,0.04);{% endif %} animation: fadeUp 0.5s ease {{ 0.8 + loop.index0 * 0.15 }}s both;">
+            <div>
+                <span style="font-size: 0.9rem; color: var(--text-primary);">{{ pot.name }}</span>
+                {% if pot.type == 'debt' or 'pay off' in pot.name|lower or 'credit' in pot.name|lower or 'loan' in pot.name|lower or 'overdraft' in pot.name|lower %}
+                <span style="font-size: 0.6rem; padding: 1px 6px; border-radius: 4px; background: rgba(246,173,85,0.08); color: rgba(246,173,85,0.8); margin-left: 6px;">priority</span>
+                {% endif %}
+                {% if pot.months_to_target is defined and pot.months_to_target %}
+                <span style="font-size: 0.7rem; color: var(--text-tertiary); margin-left: 6px;">~{{ pot.months_to_target }} months</span>
+                {% endif %}
+            </div>
+            <span style="font-size: 0.9rem; color: {% if pot.type == 'lifestyle' %}var(--roman-gold){% else %}var(--text-primary){% endif %}; font-weight: 500;">£{{ "{:,.0f}".format(pot.monthly_amount) }}<span style="font-size: 0.7rem; font-weight: 400; color: var(--text-tertiary);">/mo</span></span>
+        </div>
+        {% endif %}
+        {% endfor %}
+
+        {% set paused = [] %}
+        {% for pot in plan.pots %}
+            {% if pot.monthly_amount == 0 and pot.type not in ['lifestyle', 'buffer'] and not pot.completed %}
+                {% if paused.append(pot) %}{% endif %}
+            {% endif %}
+        {% endfor %}
+        {% if paused %}
+        <div style="margin-top: 12px; padding: 10px 14px; border-radius: 8px; background: rgba(255,255,255,0.02); border: 0.5px solid rgba(255,255,255,0.04);">
+            <span style="font-size: 0.75rem; color: var(--text-tertiary);">
+                {{ paused|map(attribute='name')|join(', ') }} — starts after higher priorities are cleared
+            </span>
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- Phases -->
+    {% if plan.phases|length > 1 %}
+    <div style="margin-top: 32px; animation: fadeUp 0.6s ease 1.4s both;">
+        <div style="font-size: 0.7rem; color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 14px;">Your journey</div>
+
+        {% for phase in plan.phases %}
+        <div style="display: flex; gap: 14px; margin-bottom: 12px;">
+            <div style="display: flex; flex-direction: column; align-items: center;">
+                <div style="width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.7rem; font-weight: 500;
+                    {% if loop.first %}background: rgba(197,163,93,0.15); color: var(--roman-gold); border: 1px solid rgba(197,163,93,0.3);
+                    {% else %}background: rgba(255,255,255,0.04); color: var(--text-tertiary); border: 1px solid rgba(255,255,255,0.06);{% endif %}">
+                    {{ phase.phase }}
+                </div>
+                {% if not loop.last %}
+                <div style="width: 1px; flex: 1; min-height: 20px; background: rgba(255,255,255,0.06); margin: 4px 0;"></div>
+                {% endif %}
+            </div>
+            <div style="flex: 1; padding-top: 4px;">
+                <div style="font-size: 0.8rem; color: {% if loop.first %}var(--roman-gold){% else %}var(--text-secondary){% endif %}; font-weight: 500; margin-bottom: 2px;">
+                    {{ phase.duration_months }} month{{ 's' if phase.duration_months != 1 else '' }}
+                </div>
+                <div style="font-size: 0.75rem; color: var(--text-tertiary); line-height: 1.5;">{{ phase.description }}</div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <!-- Whisper -->
+    <div class="gold-card" style="margin-top: 28px; animation: fadeUp 0.6s ease 1.8s both;">
+        <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 10px;">
+            <span class="ai-pulse"></span>
+            <span style="font-size: 0.65rem; color: var(--roman-gold); text-transform: uppercase; letter-spacing: 0.06em;">Claro</span>
+        </div>
+        <p style="font-size: 0.9rem; color: var(--text-primary); line-height: 1.7; font-style: italic;">{{ summary }}</p>
+    </div>
+
+    <!-- Alerts -->
+    {% if plan.alerts %}
+    <div style="margin-top: 16px; animation: fadeUp 0.6s ease 2s both;">
+        {% for alert in plan.alerts %}
+        <div style="padding: 10px 14px; margin-bottom: 6px; border-radius: 10px; background: {% if alert.severity == 'warning' %}rgba(246,173,85,0.06){% else %}rgba(255,255,255,0.02){% endif %}; border: 0.5px solid {% if alert.severity == 'warning' %}rgba(246,173,85,0.15){% else %}rgba(255,255,255,0.04){% endif %};">
+            <p style="font-size: 0.78rem; color: {% if alert.severity == 'warning' %}rgba(246,173,85,0.9){% else %}var(--text-tertiary){% endif %}; line-height: 1.5; margin: 0;">{{ alert.message }}</p>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <!-- CTA -->
+    <a href="{{ url_for('pages.overview') }}" class="btn-primary" style="display: block; text-align: center; width: 100%; padding: 16px; font-size: 0.95rem; margin-top: 28px; text-decoration: none; animation: fadeUp 0.6s ease 2.2s both;">
+        Start following this plan →
+    </a>
+
+</div>
+
+<style>
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:translateY(0);}}
+</style>
+{% endblock %}

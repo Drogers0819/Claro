@@ -51,7 +51,7 @@ def project_goal_timeline(goal_data, monthly_contribution, growth_rate=None):
 
         monthly_projections.append({
             "month": months,
-            "date": projected_date.strftime("%-d %b %Y"),
+            "date": projected_date.strftime("%#d %b %Y"),
             "balance": round(balance, 2),
             "contributions_total": round(current + (contribution * months), 2),
             "interest_earned": round(balance - current - (contribution * months), 2)
@@ -65,7 +65,7 @@ def project_goal_timeline(goal_data, monthly_contribution, growth_rate=None):
             "reachable": True,
             "months_to_target": months,
             "years_to_target": round(months / 12, 1),
-            "completion_date": completion_date.strftime("%-d %b %Y"),
+            "completion_date": completion_date.strftime("%#d %b %Y"),
             "completion_date_human": completion_date.strftime("%B %Y"),
             "target_amount": round(target, 2),
             "current_amount": round(current, 2),
