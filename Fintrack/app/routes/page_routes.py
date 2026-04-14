@@ -686,6 +686,109 @@ def my_budgets():
         savings=data["savings_opportunities"]
     )
 
+# ─── CHECK-IN ────────────────────────────────────────────────
+
+@page_bp.route("/check-in", methods=["GET", "POST"])
+@login_required
+def checkin():
+    from app.models.checkin import CheckIn, CheckInEntry
+
+    today = date.today()
+
+    # Determine which month to check in for (previous month)
+    if today.month == 1:
+        checkin_month = 12
+        checkin_year = today.year - 1
+    else:
+        checkin_month = today.month - 1
+        checkin_year = today.year
+
+    checkin_month_name = date(checkin_year, checkin_month, 1).strftime("%B %Y")
+
+    # Check if already completed
+    existing = CheckIn.query.filter_by(
+        user_id=current_user.id,
+        month=checkin_month,
+        year=checkin_year
+    ).first()
+
+    # Get the current plan for planned amounts
+    smart_plan = None
+    pots_for_checkin = []
+    if current_user.factfind_completed and current_user.monthly_income:
+        _ensure_emergency_goal()
+        user_profile = current_user.profile_dict()
+        goals_data = [g.to_dict() for g in Goal.query.filter_by(
+            user_id=current_user.id, status="active"
+        ).order_by(Goal.priority_rank.asc()).all()]
+        smart_plan = generate_financial_plan(user_profile, goals_data)
+
+        if "error" not in smart_plan:
+            for pot in smart_plan["pots"]:
+                if pot["monthly_amount"] > 0 and pot["type"] not in ("lifestyle", "buffer"):
+                    pots_for_checkin.append({
+                        "name": pot["name"],
+                        "planned": pot["monthly_amount"],
+                        "goal_id": pot.get("goal_id"),
+                        "target": pot.get("target"),
+                        "current": pot.get("current", 0),
+                        "type": pot["type"]
+                    })
+
+    if request.method == "POST" and not existing:
+        checkin_record = CheckIn(
+            user_id=current_user.id,
+            month=checkin_month,
+            year=checkin_year,
+            surplus_at_checkin=smart_plan["surplus"] if smart_plan and "error" not in smart_plan else None,
+            phase_at_checkin=smart_plan["current_phase"]["phase"] if smart_plan and smart_plan.get("current_phase") else None
+        )
+        db.session.add(checkin_record)
+        db.session.flush()  # Get the ID
+
+        for pot in pots_for_checkin:
+            form_key = f"actual_{pot['name'].replace(' ', '_')}"
+            try:
+                actual = round(float(request.form.get(form_key, 0)), 2)
+            except (ValueError, TypeError):
+                actual = 0
+
+            note = request.form.get(f"note_{pot['name'].replace(' ', '_')}", "").strip() or None
+
+            entry = CheckInEntry(
+                checkin_id=checkin_record.id,
+                goal_id=pot.get("goal_id"),
+                pot_name=pot["name"],
+                planned_amount=pot["planned"],
+                actual_amount=actual
+            )
+            db.session.add(entry)
+
+            # Update goal current_amount
+            if pot.get("goal_id") and actual > 0:
+                goal = Goal.query.get(pot["goal_id"])
+                if goal:
+                    goal.current_amount = round(
+                        float(goal.current_amount or 0) + actual, 2
+                    )
+
+        db.session.commit()
+        flash("Check-in complete. Your plan has been updated.", "success")
+        return redirect(url_for("pages.checkin"))
+
+    # Get past check-ins for history
+    past_checkins = CheckIn.query.filter_by(
+        user_id=current_user.id
+    ).order_by(CheckIn.year.desc(), CheckIn.month.desc()).limit(6).all()
+
+    return render_template("checkin.html",
+        checkin_month=checkin_month_name,
+        already_done=existing is not None,
+        existing=existing.to_dict() if existing else None,
+        pots=pots_for_checkin,
+        smart_plan=smart_plan,
+        past_checkins=[c.to_dict() for c in past_checkins]
+    )
 
 # ─── SETTINGS ────────────────────────────────────────────
 

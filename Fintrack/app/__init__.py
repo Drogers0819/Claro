@@ -49,6 +49,7 @@ def create_app(config_class=None):
         from app.models.transaction import Transaction
         from app.models.goal import Goal
         from app.models.budget import Budget
+        from app.models.checkin import CheckIn, CheckInEntry
         db.create_all()
 
         if Category.query.count() == 0:

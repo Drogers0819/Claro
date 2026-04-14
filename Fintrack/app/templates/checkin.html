@@ -1,0 +1,104 @@
+{% extends "base.html" %}
+{% block title %}Check-in – Claro{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>Monthly check-in</h1>
+</div>
+
+{% if not smart_plan or smart_plan.error %}
+<div style="text-align: center; padding: 40px 20px;">
+    <p style="font-size: 0.95rem; color: var(--text-secondary); margin-bottom: 16px;">Complete your financial profile and add some goals to start checking in.</p>
+    <a href="{{ url_for('pages.factfind') }}" class="btn-primary btn-sm">Set up your profile</a>
+</div>
+
+{% elif already_done %}
+<!-- Already checked in -->
+<div class="gold-card" style="margin-bottom: 24px;">
+    <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 12px;">
+        <span class="ai-pulse"></span>
+        <span class="metric-label" style="margin-bottom: 0; color: var(--roman-gold);">Done for {{ checkin_month }}</span>
+    </div>
+    <p style="font-size: 0.9rem; color: var(--text-primary); line-height: 1.7;">You've already checked in for {{ checkin_month }}. Your plan has been updated with the figures you provided.</p>
+</div>
+
+{% if existing and existing.entries %}
+<div class="glass-card" style="margin-bottom: 24px;">
+    <div class="metric-label" style="margin-bottom: 14px;">What you reported</div>
+    {% for entry in existing.entries %}
+    <div style="display: flex; justify-content: space-between; align-items: center; padding: 8px 0; {% if not loop.last %}border-bottom: 0.5px solid rgba(255,255,255,0.04);{% endif %}">
+        <span style="font-size: 0.85rem; color: var(--text-primary);">{{ entry.pot_name }}</span>
+        <div style="text-align: right;">
+            <span style="font-size: 0.85rem; {% if entry.difference >= 0 %}color: var(--text-primary){% else %}color: var(--danger){% endif %};">£{{ "{:,.0f}".format(entry.actual_amount) }}</span>
+            {% if entry.difference != 0 %}
+            <span style="font-size: 0.7rem; color: var(--text-tertiary); margin-left: 6px;">
+                ({% if entry.difference > 0 %}+{% endif %}£{{ "{:,.0f}".format(entry.difference) }} vs plan)
+            </span>
+            {% endif %}
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+
+{% else %}
+<!-- Check-in form -->
+<div class="glass-card" style="margin-bottom: 24px;">
+    <div class="metric-label" style="margin-bottom: 6px;">{{ checkin_month }}</div>
+    <p style="font-size: 0.85rem; color: var(--text-secondary); line-height: 1.6; margin-bottom: 20px;">
+        Looking back at {{ checkin_month }} — how much did you actually put toward each pot? Be honest — the plan adjusts to reality, not the other way around.
+    </p>
+
+    <form method="POST" action="{{ url_for('pages.checkin') }}">
+        {% for pot in pots %}
+        <div style="padding: 14px 0; {% if not loop.last %}border-bottom: 0.5px solid rgba(255,255,255,0.04);{% endif %}">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                <div>
+                    <span style="font-size: 0.9rem; color: var(--text-primary);">{{ pot.name }}</span>
+                    {% if pot.target %}
+                    <span style="font-size: 0.7rem; color: var(--text-tertiary); margin-left: 6px;">£{{ "{:,.0f}".format(pot.current) }} of £{{ "{:,.0f}".format(pot.target) }}</span>
+                    {% endif %}
+                </div>
+                <span style="font-size: 0.75rem; color: var(--text-tertiary);">Plan: £{{ "{:,.0f}".format(pot.planned) }}</span>
+            </div>
+            <div class="form-group" style="margin-bottom: 0;">
+                <input type="number" name="actual_{{ pot.name | replace(' ', '_') }}"
+                       class="form-input" step="0.01" min="0"
+                       value="{{ '{:.2f}'.format(pot.planned) }}"
+                       placeholder="Actual amount">
+            </div>
+        </div>
+        {% endfor %}
+
+        <button type="submit" class="btn-primary" style="margin-top: 20px; width: 100%;">
+            Confirm check-in
+        </button>
+    </form>
+</div>
+{% endif %}
+
+<!-- Past check-ins -->
+{% if past_checkins %}
+<div style="margin-top: 32px; padding-top: 24px; border-top: 0.5px solid rgba(255,255,255,0.06);">
+    <div class="metric-label" style="margin-bottom: 14px;">History</div>
+    {% for ci in past_checkins %}
+    <div style="display: flex; justify-content: space-between; align-items: center; padding: 8px 0; {% if not loop.last %}border-bottom: 0.5px solid rgba(255,255,255,0.04);{% endif %}">
+        <span style="font-size: 0.85rem; color: var(--text-secondary);">
+            {{ '{:02d}/{}'.format(ci.month, ci.year) }}
+        </span>
+        <div>
+            {% set total_planned = ci.entries | sum(attribute='planned_amount') %}
+            {% set total_actual = ci.entries | sum(attribute='actual_amount') %}
+            <span style="font-size: 0.85rem; color: var(--text-primary);">£{{ "{:,.0f}".format(total_actual) }}</span>
+            {% if total_actual != total_planned %}
+            <span style="font-size: 0.7rem; color: var(--text-tertiary); margin-left: 4px;">
+                of £{{ "{:,.0f}".format(total_planned) }} planned
+            </span>
+            {% endif %}
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+
+{% endblock %}
