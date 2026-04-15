@@ -58,6 +58,23 @@
                         <label class="amt-opt"><input type="radio" name="house_amount" value="25000" style="display:none;" onchange="selOpt(this)"><span>£25,000</span></label>
                     </div>
                     <input type="number" name="house_custom" class="form-input" style="margin-top: 10px;" placeholder="Or enter a custom amount" step="1000" min="1000">
+                    <div class="timeline-label">When are you hoping to buy?</div>
+                    <div style="display: flex; flex-wrap: wrap; gap: 8px;">
+                        <label class="amt-opt"><input type="radio" name="house_timeline" value="6" style="display:none;" onchange="selOpt(this); checkMustHit('house', 6)"><span>6 months</span></label>
+                        <label class="amt-opt"><input type="radio" name="house_timeline" value="12" style="display:none;" onchange="selOpt(this); checkMustHit('house', 12)"><span>1 year</span></label>
+                        <label class="amt-opt"><input type="radio" name="house_timeline" value="24" style="display:none;" onchange="selOpt(this); checkMustHit('house', 24)"><span>2 years</span></label>
+                        <label class="amt-opt"><input type="radio" name="house_timeline" value="36" style="display:none;" onchange="selOpt(this); checkMustHit('house', 36)"><span>3+ years</span></label>
+                        <label class="amt-opt"><input type="radio" name="house_timeline" value="0" style="display:none;" onchange="selOpt(this); checkMustHit('house', 0)"><span>No rush</span></label>
+                    </div>
+                    <div id="house-mustHit" class="must-hit-box" style="display: none;">
+                        <label style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
+                            <input type="checkbox" name="house_must_hit" value="1" style="accent-color: var(--roman-gold); width: 16px; height: 16px;">
+                            <div>
+                                <span style="font-size: 0.8rem; color: var(--text-primary);">This is a hard deadline</span>
+                                <span class="must-hit-disclaimer">Allocations will prioritise this goal, which may reduce funding to other pots including your emergency fund</span>
+                            </div>
+                        </label>
+                    </div>
                 </div>
             </div>
 
@@ -66,18 +83,18 @@
                 <div class="glass-card" style="padding: 16px 20px;">
                     <div style="font-size: 0.85rem; color: var(--text-primary); margin-bottom: 10px;">✈️ Holiday — when and how much?</div>
                     <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 10px;">
-                        <label class="amt-opt"><input type="radio" name="holiday_timeline" value="3" style="display:none;" onchange="selOpt(this); showMustHit('holiday')"><span>3 months</span></label>
-                        <label class="amt-opt"><input type="radio" name="holiday_timeline" value="6" style="display:none;" onchange="selOpt(this); showMustHit('holiday')"><span>6 months</span></label>
-                        <label class="amt-opt"><input type="radio" name="holiday_timeline" value="12" style="display:none;" onchange="selOpt(this); hideMustHit('holiday')"><span>1 year</span></label>
-                        <label class="amt-opt"><input type="radio" name="holiday_timeline" value="0" style="display:none;" onchange="selOpt(this); hideMustHit('holiday')"><span>No rush</span></label>
+                        <label class="amt-opt"><input type="radio" name="holiday_timeline" value="3" style="display:none;" onchange="selOpt(this); checkMustHit('holiday', 3)"><span>3 months</span></label>
+                        <label class="amt-opt"><input type="radio" name="holiday_timeline" value="6" style="display:none;" onchange="selOpt(this); checkMustHit('holiday', 6)"><span>6 months</span></label>
+                        <label class="amt-opt"><input type="radio" name="holiday_timeline" value="12" style="display:none;" onchange="selOpt(this); checkMustHit('holiday', 12)"><span>1 year</span></label>
+                        <label class="amt-opt"><input type="radio" name="holiday_timeline" value="0" style="display:none;" onchange="selOpt(this); checkMustHit('holiday', 0)"><span>No rush</span></label>
                     </div>
                     <input type="number" name="holiday_amount" class="form-input" placeholder="Budget (£) e.g. 2000" step="100" min="100">
-                    <div id="holiday-mustHit" style="display: none; margin-top: 12px; padding: 10px 14px; border-radius: 8px; background: rgba(197,163,93,0.04); border: 0.5px solid rgba(197,163,93,0.1);">
+                    <div id="holiday-mustHit" class="must-hit-box" style="display: none;">
                         <label style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
                             <input type="checkbox" name="holiday_must_hit" value="1" style="accent-color: var(--roman-gold); width: 16px; height: 16px;">
                             <div>
                                 <span style="font-size: 0.8rem; color: var(--text-primary);">This trip is booked — I have to go</span>
-                                <span style="display: block; font-size: 0.7rem; color: var(--text-tertiary); margin-top: 2px;">We'll make sure this gets funded first, even before the emergency fund</span>
+                                <span class="must-hit-disclaimer">Allocations will prioritise this goal, which may reduce funding to other pots including your emergency fund</span>
                             </div>
                         </label>
                     </div>
@@ -87,16 +104,27 @@
             <!-- Baby fund -->
             <div class="goal-detail" id="detail-baby" style="display: none;">
                 <div class="glass-card" style="padding: 16px 20px;">
-                    <div style="font-size: 0.85rem; color: var(--text-primary); margin-bottom: 10px;">👶 Baby fund</div>
+                    <div style="font-size: 0.85rem; color: var(--text-primary); margin-bottom: 10px;">👶 Baby fund — how much?</div>
                     <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 10px;">
                         <label class="amt-opt"><input type="radio" name="baby_amount" value="5000" style="display:none;" onchange="selOpt(this)"><span>£5,000</span></label>
                         <label class="amt-opt"><input type="radio" name="baby_amount" value="8000" style="display:none;" onchange="selOpt(this)"><span>£8,000</span></label>
                         <label class="amt-opt"><input type="radio" name="baby_amount" value="12000" style="display:none;" onchange="selOpt(this)"><span>£12,000</span></label>
                     </div>
+                    <div class="timeline-label">When are you thinking?</div>
                     <div style="display: flex; flex-wrap: wrap; gap: 8px;">
-                        <label class="amt-opt"><input type="radio" name="baby_timeline" value="12" style="display:none;" onchange="selOpt(this)"><span>1 year</span></label>
-                        <label class="amt-opt"><input type="radio" name="baby_timeline" value="24" style="display:none;" onchange="selOpt(this)"><span>2 years</span></label>
-                        <label class="amt-opt"><input type="radio" name="baby_timeline" value="36" style="display:none;" onchange="selOpt(this)"><span>3 years</span></label>
+                        <label class="amt-opt"><input type="radio" name="baby_timeline" value="6" style="display:none;" onchange="selOpt(this); checkMustHit('baby', 6)"><span>6 months</span></label>
+                        <label class="amt-opt"><input type="radio" name="baby_timeline" value="12" style="display:none;" onchange="selOpt(this); checkMustHit('baby', 12)"><span>1 year</span></label>
+                        <label class="amt-opt"><input type="radio" name="baby_timeline" value="24" style="display:none;" onchange="selOpt(this); checkMustHit('baby', 24)"><span>2 years</span></label>
+                        <label class="amt-opt"><input type="radio" name="baby_timeline" value="36" style="display:none;" onchange="selOpt(this); checkMustHit('baby', 36)"><span>3 years</span></label>
+                    </div>
+                    <div id="baby-mustHit" class="must-hit-box" style="display: none;">
+                        <label style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
+                            <input type="checkbox" name="baby_must_hit" value="1" style="accent-color: var(--roman-gold); width: 16px; height: 16px;">
+                            <div>
+                                <span style="font-size: 0.8rem; color: var(--text-primary);">This is a firm timeline</span>
+                                <span class="must-hit-disclaimer">Allocations will prioritise this goal, which may reduce funding to other pots including your emergency fund</span>
+                            </div>
+                        </label>
                     </div>
                 </div>
             </div>
@@ -107,6 +135,22 @@
                     <div style="font-size: 0.85rem; color: var(--text-primary); margin-bottom: 10px;">💳 What debt are you clearing?</div>
                     <input type="text" name="debt_name" class="form-input" placeholder="e.g. Credit card, overdraft" style="margin-bottom: 10px;">
                     <input type="number" name="debt_amount" class="form-input" placeholder="How much do you owe? (£)" step="100" min="100">
+                    <div class="timeline-label">When do you want this cleared?</div>
+                    <div style="display: flex; flex-wrap: wrap; gap: 8px;">
+                        <label class="amt-opt"><input type="radio" name="debt_timeline" value="3" style="display:none;" onchange="selOpt(this); checkMustHit('debt', 3)"><span>3 months</span></label>
+                        <label class="amt-opt"><input type="radio" name="debt_timeline" value="6" style="display:none;" onchange="selOpt(this); checkMustHit('debt', 6)"><span>6 months</span></label>
+                        <label class="amt-opt"><input type="radio" name="debt_timeline" value="12" style="display:none;" onchange="selOpt(this); checkMustHit('debt', 12)"><span>1 year</span></label>
+                        <label class="amt-opt"><input type="radio" name="debt_timeline" value="0" style="display:none;" onchange="selOpt(this); checkMustHit('debt', 0)"><span>ASAP</span></label>
+                    </div>
+                    <div id="debt-mustHit" class="must-hit-box" style="display: none;">
+                        <label style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
+                            <input type="checkbox" name="debt_must_hit" value="1" style="accent-color: var(--roman-gold); width: 16px; height: 16px;">
+                            <div>
+                                <span style="font-size: 0.8rem; color: var(--text-primary);">I need this cleared by this date</span>
+                                <span class="must-hit-disclaimer">Allocations will prioritise this goal, which may reduce funding to other pots including your emergency fund</span>
+                            </div>
+                        </label>
+                    </div>
                 </div>
             </div>
 
@@ -115,23 +159,51 @@
                 <div class="glass-card" style="padding: 16px 20px;">
                     <div style="font-size: 0.85rem; color: var(--text-primary); margin-bottom: 10px;">🚗 Car — roughly how much?</div>
                     <input type="number" name="car_amount" class="form-input" placeholder="e.g. 5000" step="500" min="500">
+                    <div class="timeline-label">When do you need it?</div>
+                    <div style="display: flex; flex-wrap: wrap; gap: 8px;">
+                        <label class="amt-opt"><input type="radio" name="car_timeline" value="3" style="display:none;" onchange="selOpt(this); checkMustHit('car', 3)"><span>3 months</span></label>
+                        <label class="amt-opt"><input type="radio" name="car_timeline" value="6" style="display:none;" onchange="selOpt(this); checkMustHit('car', 6)"><span>6 months</span></label>
+                        <label class="amt-opt"><input type="radio" name="car_timeline" value="12" style="display:none;" onchange="selOpt(this); checkMustHit('car', 12)"><span>1 year</span></label>
+                        <label class="amt-opt"><input type="radio" name="car_timeline" value="24" style="display:none;" onchange="selOpt(this); checkMustHit('car', 24)"><span>2 years</span></label>
+                        <label class="amt-opt"><input type="radio" name="car_timeline" value="0" style="display:none;" onchange="selOpt(this); checkMustHit('car', 0)"><span>No rush</span></label>
+                    </div>
+                    <div id="car-mustHit" class="must-hit-box" style="display: none;">
+                        <label style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
+                            <input type="checkbox" name="car_must_hit" value="1" style="accent-color: var(--roman-gold); width: 16px; height: 16px;">
+                            <div>
+                                <span style="font-size: 0.8rem; color: var(--text-primary);">I need this by the deadline</span>
+                                <span class="must-hit-disclaimer">Allocations will prioritise this goal, which may reduce funding to other pots including your emergency fund</span>
+                            </div>
+                        </label>
+                    </div>
                 </div>
             </div>
 
             <!-- Wedding -->
             <div class="goal-detail" id="detail-wedding" style="display: none;">
                 <div class="glass-card" style="padding: 16px 20px;">
-                    <div style="font-size: 0.85rem; color: var(--text-primary); margin-bottom: 10px;">💍 Wedding</div>
+                    <div style="font-size: 0.85rem; color: var(--text-primary); margin-bottom: 10px;">💍 Wedding — how much?</div>
                     <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 10px;">
                         <label class="amt-opt"><input type="radio" name="wedding_amount" value="5000" style="display:none;" onchange="selOpt(this)"><span>£5,000</span></label>
                         <label class="amt-opt"><input type="radio" name="wedding_amount" value="10000" style="display:none;" onchange="selOpt(this)"><span>£10,000</span></label>
                         <label class="amt-opt"><input type="radio" name="wedding_amount" value="20000" style="display:none;" onchange="selOpt(this)"><span>£20,000</span></label>
                     </div>
                     <input type="number" name="wedding_custom" class="form-input" placeholder="Or enter custom amount" step="1000" min="1000">
-                    <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px;">
-                        <label class="amt-opt"><input type="radio" name="wedding_timeline" value="12" style="display:none;" onchange="selOpt(this)"><span>1 year</span></label>
-                        <label class="amt-opt"><input type="radio" name="wedding_timeline" value="24" style="display:none;" onchange="selOpt(this)"><span>2 years</span></label>
-                        <label class="amt-opt"><input type="radio" name="wedding_timeline" value="36" style="display:none;" onchange="selOpt(this)"><span>3+ years</span></label>
+                    <div class="timeline-label">When?</div>
+                    <div style="display: flex; flex-wrap: wrap; gap: 8px;">
+                        <label class="amt-opt"><input type="radio" name="wedding_timeline" value="6" style="display:none;" onchange="selOpt(this); checkMustHit('wedding', 6)"><span>6 months</span></label>
+                        <label class="amt-opt"><input type="radio" name="wedding_timeline" value="12" style="display:none;" onchange="selOpt(this); checkMustHit('wedding', 12)"><span>1 year</span></label>
+                        <label class="amt-opt"><input type="radio" name="wedding_timeline" value="24" style="display:none;" onchange="selOpt(this); checkMustHit('wedding', 24)"><span>2 years</span></label>
+                        <label class="amt-opt"><input type="radio" name="wedding_timeline" value="36" style="display:none;" onchange="selOpt(this); checkMustHit('wedding', 36)"><span>3+ years</span></label>
+                    </div>
+                    <div id="wedding-mustHit" class="must-hit-box" style="display: none;">
+                        <label style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
+                            <input type="checkbox" name="wedding_must_hit" value="1" style="accent-color: var(--roman-gold); width: 16px; height: 16px;">
+                            <div>
+                                <span style="font-size: 0.8rem; color: var(--text-primary);">The date is set — non-negotiable</span>
+                                <span class="must-hit-disclaimer">Allocations will prioritise this goal, which may reduce funding to other pots including your emergency fund</span>
+                            </div>
+                        </label>
                     </div>
                 </div>
             </div>
@@ -141,6 +213,22 @@
                 <div class="glass-card" style="padding: 16px 20px;">
                     <div style="font-size: 0.85rem; color: var(--text-primary); margin-bottom: 10px;">🎓 Student loan — how much to clear?</div>
                     <input type="number" name="student_amount" class="form-input" placeholder="e.g. 3000" step="500" min="100">
+                    <div class="timeline-label">When do you want this cleared?</div>
+                    <div style="display: flex; flex-wrap: wrap; gap: 8px;">
+                        <label class="amt-opt"><input type="radio" name="student_timeline" value="6" style="display:none;" onchange="selOpt(this); checkMustHit('student', 6)"><span>6 months</span></label>
+                        <label class="amt-opt"><input type="radio" name="student_timeline" value="12" style="display:none;" onchange="selOpt(this); checkMustHit('student', 12)"><span>1 year</span></label>
+                        <label class="amt-opt"><input type="radio" name="student_timeline" value="24" style="display:none;" onchange="selOpt(this); checkMustHit('student', 24)"><span>2 years</span></label>
+                        <label class="amt-opt"><input type="radio" name="student_timeline" value="0" style="display:none;" onchange="selOpt(this); checkMustHit('student', 0)"><span>ASAP</span></label>
+                    </div>
+                    <div id="student-mustHit" class="must-hit-box" style="display: none;">
+                        <label style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
+                            <input type="checkbox" name="student_must_hit" value="1" style="accent-color: var(--roman-gold); width: 16px; height: 16px;">
+                            <div>
+                                <span style="font-size: 0.8rem; color: var(--text-primary);">I need this cleared by this date</span>
+                                <span class="must-hit-disclaimer">Allocations will prioritise this goal, which may reduce funding to other pots including your emergency fund</span>
+                            </div>
+                        </label>
+                    </div>
                 </div>
             </div>
 
@@ -150,10 +238,21 @@
                     <div style="font-size: 0.85rem; color: var(--text-primary); margin-bottom: 10px;">💻 What are you saving for?</div>
                     <input type="text" name="purchase_name" class="form-input" placeholder="e.g. Laptop, phone" style="margin-bottom: 10px;">
                     <input type="number" name="purchase_amount" class="form-input" placeholder="How much? (£)" step="100" min="100">
-                    <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px;">
-                        <label class="amt-opt"><input type="radio" name="purchase_timeline" value="3" style="display:none;" onchange="selOpt(this)"><span>3 months</span></label>
-                        <label class="amt-opt"><input type="radio" name="purchase_timeline" value="6" style="display:none;" onchange="selOpt(this)"><span>6 months</span></label>
-                        <label class="amt-opt"><input type="radio" name="purchase_timeline" value="12" style="display:none;" onchange="selOpt(this)"><span>1 year</span></label>
+                    <div class="timeline-label">When do you need it?</div>
+                    <div style="display: flex; flex-wrap: wrap; gap: 8px;">
+                        <label class="amt-opt"><input type="radio" name="purchase_timeline" value="3" style="display:none;" onchange="selOpt(this); checkMustHit('purchase', 3)"><span>3 months</span></label>
+                        <label class="amt-opt"><input type="radio" name="purchase_timeline" value="6" style="display:none;" onchange="selOpt(this); checkMustHit('purchase', 6)"><span>6 months</span></label>
+                        <label class="amt-opt"><input type="radio" name="purchase_timeline" value="12" style="display:none;" onchange="selOpt(this); checkMustHit('purchase', 12)"><span>1 year</span></label>
+                        <label class="amt-opt"><input type="radio" name="purchase_timeline" value="0" style="display:none;" onchange="selOpt(this); checkMustHit('purchase', 0)"><span>No rush</span></label>
+                    </div>
+                    <div id="purchase-mustHit" class="must-hit-box" style="display: none;">
+                        <label style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
+                            <input type="checkbox" name="purchase_must_hit" value="1" style="accent-color: var(--roman-gold); width: 16px; height: 16px;">
+                            <div>
+                                <span style="font-size: 0.8rem; color: var(--text-primary);">I need this by the deadline</span>
+                                <span class="must-hit-disclaimer">Allocations will prioritise this goal, which may reduce funding to other pots including your emergency fund</span>
+                            </div>
+                        </label>
                     </div>
                 </div>
             </div>
@@ -164,6 +263,22 @@
                     <div style="font-size: 0.85rem; color: var(--text-primary); margin-bottom: 10px;">➕ What's the goal?</div>
                     <input type="text" name="custom_name" class="form-input" placeholder="e.g. Moving costs, driving lessons" style="margin-bottom: 10px;">
                     <input type="number" name="custom_amount" class="form-input" placeholder="How much? (£)" step="100" min="100">
+                    <div class="timeline-label">When do you need it?</div>
+                    <div style="display: flex; flex-wrap: wrap; gap: 8px;">
+                        <label class="amt-opt"><input type="radio" name="custom_timeline" value="3" style="display:none;" onchange="selOpt(this); checkMustHit('custom', 3)"><span>3 months</span></label>
+                        <label class="amt-opt"><input type="radio" name="custom_timeline" value="6" style="display:none;" onchange="selOpt(this); checkMustHit('custom', 6)"><span>6 months</span></label>
+                        <label class="amt-opt"><input type="radio" name="custom_timeline" value="12" style="display:none;" onchange="selOpt(this); checkMustHit('custom', 12)"><span>1 year</span></label>
+                        <label class="amt-opt"><input type="radio" name="custom_timeline" value="0" style="display:none;" onchange="selOpt(this); checkMustHit('custom', 0)"><span>No rush</span></label>
+                    </div>
+                    <div id="custom-mustHit" class="must-hit-box" style="display: none;">
+                        <label style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
+                            <input type="checkbox" name="custom_must_hit" value="1" style="accent-color: var(--roman-gold); width: 16px; height: 16px;">
+                            <div>
+                                <span style="font-size: 0.8rem; color: var(--text-primary);">This is a hard deadline</span>
+                                <span class="must-hit-disclaimer">Allocations will prioritise this goal, which may reduce funding to other pots including your emergency fund</span>
+                            </div>
+                        </label>
+                    </div>
                 </div>
             </div>
         </div>
@@ -178,6 +293,9 @@
 .goal-chip.selected{border-color:var(--roman-gold)!important;background:rgba(197,163,93,0.1)!important;color:var(--roman-gold)!important;}
 .amt-opt span{display:inline-block;padding:8px 16px;border-radius:8px;border:1px solid rgba(255,255,255,0.08);background:rgba(255,255,255,0.02);font-size:0.8rem;color:var(--text-secondary);cursor:pointer;transition:all 0.2s ease;}
 .amt-opt input:checked+span{border-color:var(--roman-gold);background:rgba(197,163,93,0.1);color:var(--roman-gold);}
+.must-hit-box{margin-top:12px;padding:10px 14px;border-radius:8px;background:rgba(197,163,93,0.04);border:0.5px solid rgba(197,163,93,0.1);}
+.must-hit-disclaimer{display:block;font-size:0.7rem;color:var(--text-tertiary);margin-top:2px;line-height:1.5;}
+.timeline-label{font-size:0.8rem;color:var(--text-tertiary);margin-top:14px;margin-bottom:8px;}
 </style>
 
 <script>
@@ -193,13 +311,16 @@ function updateBtn(){
     var c=document.querySelectorAll('input[name="goals"]:checked');
     document.getElementById('buildBtn').style.display=c.length>0?'block':'none';
 }
-function showMustHit(goal){
+function checkMustHit(goal, months){
     var el=document.getElementById(goal+'-mustHit');
-    if(el)el.style.display='block';
-}
-function hideMustHit(goal){
-    var el=document.getElementById(goal+'-mustHit');
-    if(el){el.style.display='none';el.querySelector('input[type="checkbox"]').checked=false;}
+    if(!el)return;
+    if(months>0 && months<=12){
+        el.style.display='block';
+    } else {
+        el.style.display='none';
+        var cb=el.querySelector('input[type="checkbox"]');
+        if(cb)cb.checked=false;
+    }
 }
 </script>
 {% endblock %}

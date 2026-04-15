@@ -813,10 +813,15 @@ def goal_chips():
             name = None
             target = None
             deadline = None
+            must_hit = False
 
             if chip == "house":
                 name = "House deposit"
                 target = request.form.get("house_custom") or request.form.get("house_amount")
+                months = request.form.get("house_timeline", type=int)
+                if months and months > 0:
+                    deadline = today + relativedelta(months=months)
+                must_hit = bool(request.form.get("house_must_hit"))
 
             elif chip == "holiday":
                 name = "Holiday"
@@ -824,8 +829,7 @@ def goal_chips():
                 months = request.form.get("holiday_timeline", type=int)
                 if months and months > 0:
                     deadline = today + relativedelta(months=months)
-                if request.form.get("holiday_must_hit"):
-                    name = "Holiday (must-hit)"
+                must_hit = bool(request.form.get("holiday_must_hit"))
 
             elif chip == "baby":
                 name = "Baby fund"
@@ -833,6 +837,7 @@ def goal_chips():
                 months = request.form.get("baby_timeline", type=int)
                 if months and months > 0:
                     deadline = today + relativedelta(months=months)
+                must_hit = bool(request.form.get("baby_must_hit"))
 
             elif chip == "debt":
                 name = request.form.get("debt_name", "").strip()
@@ -841,10 +846,18 @@ def goal_chips():
                 elif not any(w in name.lower() for w in ["pay off", "clear", "debt", "loan", "credit", "overdraft"]):
                     name = f"Pay off {name}"
                 target = request.form.get("debt_amount")
+                months = request.form.get("debt_timeline", type=int)
+                if months and months > 0:
+                    deadline = today + relativedelta(months=months)
+                must_hit = bool(request.form.get("debt_must_hit"))
 
             elif chip == "car":
                 name = "Car"
                 target = request.form.get("car_amount")
+                months = request.form.get("car_timeline", type=int)
+                if months and months > 0:
+                    deadline = today + relativedelta(months=months)
+                must_hit = bool(request.form.get("car_must_hit"))
 
             elif chip == "wedding":
                 name = "Wedding"
@@ -852,10 +865,15 @@ def goal_chips():
                 months = request.form.get("wedding_timeline", type=int)
                 if months and months > 0:
                     deadline = today + relativedelta(months=months)
+                must_hit = bool(request.form.get("wedding_must_hit"))
 
             elif chip == "student":
                 name = "Pay off student loan"
                 target = request.form.get("student_amount")
+                months = request.form.get("student_timeline", type=int)
+                if months and months > 0:
+                    deadline = today + relativedelta(months=months)
+                must_hit = bool(request.form.get("student_must_hit"))
 
             elif chip == "purchase":
                 name = request.form.get("purchase_name", "").strip() or "New purchase"
@@ -863,10 +881,18 @@ def goal_chips():
                 months = request.form.get("purchase_timeline", type=int)
                 if months and months > 0:
                     deadline = today + relativedelta(months=months)
+                must_hit = bool(request.form.get("purchase_must_hit"))
 
             elif chip == "custom":
                 name = request.form.get("custom_name", "").strip() or "Custom goal"
                 target = request.form.get("custom_amount")
+                months = request.form.get("custom_timeline", type=int)
+                if months and months > 0:
+                    deadline = today + relativedelta(months=months)
+                must_hit = bool(request.form.get("custom_must_hit"))
+
+            if must_hit and name:
+                name = f"{name} (must-hit)"
 
             if name and target:
                 try:
