@@ -1031,6 +1031,11 @@ def factfind():
         current_user.bills_amount = bills_amount
         current_user.groceries_estimate = groceries_estimate
         current_user.transport_estimate = transport_estimate
+        try:
+            subscriptions_total = round(float(request.form.get("subscriptions_total", 0)), 2)
+        except (ValueError, TypeError):
+            subscriptions_total = 0
+        current_user.subscriptions_total = subscriptions_total
         current_user.income_day = income_day
         current_user.factfind_completed = True
 

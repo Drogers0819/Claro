@@ -42,8 +42,9 @@ def generate_financial_plan(user_profile, goals, debts=None, upcoming_expenses=N
     bills = float(user_profile.get("bills_amount") or 0)
     groceries = float(user_profile.get("groceries_estimate") or 0)
     transport = float(user_profile.get("transport_estimate") or 0)
+    subscriptions = float(user_profile.get("subscriptions_total") or 0)
 
-    essentials = rent + bills + groceries + transport
+    essentials = rent + bills + groceries + transport + subscriptions
     surplus = income - essentials
 
     if surplus <= 0:
@@ -69,7 +70,8 @@ def generate_financial_plan(user_profile, goals, debts=None, upcoming_expenses=N
             "rent": round(rent, 2),
             "bills": round(bills, 2),
             "groceries": round(groceries, 2),
-            "transport": round(transport, 2)
+            "transport": round(transport, 2),
+            "subscriptions": round(subscriptions, 2)
         },
         "surplus": round(surplus, 2),
         "pots": [_pot_to_dict(p) for p in pots],

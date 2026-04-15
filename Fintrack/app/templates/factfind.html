@@ -4,103 +4,232 @@
 {% block content %}
 <div style="max-width: 560px;">
 
+{% if profile.factfind_completed %}
 <a href="{{ url_for('pages.settings') }}" style="display: inline-flex; align-items: center; gap: 6px; font-size: 0.75rem; color: var(--text-tertiary); text-decoration: none; margin-bottom: 16px;">
     <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
     Settings
 </a>
+{% endif %}
+
 <div class="page-header">
-    <h1>Your financial profile</h1>
-    <p>This takes about 60 seconds. We use this to show you where your money goes and where it could take you.</p>
+    <h1>{% if profile.factfind_completed %}Your financial profile{% else %}Let's build your plan{% endif %}</h1>
+    <p>{% if profile.factfind_completed %}Update your details below.{% else %}This takes about 60 seconds. Five questions and we have everything we need.{% endif %}</p>
 </div>
 
 <form method="POST" action="{{ url_for('pages.factfind') }}">
 
-        <div class="section-label" style="margin-top: 0; margin-bottom: 16px;">Income</div>
+    <!-- ─── INCOME ─── -->
+    <div class="section-label" style="margin-top: 0; margin-bottom: 16px;">Income</div>
 
-        <div class="grid-2">
-            <div class="form-group" style="margin-bottom: 0;">
-                <label class="form-label">Monthly take-home pay (£)</label>
-                <input type="number" name="monthly_income" class="form-input" step="0.01" min="0.01"
-                       placeholder="e.g. 1700" required
-                       value="{{ '%g' | format(profile.monthly_income) if profile.monthly_income else '' }}">
-            </div>
-            <div class="form-group" style="margin-bottom: 0;">
-                <label class="form-label">Pay day (day of month)</label>
-                <input type="number" name="income_day" class="form-input" min="1" max="31"
-                       placeholder="e.g. 25"
-                       value="{{ profile.income_day | int if profile.income_day else '' }}">
-            </div>
+    <div class="grid-2">
+        <div class="form-group" style="margin-bottom: 0;">
+            <label class="form-label">Monthly take-home pay (£)</label>
+            <input type="number" name="monthly_income" class="form-input" step="0.01" min="0.01"
+                   placeholder="e.g. 1700" required
+                   value="{{ '%g' | format(profile.monthly_income) if profile.monthly_income else '' }}">
         </div>
-
-        <div class="section-label" style="margin-top: 28px; margin-bottom: 16px;">Commitments</div>
-
-        <div class="grid-2">
-            <div class="form-group" style="margin-bottom: 0;">
-                <label class="form-label">Monthly rent or mortgage (£)</label>
-                <input type="number" name="rent_amount" class="form-input" step="0.01" min="0"
-                       placeholder="e.g. 800" required
-                       value="{{ '%g' | format(profile.rent_amount) if profile.rent_amount else '' }}">
-            </div>
-            <div class="form-group" style="margin-bottom: 0;">
-                <label class="form-label">Monthly bills combined (£)</label>
-                <input type="number" name="bills_amount" class="form-input" step="0.01" min="0"
-                       placeholder="e.g. 150" required
-                       value="{{ '%g' | format(profile.bills_amount) if profile.bills_amount else '' }}">
-            </div>
+        <div class="form-group" style="margin-bottom: 0;">
+            <label class="form-label">Pay day (day of month)</label>
+            <input type="number" name="income_day" class="form-input" min="1" max="31"
+                   placeholder="e.g. 25"
+                   value="{{ profile.income_day | int if profile.income_day else '' }}">
         </div>
+    </div>
 
-        <p style="font-size: 0.75rem; color: var(--text-tertiary); margin-top: 12px; margin-bottom: 24px; font-style: italic;">
-            Council tax, phone, utilities, internet and similar fixed costs.
-        </p>
+    <!-- ─── COMMITMENTS ─── -->
+    <div class="section-label" style="margin-top: 28px; margin-bottom: 16px;">Commitments</div>
 
-        <div class="section-label" style="margin-top: 28px; margin-bottom: 16px;">Living costs</div>
-
-        <div class="grid-2">
-            <div class="form-group" style="margin-bottom: 0;">
-                <label class="form-label">Monthly groceries (£)</label>
-                <input type="number" name="groceries_estimate" class="form-input" step="0.01" min="0"
-                       placeholder="e.g. 250"
-                       value="{{ '%g' | format(profile.groceries_estimate) if profile.groceries_estimate else '' }}">
-            </div>
-            <div class="form-group" style="margin-bottom: 0;">
-                <label class="form-label">Monthly transport (£)</label>
-                <input type="number" name="transport_estimate" class="form-input" step="0.01" min="0"
-                       placeholder="e.g. 80"
-                       value="{{ '%g' | format(profile.transport_estimate) if profile.transport_estimate else '' }}">
-            </div>
+    <div class="grid-2">
+        <div class="form-group" style="margin-bottom: 0;">
+            <label class="form-label">Monthly rent or mortgage (£)</label>
+            <input type="number" name="rent_amount" class="form-input" step="0.01" min="0"
+                   placeholder="e.g. 800" required
+                   value="{{ '%g' | format(profile.rent_amount) if profile.rent_amount else '' }}">
         </div>
-
-        <p style="font-size: 0.75rem; color: var(--text-tertiary); margin-top: 12px; margin-bottom: 24px; font-style: italic;">
-            Rough estimates are fine. We'll refine these from your bank statements.
-        </p>
-
-        {% if profile.monthly_income %}
-        <div style="padding: 16px; border-radius: 12px; background: var(--glass-bg); border: 0.5px solid var(--glass-border); margin-bottom: 24px;">
-            <div style="font-size: 0.65rem; color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 4px;">Available for goals</div>
-            <div style="font-size: 1.3rem; font-weight: 600; color: var(--text-primary);">
-                £{{ "{:,.0f}".format(profile.monthly_surplus) }}<span style="font-size: 0.8rem; font-weight: 400; color: var(--text-tertiary);">/month</span>
-            </div>
-            <p style="font-size: 0.72rem; color: var(--text-tertiary); margin-top: 4px;">After rent and bills.</p>
+        <div class="form-group" style="margin-bottom: 0;">
+            <label class="form-label">Monthly bills combined (£)</label>
+            <input type="number" name="bills_amount" class="form-input" step="0.01" min="0"
+                   placeholder="e.g. 150" required
+                   value="{{ '%g' | format(profile.bills_amount) if profile.bills_amount else '' }}">
         </div>
-        {% endif %}
+    </div>
 
-        <p style="font-size: 0.7rem; color: var(--text-tertiary); margin-bottom: 16px;">
-            <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle; margin-right: 4px;"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-            Encrypted in transit · never sold · never shared
-        </p>
-        <div style="display: flex; align-items: center; gap: 12px;">
-            <button type="submit" class="btn-primary">
-                {% if profile.factfind_completed %}
-                    Update profile
-                {% else %}
-                    Save & Continue
-                {% endif %}
-            </button>
+    <p style="font-size: 0.75rem; color: var(--text-tertiary); margin-top: 12px; margin-bottom: 0; font-style: italic;">
+        Council tax, phone, utilities, internet and similar fixed costs.
+    </p>
+
+    <!-- ─── SUBSCRIPTIONS ─── -->
+    <div class="section-label" style="margin-top: 28px; margin-bottom: 10px;">Subscriptions</div>
+    <p style="font-size: 0.75rem; color: var(--text-tertiary); margin-bottom: 14px;">Tap any you pay for. We'll add up the total.</p>
+
+    <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 14px;">
+        {% set subs = [
+            {"id": "netflix", "label": "Netflix", "cost": 10.99},
+            {"id": "spotify", "label": "Spotify", "cost": 10.99},
+            {"id": "prime", "label": "Amazon Prime", "cost": 8.99},
+            {"id": "disney", "label": "Disney+", "cost": 7.99},
+            {"id": "apple_music", "label": "Apple Music", "cost": 10.99},
+            {"id": "apple_tv", "label": "Apple TV+", "cost": 8.99},
+            {"id": "youtube", "label": "YouTube Premium", "cost": 12.99},
+            {"id": "now_tv", "label": "NOW TV", "cost": 6.99},
+            {"id": "sky", "label": "Sky", "cost": 26.00},
+            {"id": "gym", "label": "Gym membership", "cost": 30.00},
+            {"id": "crunch", "label": "Crunchyroll", "cost": 4.99},
+            {"id": "audible", "label": "Audible", "cost": 7.99},
+            {"id": "xbox", "label": "Xbox Game Pass", "cost": 12.99},
+            {"id": "ps_plus", "label": "PS Plus", "cost": 10.99},
+            {"id": "icloud", "label": "iCloud+", "cost": 2.99},
+            {"id": "chatgpt", "label": "ChatGPT Plus", "cost": 20.00},
+            {"id": "notion", "label": "Notion", "cost": 8.00},
+            {"id": "adobe", "label": "Adobe CC", "cost": 19.97},
+            {"id": "deliveroo", "label": "Deliveroo Plus", "cost": 3.49},
+            {"id": "just_eat", "label": "Just Eat+", "cost": 5.99}
+        ] %}
+        {% for sub in subs %}
+        <label style="cursor: pointer;">
+            <input type="checkbox" class="sub-checkbox" data-cost="{{ sub.cost }}" data-name="{{ sub.label }}" style="display: none;" onchange="updateSubTotal()">
+            <div class="sub-chip" style="display: flex; align-items: center; gap: 6px; padding: 7px 14px; border-radius: 50px; border: 1px solid rgba(255,255,255,0.08); background: rgba(255,255,255,0.02); transition: all 0.2s ease; font-size: 0.78rem; color: var(--text-secondary); user-select: none;">
+                {{ sub.label }} <span style="color: var(--text-tertiary); font-size: 0.7rem;">£{{ "%.2f" | format(sub.cost) }}</span>
+            </div>
+        </label>
+        {% endfor %}
+    </div>
+
+    <!-- Custom subscription -->
+    <div style="display: flex; gap: 8px; align-items: center; margin-bottom: 14px;">
+        <input type="text" id="custom-sub-name" class="form-input" placeholder="Other subscription" style="flex: 1; padding: 8px 12px; font-size: 0.8rem;">
+        <input type="number" id="custom-sub-cost" class="form-input" placeholder="£/mo" step="0.01" min="0" style="width: 80px; padding: 8px 12px; font-size: 0.8rem;">
+        <button type="button" onclick="addCustomSub()" style="padding: 8px 14px; border-radius: 8px; border: 1px solid rgba(197,163,93,0.3); background: rgba(197,163,93,0.05); color: var(--roman-gold); font-size: 0.75rem; cursor: pointer; white-space: nowrap;">+ Add</button>
+    </div>
+
+    <!-- Custom subs list -->
+    <div id="custom-subs-list" style="margin-bottom: 14px;"></div>
+
+    <!-- Subscriptions total display -->
+    <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px 14px; border-radius: 8px; background: rgba(197,163,93,0.04); border: 0.5px solid rgba(197,163,93,0.1); margin-bottom: 24px;">
+        <span style="font-size: 0.8rem; color: var(--text-secondary);">Subscriptions total</span>
+        <span id="sub-total-display" style="font-size: 0.9rem; font-weight: 500; color: var(--roman-gold);">£0.00</span>
+    </div>
+
+    <input type="hidden" name="subscriptions_total" id="subscriptions_total" value="{{ '%g' | format(profile.subscriptions_total) if profile.subscriptions_total else '0' }}">
+
+    <!-- ─── LIVING COSTS ─── -->
+    <div class="section-label" style="margin-top: 4px; margin-bottom: 16px;">Living costs</div>
+
+    <div class="grid-2">
+        <div class="form-group" style="margin-bottom: 0;">
+            <label class="form-label">Monthly groceries (£)</label>
+            <input type="number" name="groceries_estimate" class="form-input" step="0.01" min="0"
+                   placeholder="e.g. 250"
+                   value="{{ '%g' | format(profile.groceries_estimate) if profile.groceries_estimate else '' }}">
+        </div>
+        <div class="form-group" style="margin-bottom: 0;">
+            <label class="form-label">Monthly transport (£)</label>
+            <input type="number" name="transport_estimate" class="form-input" step="0.01" min="0"
+                   placeholder="e.g. 80"
+                   value="{{ '%g' | format(profile.transport_estimate) if profile.transport_estimate else '' }}">
+        </div>
+    </div>
+
+    <p style="font-size: 0.75rem; color: var(--text-tertiary); margin-top: 12px; margin-bottom: 24px; font-style: italic;">
+        Rough estimates are fine. We'll refine these over time.
+    </p>
+
+    <!-- ─── SURPLUS PREVIEW ─── -->
+    {% if profile.monthly_income %}
+    <div style="padding: 16px; border-radius: 12px; background: var(--glass-bg); border: 0.5px solid var(--glass-border); margin-bottom: 24px;">
+        <div style="font-size: 0.65rem; color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 4px;">Available for goals</div>
+        <div style="font-size: 1.3rem; font-weight: 600; color: var(--text-primary);">
+            £{{ "{:,.0f}".format(profile.monthly_surplus) }}<span style="font-size: 0.8rem; font-weight: 400; color: var(--text-tertiary);">/month</span>
+        </div>
+        <p style="font-size: 0.72rem; color: var(--text-tertiary); margin-top: 4px;">After all commitments and living costs.</p>
+    </div>
+    {% endif %}
+
+    <p style="font-size: 0.7rem; color: var(--text-tertiary); margin-bottom: 16px;">
+        <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle; margin-right: 4px;"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        Encrypted in transit · never sold · never shared
+    </p>
+    <div style="display: flex; align-items: center; gap: 12px;">
+        <button type="submit" class="btn-primary">
             {% if profile.factfind_completed %}
-            <a href="{{ url_for('pages.settings') }}" style="font-size: 0.82rem; color: var(--text-tertiary); text-decoration: none;">Cancel</a>
+                Update profile
+            {% else %}
+                Save & continue →
             {% endif %}
-        </div>
-    </form>
-
+        </button>
+        {% if profile.factfind_completed %}
+        <a href="{{ url_for('pages.settings') }}" style="font-size: 0.82rem; color: var(--text-tertiary); text-decoration: none;">Cancel</a>
+        {% endif %}
+    </div>
+</form>
 </div>
+
+<style>
+.sub-chip.selected{border-color:var(--roman-gold)!important;background:rgba(197,163,93,0.1)!important;color:var(--roman-gold)!important;}
+.custom-sub-item{display:flex;justify-content:space-between;align-items:center;padding:6px 12px;margin-bottom:6px;border-radius:8px;background:rgba(255,255,255,0.02);border:0.5px solid rgba(255,255,255,0.06);font-size:0.78rem;color:var(--text-secondary);}
+.custom-sub-remove{background:none;border:none;color:var(--text-tertiary);cursor:pointer;font-size:0.75rem;padding:2px 6px;}
+.custom-sub-remove:hover{color:var(--danger);}
+</style>
+
+<script>
+var customSubs = [];
+
+function updateSubTotal() {
+    var total = 0;
+    var checkboxes = document.querySelectorAll('.sub-checkbox');
+    checkboxes.forEach(function(cb) {
+        var chip = cb.nextElementSibling;
+        if (cb.checked) {
+            chip.classList.add('selected');
+            total += parseFloat(cb.dataset.cost);
+        } else {
+            chip.classList.remove('selected');
+        }
+    });
+
+    // Add custom subs
+    customSubs.forEach(function(s) {
+        total += s.cost;
+    });
+
+    total = Math.round(total * 100) / 100;
+    document.getElementById('sub-total-display').textContent = '£' + total.toFixed(2);
+    document.getElementById('subscriptions_total').value = total.toFixed(2);
+}
+
+function addCustomSub() {
+    var nameInput = document.getElementById('custom-sub-name');
+    var costInput = document.getElementById('custom-sub-cost');
+    var name = nameInput.value.trim();
+    var cost = parseFloat(costInput.value);
+
+    if (!name || !cost || cost <= 0) return;
+
+    customSubs.push({ name: name, cost: cost });
+    nameInput.value = '';
+    costInput.value = '';
+
+    renderCustomSubs();
+    updateSubTotal();
+}
+
+function removeCustomSub(index) {
+    customSubs.splice(index, 1);
+    renderCustomSubs();
+    updateSubTotal();
+}
+
+function renderCustomSubs() {
+    var container = document.getElementById('custom-subs-list');
+    container.innerHTML = '';
+    customSubs.forEach(function(s, i) {
+        var div = document.createElement('div');
+        div.className = 'custom-sub-item';
+        div.innerHTML = '<span>' + s.name + ' <span style="color:var(--text-tertiary);font-size:0.7rem;">£' + s.cost.toFixed(2) + '/mo</span></span>' +
+            '<button type="button" class="custom-sub-remove" onclick="removeCustomSub(' + i + ')">✕</button>';
+        container.appendChild(div);
+    });
+}
+</script>
 {% endblock %}
