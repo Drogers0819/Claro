@@ -110,8 +110,8 @@ class TestGeneratePlan:
         assert "error" in plan
         assert plan["surplus"] < 0
 
-    def test_empty_goals_still_generates(self, basic_profile):
-        plan = generate_financial_plan(basic_profile, [])
+    def test_empty_goals_still_generates(self, basic_profile, emergency_goal):
+        plan = generate_financial_plan(basic_profile, [emergency_goal])
         assert "error" not in plan
         pot_types = [p["type"] for p in plan["pots"]]
         assert "emergency" in pot_types
@@ -130,8 +130,8 @@ class TestGeneratePlan:
 # ─── POT STRUCTURE ───────────────────────────────────────────
 
 class TestPotStructure:
-    def test_always_includes_emergency(self, basic_profile):
-        plan = generate_financial_plan(basic_profile, [])
+    def test_emergency_included_when_goal_exists(self, basic_profile, emergency_goal):
+        plan = generate_financial_plan(basic_profile, [emergency_goal])
         pot_names = [p["name"] for p in plan["pots"]]
         assert "Emergency fund" in pot_names
 
@@ -152,8 +152,8 @@ class TestPotStructure:
         assert "House deposit" in pot_names
         assert "Holiday" in pot_names
 
-    def test_emergency_target_is_3_months_essentials(self, basic_profile):
-        plan = generate_financial_plan(basic_profile, [])
+    def test_emergency_target_is_3_months_essentials(self, basic_profile, emergency_goal):
+        plan = generate_financial_plan(basic_profile, [emergency_goal])
         emergency = next(p for p in plan["pots"] if p["type"] == "emergency")
         essentials = 600 + 200 + 250 + 84
         assert emergency["target"] == essentials * 3
@@ -194,10 +194,10 @@ class TestStagedAllocation:
         assert debt["monthly_amount"] > 0  # Debt gets funding
         assert house["monthly_amount"] > 0  # Goals get funding too
 
-    def test_debt_gets_all_available_after_mini_emergency(self, basic_profile):
+    def test_debt_gets_all_available_after_mini_emergency(self, basic_profile, emergency_goal):
         """Debt should get all surplus after lifestyle + buffer + mini emergency"""
         debts = [{"name": "Credit card", "amount": 500, "min_payment": 25}]
-        plan = generate_financial_plan(basic_profile, [], debts=debts)
+        plan = generate_financial_plan(basic_profile, [emergency_goal], debts=debts)
         debt = next(p for p in plan["pots"] if p["type"] == "debt")
         emergency = next(p for p in plan["pots"] if p["type"] == "emergency")
         lifestyle = next(p for p in plan["pots"] if p["type"] == "lifestyle")
@@ -218,9 +218,9 @@ class TestStagedAllocation:
         assert cc["monthly_amount"] > 0
         assert cc["monthly_amount"] > house["monthly_amount"]  # Debt prioritised
 
-    def test_emergency_prioritised_during_build(self, basic_profile, house_goal):
+    def test_emergency_prioritised_during_build(self, basic_profile, house_goal, emergency_goal):
         """Emergency gets higher share than non-urgent goals"""
-        plan = generate_financial_plan(basic_profile, [house_goal])
+        plan = generate_financial_plan(basic_profile, [house_goal, emergency_goal])
         emergency = next(p for p in plan["pots"] if p["type"] == "emergency")
         house = next(p for p in plan["pots"] if p["name"] == "House deposit")
         assert emergency["monthly_amount"] > 0
@@ -241,10 +241,10 @@ class TestStagedAllocation:
         house = next(p for p in plan["pots"] if p["name"] == "House deposit")
         assert house["monthly_amount"] > 0
 
-    def test_mini_emergency_before_debt(self, basic_profile):
+    def test_mini_emergency_before_debt(self, basic_profile, emergency_goal):
         """Emergency gets £1000 mini buffer even when debt exists"""
         debts = [{"name": "Credit card", "amount": 1000, "min_payment": 25}]
-        plan = generate_financial_plan(basic_profile, [], debts=debts)
+        plan = generate_financial_plan(basic_profile, [emergency_goal], debts=debts)
         emergency = next(p for p in plan["pots"] if p["type"] == "emergency")
         assert emergency["monthly_amount"] > 0
 
@@ -317,9 +317,9 @@ class TestProjections:
             assert "date_display" in proj
             assert "month" in proj
 
-    def test_emergency_balance_increases(self, basic_profile, house_goal):
+    def test_emergency_balance_increases(self, basic_profile, house_goal, emergency_goal):
         """Emergency fund should grow during its build phase"""
-        plan = generate_financial_plan(basic_profile, [house_goal])
+        plan = generate_financial_plan(basic_profile, [house_goal, emergency_goal])
         projs = plan["monthly_projections"]
         if len(projs) > 2:
             m1 = projs[0]["pots"].get("Emergency fund", {}).get("balance", 0)
@@ -330,8 +330,8 @@ class TestProjections:
         plan = generate_financial_plan(basic_profile, [house_goal])
         assert len(plan["monthly_projections"]) >= 24
 
-    def test_all_pots_in_projections(self, basic_profile, house_goal):
-        plan = generate_financial_plan(basic_profile, [house_goal])
+    def test_all_pots_in_projections(self, basic_profile, house_goal, emergency_goal):
+        plan = generate_financial_plan(basic_profile, [house_goal, emergency_goal])
         first_month = plan["monthly_projections"][0]
         pot_names = list(first_month["pots"].keys())
         assert "Emergency fund" in pot_names
@@ -472,9 +472,9 @@ class TestPlanSummary:
 # ─── ALERTS ──────────────────────────────────────────────────
 
 class TestAlerts:
-    def test_low_emergency_alert_when_no_debt(self, basic_profile, house_goal):
+    def test_low_emergency_alert_when_no_debt(self, basic_profile, house_goal, emergency_goal):
         """Low emergency alert fires when no debt is present"""
-        plan = generate_financial_plan(basic_profile, [house_goal])
+        plan = generate_financial_plan(basic_profile, [house_goal, emergency_goal])
         alert_types = [a["type"] for a in plan["alerts"]]
         assert "low_emergency_fund" in alert_types
 

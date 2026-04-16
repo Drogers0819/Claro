@@ -111,20 +111,23 @@ def _build_pots(surplus, essentials, goals, debts=None):
                 "goal_id": debt.get("goal_id")
             })
 
-    emergency_target = round(essentials * EMERGENCY_MONTHS, 2)
-    existing_emergency = _find_existing_savings(goals, "emergency")
+    # Only add emergency pot if user has an emergency goal
+    has_emergency_goal = any(_is_emergency(g.get("name", "")) for g in goals)
+    if has_emergency_goal:
+        emergency_target = round(essentials * EMERGENCY_MONTHS, 2)
+        existing_emergency = _find_existing_savings(goals, "emergency")
 
-    pots.append({
-        "name": "Emergency fund",
-        "type": "emergency",
-        "target": emergency_target,
-        "current": existing_emergency,
-        "monthly_amount": 0,
-        "deadline": None,
-        "priority": 1,
-        "completed": existing_emergency >= emergency_target,
-        "goal_id": _find_goal_id(goals, "emergency")
-    })
+        pots.append({
+            "name": "Emergency fund",
+            "type": "emergency",
+            "target": emergency_target,
+            "current": existing_emergency,
+            "monthly_amount": 0,
+            "deadline": None,
+            "priority": 1,
+            "completed": existing_emergency >= emergency_target,
+            "goal_id": _find_goal_id(goals, "emergency")
+        })
 
     user_goals = _parse_goals(goals, today)
     for i, goal in enumerate(user_goals):
