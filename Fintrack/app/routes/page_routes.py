@@ -994,6 +994,73 @@ def plan_reveal():
         summary=summary
     )
 
+# ─── PLAN REVIEW (Onboarding) ────────────────────────────────
+@page_bp.route("/onboarding/plan-review")
+@login_required
+def plan_review():
+    if not current_user.factfind_completed:
+        return redirect(url_for("pages.factfind"))
+
+    _ensure_emergency_goal()
+
+    user_profile = current_user.profile_dict()
+    goals_data = [g.to_dict() for g in Goal.query.filter_by(
+        user_id=current_user.id, status="active"
+    ).order_by(Goal.priority_rank.asc()).all()]
+
+    plan = generate_financial_plan(user_profile, goals_data)
+
+    # Build reasoning for each pot
+    reasoning = []
+    if "error" not in plan:
+        for pot in plan["pots"]:
+            name = pot.get("name", "")
+            monthly = pot.get("monthly_amount", 0)
+            pot_type = pot.get("type", "")
+            target = pot.get("target")
+            months = pot.get("months_to_target")
+
+            if monthly <= 0:
+                continue
+
+            if pot_type == "emergency":
+                reason = "Your emergency fund is the foundation of financial security. We target 3 months of essential costs so an unexpected expense doesn't derail your goals."
+                if target and months:
+                    reason += f" At £{monthly:,.0f}/month, you'll reach your £{target:,.0f} target in approximately {months} months."
+            elif pot_type == "debt" or "pay off" in name.lower() or "credit" in name.lower():
+                reason = "Debt is prioritised because interest compounds against you. Clearing it first frees up money for everything else."
+                if target and months:
+                    reason += f" At £{monthly:,.0f}/month, this clears in approximately {months} months."
+            elif pot_type == "lifestyle":
+                reason = "Your lifestyle pot keeps the plan sustainable. This is the money that lets you enjoy the month — meals out, social plans, hobbies. Without it, plans get abandoned."
+            elif pot_type == "buffer":
+                reason = "A small buffer protects against minor overspending without touching your goals. Think of it as your plan's shock absorber."
+            else:
+                deadline = pot.get("deadline")
+                if deadline and months:
+                    reason = f"Based on your timeline, £{monthly:,.0f}/month gets you to your £{target:,.0f} target in approximately {months} months."
+                    if "(must-hit)" in name.lower() or pot.get("_stage") == "must_hit":
+                        reason += " You marked this as must-hit, so it's funded before other goals."
+                elif target and months:
+                    reason = f"With no fixed deadline, we've spread this across {months} months at £{monthly:,.0f}/month. As other goals complete, this will accelerate."
+                else:
+                    reason = f"Allocated £{monthly:,.0f}/month based on priority weighting across all your goals."
+
+            reasoning.append({
+                "name": name,
+                "monthly": monthly,
+                "type": pot_type,
+                "target": target,
+                "months": months,
+                "reason": reason
+            })
+
+    return render_template("plan_review.html",
+        plan=plan,
+        reasoning=reasoning,
+        profile=user_profile
+    )
+
 # ─── SETTINGS ────────────────────────────────────────────
 
 @page_bp.route("/settings")
