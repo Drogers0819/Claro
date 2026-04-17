@@ -523,14 +523,25 @@ body.theme-mist .mobile-settings-btn.active {
 }
 
 .theme-cobalt .btn-primary {
-    background: #63B3ED;
-    color: #0C0F14;
-    border-color: #63B3ED;
+    background: #2B6CB0;
+    color: #FFFFFF;
+    border-color: #2B6CB0;
 }
 
 .theme-cobalt .btn-primary:hover {
-    background: #4299E1;
-    border-color: #4299E1;
+    background: #2563A8;
+    border-color: #2563A8;
+}
+
+.theme-cobalt .btn-secondary {
+    border-color: rgba(99, 179, 237, 0.35);
+    color: #63B3ED;
+}
+
+.theme-cobalt .btn-secondary:hover {
+    background: rgba(99, 179, 237, 0.08);
+    border-color: #63B3ED;
+    color: #63B3ED;
 }
 
 .theme-cobalt input[type="range"]::-webkit-slider-thumb {
