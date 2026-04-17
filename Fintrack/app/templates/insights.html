@@ -7,6 +7,7 @@
     Money
 </a>
 <div class="page-header">
+    <div style="font-size: 0.65rem; color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 4px;">Insights</div>
     <h1>{{ predictions.current_month.month_name }} outlook</h1>
     <p>Day {{ predictions.current_month.days_elapsed }} of {{ predictions.current_month.days_in_month }} · {{ predictions.current_month.days_remaining }} days remaining</p>
 </div>
@@ -24,25 +25,29 @@
 </div>
 {% endif %}
 
-<!-- Month progress — contextual, shown after the primary insight -->
+<!-- Month progress — contextual time marker -->
 <div style="margin-bottom: 28px;">
     <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 8px;">
         <span style="font-size: 0.72rem; color: var(--text-tertiary);">Month progress</span>
         <span style="font-size: 0.75rem; color: var(--text-tertiary);">{{ predictions.current_month.progress_percent }}%</span>
     </div>
     <div class="progress-track">
-        <div class="progress-fill" style="width: {{ predictions.current_month.progress_percent }}%; background: var(--text-tertiary);"></div>
+        <div class="progress-fill" style="width: {{ predictions.current_month.progress_percent }}%; background: var(--text-secondary);"></div>
     </div>
 </div>
 
 <!-- Key metrics — only shown when there is transaction data -->
 {% if predictions.spending_so_far.transaction_count > 0 %}
+<div class="section-label">Spending this month</div>
 <div style="margin-bottom: 32px;">
     <!-- Hero metric -->
     <div class="glass-card" style="margin-bottom: 12px;">
         <div class="metric-label">Predicted total</div>
         <div class="metric-value hero" style="margin: 4px 0;">£{{ "{:,.2f}".format(predictions.predictions.blended.predicted_total) }}</div>
         <div style="font-size: 0.75rem; color: var(--text-tertiary);">based on {{ predictions.spending_so_far.transaction_count }} transaction{{ "s" if predictions.spending_so_far.transaction_count != 1 else "" }}</div>
+        {% if predictions.historical_months_available < 2 %}
+        <div style="font-size: 0.7rem; color: var(--text-tertiary); margin-top: 6px;">Limited history — predictions improve as you add more months.</div>
+        {% endif %}
     </div>
     <!-- Supporting stats -->
     <div class="grid-2">
@@ -163,9 +168,4 @@
 </div>
 {% endif %}
 
-{% if predictions.historical_months_available < 2 %}
-<p style="font-size: 0.75rem; color: var(--text-tertiary); margin-top: 24px; line-height: 1.6;">
-    Predictions improve with more data. Upload additional months of bank statements to see more accurate forecasts.
-</p>
-{% endif %}
 {% endblock %}

@@ -203,13 +203,20 @@
                             </button>
                         </div>
                         <div id="password-strength" style="display: none; margin-top: 8px;">
-                            <div style="display: flex; gap: 4px; margin-bottom: 4px;">
+                            <div style="display: flex; gap: 4px; margin-bottom: 6px;">
                                 <div class="str-bar" style="height: 3px; flex: 1; border-radius: 2px; background: var(--glass-border); transition: background 0.2s;"></div>
                                 <div class="str-bar" style="height: 3px; flex: 1; border-radius: 2px; background: var(--glass-border); transition: background 0.2s;"></div>
                                 <div class="str-bar" style="height: 3px; flex: 1; border-radius: 2px; background: var(--glass-border); transition: background 0.2s;"></div>
                                 <div class="str-bar" style="height: 3px; flex: 1; border-radius: 2px; background: var(--glass-border); transition: background 0.2s;"></div>
                             </div>
                             <span id="str-label" style="font-size: 0.7rem;"></span>
+                            <!-- Per-requirement indicators -->
+                            <div id="pw-requirements" style="display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px;">
+                                <span id="req-length" style="font-size: 0.65rem; color: var(--text-tertiary); display: flex; align-items: center; gap: 3px;"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/></svg> 8+ characters</span>
+                                <span id="req-upper" style="font-size: 0.65rem; color: var(--text-tertiary); display: flex; align-items: center; gap: 3px;"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/></svg> Uppercase</span>
+                                <span id="req-number" style="font-size: 0.65rem; color: var(--text-tertiary); display: flex; align-items: center; gap: 3px;"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/></svg> Number</span>
+                                <span id="req-symbol" style="font-size: 0.65rem; color: var(--text-tertiary); display: flex; align-items: center; gap: 3px;"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/></svg> Symbol</span>
+                            </div>
                         </div>
                     </div>
                     <div class="form-group" style="margin-bottom: 14px;">
@@ -286,28 +293,56 @@ function toggleEdit(field) {
 document.addEventListener('DOMContentLoaded', function() {
     var newPwInput = document.getElementById('newPassword');
     if (!newPwInput) return;
-    newPwInput.addEventListener('input', function() {
-        var val = this.value;
+
+    function updateReqIndicator(id, met) {
+        var el = document.getElementById(id);
+        if (!el) return;
+        el.style.color = met ? 'var(--success)' : 'var(--text-tertiary)';
+        var svgEl = el.querySelector('svg');
+        if (svgEl) svgEl.style.opacity = met ? '1' : '0.35';
+    }
+
+    function updateStrength() {
+        var val = newPwInput.value;
         var container = document.getElementById('password-strength');
         if (!container) return;
         container.style.display = val.length > 0 ? 'block' : 'none';
-        var score = 0;
-        if (val.length >= 8) score++;
-        if (/[A-Z]/.test(val)) score++;
-        if (/[0-9]/.test(val)) score++;
-        if (/[^A-Za-z0-9]/.test(val)) score++;
-        var colors = ['var(--danger)', 'var(--danger)', 'var(--roman-gold)', 'var(--success)'];
-        var labels = ['Too short', 'Weak', 'Fair', 'Strong'];
-        var activeColor = colors[Math.max(0, score - 1)];
-        container.querySelectorAll('.str-bar').forEach(function(bar, i) {
-            bar.style.background = i < score ? activeColor : 'var(--glass-border)';
-        });
-        var label = document.getElementById('str-label');
-        if (label) {
-            label.textContent = labels[Math.max(0, score - 1)];
-            label.style.color = activeColor;
+
+        var hasLength = val.length >= 8;
+        var hasUpper = /[A-Z]/.test(val);
+        var hasNumber = /[0-9]/.test(val);
+        var hasSymbol = /[^A-Za-z0-9]/.test(val);
+        var score = (hasLength ? 1 : 0) + (hasUpper ? 1 : 0) + (hasNumber ? 1 : 0) + (hasSymbol ? 1 : 0);
+
+        // Fix: score maps directly to bars/label. score 0 or no-length = danger.
+        var barColor, labelText, labelColor;
+        if (!hasLength) {
+            barColor = 'var(--danger)'; labelText = 'Too short (min. 8 characters)'; labelColor = 'var(--danger)';
+            score = 1; // show 1 danger bar while too short
+        } else if (score <= 1) {
+            barColor = 'var(--danger)'; labelText = 'Weak'; labelColor = 'var(--danger)';
+        } else if (score === 2) {
+            barColor = 'var(--roman-gold)'; labelText = 'Fair'; labelColor = 'var(--roman-gold)';
+        } else if (score === 3) {
+            barColor = 'var(--success)'; labelText = 'Good'; labelColor = 'var(--success)';
+        } else {
+            barColor = 'var(--success)'; labelText = 'Strong'; labelColor = 'var(--success)';
         }
-    });
+
+        container.querySelectorAll('.str-bar').forEach(function(bar, i) {
+            bar.style.background = i < score ? barColor : 'var(--glass-border)';
+        });
+        var labelEl = document.getElementById('str-label');
+        if (labelEl) { labelEl.textContent = labelText; labelEl.style.color = labelColor; }
+
+        updateReqIndicator('req-length', hasLength);
+        updateReqIndicator('req-upper', hasUpper);
+        updateReqIndicator('req-number', hasNumber);
+        updateReqIndicator('req-symbol', hasSymbol);
+    }
+
+    newPwInput.addEventListener('input', updateStrength);
+    newPwInput.addEventListener('change', updateStrength);
 });
 </script>
 {% endblock %}

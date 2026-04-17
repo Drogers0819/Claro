@@ -212,10 +212,20 @@ a:hover {
     display: none;
 }
 
-/* Mobile settings avatar — fixed top-right on all pages. Sidebar footer is hidden on mobile. */
+/* Mobile fixed header bar — contains avatar, blocks content scrolling behind it */
+.mobile-header-bar {
+    display: none;
+}
+
+/* Mobile settings avatar — lives inside the header bar on mobile */
 .mobile-settings-btn {
     display: none;
 }
+
+/* More nav panel — hidden on desktop */
+.more-nav-btn { display: none; }
+.more-overlay { display: none; }
+.more-panel { display: none; }
 
 /* Visibility helpers */
 .mobile-only { display: none; }
@@ -224,12 +234,27 @@ a:hover {
 @media (max-width: 768px) { .desktop-only { display: none; } }
 
 @media (max-width: 768px) {
+    /* Fixed header bar — solid bg prevents avatar from floating over scrolled content */
+    .mobile-header-bar {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: calc(52px + env(safe-area-inset-top));
+        padding-top: env(safe-area-inset-top);
+        padding-right: 16px;
+        z-index: 400;
+        background: var(--bg-primary);
+        border-bottom: 0.5px solid transparent;
+        pointer-events: none;
+    }
+
     .mobile-settings-btn {
         display: flex;
-        position: fixed;
-        top: max(14px, calc(env(safe-area-inset-top) + 8px));
-        right: 16px;
-        z-index: 500;
+        pointer-events: all;
         align-items: center;
         justify-content: center;
         width: 36px;
@@ -244,12 +269,117 @@ a:hover {
         letter-spacing: 0.02em;
         text-decoration: none;
         transition: background 0.2s ease, border-color 0.2s ease;
+        flex-shrink: 0;
     }
 
     .mobile-settings-btn:hover,
     .mobile-settings-btn.active {
         background: rgba(255, 255, 255, 0.12);
         border-color: rgba(255, 255, 255, 0.18);
+    }
+
+    /* More panel overlay */
+    .more-overlay {
+        display: block;
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0);
+        z-index: 350;
+        transition: background 0.2s ease;
+        pointer-events: none;
+    }
+
+    .more-overlay.open {
+        background: rgba(0, 0, 0, 0.5);
+        pointer-events: all;
+    }
+
+    /* More panel — slides up from above the bottom nav */
+    .more-panel {
+        display: block;
+        position: fixed;
+        bottom: calc(72px + env(safe-area-inset-bottom));
+        left: 12px;
+        right: 12px;
+        background: var(--glass);
+        border: 0.5px solid var(--glass-border);
+        border-radius: 16px;
+        padding: 8px;
+        z-index: 360;
+        transform: translateY(20px);
+        opacity: 0;
+        pointer-events: none;
+        transition: transform 0.2s ease, opacity 0.2s ease;
+    }
+
+    .more-panel.open {
+        transform: translateY(0);
+        opacity: 1;
+        pointer-events: all;
+    }
+
+    .more-panel-item {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        padding: 14px 16px;
+        border-radius: 10px;
+        text-decoration: none;
+        color: var(--text-secondary);
+        font-size: 0.9rem;
+        transition: background 0.15s ease;
+    }
+
+    .more-panel-item:hover,
+    .more-panel-item.active {
+        background: var(--glass-hover);
+        color: var(--text-primary);
+    }
+
+    .more-panel-item.active {
+        color: var(--roman-gold);
+    }
+
+    .more-panel-item .nav-icon {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 32px;
+        height: 32px;
+        border-radius: 8px;
+        background: var(--glass);
+        flex-shrink: 0;
+    }
+
+    /* More button in bottom nav */
+    .more-nav-btn {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 3px;
+        padding: 5px 4px;
+        font-size: 0.6rem;
+        flex: 1;
+        text-align: center;
+        min-height: 44px;
+        justify-content: center;
+        background: none;
+        border: none;
+        cursor: pointer;
+        color: var(--text-tertiary);
+        font-family: var(--font-sans);
+        -webkit-tap-highlight-color: transparent;
+        transition: color 0.15s ease;
+        letter-spacing: 0.02em;
+    }
+
+    .more-nav-btn.active {
+        color: var(--roman-gold);
+    }
+
+    /* Hide Check-in and Companion from bottom nav on mobile — they go in the More panel */
+    .nav-extra {
+        display: none !important;
     }
 }
 
@@ -1811,9 +1941,9 @@ body.theme-mist .budget-row-danger {
         margin: 0;
     }
 
-    /* Main content: safe-area-aware top padding aligns h1 with fixed avatar */
+    /* Main content: starts below the fixed header bar */
     .main-content {
-        padding: max(16px, calc(env(safe-area-inset-top) + 10px)) 16px 96px;
+        padding: calc(52px + env(safe-area-inset-top) + 16px) 16px 96px;
         margin-left: 0;
         width: 100%;
         overflow-x: hidden;
@@ -2052,7 +2182,7 @@ body.theme-mist .budget-row-danger {
 
 @media (max-width: 375px) {
     .main-content {
-        padding: max(12px, calc(env(safe-area-inset-top) + 8px)) 12px 96px;
+        padding: calc(52px + env(safe-area-inset-top) + 12px) 12px 96px;
     }
 
     .page-header h1 {
