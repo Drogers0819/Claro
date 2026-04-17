@@ -28,16 +28,14 @@
 
     <!-- Onboarding step indicator -->
     <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 24px;">
+        <a href="{{ url_for('pages.surplus_reveal') }}" style="font-size: 0.65rem; color: var(--text-tertiary); text-decoration: none; white-space: nowrap; display: inline-flex; align-items: center; gap: 2px;"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>Back</a>
         <div style="display: flex; gap: 4px; flex: 1;">
-            <div style="flex: 1; height: 2px; border-radius: 1px; background: var(--roman-gold);"></div>
-            <div style="flex: 1; height: 2px; border-radius: 1px; background: var(--roman-gold);"></div>
-            <div style="flex: 1; height: 2px; border-radius: 1px; background: var(--roman-gold);"></div>
+            <div style="flex: 1; height: 2px; border-radius: 1px; background: rgba(255,255,255,0.25);"></div>
+            <div style="flex: 1; height: 2px; border-radius: 1px; background: rgba(255,255,255,0.25);"></div>
+            <div style="flex: 1; height: 2px; border-radius: 1px; background: rgba(255,255,255,0.25);"></div>
             <div style="flex: 1; height: 2px; border-radius: 1px; background: rgba(255,255,255,0.08);"></div>
         </div>
-        <div style="display: flex; align-items: center; gap: 10px;">
-            <a href="{{ url_for('pages.surplus_reveal') }}" style="font-size: 0.65rem; color: var(--text-tertiary); text-decoration: none;">← Back</a>
-            <span style="font-size: 0.65rem; color: var(--text-tertiary); white-space: nowrap; letter-spacing: 0.04em;">Step 3 of 4</span>
-        </div>
+        <span style="font-size: 0.65rem; color: var(--text-tertiary); white-space: nowrap; letter-spacing: 0.04em;">Step 3 of 4</span>
     </div>
 
     <div class="page-header">
@@ -91,7 +89,7 @@
 
             <!-- House deposit -->
             <div class="goal-detail" id="detail-house" style="display: none;">
-                <div class="glass-card" style="padding: 16px 20px;">
+                <div style="padding: 12px 0 16px; border-top: 0.5px solid var(--glass-border); margin-top: 8px;">
                     <div style="font-size: 0.85rem; color: var(--text-primary); margin-bottom: 10px; display: flex; align-items: center; gap: 7px;">{{ chip_icon('house') }} House deposit: roughly how much?</div>
                     <div style="display: flex; flex-wrap: wrap; gap: 8px;">
                         <label class="amt-opt"><input type="radio" name="house_amount" value="10000" style="display:none;" onchange="selOpt(this)"><span>£10,000</span></label>
@@ -121,7 +119,7 @@
 
             <!-- Holiday -->
             <div class="goal-detail" id="detail-holiday" style="display: none;">
-                <div class="glass-card" style="padding: 16px 20px;">
+                <div style="padding: 12px 0 16px; border-top: 0.5px solid var(--glass-border); margin-top: 8px;">
                     <div style="font-size: 0.85rem; color: var(--text-primary); margin-bottom: 10px; display: flex; align-items: center; gap: 7px;">{{ chip_icon('holiday') }} Holiday: when and how much?</div>
                     <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 10px;">
                         <label class="amt-opt"><input type="radio" name="holiday_timeline" value="3" style="display:none;" onchange="selOpt(this); checkMustHit('holiday', 3)"><span>3 months</span></label>
@@ -144,7 +142,7 @@
 
             <!-- Baby fund -->
             <div class="goal-detail" id="detail-baby" style="display: none;">
-                <div class="glass-card" style="padding: 16px 20px;">
+                <div style="padding: 12px 0 16px; border-top: 0.5px solid var(--glass-border); margin-top: 8px;">
                     <div style="font-size: 0.85rem; color: var(--text-primary); margin-bottom: 10px; display: flex; align-items: center; gap: 7px;">{{ chip_icon('baby') }} Baby fund: how much?</div>
                     <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 10px;">
                         <label class="amt-opt"><input type="radio" name="baby_amount" value="5000" style="display:none;" onchange="selOpt(this)"><span>£5,000</span></label>
@@ -172,7 +170,7 @@
 
             <!-- Pay off debt -->
             <div class="goal-detail" id="detail-debt" style="display: none;">
-                <div class="glass-card" style="padding: 16px 20px;">
+                <div style="padding: 12px 0 16px; border-top: 0.5px solid var(--glass-border); margin-top: 8px;">
                     <div style="font-size: 0.85rem; color: var(--text-primary); margin-bottom: 10px; display: flex; align-items: center; gap: 7px;">{{ chip_icon('debt') }} What debt are you clearing?</div>
                     <input type="text" name="debt_name" class="form-input" placeholder="e.g. Credit card, overdraft" style="margin-bottom: 10px;">
                     <input type="number" name="debt_amount" class="form-input" placeholder="How much do you owe? (£)" step="100" min="100">
@@ -197,7 +195,7 @@
 
             <!-- Car -->
             <div class="goal-detail" id="detail-car" style="display: none;">
-                <div class="glass-card" style="padding: 16px 20px;">
+                <div style="padding: 12px 0 16px; border-top: 0.5px solid var(--glass-border); margin-top: 8px;">
                     <div style="font-size: 0.85rem; color: var(--text-primary); margin-bottom: 10px; display: flex; align-items: center; gap: 7px;">{{ chip_icon('car') }} Car: roughly how much?</div>
                     <input type="number" name="car_amount" class="form-input" placeholder="e.g. 5000" step="500" min="500">
                     <div class="timeline-label">When do you need it?</div>
@@ -222,7 +220,7 @@
 
             <!-- Wedding -->
             <div class="goal-detail" id="detail-wedding" style="display: none;">
-                <div class="glass-card" style="padding: 16px 20px;">
+                <div style="padding: 12px 0 16px; border-top: 0.5px solid var(--glass-border); margin-top: 8px;">
                     <div style="font-size: 0.85rem; color: var(--text-primary); margin-bottom: 10px; display: flex; align-items: center; gap: 7px;">{{ chip_icon('wedding') }} Wedding: how much?</div>
                     <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 10px;">
                         <label class="amt-opt"><input type="radio" name="wedding_amount" value="5000" style="display:none;" onchange="selOpt(this)"><span>£5,000</span></label>
@@ -251,7 +249,7 @@
 
             <!-- Student loan -->
             <div class="goal-detail" id="detail-student" style="display: none;">
-                <div class="glass-card" style="padding: 16px 20px;">
+                <div style="padding: 12px 0 16px; border-top: 0.5px solid var(--glass-border); margin-top: 8px;">
                     <div style="font-size: 0.85rem; color: var(--text-primary); margin-bottom: 10px; display: flex; align-items: center; gap: 7px;">{{ chip_icon('student') }} Student loan: how much to clear?</div>
                     <input type="number" name="student_amount" class="form-input" placeholder="e.g. 3000" step="500" min="100">
                     <div class="timeline-label">When do you want this cleared?</div>
@@ -275,7 +273,7 @@
 
             <!-- New purchase -->
             <div class="goal-detail" id="detail-purchase" style="display: none;">
-                <div class="glass-card" style="padding: 16px 20px;">
+                <div style="padding: 12px 0 16px; border-top: 0.5px solid var(--glass-border); margin-top: 8px;">
                     <div style="font-size: 0.85rem; color: var(--text-primary); margin-bottom: 10px; display: flex; align-items: center; gap: 7px;">{{ chip_icon('purchase') }} What are you saving for?</div>
                     <input type="text" name="purchase_name" class="form-input" placeholder="e.g. Laptop, phone" style="margin-bottom: 10px;">
                     <input type="number" name="purchase_amount" class="form-input" placeholder="How much? (£)" step="100" min="100">
@@ -300,7 +298,7 @@
 
             <!-- Something else -->
             <div class="goal-detail" id="detail-custom" style="display: none;">
-                <div class="glass-card" style="padding: 16px 20px;">
+                <div style="padding: 12px 0 16px; border-top: 0.5px solid var(--glass-border); margin-top: 8px;">
                     <div style="font-size: 0.85rem; color: var(--text-primary); margin-bottom: 10px; display: flex; align-items: center; gap: 7px;">{{ chip_icon('custom') }} What's the goal?</div>
                     <input type="text" name="custom_name" class="form-input" placeholder="e.g. Moving costs, driving lessons" style="margin-bottom: 10px;">
                     <input type="number" name="custom_amount" class="form-input" placeholder="How much? (£)" step="100" min="100">
@@ -324,17 +322,17 @@
             </div>
         </div>
 
-        <button type="submit" class="btn-primary" id="buildBtn" style="width: 100%; padding: 16px; font-size: 0.95rem; display: none;">
-            Build my plan →
+        <button type="submit" class="btn-primary" id="buildBtn" style="width: 100%; padding: 16px; font-size: 0.95rem; display: flex; align-items: center; justify-content: center; gap: 8px;" disabled>
+            Select a goal above to continue
         </button>
     </form>
 </div>
 
 <style>
-.goal-chip.selected{border-color:var(--roman-gold)!important;background:rgba(197,163,93,0.1)!important;color:var(--roman-gold)!important;}
+.goal-chip.selected{border-color:var(--roman-gold)!important;background:rgba(255,255,255,0.06)!important;color:var(--text-primary)!important;}
 .amt-opt span{display:inline-block;padding:8px 16px;border-radius:8px;border:1px solid rgba(255,255,255,0.08);background:rgba(255,255,255,0.02);font-size:0.8rem;color:var(--text-secondary);cursor:pointer;transition:all 0.2s ease;}
-.amt-opt input:checked+span{border-color:var(--roman-gold);background:rgba(197,163,93,0.1);color:var(--roman-gold);}
-.must-hit-box{margin-top:12px;padding:10px 14px;border-radius:8px;background:rgba(197,163,93,0.04);border:0.5px solid rgba(197,163,93,0.1);}
+.amt-opt input:checked+span{border-color:var(--roman-gold);background:rgba(255,255,255,0.06);color:var(--text-primary);}
+.must-hit-box{margin-top:12px;padding:10px 14px;border-radius:8px;background:rgba(255,255,255,0.02);border:0.5px solid var(--glass-border);}
 .must-hit-disclaimer{display:block;font-size:0.7rem;color:var(--text-tertiary);margin-top:2px;line-height:1.5;}
 .timeline-label{font-size:0.8rem;color:var(--text-tertiary);margin-top:14px;margin-bottom:8px;}
 </style>
@@ -350,7 +348,21 @@ function toggleChip(cb){
 function selOpt(r){}
 function updateBtn(){
     var c=document.querySelectorAll('input[name="goals"]:checked');
-    document.getElementById('buildBtn').style.display=c.length>0?'block':'none';
+    var btn=document.getElementById('buildBtn');
+    btn.disabled=c.length===0;
+    btn.textContent=c.length>0?'Build my plan':'Select a goal above to continue';
+    var existingIcon=btn.querySelector('svg');
+    if(existingIcon)btn.removeChild(existingIcon);
+    if(c.length>0){
+        var ns='http://www.w3.org/2000/svg';
+        var svg=document.createElementNS(ns,'svg');
+        svg.setAttribute('width','14');svg.setAttribute('height','14');svg.setAttribute('viewBox','0 0 24 24');
+        svg.setAttribute('fill','none');svg.setAttribute('stroke','currentColor');svg.setAttribute('stroke-width','2');
+        svg.setAttribute('stroke-linecap','round');svg.setAttribute('stroke-linejoin','round');
+        var p1=document.createElementNS(ns,'path');p1.setAttribute('d','M5 12h14');svg.appendChild(p1);
+        var p2=document.createElementNS(ns,'path');p2.setAttribute('d','m12 5 7 7-7 7');svg.appendChild(p2);
+        btn.appendChild(svg);
+    }
 }
 function checkMustHit(goal, months){
     var el=document.getElementById(goal+'-mustHit');

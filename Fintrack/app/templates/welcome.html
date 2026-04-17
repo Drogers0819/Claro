@@ -7,7 +7,7 @@
 </div>
 
 <!-- Trial framing — most important thing to communicate first -->
-<div style="display: flex; align-items: center; gap: 10px; padding: 12px 16px; border-radius: 10px; background: rgba(197,163,93,0.06); border: 0.5px solid rgba(197,163,93,0.2); margin-bottom: 24px; max-width: 560px;">
+<div style="display: flex; align-items: center; gap: 10px; padding: 12px 16px; border-radius: 10px; background: var(--roman-gold-dim); border: 0.5px solid var(--glass-border); margin-bottom: 24px; max-width: 560px;">
     <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--roman-gold)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0;"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
     <span style="font-size: 0.8rem; color: var(--text-secondary); line-height: 1.5;">Your 14-day full access has started. No card needed.</span>
 </div>
@@ -19,8 +19,8 @@
 <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 32px; max-width: 560px;">
     {% for i in range(2) %}
     <div style="flex: 1; height: 3px; border-radius: 2px;
-        {% if i < steps_done %}background: var(--roman-gold);
-        {% elif i == steps_done %}background: rgba(197, 163, 93, 0.35);
+        {% if i < steps_done %}background: rgba(255,255,255,0.25);
+        {% elif i == steps_done %}background: rgba(255,255,255,0.15);
         {% else %}background: rgba(255,255,255,0.06);{% endif %}">
     </div>
     {% endfor %}
@@ -31,11 +31,11 @@
 <div style="display: flex; flex-direction: column; gap: 12px; max-width: 560px;">
 
     <!-- Step 1: Financial profile -->
-    <div class="glass-card" style="{% if profile_done %}opacity: 0.55;{% elif not profile_done %}border-color: rgba(197,163,93,0.3);{% endif %}">
+    <div class="glass-card" style="{% if profile_done %}opacity: 0.55;{% elif not profile_done %}border-color: rgba(255,255,255,0.15);{% endif %}">
         <div style="display: flex; align-items: flex-start; gap: 16px;">
             <div style="flex-shrink: 0; width: 36px; height: 36px; border-radius: 50%;
                 display: flex; align-items: center; justify-content: center;
-                {% if profile_done %}background: rgba(197,163,93,0.15); color: var(--roman-gold);
+                {% if profile_done %}background: rgba(72,187,120,0.1); color: rgba(72,187,120,0.8);
                 {% else %}background: rgba(255,255,255,0.05); color: var(--text-tertiary);{% endif %}">
                 {% if profile_done %}
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
@@ -63,11 +63,11 @@
     <!-- Step 2: First goal -->
     {% set step2_active = profile_done and not goals_done %}
     {% set step2_locked = not profile_done %}
-    <div class="glass-card" style="{% if goals_done %}opacity: 0.55;{% elif step2_active %}border-color: rgba(197,163,93,0.3);{% elif step2_locked %}opacity: 0.35;{% endif %}">
+    <div class="glass-card" style="{% if goals_done %}opacity: 0.55;{% elif step2_active %}border-color: rgba(255,255,255,0.15);{% elif step2_locked %}opacity: 0.35;{% endif %}">
         <div style="display: flex; align-items: flex-start; gap: 16px;">
             <div style="flex-shrink: 0; width: 36px; height: 36px; border-radius: 50%;
                 display: flex; align-items: center; justify-content: center;
-                {% if goals_done %}background: rgba(197,163,93,0.15); color: var(--roman-gold);
+                {% if goals_done %}background: rgba(72,187,120,0.1); color: rgba(72,187,120,0.8);
                 {% else %}background: rgba(255,255,255,0.05); color: var(--text-tertiary);{% endif %}">
                 {% if goals_done %}
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
@@ -96,8 +96,9 @@
 
 <!-- Skip link -->
 <div style="margin-top: 24px; max-width: 560px;">
-    <a href="{{ url_for('pages.overview') }}" style="font-size: 0.75rem; color: var(--text-tertiary); text-decoration: none;">
-        Skip for now →
+    <a href="{{ url_for('pages.overview') }}" style="font-size: 0.75rem; color: var(--text-tertiary); text-decoration: none; display: inline-flex; align-items: center; gap: 4px;">
+        Skip for now
+        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
     </a>
     <span style="font-size: 0.72rem; color: var(--text-tertiary); opacity: 0.6;"> You can return to this page anytime from the overview.</span>
 </div>

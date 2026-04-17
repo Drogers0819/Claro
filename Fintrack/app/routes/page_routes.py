@@ -389,7 +389,7 @@ def register():
         db.session.commit()
 
         login_user(user)
-        return redirect(url_for("pages.welcome"))
+        return redirect(url_for("pages.factfind"))
 
     return render_template("register.html")
 
@@ -1064,10 +1064,13 @@ def plan_review():
                 "reason": reason
             })
 
+    summary = get_plan_summary(plan) if "error" not in plan else ""
+
     return render_template("plan_review.html",
         plan=plan,
         reasoning=reasoning,
-        profile=user_profile
+        profile=user_profile,
+        summary=summary
     )
 
 # ─── SETTINGS ────────────────────────────────────────────

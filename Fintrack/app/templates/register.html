@@ -7,7 +7,7 @@
         <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Claro"
              style="width: 160px; height: auto; margin-bottom: 16px;">
         <p class="serif" style="font-size: 1.5rem; color: var(--text-primary); margin-bottom: 6px;">Your money, finally clear.</p>
-        <p style="font-size: 0.82rem; color: var(--text-tertiary); line-height: 1.6;">Upload a statement. Claro categorises, predicts, and plans for you.</p>
+        <p style="font-size: 0.82rem; color: var(--text-tertiary); line-height: 1.6;">Answer a few questions. Get a financial plan built around you in 60 seconds.</p>
     </div>
 
     <div class="glass-card">
@@ -31,39 +31,66 @@
                 </div>
                 <!-- Password strength indicator -->
                 <div id="pw-strength" style="display: none; margin-top: 8px;">
-                    <div style="display: flex; gap: 4px; margin-bottom: 5px;">
-                        <div id="pw-bar-1" style="flex: 1; height: 3px; border-radius: 2px; background: rgba(255,255,255,0.08); transition: background 0.2s ease;"></div>
-                        <div id="pw-bar-2" style="flex: 1; height: 3px; border-radius: 2px; background: rgba(255,255,255,0.08); transition: background 0.2s ease;"></div>
-                        <div id="pw-bar-3" style="flex: 1; height: 3px; border-radius: 2px; background: rgba(255,255,255,0.08); transition: background 0.2s ease;"></div>
+                    <div style="display: flex; gap: 4px; margin-bottom: 6px;">
+                        <div class="reg-str-bar" style="flex: 1; height: 3px; border-radius: 2px; background: var(--glass-border); transition: background 0.2s;"></div>
+                        <div class="reg-str-bar" style="flex: 1; height: 3px; border-radius: 2px; background: var(--glass-border); transition: background 0.2s;"></div>
+                        <div class="reg-str-bar" style="flex: 1; height: 3px; border-radius: 2px; background: var(--glass-border); transition: background 0.2s;"></div>
+                        <div class="reg-str-bar" style="flex: 1; height: 3px; border-radius: 2px; background: var(--glass-border); transition: background 0.2s;"></div>
                     </div>
-                    <span id="pw-label" style="font-size: 0.7rem; color: var(--text-tertiary);"></span>
+                    <span id="pw-label" style="font-size: 0.7rem;"></span>
+                    <div style="display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px;">
+                        <span id="reg-req-length" style="font-size: 0.65rem; color: var(--text-tertiary); display: flex; align-items: center; gap: 3px;"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/></svg> 8+ characters</span>
+                        <span id="reg-req-upper" style="font-size: 0.65rem; color: var(--text-tertiary); display: flex; align-items: center; gap: 3px;"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/></svg> Uppercase</span>
+                        <span id="reg-req-number" style="font-size: 0.65rem; color: var(--text-tertiary); display: flex; align-items: center; gap: 3px;"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/></svg> Number</span>
+                        <span id="reg-req-symbol" style="font-size: 0.65rem; color: var(--text-tertiary); display: flex; align-items: center; gap: 3px;"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/></svg> Symbol</span>
+                    </div>
                 </div>
             </div>
             <button type="submit" class="btn-primary btn-full">Create my account</button>
 
 <script>
+function updateRegReq(id, met) {
+    var el = document.getElementById(id);
+    if (!el) return;
+    el.style.color = met ? 'var(--success)' : 'var(--text-tertiary)';
+    var svg = el.querySelector('svg');
+    if (svg) svg.style.opacity = met ? '1' : '0.35';
+}
 function checkStrength(val) {
     var el = document.getElementById('pw-strength');
     if (!val) { el.style.display = 'none'; return; }
     el.style.display = 'block';
 
-    var score = 0;
-    if (val.length >= 8) score++;
-    if (val.length >= 12) score++;
-    if (/[A-Z]/.test(val) && /[0-9]/.test(val)) score++;
-    if (/[^A-Za-z0-9]/.test(val)) score++;
+    var hasLength = val.length >= 8;
+    var hasUpper = /[A-Z]/.test(val);
+    var hasNumber = /[0-9]/.test(val);
+    var hasSymbol = /[^A-Za-z0-9]/.test(val);
+    var score = (hasLength ? 1 : 0) + (hasUpper ? 1 : 0) + (hasNumber ? 1 : 0) + (hasSymbol ? 1 : 0);
 
-    var level = score <= 1 ? 1 : score <= 2 ? 2 : 3;
-    var colors = ['', 'var(--danger)', 'var(--warning)', 'var(--success)'];
-    var labels = ['', 'Weak', 'Fair', 'Strong'];
-
-    for (var i = 1; i <= 3; i++) {
-        var bar = document.getElementById('pw-bar-' + i);
-        bar.style.background = i <= level ? colors[level] : 'rgba(255,255,255,0.08)';
+    var barColor, labelText, labelColor;
+    if (!hasLength) {
+        barColor = 'var(--danger)'; labelText = 'Too short (min. 8 characters)'; labelColor = 'var(--danger)';
+        score = 1;
+    } else if (score <= 1) {
+        barColor = 'var(--danger)'; labelText = 'Weak'; labelColor = 'var(--danger)';
+    } else if (score === 2) {
+        barColor = 'var(--warning)'; labelText = 'Fair'; labelColor = 'var(--warning)';
+    } else if (score === 3) {
+        barColor = 'var(--success)'; labelText = 'Good'; labelColor = 'var(--success)';
+    } else {
+        barColor = 'var(--success)'; labelText = 'Strong'; labelColor = 'var(--success)';
     }
+
+    document.querySelectorAll('.reg-str-bar').forEach(function(bar, i) {
+        bar.style.background = i < score ? barColor : 'var(--glass-border)';
+    });
     var lbl = document.getElementById('pw-label');
-    lbl.textContent = labels[level];
-    lbl.style.color = colors[level];
+    lbl.textContent = labelText; lbl.style.color = labelColor;
+
+    updateRegReq('reg-req-length', hasLength);
+    updateRegReq('reg-req-upper', hasUpper);
+    updateRegReq('reg-req-number', hasNumber);
+    updateRegReq('reg-req-symbol', hasSymbol);
 }
 </script>
             <div style="display: flex; align-items: center; justify-content: center; gap: 6px; margin-top: 14px;">

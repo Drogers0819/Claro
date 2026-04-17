@@ -19,13 +19,13 @@
 
         <div class="grid-2">
             <div class="form-group">
-                <label class="form-label">Target amount (£)</label>
+                <label class="form-label">Target amount (£) <span style="font-size: 0.7rem; color: var(--text-tertiary); font-weight: 400;">(optional)</span></label>
                 <input type="number" name="target_amount" class="form-input" step="0.01" min="0"
                        value="{{ '%.2f' | format(goal.target_amount) if goal.target_amount else '' }}"
                        placeholder="e.g. 10000">
             </div>
             <div class="form-group">
-                <label class="form-label">Already saved (£)</label>
+                <label class="form-label">Already saved (£) <span style="font-size: 0.7rem; color: var(--text-tertiary); font-weight: 400;">(optional)</span></label>
                 <input type="number" name="current_amount" class="form-input" step="0.01" min="0"
                        value="{{ '%.2f' | format(goal.current_amount) if goal.current_amount else '0' }}">
             </div>
@@ -33,13 +33,13 @@
 
         <div class="grid-2">
             <div class="form-group">
-                <label class="form-label">Monthly contribution (£)</label>
+                <label class="form-label">Monthly contribution (£) <span style="font-size: 0.7rem; color: var(--text-tertiary); font-weight: 400;">(optional)</span></label>
                 <input type="number" name="monthly_allocation" class="form-input" step="0.01" min="0"
                        value="{{ '%.2f' | format(goal.monthly_allocation) if goal.monthly_allocation else '' }}"
                        placeholder="e.g. 412">
             </div>
             <div class="form-group">
-                <label class="form-label">Target date (optional)</label>
+                <label class="form-label">Target date <span style="font-size: 0.7rem; color: var(--text-tertiary); font-weight: 400;">(optional)</span></label>
                 <input type="text" name="deadline" class="form-input date-picker"
                        value="{{ goal.deadline.isoformat() if goal.deadline else '' }}"
                        placeholder="Select date">
@@ -54,7 +54,7 @@
 
         <div style="display: flex; align-items: center; gap: 14px;">
             <button type="submit" class="btn-primary">Save changes</button>
-            <a href="{{ url_for('pages.my_goals') }}" style="font-size: 0.82rem; color: var(--text-tertiary); text-decoration: none;">Cancel</a>
+            <a href="{{ url_for('pages.my_goals') }}" class="btn-secondary btn-sm">Cancel</a>
         </div>
     </form>
 </div>

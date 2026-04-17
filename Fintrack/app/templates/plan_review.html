@@ -16,6 +16,17 @@
 
     {% if plan and "error" not in plan %}
 
+    {% if summary %}
+    <!-- AI whisper -->
+    <div class="gold-card" style="margin-bottom: 24px;">
+        <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 10px;">
+            <span class="ai-pulse"></span>
+            <span style="font-size: 0.65rem; color: var(--roman-gold); text-transform: uppercase; letter-spacing: 0.06em;">Claro</span>
+        </div>
+        <p style="font-size: 0.9rem; color: var(--text-primary); line-height: 1.7; font-style: italic;">{{ summary }}</p>
+    </div>
+    {% endif %}
+
     <!-- Summary card -->
     <div class="glass-card" style="padding: 20px; margin-bottom: 24px;">
         <div class="section-label" style="margin-bottom: 12px;">Plan overview</div>
@@ -106,27 +117,22 @@
     {% endfor %}
     {% endif %}
 
-    <!-- Important notes -->
-    <div style="padding: 14px 16px; border-radius: 10px; background: rgba(255,255,255,0.02); border: 0.5px solid rgba(255,255,255,0.06); margin-top: 28px; margin-bottom: 24px;">
-        <div class="section-label" style="margin-bottom: 8px;">Important</div>
-        <div style="font-size: 0.75rem; color: var(--text-tertiary); line-height: 1.6;">
-            This plan is guidance, not financial advice. It's based on the information you've provided and follows established financial planning principles. As your circumstances change, your plan adjusts automatically through monthly check-ins. You can modify your goals, timelines, and allocations at any time.
-        </div>
-    </div>
-
     <!-- CTA -->
-    <a href="{{ url_for('pages.overview') }}" class="btn-primary" style="display: block; text-align: center; width: 100%; padding: 16px; font-size: 0.95rem; text-decoration: none;">
-        Start following this plan →
+    <a href="{{ url_for('pages.overview') }}" class="btn-primary" style="display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; padding: 16px; font-size: 0.95rem; text-decoration: none; margin-top: 28px;">
+        Start following this plan
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
     </a>
 
-    <p style="font-size: 0.72rem; color: var(--text-tertiary); text-align: center; margin-top: 12px;">
-        You can always come back and adjust this from your Plan page.
+    <!-- Guidance note — footer treatment -->
+    <p style="font-size: 0.7rem; color: var(--text-tertiary); text-align: center; margin-top: 16px; line-height: 1.6; padding: 0 8px;">
+        Guidance only, not financial advice. Based on the information you've provided. Adjusts automatically as your circumstances change.
     </p>
 
     {% else %}
     <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 20px;">{{ plan.error if plan.error else "Unable to generate plan. Please check your financial profile." }}</p>
-    <a href="{{ url_for('pages.factfind') }}" class="btn-primary" style="display: block; text-align: center; width: 100%; padding: 16px; font-size: 0.95rem; text-decoration: none;">
-        Update my profile →
+    <a href="{{ url_for('pages.factfind') }}" class="btn-primary" style="display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; padding: 16px; font-size: 0.95rem; text-decoration: none;">
+        Update my profile
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
     </a>
     {% endif %}
 

@@ -288,6 +288,31 @@ This document tracks my learning journey building FinTrack from the ground up. U
 
 ---
 
+## Session — UI Audit: Colour Semantics, Card Usage, Hierarchy (All Active Routes)
+
+**Date:** 17 Apr 2026
+
+### What was done
+
+Ran a comprehensive end-to-end UI audit against the full `/ui-audit` checklist across all 25 active Claro templates. Every confirmed violation was fixed in the same session. Key areas resolved: gold colour overuse (hardcoded `rgba(197,163,93,...)` bypassing CSS tokens broke all non-default themes), card misuse on non-financial analysis sections, CRUD completeness gap on goal detail, missing back-links on plan and check-in pages, and onboarding progress bars incorrectly using gold instead of neutral white.
+
+### Fixes shipped
+
+- **Gold token sweep:** Eliminated all hardcoded `rgba(197,163,93,...)` across 8 templates. All gold now flows from `var(--roman-gold)` or `var(--roman-gold-dim)` tokens, meaning Cobalt and light themes no longer break.
+- **Card overuse:** Removed `glass-card` wrappers from analysis/comparison sections in `insights.html` and all 9 form sections in `goal_chips.html`. Cards are now only on discrete financial objects.
+- **Onboarding progress bars:** All 4 step-indicator bars across `factfind`, `surplus_reveal`, `goal_chips`, `plan_reveal` changed from gold to `rgba(255,255,255,0.25)`. Gold progress bars are now strictly goal savings bars only.
+- **CRUD completeness:** Added Edit button to `goal_detail.html`. Users can now reach goal editing from the detail page, not just the goals list.
+- **Navigation:** Added ← Overview back links to `plan.html` and `checkin.html`.
+- **Copy:** Fixed em dash in `insights.html` body copy and `simulator_routes.py` user-facing message. Done icon circles on `welcome.html` changed from gold to green (matching the "done" badge convention).
+- **Chip selection states:** Factfind subscription chips, goal chips, and lifestyle budget options — gold selected state replaced with neutral white across `factfind.html`, `goal_chips.html`, `surplus_reveal.html`.
+
+### Outstanding
+
+- Playwright visual verification still needed (MCP was unavailable during session — prompts ready for next session)
+- Settings accordion cards (Appearance, Account) — design decision deferred on whether to convert to bare sections
+
+---
+
 ## Week 9 — Deploy + Launch + Ship v5.0
 
 **Date:** [INSERT DATE]

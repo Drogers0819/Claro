@@ -36,21 +36,21 @@
 {% if not _p %}
 <!-- Step 1 not done: profile prompt -->
 <a href="{{ url_for('pages.factfind') }}" class="factfind-nudge">
-    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--roman-gold)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0; color: var(--text-tertiary);"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
     <span style="flex: 1; font-size: 0.8rem; color: var(--text-secondary);">Complete your profile to generate your financial plan</span>
     <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--text-tertiary)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0;"><path d="M9 18l6-6-6-6"/></svg>
 </a>
 
 {% elif not _g %}
 <!-- Profile done, no goals yet -->
-<div style="display: flex; align-items: center; gap: 10px; padding: 11px 16px; border-radius: 10px; background: rgba(197, 163, 93, 0.05); border: 0.5px solid var(--glass-border); margin-bottom: 24px;">
+<div style="display: flex; align-items: center; gap: 10px; padding: 11px 16px; border-radius: 10px; background: rgba(255,255,255,0.02); border: 0.5px solid var(--glass-border); margin-bottom: 24px;">
     <div style="display: flex; gap: 4px; flex-shrink: 0;">
         {% for done in [_p, _g] %}
         <div style="width: 20px; height: 3px; border-radius: 2px; background: {% if done %}var(--roman-gold){% else %}var(--progress-track){% endif %};"></div>
         {% endfor %}
     </div>
     <span style="flex: 1; font-size: 0.8rem; color: var(--text-secondary);">Add a goal and Claro will show you exactly when you'll get there.</span>
-    <a href="{{ url_for('pages.add_goal') }}" style="font-size: 0.75rem; color: var(--roman-gold); white-space: nowrap; text-decoration: none; flex-shrink: 0;">Add goal →</a>
+    <a href="{{ url_for('pages.add_goal') }}" style="font-size: 0.75rem; color: var(--text-secondary); text-decoration: underline; text-underline-offset: 2px; white-space: nowrap; flex-shrink: 0;">Add goal →</a>
 </div>
 
 {% elif smart_plan and not smart_plan.error %}
