@@ -407,7 +407,7 @@ def login():
 
         if not user or not user.check_password(password):
             flash("Invalid email or password", "error")
-            return redirect(url_for("pages.login"))
+            return render_template("login.html", prefill_email=email)
 
         login_user(user)
         return redirect(url_for("pages.overview"))
@@ -1791,11 +1791,10 @@ def welcome():
 
     steps_done = sum([
         current_user.factfind_completed,
-        has_transactions,
         has_goals
     ])
 
-    if steps_done == 3:
+    if steps_done == 2:
         return redirect(url_for("pages.overview"))
 
     hour = datetime.now().hour
@@ -1804,7 +1803,6 @@ def welcome():
     return render_template("welcome.html",
         greeting=greeting,
         profile_done=current_user.factfind_completed,
-        transactions_done=has_transactions,
         goals_done=has_goals,
         steps_done=steps_done
     )

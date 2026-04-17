@@ -12,19 +12,19 @@
     <span style="font-size: 0.8rem; color: var(--text-secondary); line-height: 1.5;">Your 14-day full access has started. No card needed.</span>
 </div>
 
-<p style="font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 4px; max-width: 560px;">Three steps and Claro becomes genuinely useful.</p>
-<p style="font-size: 0.77rem; color: var(--text-tertiary); margin-bottom: 20px; max-width: 560px; line-height: 1.6;">The more history you give it, the more accurate it gets. Predictions, patterns, and savings you didn't know were there.</p>
+<p style="font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 4px; max-width: 560px;">Two steps and Claro becomes genuinely useful.</p>
+<p style="font-size: 0.77rem; color: var(--text-tertiary); margin-bottom: 20px; max-width: 560px; line-height: 1.6;">Takes about 60 seconds. Your plan, goals, and monthly check-in are all built from this.</p>
 
 <!-- Progress strip -->
 <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 32px; max-width: 560px;">
-    {% for i in range(3) %}
+    {% for i in range(2) %}
     <div style="flex: 1; height: 3px; border-radius: 2px;
         {% if i < steps_done %}background: var(--roman-gold);
         {% elif i == steps_done %}background: rgba(197, 163, 93, 0.35);
         {% else %}background: rgba(255,255,255,0.06);{% endif %}">
     </div>
     {% endfor %}
-    <span style="font-size: 0.7rem; color: var(--text-tertiary); white-space: nowrap; margin-left: 4px;">{{ steps_done }}/3 done</span>
+    <span style="font-size: 0.7rem; color: var(--text-tertiary); white-space: nowrap; margin-left: 4px;">{{ steps_done }}/2 done</span>
 </div>
 
 <!-- Steps -->
@@ -60,45 +60,10 @@
         </div>
     </div>
 
-    <!-- Step 2: First transactions -->
-    {% set step2_active = profile_done and not transactions_done %}
+    <!-- Step 2: First goal -->
+    {% set step2_active = profile_done and not goals_done %}
     {% set step2_locked = not profile_done %}
-    <div class="glass-card" style="{% if transactions_done %}opacity: 0.55;{% elif step2_active %}border-color: rgba(197,163,93,0.3);{% elif step2_locked %}opacity: 0.35;{% endif %}">
-        <div style="display: flex; align-items: flex-start; gap: 16px;">
-            <div style="flex-shrink: 0; width: 36px; height: 36px; border-radius: 50%;
-                display: flex; align-items: center; justify-content: center;
-                {% if transactions_done %}background: rgba(197,163,93,0.15); color: var(--roman-gold);
-                {% else %}background: rgba(255,255,255,0.05); color: var(--text-tertiary);{% endif %}">
-                {% if transactions_done %}
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-                {% else %}
-                <span style="font-size: 0.8rem; font-family: var(--font-sans);">2</span>
-                {% endif %}
-            </div>
-            <div style="flex: 1;">
-                <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 4px;">
-                    <span style="font-size: 0.95rem; color: var(--text-primary);">Import your transactions</span>
-                    {% if transactions_done %}
-                    <span style="font-size: 0.65rem; color: rgba(72,187,120,0.8); background: rgba(72,187,120,0.1); padding: 2px 8px; border-radius: 20px;">done</span>
-                    {% endif %}
-                </div>
-                <p style="font-size: 0.8rem; color: var(--text-tertiary); line-height: 1.6; margin-bottom: {% if step2_active %}14px{% else %}0{% endif %};">
-                    Upload a CSV from your bank or add transactions manually. Claro auto-categorises everything.
-                </p>
-                {% if step2_active %}
-                <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
-                    <a href="{{ url_for('pages.upload_statement') }}" class="btn-primary btn-sm">Upload statement</a>
-                    <a href="{{ url_for('pages.add_transaction') }}" style="font-size: 0.8rem; color: var(--text-secondary); text-decoration: underline; text-underline-offset: 2px;">or add manually</a>
-                </div>
-                {% endif %}
-            </div>
-        </div>
-    </div>
-
-    <!-- Step 3: First goal -->
-    {% set step3_active = transactions_done and not goals_done %}
-    {% set step3_locked = not transactions_done %}
-    <div class="glass-card" style="{% if goals_done %}opacity: 0.55;{% elif step3_active %}border-color: rgba(197,163,93,0.3);{% elif step3_locked %}opacity: 0.35;{% endif %}">
+    <div class="glass-card" style="{% if goals_done %}opacity: 0.55;{% elif step2_active %}border-color: rgba(197,163,93,0.3);{% elif step2_locked %}opacity: 0.35;{% endif %}">
         <div style="display: flex; align-items: flex-start; gap: 16px;">
             <div style="flex-shrink: 0; width: 36px; height: 36px; border-radius: 50%;
                 display: flex; align-items: center; justify-content: center;
@@ -107,7 +72,7 @@
                 {% if goals_done %}
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
                 {% else %}
-                <span style="font-size: 0.8rem; font-family: var(--font-sans);">3</span>
+                <span style="font-size: 0.8rem; font-family: var(--font-sans);">2</span>
                 {% endif %}
             </div>
             <div style="flex: 1;">
@@ -117,10 +82,10 @@
                     <span style="font-size: 0.65rem; color: rgba(72,187,120,0.8); background: rgba(72,187,120,0.1); padding: 2px 8px; border-radius: 20px;">done</span>
                     {% endif %}
                 </div>
-                <p style="font-size: 0.8rem; color: var(--text-tertiary); line-height: 1.6; margin-bottom: {% if step3_active %}14px{% else %}0{% endif %};">
+                <p style="font-size: 0.8rem; color: var(--text-tertiary); line-height: 1.6; margin-bottom: {% if step2_active %}14px{% else %}0{% endif %};">
                     A house deposit, emergency fund, a holiday. Add a goal and Claro will show you exactly when you'll get there.
                 </p>
-                {% if step3_active %}
+                {% if step2_active %}
                 <a href="{{ url_for('pages.add_goal') }}" class="btn-primary btn-sm">Add a goal</a>
                 {% endif %}
             </div>

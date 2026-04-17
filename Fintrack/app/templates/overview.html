@@ -30,9 +30,8 @@
 </div>
 
 {% set _p = current_user.factfind_completed %}
-{% set _t = has_data %}
 {% set _g = active_goals_count > 0 %}
-{% set _steps = [_p, _t, _g] | select | list | length %}
+{% set _steps = [_p, _g] | select | list | length %}
 
 {% if not _p %}
 <!-- Step 1 not done: profile prompt -->
@@ -42,22 +41,16 @@
     <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--text-tertiary)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0;"><path d="M9 18l6-6-6-6"/></svg>
 </a>
 
-{% elif _steps < 3 %}
-<!-- Steps 2–3 not done: compact progress strip -->
+{% elif not _g %}
+<!-- Profile done, no goals yet -->
 <div style="display: flex; align-items: center; gap: 10px; padding: 11px 16px; border-radius: 10px; background: rgba(197, 163, 93, 0.05); border: 0.5px solid var(--glass-border); margin-bottom: 24px;">
     <div style="display: flex; gap: 4px; flex-shrink: 0;">
-        {% for done in [_p, _t, _g] %}
+        {% for done in [_p, _g] %}
         <div style="width: 20px; height: 3px; border-radius: 2px; background: {% if done %}var(--roman-gold){% else %}var(--progress-track){% endif %};"></div>
         {% endfor %}
     </div>
-    <span style="flex: 1; font-size: 0.8rem; color: var(--text-secondary);">
-        {% if not _t %}Add your transactions so Claro can learn your real spending patterns.{% elif not _g %}Add a goal and Claro will show you exactly when you'll get there.{% endif %}
-    </span>
-    {% if not _t %}
-    <a href="{{ url_for('pages.upload_statement') }}" style="font-size: 0.75rem; color: var(--roman-gold); white-space: nowrap; text-decoration: none; flex-shrink: 0;">Upload →</a>
-    {% elif not _g %}
+    <span style="flex: 1; font-size: 0.8rem; color: var(--text-secondary);">Add a goal and Claro will show you exactly when you'll get there.</span>
     <a href="{{ url_for('pages.add_goal') }}" style="font-size: 0.75rem; color: var(--roman-gold); white-space: nowrap; text-decoration: none; flex-shrink: 0;">Add goal →</a>
-    {% endif %}
 </div>
 
 {% elif smart_plan and not smart_plan.error %}
@@ -187,12 +180,13 @@
 </div>
 
 {% else %}
-<!-- No data yet -->
+<!-- No plan data — only show CTA if no nudge is already visible above -->
+{% if _p and _g %}
 <div style="padding: 8px 0 32px;">
-    <p style="font-size: 0.95rem; color: var(--text-primary); font-weight: 500; margin-bottom: 8px;">No transactions yet</p>
-    <p style="font-size: 0.8rem; color: var(--text-tertiary); line-height: 1.6; margin-bottom: 20px;">Upload a bank statement and Claro will learn your real spending patterns to refine your plan.</p>
-    <a href="{{ url_for('pages.upload_statement') }}" class="btn-primary btn-sm">Upload a statement</a>
+    <p style="font-size: 0.95rem; color: var(--text-primary); font-weight: 500; margin-bottom: 8px;">Your plan is generating.</p>
+    <p style="font-size: 0.8rem; color: var(--text-tertiary); line-height: 1.6;">Claro is building your financial plan. Check back shortly.</p>
 </div>
+{% endif %}
 {% endif %}
 
 {% endblock %}

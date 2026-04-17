@@ -222,11 +222,6 @@ a:hover {
     display: none;
 }
 
-/* More nav panel — hidden on desktop */
-.more-nav-btn { display: none; }
-.more-overlay { display: none; }
-.more-panel { display: none; }
-
 /* Visibility helpers */
 .mobile-only { display: none; }
 @media (max-width: 768px) { .mobile-only { display: block; } }
@@ -278,109 +273,6 @@ a:hover {
         border-color: rgba(255, 255, 255, 0.18);
     }
 
-    /* More panel overlay */
-    .more-overlay {
-        display: block;
-        position: fixed;
-        inset: 0;
-        background: rgba(0, 0, 0, 0);
-        z-index: 350;
-        transition: background 0.2s ease;
-        pointer-events: none;
-    }
-
-    .more-overlay.open {
-        background: rgba(0, 0, 0, 0.5);
-        pointer-events: all;
-    }
-
-    /* More panel — slides up from above the bottom nav */
-    .more-panel {
-        display: block;
-        position: fixed;
-        bottom: calc(72px + env(safe-area-inset-bottom));
-        left: 12px;
-        right: 12px;
-        background: var(--glass);
-        border: 0.5px solid var(--glass-border);
-        border-radius: 16px;
-        padding: 8px;
-        z-index: 360;
-        transform: translateY(20px);
-        opacity: 0;
-        pointer-events: none;
-        transition: transform 0.2s ease, opacity 0.2s ease;
-    }
-
-    .more-panel.open {
-        transform: translateY(0);
-        opacity: 1;
-        pointer-events: all;
-    }
-
-    .more-panel-item {
-        display: flex;
-        align-items: center;
-        gap: 14px;
-        padding: 14px 16px;
-        border-radius: 10px;
-        text-decoration: none;
-        color: var(--text-secondary);
-        font-size: 0.9rem;
-        transition: background 0.15s ease;
-    }
-
-    .more-panel-item:hover,
-    .more-panel-item.active {
-        background: var(--glass-hover);
-        color: var(--text-primary);
-    }
-
-    .more-panel-item.active {
-        color: var(--roman-gold);
-    }
-
-    .more-panel-item .nav-icon {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 32px;
-        height: 32px;
-        border-radius: 8px;
-        background: var(--glass);
-        flex-shrink: 0;
-    }
-
-    /* More button in bottom nav */
-    .more-nav-btn {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 3px;
-        padding: 5px 4px;
-        font-size: 0.6rem;
-        flex: 1;
-        text-align: center;
-        min-height: 44px;
-        justify-content: center;
-        background: none;
-        border: none;
-        cursor: pointer;
-        color: var(--text-tertiary);
-        font-family: var(--font-sans);
-        -webkit-tap-highlight-color: transparent;
-        transition: color 0.15s ease;
-        letter-spacing: 0.02em;
-    }
-
-    .more-nav-btn.active {
-        color: var(--roman-gold);
-    }
-
-    /* Hide Check-in and Companion from bottom nav on mobile — they go in the More panel */
-    .nav-extra {
-        display: none !important;
-    }
 }
 
 .sidebar-profile-link {
@@ -749,6 +641,17 @@ input[type="number"] {
 
 .form-input::placeholder {
     color: var(--text-tertiary);
+}
+
+/* Prevent browser autofill from applying white/yellow background */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+    -webkit-box-shadow: 0 0 0 1000px var(--bg-secondary, #0d1117) inset !important;
+    -webkit-text-fill-color: var(--text-primary) !important;
+    transition: background-color 5000s ease-in-out 0s;
+    caret-color: var(--text-primary);
 }
 
 /* Remove native number spinners — use plain text field appearance */
