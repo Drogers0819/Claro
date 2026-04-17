@@ -52,9 +52,9 @@
                    value="{{ goal.priority_rank }}" required>
         </div>
 
-        <div style="display: flex; gap: 10px; align-items: center;">
-            <button type="submit" class="btn-primary btn-sm">Save changes</button>
-            <a href="{{ url_for('pages.my_goals') }}" class="btn-secondary btn-sm">Cancel</a>
+        <div style="display: flex; align-items: center; gap: 14px;">
+            <button type="submit" class="btn-primary">Save changes</button>
+            <a href="{{ url_for('pages.my_goals') }}" style="font-size: 0.82rem; color: var(--text-tertiary); text-decoration: none;">Cancel</a>
         </div>
     </form>
 </div>

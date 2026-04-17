@@ -29,13 +29,36 @@
     <h1>Good {{ greeting }}, {{ current_user.name.split()[0] }}.</h1>
 </div>
 
-{% if not current_user.factfind_completed %}
-<!-- Onboarding prompt -->
-<a href="{{ url_for('pages.factfind') }}" style="display: flex; align-items: center; gap: 10px; padding: 11px 16px; border-radius: 10px; background: rgba(197, 163, 93, 0.07); border: 0.5px solid rgba(197, 163, 93, 0.2); margin-bottom: 24px; text-decoration: none; color: inherit;">
+{% set _p = current_user.factfind_completed %}
+{% set _t = has_data %}
+{% set _g = active_goals_count > 0 %}
+{% set _steps = [_p, _t, _g] | select | list | length %}
+
+{% if not _p %}
+<!-- Step 1 not done: profile prompt -->
+<a href="{{ url_for('pages.factfind') }}" class="factfind-nudge">
     <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--roman-gold)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
     <span style="flex: 1; font-size: 0.8rem; color: var(--text-secondary);">Complete your profile to generate your financial plan</span>
     <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--text-tertiary)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0;"><path d="M9 18l6-6-6-6"/></svg>
 </a>
+
+{% elif _steps < 3 %}
+<!-- Steps 2–3 not done: compact progress strip -->
+<div style="display: flex; align-items: center; gap: 10px; padding: 11px 16px; border-radius: 10px; background: rgba(197, 163, 93, 0.05); border: 0.5px solid var(--glass-border); margin-bottom: 24px;">
+    <div style="display: flex; gap: 4px; flex-shrink: 0;">
+        {% for done in [_p, _t, _g] %}
+        <div style="width: 20px; height: 3px; border-radius: 2px; background: {% if done %}var(--roman-gold){% else %}var(--progress-track){% endif %};"></div>
+        {% endfor %}
+    </div>
+    <span style="flex: 1; font-size: 0.8rem; color: var(--text-secondary);">
+        {% if not _t %}Add your transactions so Claro can learn your real spending patterns.{% elif not _g %}Add a goal and Claro will show you exactly when you'll get there.{% endif %}
+    </span>
+    {% if not _t %}
+    <a href="{{ url_for('pages.upload_statement') }}" style="font-size: 0.75rem; color: var(--roman-gold); white-space: nowrap; text-decoration: none; flex-shrink: 0;">Upload →</a>
+    {% elif not _g %}
+    <a href="{{ url_for('pages.add_goal') }}" style="font-size: 0.75rem; color: var(--roman-gold); white-space: nowrap; text-decoration: none; flex-shrink: 0;">Add goal →</a>
+    {% endif %}
+</div>
 
 {% elif smart_plan and not smart_plan.error %}
 <!-- ════ PLAN STATUS — the hero ════ -->
@@ -46,7 +69,7 @@
     </div>
     <p style="font-size: 0.95rem; color: var(--text-primary); line-height: 1.7;">{{ plan_summary }}</p>
 
-    <div style="display: flex; gap: 12px; margin-top: 14px; padding-top: 12px; border-top: 0.5px solid rgba(255,255,255,0.06);">
+    <div style="display: flex; gap: 12px; margin-top: 14px; padding-top: 12px; border-top: 0.5px solid var(--glass-border);">
         <div style="flex: 1;">
             <div style="font-size: 0.6rem; color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 2px;">Income</div>
             <div style="font-size: 1.05rem; color: var(--text-primary); font-weight: 500;">£{{ "{:,.2f}".format(smart_plan.income) }}</div>
@@ -69,7 +92,7 @@
 <!-- ════ ACTIVE POTS — compact progress ════ -->
 {% set goal_pots = smart_plan.pots %}
 {% if goal_pots %}
-<div style="margin-bottom: 24px; padding-top: 20px; border-top: 0.5px solid rgba(255,255,255,0.06);">
+<div style="margin-bottom: 24px; padding-top: 20px; border-top: 0.5px solid var(--glass-border);">
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
         <span class="section-label" style="margin-bottom: 0;">Your pots</span>
         <a href="{{ url_for('pages.my_goals') }}" class="btn-secondary btn-sm">My goals</a>
@@ -78,9 +101,9 @@
     {% for pot in goal_pots %}
     {% if pot.monthly_amount > 0 %}
     {% if pot.goal_id %}
-    <a href="{{ url_for('pages.goal_detail', goal_id=pot.goal_id) }}" style="display: block; padding: 8px 0; {% if not loop.last %}border-bottom: 0.5px solid rgba(255,255,255,0.04);{% endif %} text-decoration: none;">
+    <a href="{{ url_for('pages.goal_detail', goal_id=pot.goal_id) }}" style="display: block; padding: 12px 0; text-decoration: none;">
     {% else %}
-    <div style="padding: 8px 0; {% if not loop.last %}border-bottom: 0.5px solid rgba(255,255,255,0.04);{% endif %}">
+    <div style="padding: 12px 0;">
     {% endif %}
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
             <div style="display: flex; align-items: center; gap: 6px;">
@@ -90,13 +113,13 @@
                 {% endif %}
             </div>
             <div style="display: flex; align-items: center; gap: 6px;">
-                <span style="font-size: 0.8rem; color: var(--text-secondary);">£{{ "{:,.2f}".format(pot.monthly_amount) }}/mo</span>
+                <span style="font-size: 0.8rem; color: var(--text-primary);">£{{ "{:,.2f}".format(pot.monthly_amount) }}/mo</span>
                 {% if pot.goal_id %}<svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="var(--text-tertiary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>{% endif %}
             </div>
         </div>
         {% if pot.target and not pot.completed %}
-        <div style="height: 3px; background: rgba(255,255,255,0.04); border-radius: 2px; overflow: hidden;">
-            <div style="height: 100%; border-radius: 2px; background: var(--roman-gold); width: {{ ((pot.current / pot.target) * 100) | round(1) }}%;"></div>
+        <div class="progress-track">
+            <div class="progress-fill" style="width: {{ ((pot.current / pot.target) * 100) | round(1) }}%; background: var(--roman-gold);"></div>
         </div>
         <div style="display: flex; justify-content: space-between; margin-top: 3px;">
             <span style="font-size: 0.65rem; color: var(--text-tertiary);">£{{ "{:,.2f}".format(pot.current) }} of £{{ "{:,.2f}".format(pot.target) }}</span>
@@ -124,7 +147,7 @@
 
 <!-- ════ SPENDING SNAPSHOT — secondary ════ -->
 {% if has_data %}
-<div class="glass-card" style="margin-bottom: 24px;">
+<div style="margin-bottom: 24px; padding-top: 20px; border-top: 0.5px solid var(--glass-border);">
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
         <span class="section-label" style="margin-bottom: 0;">This month</span>
         <a href="{{ url_for('pages.my_money') }}" class="btn-secondary btn-sm">My money</a>
@@ -149,7 +172,7 @@
     </div>
 
     {% if top_categories %}
-    <div style="padding-top: 10px; border-top: 0.5px solid rgba(255,255,255,0.04);">
+    <div style="padding-top: 10px; border-top: 0.5px solid var(--glass-border);">
         {% for cat in top_categories %}
         <div style="display: flex; justify-content: space-between; align-items: center; padding: 4px 0;">
             <span style="display: flex; align-items: center; gap: 6px; font-size: 0.8rem; color: var(--text-secondary);">
@@ -165,9 +188,9 @@
 
 {% else %}
 <!-- No data yet -->
-<div style="text-align: center; padding: 32px 0;">
-    <div style="font-size: 0.95rem; color: var(--text-primary); margin-bottom: 8px;">Make your plan smarter</div>
-    <p style="font-size: 0.8rem; color: var(--text-tertiary); line-height: 1.6; max-width: 320px; margin: 0 auto 16px;">Upload a bank statement and Claro will learn your real spending patterns to refine your plan.</p>
+<div style="padding: 8px 0 32px;">
+    <p style="font-size: 0.95rem; color: var(--text-primary); font-weight: 500; margin-bottom: 8px;">No transactions yet</p>
+    <p style="font-size: 0.8rem; color: var(--text-tertiary); line-height: 1.6; margin-bottom: 20px;">Upload a bank statement and Claro will learn your real spending patterns to refine your plan.</p>
     <a href="{{ url_for('pages.upload_statement') }}" class="btn-primary btn-sm">Upload a statement</a>
 </div>
 {% endif %}

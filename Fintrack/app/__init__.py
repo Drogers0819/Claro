@@ -43,6 +43,16 @@ def create_app(config_class=None):
             return jsonify({"error": "Authentication required"}), 401
         return redirect(url_for("pages.login"))
 
+    @app.errorhandler(404)
+    def not_found(e):
+        from flask import render_template
+        return render_template("404.html"), 404
+
+    @app.errorhandler(500)
+    def server_error(e):
+        from flask import render_template
+        return render_template("500.html"), 500
+
     with app.app_context():
         from app.models.user import User
         from app.models.category import Category

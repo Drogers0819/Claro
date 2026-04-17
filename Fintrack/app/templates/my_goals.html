@@ -5,14 +5,12 @@
 <div class="page-header" style="margin-bottom: 24px;">
     <h1>My Goals</h1>
 </div>
-<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
-    <span style="font-size: 0.8rem; color: var(--text-secondary);">
-        {% if goals | length == 1 %}1 active goal{% elif goals | length > 1 %}{{ goals | length }} active goals{% endif %}
-    </span>
-    <a href="{{ url_for('pages.add_goal') }}" class="btn-secondary btn-sm">+ Add goal</a>
-</div>
 
 {% if goals | length > 0 %}
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+    <span style="font-size: 0.8rem; color: var(--text-secondary);">{{ goals | length }} active goal{{ 's' if goals | length != 1 else '' }}</span>
+    <a href="{{ url_for('pages.add_goal') }}" class="btn-secondary btn-sm">+ Add goal</a>
+</div>
 <div style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 24px;">
     {% for g in goals %}
     <div class="glass-card">
@@ -68,9 +66,9 @@
 
         <!-- CTA — only when meaningful projection exists -->
         {% if g.target_amount and g.monthly_allocation %}
-        <div style="padding-top: 10px; border-top: 0.5px solid rgba(255,255,255,0.05);">
+        <div style="padding-top: 10px; border-top: 0.5px solid var(--glass-border);">
             <a href="{{ url_for('pages.goal_detail', goal_id=g.id) }}"
-               style="display: inline-flex; align-items: center; gap: 5px; font-size: 0.75rem; color: var(--roman-gold); text-decoration: none;">
+               style="display: inline-flex; align-items: center; gap: 5px; font-size: 0.75rem; color: var(--text-secondary); text-decoration: none;">
                 See your projection
                 <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
             </a>
@@ -82,10 +80,9 @@
 </div>
 
 {% else %}
-<div style="padding-top: 8px;">
-    <div class="empty-state" style="margin-bottom: 16px;">
-        What are you working toward? A house deposit, a holiday, an emergency fund?
-    </div>
+<div class="empty-page-center">
+    <p style="font-size: 0.95rem; color: var(--text-primary); font-weight: 500; margin-bottom: 8px; max-width: 280px;">What are you saving for?</p>
+    <p style="font-size: 0.8rem; color: var(--text-tertiary); line-height: 1.6; margin-bottom: 20px; max-width: 280px;">A house deposit, emergency fund, holiday. Add a goal and Claro will show you exactly when you'll get there.</p>
     <a href="{{ url_for('pages.add_goal') }}" class="btn-primary btn-sm">Set your first goal</a>
 </div>
 {% endif %}

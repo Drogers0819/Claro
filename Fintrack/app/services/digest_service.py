@@ -60,7 +60,7 @@ def build_weekly_digest(user, txn_list, whisper_data):
         spending_line = {
             "direction": "below",
             "amount": round(spending_diff, 2),
-            "label": f"£{spending_diff:.2f} below your usual pace — a lighter week",
+            "label": f"£{spending_diff:.2f} below your usual pace, a lighter week",
         }
 
     # ── Whisper insight ──────────────────────────────────────────
@@ -75,13 +75,13 @@ def build_weekly_digest(user, txn_list, whisper_data):
     if spending_line and spending_line["direction"] == "above":
         subject = f"You're spending a little fast this week, {user.name.split()[0]}"
     elif goal_line and goal_line["progress"] >= 90:
-        subject = f"Almost there — {goal_line['name']} is {goal_line['progress']}% funded"
+        subject = f"Almost there: {goal_line['name']} is {goal_line['progress']}% funded"
     elif goal_line and goal_line["progress"] >= 50:
-        subject = f"Over halfway to {goal_line['name']} — your Claro update"
+        subject = f"Over halfway to {goal_line['name']}. Your Claro update."
     elif spending_line and spending_line["direction"] == "below":
-        subject = f"Good week, {user.name.split()[0]} — you're under pace"
+        subject = f"Good week, {user.name.split()[0]}. You're under pace."
     else:
-        subject = f"Your Claro update — {today.strftime('%d %b')}"
+        subject = f"Your Claro update, {today.strftime('%d %b')}"
 
     return {
         "user_name": user.name.split()[0],
@@ -192,7 +192,7 @@ def render_digest_html(digest):
                 <tr>
                   <td>
                     <p style="margin:0; font-size:15px; color:#ddd; line-height:1.6;">
-                      Hi {first_name} — here's where things stand.
+                      Hi {first_name}, here's where things stand.
                     </p>
                   </td>
                 </tr>

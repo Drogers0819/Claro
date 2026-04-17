@@ -4,12 +4,10 @@
 {% block content %}
 <div style="max-width: 560px;">
 
-{% if profile.factfind_completed %}
-<a href="{{ url_for('pages.settings') }}" style="display: inline-flex; align-items: center; gap: 6px; font-size: 0.75rem; color: var(--text-tertiary); text-decoration: none; margin-bottom: 16px;">
+<a href="{{ url_for('pages.settings') if profile.factfind_completed else url_for('pages.overview') }}" style="display: inline-flex; align-items: center; gap: 6px; font-size: 0.75rem; color: var(--text-tertiary); text-decoration: none; margin-bottom: 16px;">
     <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
-    Settings
+    {% if profile.factfind_completed %}Settings{% else %}Overview{% endif %}
 </a>
-{% endif %}
 
 <div class="page-header">
     <h1>{% if profile.factfind_completed %}Your financial profile{% else %}Let's build your plan{% endif %}</h1>
@@ -59,7 +57,10 @@
     </p>
 
     <!-- ─── SUBSCRIPTIONS ─── -->
-    <div class="section-label" style="margin-top: 28px; margin-bottom: 10px;">Subscriptions</div>
+    <div style="display: flex; justify-content: space-between; align-items: baseline; margin-top: 28px; margin-bottom: 10px;">
+        <div class="section-label" style="margin-top: 0;">Subscriptions</div>
+        <span id="sub-selected-count" style="font-size: 0.7rem; color: var(--text-tertiary);"></span>
+    </div>
     <p style="font-size: 0.75rem; color: var(--text-tertiary); margin-bottom: 14px;">Tap any you pay for. We'll add up the total.</p>
 
     <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 14px;">
@@ -89,26 +90,26 @@
         <label style="cursor: pointer;">
             <input type="checkbox" class="sub-checkbox" data-cost="{{ sub.cost }}" data-name="{{ sub.label }}" style="display: none;" onchange="updateSubTotal()">
             <div class="sub-chip" style="display: flex; align-items: center; gap: 6px; padding: 7px 14px; border-radius: 50px; border: 1px solid rgba(255,255,255,0.08); background: rgba(255,255,255,0.02); transition: all 0.2s ease; font-size: 0.78rem; color: var(--text-secondary); user-select: none;">
-                {{ sub.label }} <span style="color: var(--text-tertiary); font-size: 0.7rem;">£{{ "%.2f" | format(sub.cost) }}</span>
+                {{ sub.label }} <span style="color: var(--text-tertiary); font-size: 0.7rem;">£{{ "{:,.2f}".format(sub.cost) }}</span>
             </div>
         </label>
         {% endfor %}
     </div>
 
     <!-- Custom subscription -->
-    <div style="display: flex; gap: 8px; align-items: center; margin-bottom: 14px;">
-        <input type="text" id="custom-sub-name" class="form-input" placeholder="Other subscription" style="flex: 1; padding: 8px 12px; font-size: 0.8rem;">
-        <input type="number" id="custom-sub-cost" class="form-input" placeholder="£/mo" step="0.01" min="0" style="width: 80px; padding: 8px 12px; font-size: 0.8rem;">
-        <button type="button" onclick="addCustomSub()" style="padding: 8px 14px; border-radius: 8px; border: 1px solid rgba(197,163,93,0.3); background: rgba(197,163,93,0.05); color: var(--roman-gold); font-size: 0.75rem; cursor: pointer; white-space: nowrap;">+ Add</button>
+    <div style="display: flex; gap: 8px; align-items: stretch; margin-bottom: 14px;">
+        <input type="text" id="custom-sub-name" class="form-input" placeholder="Other subscription" style="flex: 1;">
+        <input type="number" id="custom-sub-cost" class="form-input" placeholder="£/mo" step="0.01" min="0" style="width: 88px;">
+        <button type="button" onclick="addCustomSub()" class="btn-secondary btn-sm" style="white-space: nowrap; align-self: stretch;">+ Add</button>
     </div>
 
     <!-- Custom subs list -->
     <div id="custom-subs-list" style="margin-bottom: 14px;"></div>
 
     <!-- Subscriptions total display -->
-    <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px 14px; border-radius: 8px; background: rgba(197,163,93,0.04); border: 0.5px solid rgba(197,163,93,0.1); margin-bottom: 24px;">
-        <span style="font-size: 0.8rem; color: var(--text-secondary);">Subscriptions total</span>
-        <span id="sub-total-display" style="font-size: 0.9rem; font-weight: 500; color: var(--roman-gold);">£0.00</span>
+    <div style="display: flex; justify-content: space-between; align-items: baseline; padding: 10px 0; border-top: 0.5px solid var(--glass-border); margin-bottom: 24px;">
+        <span style="font-size: 0.75rem; color: var(--text-tertiary);">Subscriptions total</span>
+        <span id="sub-total-display" style="font-size: 0.9rem; font-weight: 500; color: var(--text-primary); font-variant-numeric: tabular-nums;">£0.00</span>
     </div>
 
     <input type="hidden" name="subscriptions_total" id="subscriptions_total" value="{{ '%g' | format(profile.subscriptions_total) if profile.subscriptions_total else '0' }}">
@@ -146,7 +147,7 @@
         <!-- Expanded amount inputs for selected payments -->
         {% for p in payments %}
         <div id="pay-input-{{ p.id }}" style="display: none;">
-            <div style="display: flex; align-items: center; gap: 10px; padding: 8px 14px; border-radius: 8px; background: rgba(255,255,255,0.02); border: 0.5px solid rgba(255,255,255,0.06);">
+            <div style="display: flex; align-items: center; gap: 10px; padding: 8px 14px; border-radius: 8px; background: rgba(255,255,255,0.02); border: 0.5px solid var(--glass-border);">
                 <span style="font-size: 0.78rem; color: var(--text-secondary); flex: 1;">{{ p.label }}</span>
                 <input type="number" class="form-input payment-amount" data-id="{{ p.id }}" placeholder="£/mo" step="0.01" min="0" oninput="updatePaymentTotal()" style="width: 90px; padding: 6px 10px; font-size: 0.8rem;">
             </div>
@@ -154,19 +155,19 @@
         {% endfor %}
 
         <!-- Custom payment -->
-        <div style="display: flex; gap: 8px; align-items: center; margin-top: 4px;">
-            <input type="text" id="custom-pay-name" class="form-input" placeholder="Other payment (e.g. car finance, ISA, pension)" style="flex: 1; padding: 8px 12px; font-size: 0.8rem;">
-            <input type="number" id="custom-pay-cost" class="form-input" placeholder="£/mo" step="0.01" min="0" style="width: 80px; padding: 8px 12px; font-size: 0.8rem;">
-            <button type="button" onclick="addCustomPayment()" style="padding: 8px 14px; border-radius: 8px; border: 1px solid rgba(197,163,93,0.3); background: rgba(197,163,93,0.05); color: var(--roman-gold); font-size: 0.75rem; cursor: pointer; white-space: nowrap;">+ Add</button>
+        <div style="display: flex; gap: 8px; align-items: stretch; margin-top: 4px;">
+            <input type="text" id="custom-pay-name" class="form-input" placeholder="Other payment (e.g. car finance, ISA, pension)" style="flex: 1;">
+            <input type="number" id="custom-pay-cost" class="form-input" placeholder="£/mo" step="0.01" min="0" style="width: 88px;">
+            <button type="button" onclick="addCustomPayment()" class="btn-secondary btn-sm" style="white-space: nowrap; align-self: stretch;">+ Add</button>
         </div>
 
         <div id="custom-payments-list" style="margin-top: 6px;"></div>
     </div>
 
     <!-- Other payments total -->
-    <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px 14px; border-radius: 8px; background: rgba(197,163,93,0.04); border: 0.5px solid rgba(197,163,93,0.1); margin-bottom: 24px;">
-        <span style="font-size: 0.8rem; color: var(--text-secondary);">Other payments total</span>
-        <span id="pay-total-display" style="font-size: 0.9rem; font-weight: 500; color: var(--roman-gold);">£0.00</span>
+    <div style="display: flex; justify-content: space-between; align-items: baseline; padding: 10px 0; border-top: 0.5px solid var(--glass-border); margin-bottom: 24px;">
+        <span style="font-size: 0.75rem; color: var(--text-tertiary);">Other payments total</span>
+        <span id="pay-total-display" style="font-size: 0.9rem; font-weight: 500; color: var(--text-primary); font-variant-numeric: tabular-nums;">£0.00</span>
     </div>
 
     <input type="hidden" name="other_commitments" id="other_commitments" value="{{ '%g' | format(profile.other_commitments) if profile.other_commitments else '0' }}">
@@ -231,12 +232,18 @@
 </style>
 
 <script>
+function fmtGBP(n) {
+    return n.toLocaleString('en-GB', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+}
+
 var customSubs = [];
 
 function updateSubTotal() {
     var total = 0;
+    var selectedCount = 0;
     var checkboxes = document.querySelectorAll('.sub-checkbox');
     checkboxes.forEach(function(cb) {
+        if (cb.checked) selectedCount++;
         var chip = cb.nextElementSibling;
         if (cb.checked) {
             chip.classList.add('selected');
@@ -252,8 +259,11 @@ function updateSubTotal() {
     });
 
     total = Math.round(total * 100) / 100;
-    document.getElementById('sub-total-display').textContent = '£' + total.toFixed(2);
+    selectedCount += customSubs.length;
+    document.getElementById('sub-total-display').textContent = '£' + fmtGBP(total);
     document.getElementById('subscriptions_total').value = total.toFixed(2);
+    var countEl = document.getElementById('sub-selected-count');
+    if (countEl) countEl.textContent = selectedCount > 0 ? selectedCount + ' selected' : '';
 }
 
 function addCustomSub() {
@@ -284,7 +294,7 @@ function renderCustomSubs() {
     customSubs.forEach(function(s, i) {
         var div = document.createElement('div');
         div.className = 'custom-sub-item';
-        div.innerHTML = '<span>' + s.name + ' <span style="color:var(--text-tertiary);font-size:0.7rem;">£' + s.cost.toFixed(2) + '/mo</span></span>' +
+        div.innerHTML = '<span>' + s.name + ' <span style="color:var(--text-tertiary);font-size:0.7rem;">£' + fmtGBP(s.cost) + '/mo</span></span>' +
             '<button type="button" class="custom-sub-remove" onclick="removeCustomSub(' + i + ')">✕</button>';
         container.appendChild(div);
     });
@@ -315,7 +325,7 @@ function updatePaymentTotal() {
     });
     customPayments.forEach(function(p) { total += p.cost; });
     total = Math.round(total * 100) / 100;
-    document.getElementById('pay-total-display').textContent = '£' + total.toFixed(2);
+    document.getElementById('pay-total-display').textContent = '£' + fmtGBP(total);
     document.getElementById('other_commitments').value = total.toFixed(2);
 }
 
@@ -344,7 +354,7 @@ function renderCustomPayments() {
     customPayments.forEach(function(p, i) {
         var div = document.createElement('div');
         div.className = 'custom-sub-item';
-        div.innerHTML = '<span>' + p.name + ' <span style="color:var(--text-tertiary);font-size:0.7rem;">£' + p.cost.toFixed(2) + '/mo</span></span>' +
+        div.innerHTML = '<span>' + p.name + ' <span style="color:var(--text-tertiary);font-size:0.7rem;">£' + fmtGBP(p.cost) + '/mo</span></span>' +
             '<button type="button" class="custom-sub-remove" onclick="removeCustomPayment(' + i + ')">✕</button>';
         container.appendChild(div);
     });

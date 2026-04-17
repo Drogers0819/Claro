@@ -8,7 +8,7 @@
 </a>
 <div class="page-header">
     <h1>Recurring payments</h1>
-    <p>Regular outgoings spotted from your transaction history.</p>
+    {% if recurring.count > 0 %}<p>Regular outgoings spotted from your transaction history.</p>{% endif %}
 </div>
 
 {% if recurring.count > 0 %}
@@ -33,10 +33,10 @@
 </div>
 
 {% if savings.count > 0 %}
-<div style="padding: 16px 20px; border-radius: 12px; background: var(--roman-gold-dim); border: 0.5px solid rgba(197, 163, 93, 0.2); margin-bottom: 32px;">
+<div class="gold-card" style="margin-bottom: 32px;">
     <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
         <span class="ai-pulse"></span>
-        <span class="metric-label" style="margin-bottom: 0; color: var(--roman-gold);">Savings spotted</span>
+        <span style="font-size: 0.65rem; color: var(--roman-gold); text-transform: uppercase; letter-spacing: 0.06em;">Savings spotted</span>
     </div>
     <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 12px;">
         We found {{ savings.count }} potential saving{{ "s" if savings.count != 1 else "" }} worth up to
@@ -44,7 +44,7 @@
     </p>
     {% for s in savings.opportunities %}
     <div style="font-size: 0.8rem; color: var(--text-secondary); padding: 8px 0;
-        {% if not loop.last %}border-bottom: 0.5px solid rgba(255,255,255,0.05);{% endif %}">
+        {% if not loop.last %}border-bottom: 0.5px solid var(--glass-border);{% endif %}">
         {{ s.message }}
     </div>
     {% endfor %}
@@ -86,8 +86,10 @@
 </div>
 
 {% else %}
-<div class="empty-state">
-    {{ recurring.message if recurring.message else "No regular payments spotted yet. Upload a few months of transactions and we'll find the patterns." }}
+<div class="empty-page-center">
+    <p style="font-size: 0.95rem; color: var(--text-primary); font-weight: 500; margin-bottom: 8px; max-width: 280px;">No patterns found yet</p>
+    <p style="font-size: 0.8rem; color: var(--text-tertiary); line-height: 1.6; margin-bottom: 20px; max-width: 280px;">Upload at least 2 months of bank statements and Claro will automatically detect your subscriptions, bills, and regular outgoings.</p>
+    <a href="{{ url_for('pages.upload_statement') }}" class="btn-primary btn-sm">Upload a statement</a>
 </div>
 {% endif %}
 {% endblock %}

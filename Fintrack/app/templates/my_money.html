@@ -33,41 +33,49 @@
     <h1>My Money</h1>
 </div>
 
+{% if not current_user.factfind_completed %}
+<a href="{{ url_for('pages.factfind') }}" class="factfind-nudge">
+    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--roman-gold)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+    <span style="flex: 1; font-size: 0.8rem; color: var(--text-secondary);">Complete your financial profile to generate your plan</span>
+    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--text-tertiary)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0;"><path d="M9 18l6-6-6-6"/></svg>
+</a>
+{% endif %}
+
 <!-- Sub-section navigation -->
-<div style="margin-bottom: 28px; border-radius: 12px; overflow: hidden; border: 0.5px solid rgba(255,255,255,0.07);">
-    <a href="{{ url_for('pages.insights') }}" style="display: flex; align-items: center; gap: 12px; padding: 13px 16px; background: rgba(255,255,255,0.02); text-decoration: none; border-bottom: 0.5px solid rgba(255,255,255,0.05);">
-        <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--roman-gold)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;"><path d="M2 20h.01"/><path d="M7 20v-4"/><path d="M12 20v-8"/><path d="M17 20V8"/><path d="M22 4v16"/></svg>
+<div style="margin-bottom: 28px; border-radius: 12px; overflow: hidden; border: 0.5px solid var(--glass-border);">
+    <a href="{{ url_for('pages.insights') }}" style="display: flex; align-items: center; gap: 12px; padding: 13px 16px; background: var(--glass); text-decoration: none; border-bottom: 0.5px solid var(--glass-border);">
+        <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--text-secondary)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;"><path d="M2 20h.01"/><path d="M7 20v-4"/><path d="M12 20v-8"/><path d="M17 20V8"/><path d="M22 4v16"/></svg>
         <div style="flex: 1;">
-            <div style="font-size: 0.85rem; color: var(--text-primary);">Monthly outlook</div>
-            <div style="font-size: 0.72rem; color: var(--text-tertiary); margin-top: 1px;">Predictions, patterns, AI insights</div>
+            <div style="font-size: 0.85rem; color: var(--text-primary);">Predictions &amp; insights</div>
+            <div style="font-size: 0.72rem; color: var(--text-tertiary); margin-top: 1px;">AI forecast, patterns, spending story</div>
         </div>
         <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--text-tertiary)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
     </a>
-    <a href="{{ url_for('pages.recurring') }}" style="display: flex; align-items: center; gap: 12px; padding: 13px 16px; background: rgba(255,255,255,0.02); text-decoration: none; border-bottom: 0.5px solid rgba(255,255,255,0.05);">
-        <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--roman-gold)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>
+    <a href="{{ url_for('pages.recurring') }}" style="display: flex; align-items: center; gap: 12px; padding: 13px 16px; background: var(--glass); text-decoration: none; border-bottom: 0.5px solid var(--glass-border);">
+        <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--text-secondary)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>
         <div style="flex: 1;">
             <div style="font-size: 0.85rem; color: var(--text-primary);">Recurring payments</div>
             <div style="font-size: 0.72rem; color: var(--text-tertiary); margin-top: 1px;">Subscriptions and regular bills</div>
         </div>
         <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--text-tertiary)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
     </a>
-    <a href="{{ url_for('pages.analytics') }}" style="display: flex; align-items: center; gap: 12px; padding: 13px 16px; background: rgba(255,255,255,0.02); text-decoration: none;">
-        <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--roman-gold)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+    <a href="{{ url_for('pages.analytics') }}" style="display: flex; align-items: center; gap: 12px; padding: 13px 16px; background: var(--glass); text-decoration: none; border-bottom: 0.5px solid var(--glass-border);">
+        <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--text-secondary)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
         <div style="flex: 1;">
             <div style="font-size: 0.85rem; color: var(--text-primary);">Spending breakdown</div>
             <div style="font-size: 0.72rem; color: var(--text-tertiary); margin-top: 1px;">Where your money goes, by category</div>
         </div>
         <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--text-tertiary)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
     </a>
+    <a href="{{ url_for('pages.my_budgets') }}" style="display: flex; align-items: center; gap: 12px; padding: 13px 16px; background: var(--glass); text-decoration: none;">
+        <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--text-secondary)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"/><path d="M22 12A10 10 0 0 0 12 2v10z"/></svg>
+        <div style="flex: 1;">
+            <div style="font-size: 0.85rem; color: var(--text-primary);">Budgets</div>
+            <div style="font-size: 0.72rem; color: var(--text-tertiary); margin-top: 1px;">Spending limits by category</div>
+        </div>
+        <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--text-tertiary)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
+    </a>
 </div>
-
-{% if not current_user.factfind_completed %}
-<a href="{{ url_for('pages.factfind') }}" style="display: flex; align-items: center; gap: 10px; padding: 11px 16px; border-radius: 10px; background: rgba(197, 163, 93, 0.07); border: 0.5px solid rgba(197, 163, 93, 0.2); margin-bottom: 24px; text-decoration: none; color: inherit;">
-    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--roman-gold)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-    <span style="flex: 1; font-size: 0.8rem; color: var(--text-secondary);">Finish setting up your profile to unlock all features</span>
-    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--text-tertiary)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0;"><path d="M9 18l6-6-6-6"/></svg>
-</a>
-{% endif %}
 
 <!-- Spending breakdown -->
 {% if categories | length > 0 %}
@@ -88,7 +96,7 @@
     <!-- Category rows -->
     {% for cat in categories %}
     {% set t = trend_map.data.get(cat.name) %}
-    <div style="padding: 13px 0; {% if not loop.last %}border-bottom: 0.5px solid rgba(255,255,255,0.05);{% endif %}">
+    <div style="padding: 13px 0; {% if not loop.last %}border-bottom: 0.5px solid var(--glass-border);{% endif %}">
 
         <!-- Name + amount row -->
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
@@ -173,14 +181,12 @@
     </div>
     {% endfor %}
     {% else %}
-    <div style="font-size: 0.72rem; color: var(--text-tertiary); margin-bottom: 8px;">All transactions</div>
-    <div class="empty-state" style="padding: 4px 0 12px; text-align: left;">
-        No transactions yet. Upload a bank statement to see your spending picture.
-    </div>
-    <div style="margin-top: 4px;">
-        <a href="{{ url_for('pages.upload_statement') }}" class="btn-primary btn-sm">Upload statement</a>
-        <div style="text-align: center; margin-top: 10px;">
-            <a href="{{ url_for('pages.add_transaction') }}" style="font-size: 0.8rem; color: var(--roman-gold); text-decoration: none;">or add manually</a>
+    <div style="padding: 8px 0 32px;">
+        <p style="font-size: 0.95rem; color: var(--text-primary); margin-bottom: 8px;">No transactions yet.</p>
+        <p style="font-size: 0.8rem; color: var(--text-tertiary); line-height: 1.6; margin-bottom: 20px;">Upload a bank statement to import your transactions, or add them one by one.</p>
+        <div style="display: flex; align-items: center; gap: 12px;">
+            <a href="{{ url_for('pages.upload_statement') }}" class="btn-primary btn-sm">Upload statement</a>
+            <a href="{{ url_for('pages.add_transaction') }}" style="font-size: 0.82rem; color: var(--text-tertiary); text-decoration: none;">or add manually</a>
         </div>
     </div>
     {% endif %}

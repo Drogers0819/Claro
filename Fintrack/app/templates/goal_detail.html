@@ -16,7 +16,7 @@
 <div class="gold-card" style="margin-bottom: 32px;">
     <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
         <span class="ai-pulse"></span>
-        <span class="metric-label" style="margin-bottom: 0; color: var(--roman-gold);">Projection</span>
+        <span style="font-size: 0.65rem; color: var(--roman-gold); text-transform: uppercase; letter-spacing: 0.06em;">Projection</span>
     </div>
     <div id="arrival-date" class="metric-value gold" style="margin-bottom: 4px; transition: all 0.3s ease;">
         {{ projection.completion_date_human }}
@@ -30,7 +30,7 @@
 <!-- The slider — THE moment -->
 <div class="glass-card" style="margin-bottom: 32px;">
     <div style="font-size: 0.72rem; color: var(--text-tertiary); margin-bottom: 8px;">What if you changed your contribution?</div>
-    <p style="font-size: 0.8rem; color: var(--text-tertiary); margin-bottom: 16px; font-style: italic;">
+    <p style="font-size: 0.8rem; color: var(--text-tertiary); margin-bottom: 16px;">
         Move the slider to see your future change in real time.
     </p>
 
@@ -60,7 +60,7 @@
         <canvas id="projection-chart"></canvas>
     </div>
     {% if projection.total_interest_earned > 0 %}
-    <div style="display: flex; align-items: center; gap: 6px; margin-top: 12px; padding-top: 12px; border-top: 0.5px solid rgba(255,255,255,0.05);">
+    <div style="display: flex; align-items: center; gap: 6px; margin-top: 12px; padding-top: 12px; border-top: 0.5px solid var(--glass-border);">
         <span style="font-size: 0.75rem; color: var(--text-tertiary);">Investment growth adds</span>
         <span id="interest-total" style="font-size: 0.8rem; color: var(--success); font-weight: 500;">+£{{ "{:,.0f}".format(projection.total_interest_earned) }}</span>
         <span style="font-size: 0.75rem; color: var(--text-tertiary);">to your total</span>
@@ -76,7 +76,7 @@
         <span style="font-size: 0.8rem; color: var(--text-tertiary);">of £{{ "{:,.2f}".format(projection.target_amount) }}</span>
     </div>
     <div class="progress-track" style="height: 8px; border-radius: 4px; margin-bottom: 8px;">
-        <div class="progress-fill{% if progress >= 90 %} warning{% endif %}" style="width: {{ progress }}%; border-radius: 4px;"></div>
+        <div class="progress-fill" style="width: {{ progress }}%; border-radius: 4px; background: {% if progress >= 90 %}var(--roman-gold){% else %}var(--success){% endif %};"></div>
     </div>
     <div style="font-size: 0.75rem; color: var(--text-tertiary);">{{ "%.1f" | format(progress) }}% complete</div>
 </div>
@@ -87,7 +87,7 @@
     <div class="section-label" style="margin-top: 0;">Milestones</div>
     {% for m in projection.milestones %}
     <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px 0;
-        {% if not loop.last %}border-bottom: 0.5px solid rgba(255,255,255,0.05);{% endif %}">
+        {% if not loop.last %}border-bottom: 0.5px solid var(--glass-border);{% endif %}">
         <div style="display: flex; align-items: center; gap: 10px;">
             <span style="font-size: 0.7rem; font-weight: 600; {% if m.percent == 100 %}color: var(--roman-gold);{% else %}color: var(--text-tertiary);{% endif %}">{{ m.percent }}%</span>
             <span style="font-size: 0.85rem; color: var(--text-primary);">£{{ "{:,.0f}".format(m.balance) }}</span>
@@ -102,7 +102,7 @@
 {% elif projection.reachable is defined and not projection.reachable %}
 <div style="margin-bottom: 32px;">
     <p class="empty-state" style="margin-bottom: 12px;">{{ projection.message }}</p>
-    <a href="{{ url_for('pages.my_goals') }}" style="display: inline-flex; align-items: center; gap: 5px; font-size: 0.75rem; color: var(--roman-gold); text-decoration: none;">
+    <a href="{{ url_for('pages.my_goals') }}" style="display: inline-flex; align-items: center; gap: 5px; font-size: 0.75rem; color: var(--text-secondary); text-decoration: underline; text-underline-offset: 2px;">
         Adjust this goal
         <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
     </a>

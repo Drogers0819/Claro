@@ -4,8 +4,16 @@
 {% block content %}
 <div class="page-header">
     <h1>Good {{ greeting }}, {{ current_user.name.split()[0] }}</h1>
-    <p>Three quick steps and Claro becomes useful. Let's go.</p>
 </div>
+
+<!-- Trial framing — most important thing to communicate first -->
+<div style="display: flex; align-items: center; gap: 10px; padding: 12px 16px; border-radius: 10px; background: rgba(197,163,93,0.06); border: 0.5px solid rgba(197,163,93,0.2); margin-bottom: 24px; max-width: 560px;">
+    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--roman-gold)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0;"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+    <span style="font-size: 0.8rem; color: var(--text-secondary); line-height: 1.5;">Your 14-day full access has started. No card needed.</span>
+</div>
+
+<p style="font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 4px; max-width: 560px;">Three steps and Claro becomes genuinely useful.</p>
+<p style="font-size: 0.77rem; color: var(--text-tertiary); margin-bottom: 20px; max-width: 560px; line-height: 1.6;">The more history you give it, the more accurate it gets. Predictions, patterns, and savings you didn't know were there.</p>
 
 <!-- Progress strip -->
 <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 32px; max-width: 560px;">
@@ -39,7 +47,7 @@
                 <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 4px;">
                     <span style="font-size: 0.95rem; color: var(--text-primary);">Your financial profile</span>
                     {% if profile_done %}
-                    <span style="font-size: 0.65rem; color: var(--roman-gold); background: rgba(197,163,93,0.1); padding: 2px 8px; border-radius: 20px;">Done</span>
+                    <span style="font-size: 0.65rem; color: rgba(72,187,120,0.8); background: rgba(72,187,120,0.1); padding: 2px 8px; border-radius: 20px;">done</span>
                     {% endif %}
                 </div>
                 <p style="font-size: 0.8rem; color: var(--text-tertiary); line-height: 1.6; margin-bottom: {% if not profile_done %}14px{% else %}0{% endif %};">
@@ -71,7 +79,7 @@
                 <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 4px;">
                     <span style="font-size: 0.95rem; color: var(--text-primary);">Import your transactions</span>
                     {% if transactions_done %}
-                    <span style="font-size: 0.65rem; color: var(--roman-gold); background: rgba(197,163,93,0.1); padding: 2px 8px; border-radius: 20px;">Done</span>
+                    <span style="font-size: 0.65rem; color: rgba(72,187,120,0.8); background: rgba(72,187,120,0.1); padding: 2px 8px; border-radius: 20px;">done</span>
                     {% endif %}
                 </div>
                 <p style="font-size: 0.8rem; color: var(--text-tertiary); line-height: 1.6; margin-bottom: {% if step2_active %}14px{% else %}0{% endif %};">
@@ -80,7 +88,7 @@
                 {% if step2_active %}
                 <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
                     <a href="{{ url_for('pages.upload_statement') }}" class="btn-primary btn-sm">Upload statement</a>
-                    <a href="{{ url_for('pages.add_transaction') }}" style="font-size: 0.8rem; color: var(--roman-gold); text-decoration: none;">or add manually</a>
+                    <a href="{{ url_for('pages.add_transaction') }}" style="font-size: 0.8rem; color: var(--text-secondary); text-decoration: underline; text-underline-offset: 2px;">or add manually</a>
                 </div>
                 {% endif %}
             </div>
@@ -106,7 +114,7 @@
                 <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 4px;">
                     <span style="font-size: 0.95rem; color: var(--text-primary);">Create your first goal</span>
                     {% if goals_done %}
-                    <span style="font-size: 0.65rem; color: var(--roman-gold); background: rgba(197,163,93,0.1); padding: 2px 8px; border-radius: 20px;">Done</span>
+                    <span style="font-size: 0.65rem; color: rgba(72,187,120,0.8); background: rgba(72,187,120,0.1); padding: 2px 8px; border-radius: 20px;">done</span>
                     {% endif %}
                 </div>
                 <p style="font-size: 0.8rem; color: var(--text-tertiary); line-height: 1.6; margin-bottom: {% if step3_active %}14px{% else %}0{% endif %};">
@@ -121,18 +129,11 @@
 
 </div>
 
-<!-- Gets smarter note -->
-<div style="display: flex; align-items: flex-start; gap: 10px; max-width: 560px; margin-top: 20px; padding: 12px 14px; border-radius: 10px; border: 0.5px solid rgba(255,255,255,0.06); background: rgba(255,255,255,0.01);">
-    <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--roman-gold)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0; margin-top: 1px;"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
-    <span style="font-size: 0.77rem; color: var(--text-tertiary); line-height: 1.6;">
-        Claro gets more accurate the more history you give it. Upload a few months of statements and you'll start seeing predictions, patterns, and savings you didn't know were there.
-    </span>
-</div>
-
 <!-- Skip link -->
-<div style="text-align: center; margin-top: 20px; max-width: 560px;">
+<div style="margin-top: 24px; max-width: 560px;">
     <a href="{{ url_for('pages.overview') }}" style="font-size: 0.75rem; color: var(--text-tertiary); text-decoration: none;">
-        Skip for now, take me to the overview →
+        Skip for now →
     </a>
+    <span style="font-size: 0.72rem; color: var(--text-tertiary); opacity: 0.6;"> You can return to this page anytime from the overview.</span>
 </div>
 {% endblock %}

@@ -28,7 +28,7 @@
         </div>
 
         {% if goals | length > 0 %}
-        <div style="border-top: 0.5px solid rgba(255,255,255,0.06); padding-top: 20px; margin-top: 4px;">
+        <div style="border-top: 0.5px solid var(--glass-border); padding-top: 20px; margin-top: 4px;">
             <div class="section-label" style="margin-top: 0; margin-bottom: 6px;">Goal savings per month</div>
             <p style="font-size: 0.75rem; color: var(--text-tertiary); margin-bottom: 16px;">
                 Adjust any number to see what changes.
@@ -47,7 +47,7 @@
         {% endif %}
 
         <div style="margin-top: 24px;">
-            <button type="submit" class="btn-primary btn-sm">See the impact</button>
+            <button type="submit" class="btn-primary">See the impact</button>
         </div>
     </form>
 </div>
@@ -58,7 +58,7 @@
 
 {% if change | abs < 0.5 %}
 <!-- No meaningful change -->
-<p style="font-size: 0.85rem; color: var(--text-tertiary); text-align: center; padding: 16px 0 32px;">
+<p style="font-size: 0.85rem; color: var(--text-tertiary); padding: 16px 0 32px;">
     No change to your surplus. Adjust a number above to see the impact.
 </p>
 
@@ -67,7 +67,7 @@
 <div class="gold-card" style="margin-bottom: 24px;">
     <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 14px;">
         <span class="ai-pulse"></span>
-        <span class="metric-label" style="margin-bottom: 0; color: var(--roman-gold);">Claro</span>
+        <span style="font-size: 0.65rem; color: var(--roman-gold); text-transform: uppercase; letter-spacing: 0.06em;">Claro</span>
     </div>
 
     <!-- Lead: the new state, prominently. Delta is secondary context. -->
@@ -88,7 +88,7 @@
     </div>
 
     {% if scenario_result.summary.net_insight %}
-    <p style="font-size: 0.85rem; color: var(--text-secondary); line-height: 1.7; padding-top: 14px; border-top: 0.5px solid rgba(255,255,255,0.06);">
+    <p style="font-size: 0.85rem; color: var(--text-secondary); line-height: 1.7; padding-top: 14px; border-top: 0.5px solid var(--glass-border);">
         {{ scenario_result.summary.net_insight }}
     </p>
     {% endif %}
@@ -99,7 +99,7 @@
 <div style="display: flex; flex-direction: column; gap: 12px;">
     {% for c in scenario_result.comparison %}
     {% if c.months_saved != 0 %}
-    <div style="padding: 14px 0; border-bottom: 0.5px solid rgba(255,255,255,0.05);">
+    <div style="padding: 14px 0; border-bottom: 0.5px solid var(--glass-border);">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
             <span style="font-size: 0.85rem; color: var(--text-primary);">{{ c.goal_name }}</span>
             <span class="badge {% if c.months_saved > 0 %}badge-success{% else %}badge-danger{% endif %}">

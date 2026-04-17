@@ -389,7 +389,7 @@ def register():
         db.session.commit()
 
         login_user(user)
-        return redirect(url_for("pages.factfind"))
+        return redirect(url_for("pages.welcome"))
 
     return render_template("register.html")
 
@@ -1041,7 +1041,7 @@ def plan_review():
                 if target and months:
                     reason += f" At £{monthly:,.0f}/month, this clears in approximately {months} months."
             elif pot_type == "lifestyle":
-                reason = "Your lifestyle pot keeps the plan sustainable. This is the money that lets you enjoy the month — meals out, social plans, hobbies. Without it, plans get abandoned."
+                reason = "Your lifestyle pot keeps the plan sustainable. This is the money that lets you enjoy the month: meals out, social plans, hobbies. Without it, plans get abandoned."
             elif pot_type == "buffer":
                 reason = "A small buffer protects against minor overspending without touching your goals. Think of it as your plan's shock absorber."
             else:
@@ -1725,7 +1725,19 @@ def recurring():
 def update_account():
     form_type = request.form.get("form_type")
 
-    if form_type == "change_email":
+    if form_type == "change_name":
+        new_name = request.form.get("new_name", "").strip()
+        if not new_name:
+            flash("Name is required", "error")
+            return redirect(url_for("pages.settings"))
+        if len(new_name) > 100:
+            flash("Name is too long", "error")
+            return redirect(url_for("pages.settings"))
+        current_user.name = new_name
+        db.session.commit()
+        flash("Name updated", "success")
+
+    elif form_type == "change_email":
         new_email = request.form.get("new_email", "").strip()
         password = request.form.get("confirm_password_email", "")
 

@@ -809,7 +809,7 @@ def can_i_afford(plan, expense_name, amount, target_month=None):
             "source": "Lifestyle & family pot",
             "balance_before": round(lifestyle_balance, 2),
             "balance_after": round(remaining_after, 2),
-            "message": f"Yes — your lifestyle pot will have £{lifestyle_balance:,.0f} by then. "
+            "message": f"Yes, your lifestyle pot will have £{lifestyle_balance:,.0f} by then. "
                       f"After the {expense_name} you'll have £{remaining_after:,.0f} left.",
             "impact": "none"
         }
@@ -956,7 +956,7 @@ def get_plan_summary(plan):
         most_urgent = min(underfunded, key=lambda u: u["months_available"])
         if len(underfunded) == 1:
             return (
-                f"Your {most_urgent['name']} is tight — at current pace it needs "
+                f"Your {most_urgent['name']} is tight. At current pace it needs "
                 f"{most_urgent['months_needed']} months but the deadline is in "
                 f"{most_urgent['months_available']}. Consider adjusting the target or timeline."
             )
@@ -964,7 +964,7 @@ def get_plan_summary(plan):
             names = " and ".join(u["name"] for u in underfunded)
             return (
                 f"{len(underfunded)} goals are tight for their deadlines: {names}. "
-                f"The most urgent is {most_urgent['name']} — needs "
+                f"The most urgent is {most_urgent['name']}: needs "
                 f"{most_urgent['months_needed']} months but deadline is in "
                 f"{most_urgent['months_available']}."
             )

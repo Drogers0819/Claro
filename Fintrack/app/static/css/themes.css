@@ -12,12 +12,15 @@ body.theme-racing-green {
     --text-primary: rgba(255, 255, 255, 0.9);
     --text-secondary: rgba(255, 255, 255, 0.65);
     --text-tertiary: rgba(255, 255, 255, 0.5);
+    --progress-track: rgba(255, 255, 255, 0.1);
+    --popover-bg: #101e15;
     background: radial-gradient(circle at top right, #0A2A22, #020408);
 }
 
 body.theme-midnight-navy {
     --racing-green: #0A1628;
     --glass-border: rgba(197, 163, 93, 0.12);
+    --popover-bg: #0d1620;
     background: radial-gradient(circle at top right, #0A1628, #020408);
 }
 
@@ -25,18 +28,21 @@ body.theme-midnight-navy {
 body.theme-oxford-saddle {
     --racing-green: #2A1A10;
     --glass: rgba(255, 255, 255, 0.04);
+    --popover-bg: #1a1008;
     background: radial-gradient(circle at top right, #2A1A10, #0A0604);
 }
 
 /* Amethyst — more visible purple */
 body.theme-amethyst {
     --racing-green: #1A0C28;
+    --popover-bg: #14091e;
     background: radial-gradient(circle at top right, #1A0C28, #060210);
 }
 
 /* Rosso — richer red presence */
 body.theme-rosso {
     --racing-green: #3A1212;
+    --popover-bg: #1a0808;
     background: radial-gradient(circle at top right, #3A1212, #0C0404);
 }
 
@@ -69,14 +75,15 @@ body.theme-rosso {
     /* Sidebar */
     --sidebar-bg: #0A0E1C;
     --sidebar-border: rgba(99, 179, 237, 0.1);
+    --popover-bg: #0c1220;
 
       /* Transaction semantics */                    
     --income: #48BB78;                             
     --spending: #FC8181; 
 
-    /* Fonts — sans-serif for modern feel */
-    --font-serif: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    /* Fonts — keep Cormorant for headings (brand consistency), Inter for body */
     --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    --progress-track: rgba(255, 255, 255, 0.1);
 }
 
 /* ===== LIGHT AURAS ===== */
@@ -95,7 +102,12 @@ body.theme-ivory {
     --text-tertiary: rgba(26, 26, 24, 0.7);
     --danger: #C53030;
     --success: #276749;
+    --progress-track: rgba(0, 0, 0, 0.08);
     background: linear-gradient(135deg, #F0EBE2, #E4DDD0);
+}
+
+body.theme-ivory {
+    --popover-bg: #e8e0d0;
 }
 
 body.theme-ivory .sidebar {
@@ -139,7 +151,12 @@ body.theme-pearl {
     --text-tertiary: rgba(26, 29, 36, 0.7);
     --danger: #C53030;
     --success: #276749;
+    --progress-track: rgba(0, 0, 0, 0.08);
     background: linear-gradient(135deg, #E4E8F0, #D6DCE8);
+}
+
+body.theme-pearl {
+    --popover-bg: #d0d8e8;
 }
 
 body.theme-pearl .sidebar {
@@ -183,7 +200,12 @@ body.theme-sandstone {
     --text-tertiary: rgba(44, 36, 24, 0.7);
     --danger: #C53030;
     --success: #276749;
+    --progress-track: rgba(0, 0, 0, 0.08);
     background: linear-gradient(135deg, #ECE4D6, #DED4C2);
+}
+
+body.theme-sandstone {
+    --popover-bg: #d4c8b6;
 }
 
 body.theme-sandstone .sidebar {
@@ -227,7 +249,12 @@ body.theme-sage {
     --text-tertiary: rgba(26, 36, 28, 0.7);
     --danger: #C53030;
     --success: #276749;
+    --progress-track: rgba(0, 0, 0, 0.08);
     background: linear-gradient(135deg, #E0E8DC, #D0DCC8);
+}
+
+body.theme-sage {
+    --popover-bg: #c4d4bc;
 }
 
 body.theme-sage .sidebar {
@@ -271,7 +298,12 @@ body.theme-lavender {
     --text-tertiary: rgba(32, 28, 40, 0.7);
     --danger: #C53030;
     --success: #276749;
+    --progress-track: rgba(0, 0, 0, 0.08);
     background: linear-gradient(135deg, #E4DFF0, #D6CEE4);
+}
+
+body.theme-lavender {
+    --popover-bg: #c8c0dc;
 }
 
 body.theme-lavender .sidebar {
@@ -315,7 +347,12 @@ body.theme-mist {
     --text-tertiary: rgba(28, 28, 26, 0.7);
     --danger: #C53030;
     --success: #276749;
+    --progress-track: rgba(0, 0, 0, 0.08);
     background: linear-gradient(135deg, #E2E2DE, #D4D4CE);
+}
+
+body.theme-mist {
+    --popover-bg: #c8c8c2;
 }
 
 body.theme-mist .sidebar {
@@ -377,7 +414,7 @@ body.theme-mist .btn-secondary:hover {
     color: var(--roman-gold);
 }
 
-/* ===== LIGHT THEME FLASH MESSAGE OVERRIDES ===== */
+/* ===== LIGHT THEME TOAST OVERRIDES ===== */
 
 body.theme-ivory .flash-success,
 body.theme-pearl .flash-success,
@@ -385,9 +422,9 @@ body.theme-sandstone .flash-success,
 body.theme-sage .flash-success,
 body.theme-lavender .flash-success,
 body.theme-mist .flash-success {
-    background: rgba(39, 103, 73, 0.10);
-    border-color: rgba(39, 103, 73, 0.30);
-    color: #276749;
+    background: #f0faf4;
+    border-left-color: #27ae60;
+    color: #1a6b42;
 }
 
 body.theme-ivory .flash-error,
@@ -396,9 +433,69 @@ body.theme-sandstone .flash-error,
 body.theme-sage .flash-error,
 body.theme-lavender .flash-error,
 body.theme-mist .flash-error {
-    background: rgba(197, 48, 48, 0.10);
-    border-color: rgba(197, 48, 48, 0.30);
-    color: #C53030;
+    background: #fdf0f0;
+    border-left-color: #c53030;
+    color: #9b2c2c;
+}
+
+body.theme-ivory .flash-warning,
+body.theme-pearl .flash-warning,
+body.theme-sandstone .flash-warning,
+body.theme-sage .flash-warning,
+body.theme-lavender .flash-warning,
+body.theme-mist .flash-warning {
+    background: #fefbf0;
+    border-left-color: #d4a017;
+    color: #7d5f0a;
+}
+
+body.theme-ivory .flash-info,
+body.theme-pearl .flash-info,
+body.theme-sandstone .flash-info,
+body.theme-sage .flash-info,
+body.theme-lavender .flash-info,
+body.theme-mist .flash-info {
+    background: rgba(0,0,0,0.04);
+    border-left-color: rgba(0,0,0,0.2);
+    color: var(--text-secondary);
+}
+
+/* ===== LIGHT THEME AVATAR OVERRIDES ===== */
+
+body.theme-ivory .user-avatar,
+body.theme-pearl .user-avatar,
+body.theme-sandstone .user-avatar,
+body.theme-sage .user-avatar,
+body.theme-lavender .user-avatar,
+body.theme-mist .user-avatar {
+    background: rgba(0, 0, 0, 0.05);
+    border-color: rgba(0, 0, 0, 0.1);
+}
+
+body.theme-ivory .mobile-settings-btn,
+body.theme-pearl .mobile-settings-btn,
+body.theme-sandstone .mobile-settings-btn,
+body.theme-sage .mobile-settings-btn,
+body.theme-lavender .mobile-settings-btn,
+body.theme-mist .mobile-settings-btn {
+    background: rgba(0, 0, 0, 0.05);
+    border-color: rgba(0, 0, 0, 0.1);
+}
+
+body.theme-ivory .mobile-settings-btn:hover,
+body.theme-ivory .mobile-settings-btn.active,
+body.theme-pearl .mobile-settings-btn:hover,
+body.theme-pearl .mobile-settings-btn.active,
+body.theme-sandstone .mobile-settings-btn:hover,
+body.theme-sandstone .mobile-settings-btn.active,
+body.theme-sage .mobile-settings-btn:hover,
+body.theme-sage .mobile-settings-btn.active,
+body.theme-lavender .mobile-settings-btn:hover,
+body.theme-lavender .mobile-settings-btn.active,
+body.theme-mist .mobile-settings-btn:hover,
+body.theme-mist .mobile-settings-btn.active {
+    background: rgba(0, 0, 0, 0.09);
+    border-color: rgba(0, 0, 0, 0.15);
 }
 
 /* Cobalt-specific component overrides */

@@ -25,7 +25,7 @@
             </label>
         </div>
 
-        <div style="margin-bottom: 24px; padding: 16px; border-radius: 12px; background: rgba(255,255,255,0.02); border: 0.5px solid rgba(255,255,255,0.05);">
+        <div style="margin-bottom: 24px; padding: 16px; border-radius: 12px; background: rgba(255,255,255,0.02); border: 0.5px solid var(--glass-border);">
             <p style="font-size: 0.72rem; color: var(--text-tertiary); margin-bottom: 12px;">How to export your CSV</p>
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
                 <div style="font-size: 0.75rem;">
@@ -64,7 +64,7 @@
 
 {% if result %}
 <!-- ── WOW MOMENT ── -->
-<div class="glass-card" style="max-width: 560px; margin-top: 24px; border-left: 3px solid var(--roman-gold);">
+<div class="glass-card" style="max-width: 560px; margin-top: 24px;">
 
     <!-- Header -->
     <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 20px;">
@@ -109,7 +109,7 @@
 
         <!-- Savings opportunities -->
         {% if result.savings_count > 0 %}
-        <div style="display: flex; align-items: flex-start; gap: 12px; padding: 12px 14px; border-radius: 10px; background: rgba(255,255,255,0.02); border: 0.5px solid rgba(255,255,255,0.06);">
+        <div style="display: flex; align-items: flex-start; gap: 12px; padding: 12px 14px; border-radius: 10px; background: rgba(255,255,255,0.02); border: 0.5px solid var(--glass-border);">
             <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--text-secondary)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0; margin-top: 1px;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
             <div>
                 <div style="font-size: 0.82rem; color: var(--text-secondary);">
@@ -119,7 +119,7 @@
                 <div style="font-size: 0.76rem; color: var(--text-tertiary); margin-top: 4px;">{{ s.merchant }} · {{ s.reason }}</div>
                 {% endfor %}
                 {% if result.savings_count > 2 %}
-                <div style="font-size: 0.76rem; color: var(--text-tertiary); margin-top: 4px;">+{{ result.savings_count - 2 }} more in <a href="{{ url_for('pages.recurring') }}" style="color: var(--roman-gold);">Recurring</a></div>
+                <div style="font-size: 0.76rem; color: var(--text-tertiary); margin-top: 4px;">+{{ result.savings_count - 2 }} more in <a href="{{ url_for('pages.recurring') }}" style="color: var(--text-secondary); text-decoration: underline; text-underline-offset: 2px;">Recurring</a></div>
                 {% endif %}
             </div>
         </div>
@@ -130,7 +130,7 @@
     <!-- CTAs -->
     <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
         <a href="{{ url_for('pages.overview') }}" class="btn-primary btn-sm">See your overview</a>
-        <a href="{{ url_for('pages.my_money') }}" style="font-size: 0.8rem; color: var(--roman-gold); text-decoration: none;">View transactions</a>
+        <a href="{{ url_for('pages.my_money') }}" style="font-size: 0.8rem; color: var(--text-secondary); text-decoration: underline; text-underline-offset: 2px;">View transactions</a>
     </div>
 
     {% if result.errors %}

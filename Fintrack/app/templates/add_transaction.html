@@ -53,7 +53,10 @@
             <input type="text" name="merchant" class="form-input" placeholder="e.g. Tesco, Netflix, Uber">
         </div>
 
-        <button type="submit" class="btn-primary">Record transaction</button>
+        <div style="display: flex; align-items: center; gap: 14px;">
+            <button type="submit" class="btn-primary">Record transaction</button>
+            <a href="{{ url_for('pages.my_money') }}" style="font-size: 0.82rem; color: var(--text-tertiary); text-decoration: none;">Cancel</a>
+        </div>
     </form>
 </div>
 

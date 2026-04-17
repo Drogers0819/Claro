@@ -55,7 +55,10 @@
             </div>
         </div>
 
-        <button type="submit" class="btn-primary">Create goal</button>
+        <div style="display: flex; align-items: center; gap: 14px;">
+            <button type="submit" class="btn-primary">Create goal</button>
+            <a href="{{ url_for('pages.my_goals') }}" style="font-size: 0.82rem; color: var(--text-tertiary); text-decoration: none;">Cancel</a>
+        </div>
     </form>
 </div>
 

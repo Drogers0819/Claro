@@ -11,23 +11,12 @@
     <p>Day {{ predictions.current_month.days_elapsed }} of {{ predictions.current_month.days_in_month }} · {{ predictions.current_month.days_remaining }} days remaining</p>
 </div>
 
-<!-- Month progress bar -->
-<div style="margin-bottom: 28px;">
-    <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 8px;">
-        <span style="font-size: 0.72rem; color: var(--text-tertiary);">Month progress</span>
-        <span style="font-size: 0.75rem; color: var(--text-tertiary);">{{ predictions.current_month.progress_percent }}%</span>
-    </div>
-    <div class="progress-track" style="height: 6px;">
-        <div class="progress-fill" style="width: {{ predictions.current_month.progress_percent }}%; background: var(--roman-gold);"></div>
-    </div>
-</div>
-
-<!-- AI Insight -->
+<!-- AI Insight — primary signal, shown before metrics -->
 {% if predictions.insight %}
-<div class="gold-card" style="margin-bottom: 32px;">
+<div class="gold-card" style="margin-bottom: 28px;">
     <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
         <span class="ai-pulse"></span>
-        <span class="metric-label" style="margin-bottom: 0; color: var(--roman-gold);">Prediction</span>
+        <span style="font-size: 0.65rem; color: var(--roman-gold); text-transform: uppercase; letter-spacing: 0.06em;">Prediction</span>
     </div>
     <p style="font-size: 0.9rem; font-style: italic; color: var(--text-secondary); line-height: 1.7;">
         "{{ predictions.insight.summary }}"
@@ -35,20 +24,32 @@
 </div>
 {% endif %}
 
-<!-- Key metrics — predicted total is the hero, others are supporting -->
+<!-- Month progress — contextual, shown after the primary insight -->
+<div style="margin-bottom: 28px;">
+    <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 8px;">
+        <span style="font-size: 0.72rem; color: var(--text-tertiary);">Month progress</span>
+        <span style="font-size: 0.75rem; color: var(--text-tertiary);">{{ predictions.current_month.progress_percent }}%</span>
+    </div>
+    <div class="progress-track">
+        <div class="progress-fill" style="width: {{ predictions.current_month.progress_percent }}%; background: var(--text-tertiary);"></div>
+    </div>
+</div>
+
+<!-- Key metrics — only shown when there is transaction data -->
+{% if predictions.spending_so_far.transaction_count > 0 %}
 <div style="margin-bottom: 32px;">
     <!-- Hero metric -->
-    <div class="glass-card" style="margin-bottom: 12px; border-left: 3px solid var(--roman-gold); padding-left: 20px;">
+    <div class="glass-card" style="margin-bottom: 12px;">
         <div class="metric-label">Predicted total</div>
         <div class="metric-value hero" style="margin: 4px 0;">£{{ "{:,.2f}".format(predictions.predictions.blended.predicted_total) }}</div>
-        <div style="font-size: 0.75rem; color: var(--text-tertiary);">based on {{ predictions.spending_so_far.transaction_count }} transactions</div>
+        <div style="font-size: 0.75rem; color: var(--text-tertiary);">based on {{ predictions.spending_so_far.transaction_count }} transaction{{ "s" if predictions.spending_so_far.transaction_count != 1 else "" }}</div>
     </div>
     <!-- Supporting stats -->
     <div class="grid-2">
         <div class="glass-card">
             <div class="metric-label">Spent so far</div>
             <div class="metric-value md" style="margin: 4px 0;">£{{ "{:,.2f}".format(predictions.spending_so_far.total) }}</div>
-            <div style="font-size: 0.7rem; color: var(--text-tertiary);">{{ predictions.spending_so_far.transaction_count }} transactions</div>
+            <div style="font-size: 0.7rem; color: var(--text-tertiary);">{{ predictions.spending_so_far.transaction_count }} transaction{{ "s" if predictions.spending_so_far.transaction_count != 1 else "" }}</div>
         </div>
         <div class="glass-card">
             <div class="metric-label">Daily average</div>
@@ -57,6 +58,13 @@
         </div>
     </div>
 </div>
+{% else %}
+<div style="padding: 8px 0 32px;">
+    <p style="font-size: 0.95rem; color: var(--text-primary); font-weight: 500; margin-bottom: 8px;">No spending recorded yet</p>
+    <p style="font-size: 0.8rem; color: var(--text-tertiary); line-height: 1.6; margin-bottom: 20px;">Upload a bank statement or add transactions and Claro will start tracking your spending for this month.</p>
+    <a href="{{ url_for('pages.upload_statement') }}" class="btn-primary btn-sm">Upload a statement</a>
+</div>
+{% endif %}
 
 <!-- Comparison to average -->
 {% if predictions.comparison.status != "no_comparison" %}
@@ -76,7 +84,7 @@
     {% endif %}
 
     <!-- Supporting context + badge -->
-    <div style="display: flex; justify-content: space-between; align-items: center; padding-top: 10px; border-top: 0.5px solid rgba(255,255,255,0.05);">
+    <div style="display: flex; justify-content: space-between; align-items: center; padding-top: 10px; border-top: 0.5px solid var(--glass-border);">
         <div style="font-size: 0.75rem; color: var(--text-tertiary);">
             Expected £{{ "{:,.2f}".format(predictions.comparison.expected_at_this_point) }} · Actual £{{ "{:,.2f}".format(predictions.comparison.current_spent) }}
         </div>
@@ -96,12 +104,12 @@
     <!-- Header: question + badge -->
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
         <div style="font-size: 0.8rem; color: var(--text-primary);">Can you fund your goals this month?</div>
-        <span class="badge {% if budget_status.status == 'healthy' %}badge-default{% elif budget_status.status == 'tight' %}badge-warning{% else %}badge-danger{% endif %}">
+        <span class="badge {% if budget_status.status == 'healthy' %}badge-success{% elif budget_status.status == 'tight' %}badge-warning{% else %}badge-danger{% endif %}">
             {{ budget_status.status }}
         </span>
     </div>
     <!-- Message: tighter spacing, reads as context not heading -->
-    <p style="font-size: 0.8rem; color: var(--text-secondary); font-style: italic; margin-bottom: 16px; line-height: 1.6;">
+    <p style="font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 16px; line-height: 1.6;">
         {{ budget_status.message }}
     </p>
     <!-- Hero: remaining (the answer) — supporting: spending + allocations -->
@@ -111,7 +119,7 @@
             {% if budget_status.surplus_after_goals < 0 %}−£{{ "{:,.2f}".format(budget_status.surplus_after_goals | abs) }}{% else %}£{{ "{:,.2f}".format(budget_status.surplus_after_goals) }}{% endif %}
         </div>
     </div>
-    <div style="display: flex; gap: 24px; padding-top: 12px; border-top: 0.5px solid rgba(255,255,255,0.05);">
+    <div style="display: flex; gap: 24px; padding-top: 12px; border-top: 0.5px solid var(--glass-border);">
         <div>
             <div style="font-size: 0.7rem; color: var(--text-tertiary);">Predicted spending</div>
             <div style="font-size: 0.85rem; font-variant-numeric: tabular-nums; color: var(--text-secondary);">£{{ "{:,.2f}".format(budget_status.predicted_expenses) }}</div>
@@ -129,7 +137,7 @@
 <div class="section-label">Category forecast</div>
 <div class="glass-card">
     {% for cat in predictions.predictions.by_category %}
-    <div style="{% if not loop.last %}margin-bottom: 16px; padding-bottom: 16px; border-bottom: 0.5px solid rgba(255,255,255,0.05);{% endif %}">
+    <div style="{% if not loop.last %}margin-bottom: 16px; padding-bottom: 16px; border-bottom: 0.5px solid var(--glass-border);{% endif %}">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
             <div style="display: flex; align-items: center; gap: 8px;">
                 <span style="font-size: 0.9rem; color: var(--text-primary);">{{ cat.category }}</span>
@@ -156,7 +164,7 @@
 {% endif %}
 
 {% if predictions.historical_months_available < 2 %}
-<p style="font-size: 0.8rem; color: var(--text-tertiary); font-style: italic; margin-top: 24px;">
+<p style="font-size: 0.75rem; color: var(--text-tertiary); margin-top: 24px; line-height: 1.6;">
     Predictions improve with more data. Upload additional months of bank statements to see more accurate forecasts.
 </p>
 {% endif %}

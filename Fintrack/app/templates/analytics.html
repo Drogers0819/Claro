@@ -40,7 +40,7 @@
     <p>{{ month_name }} {{ year }}</p>
 </div>
 
-<div class="glass-card" style="margin-bottom: 12px; border-left: 3px solid var(--roman-gold); padding-left: 20px;">
+<div class="glass-card" style="margin-bottom: 12px;">
     <div class="metric-label">Total spending</div>
     <div class="metric-value hero" style="margin: 4px 0;">£{{ "{:,.2f}".format(total_expenses) }}</div>
 </div>
@@ -66,7 +66,7 @@
 <div class="section-label">Spending by category</div>
 <div class="glass-card">
     {% for cat in categories %}
-    <div style="margin-bottom: 16px; {% if not loop.last %}padding-bottom: 16px; border-bottom: 0.5px solid rgba(255,255,255,0.05);{% endif %}">
+    <div style="margin-bottom: 16px; {% if not loop.last %}padding-bottom: 16px; border-bottom: 0.5px solid var(--glass-border);{% endif %}">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
             <div style="display: flex; align-items: center; gap: 10px;">
                 {{ category_icon(cat.name, cat.colour) }}
@@ -87,8 +87,9 @@
     {% endfor %}
 </div>
 {% else %}
-<div class="empty-state">
-    No expense transactions for this month. <a href="{{ url_for('pages.add_transaction') }}">Add some transactions</a> or <a href="{{ url_for('pages.upload_statement') }}">upload a statement</a>.
+<div style="padding-top: 8px;">
+    <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 16px;">No transactions for {{ month_name }}. Upload a statement or add transactions manually to see your spending breakdown.</p>
+    <a href="{{ url_for('pages.upload_statement') }}" class="btn-primary btn-sm">Upload a statement</a>
 </div>
 {% endif %}
 

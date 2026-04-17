@@ -2,14 +2,18 @@
 {% block title %}My Budgets – Claro{% endblock %}
 
 {% block content %}
+<a href="{{ url_for('pages.my_money') }}" style="display: inline-flex; align-items: center; gap: 6px; font-size: 0.75rem; color: var(--text-tertiary); text-decoration: none; margin-bottom: 16px;">
+    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+    Money
+</a>
 <div class="page-header">
     <h1>My Budgets</h1>
 </div>
 
 {% if not current_user.factfind_completed %}
-<a href="{{ url_for('pages.factfind') }}" style="display: flex; align-items: center; gap: 10px; padding: 11px 16px; border-radius: 10px; background: rgba(197, 163, 93, 0.07); border: 0.5px solid rgba(197, 163, 93, 0.2); margin-bottom: 24px; text-decoration: none; color: inherit;">
+<a href="{{ url_for('pages.factfind') }}" class="factfind-nudge">
     <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--roman-gold)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-    <span style="flex: 1; font-size: 0.8rem; color: var(--text-secondary);">Finish setting up your profile to unlock all features</span>
+    <span style="flex: 1; font-size: 0.8rem; color: var(--text-secondary);">Complete your financial profile to generate your plan</span>
     <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--text-tertiary)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0;"><path d="M9 18l6-6-6-6"/></svg>
 </a>
 {% endif %}
@@ -28,7 +32,7 @@
     <div style="font-size: 0.75rem; color: var(--text-tertiary); margin-bottom: 16px;">potential saving on your subscriptions each year</div>
     {% for s in savings.opportunities[:3] %}
     <div style="display: flex; justify-content: space-between; align-items: center; padding: 8px 0;
-        {% if not loop.last %}border-bottom: 0.5px solid rgba(255,255,255,0.06);{% endif %}">
+        {% if not loop.last %}border-bottom: 0.5px solid var(--glass-border);{% endif %}">
         <span style="font-size: 0.85rem; color: var(--text-primary); text-transform: capitalize;">{{ s.merchant }}</span>
         <span style="font-size: 0.8rem; color: var(--text-secondary);">£{{ "{:,.2f}".format(s.monthly_cost) }}/mo</span>
     </div>
@@ -57,7 +61,7 @@
                            step="1" min="1"
                            style="width: 64px; padding: 2px 6px; font-size: 0.8rem; background: var(--glass); border: 0.5px solid var(--glass-border); border-radius: 6px; color: var(--text-primary); font-family: var(--font-sans);"
                            onkeydown="if(event.key==='Escape')cancelBudgetEdit({{ b.budget_id }});if(event.key==='Enter')saveBudgetLimit({{ b.budget_id }})">
-                    <button type="button" class="btn-primary btn-sm" style="padding: 2px 8px; font-size: 0.7rem;"
+                    <button type="button" class="btn-secondary btn-sm" style="padding: 2px 8px; font-size: 0.7rem;"
                             onclick="saveBudgetLimit({{ b.budget_id }})">Save</button>
                     <button type="button" class="transaction-delete" style="opacity: 1;"
                             onclick="cancelBudgetEdit({{ b.budget_id }})" aria-label="Cancel">
@@ -88,8 +92,7 @@
             <div style="position: absolute; left: {{ month_progress }}%; top: -2px; width: 1.5px; height: 8px; background: var(--text-secondary); z-index: 2; border-radius: 1px;"></div>
             <div class="progress-fill"
                  style="width: {{ [b.percent_used, 100] | min }}%;
-                        background: {% if b.status == 'exceeded' %}var(--danger){% elif b.status == 'warning' %}var(--warning){% else %}{{ b.category_colour }}{% endif %};
-                        opacity: {% if b.status == 'exceeded' %}1{% else %}0.8{% endif %};"></div>
+                        background: {% if b.status == 'exceeded' %}var(--danger){% elif b.status == 'warning' %}var(--warning){% else %}{{ b.category_colour }}{% endif %};"></div>
         </div>
 
         <!-- Line 3: status text — only when it adds information -->
@@ -108,11 +111,6 @@
 
 <!-- Set a spending limit -->
 <div style="{% if budget_statuses | length > 0 %}padding-top: 4px; border-top: 0.5px solid var(--glass-border);{% endif %}">
-    {% if budget_statuses | length == 0 %}
-    <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 16px;">
-        No spending limits set yet. Pick a category and set a monthly cap to stay on track.
-    </p>
-    {% endif %}
     <div style="font-size: 0.72rem; color: var(--text-tertiary); margin-bottom: 16px; {% if budget_statuses | length > 0 %}margin-top: 20px;{% endif %}">Set a spending limit</div>
     <form method="POST" action="{{ url_for('pages.create_budget_page') }}">
         <div class="grid-2">
@@ -133,7 +131,7 @@
         </div>
     </form>
     <p style="font-size: 0.72rem; color: var(--text-tertiary); margin-top: 16px; margin-bottom: 0;">
-        See your regular payments under <a href="{{ url_for('pages.recurring') }}" style="color: var(--roman-gold); text-decoration: none;">Recurring payments</a>
+        See your regular payments under <a href="{{ url_for('pages.recurring') }}" style="color: var(--text-secondary); text-decoration: underline; text-underline-offset: 2px;">Recurring payments</a>
     </p>
 </div>
 

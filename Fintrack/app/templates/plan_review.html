@@ -13,7 +13,7 @@
 
     <!-- Summary card -->
     <div class="glass-card" style="padding: 20px; margin-bottom: 24px;">
-        <div style="font-size: 0.65rem; color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 12px;">Plan overview</div>
+        <div class="section-label" style="margin-bottom: 12px;">Plan overview</div>
 
         <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 8px;">
             <span style="font-size: 0.8rem; color: var(--text-tertiary);">Monthly income</span>
@@ -25,38 +25,38 @@
         </div>
         <div style="border-top: 0.5px solid var(--glass-border); padding-top: 10px; margin-top: 10px; display: flex; justify-content: space-between; align-items: baseline;">
             <span style="font-size: 0.85rem; color: var(--text-primary); font-weight: 500;">Surplus allocated</span>
-            <span style="font-size: 1.1rem; font-weight: 600; color: var(--roman-gold);">£{{ "{:,.0f}".format(plan.surplus) }}/mo</span>
+            <span style="font-size: 1.1rem; font-weight: 600; color: var(--text-primary);">£{{ "{:,.0f}".format(plan.surplus) }}/mo</span>
         </div>
     </div>
 
     <!-- Methodology note -->
     <div style="padding: 14px 16px; border-radius: 10px; background: rgba(197,163,93,0.03); border: 0.5px solid rgba(197,163,93,0.08); margin-bottom: 24px;">
         <div style="font-size: 0.78rem; color: var(--text-secondary); line-height: 1.6;">
-            This plan follows a professional financial planning methodology: build a safety net, clear debt, then fund your goals by urgency. Every pot receives funding simultaneously — priority goals simply receive a larger share. When a pot completes, its allocation redistributes automatically.
+            This plan follows a professional financial planning methodology: build a safety net, clear debt, then fund your goals by urgency. Every pot receives funding simultaneously, with priority goals receiving a larger share. When a pot completes, its allocation redistributes automatically.
         </div>
     </div>
 
     <!-- Allocation reasoning -->
-    <div style="font-size: 0.65rem; color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 14px;">Allocation breakdown</div>
+    <div class="section-label" style="margin-bottom: 14px;">Allocation breakdown</div>
 
     {% for item in reasoning %}
     <div class="glass-card" style="padding: 16px 18px; margin-bottom: 12px;">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
             <div style="display: flex; align-items: center; gap: 8px;">
-                {% if item.type == "emergency" %}
-                <span style="font-size: 0.9rem;">🛡️</span>
-                {% elif item.type == "debt" or "pay off" in item.name|lower or "credit" in item.name|lower %}
-                <span style="font-size: 0.9rem;">💳</span>
-                {% elif item.type == "lifestyle" %}
-                <span style="font-size: 0.9rem;">🎉</span>
-                {% elif item.type == "buffer" %}
-                <span style="font-size: 0.9rem;">🔄</span>
+                {% if item.type == 'emergency' %}
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;opacity:0.6;"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                {% elif item.type == 'debt' or 'pay off' in item.name|lower or 'credit' in item.name|lower or 'loan' in item.name|lower or 'overdraft' in item.name|lower %}
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;opacity:0.6;"><rect width="22" height="16" x="1" y="4" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+                {% elif item.type == 'lifestyle' %}
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;opacity:0.6;"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+                {% elif item.type == 'buffer' %}
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;opacity:0.6;"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M8 16H3v5"/></svg>
                 {% else %}
-                <span style="font-size: 0.9rem;">🎯</span>
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;opacity:0.6;"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
                 {% endif %}
                 <span style="font-size: 0.85rem; color: var(--text-primary); font-weight: 500;">{{ item.name }}</span>
             </div>
-            <span style="font-size: 0.9rem; font-weight: 600; color: var(--roman-gold);">£{{ "{:,.0f}".format(item.monthly) }}/mo</span>
+            <span style="font-size: 0.9rem; font-weight: 600; color: var(--text-primary);">£{{ "{:,.0f}".format(item.monthly) }}/mo</span>
         </div>
         {% if item.target %}
         <div style="font-size: 0.72rem; color: var(--text-tertiary); margin-bottom: 6px;">
@@ -71,7 +71,7 @@
 
     <!-- Phases overview -->
     {% if plan.phases %}
-    <div style="font-size: 0.65rem; color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.06em; margin-top: 28px; margin-bottom: 14px;">Your journey</div>
+    <div class="section-label" style="margin-top: 28px; margin-bottom: 14px;">Your journey</div>
 
     {% for phase in plan.phases %}
     <div style="display: flex; gap: 14px; margin-bottom: 16px;">
@@ -92,7 +92,7 @@
 
     <!-- Alerts -->
     {% if plan.alerts %}
-    <div style="font-size: 0.65rem; color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.06em; margin-top: 28px; margin-bottom: 14px;">Things to note</div>
+    <div class="section-label" style="margin-top: 28px; margin-bottom: 14px;">Things to note</div>
 
     {% for alert in plan.alerts %}
     <div style="padding: 12px 14px; border-radius: 8px; background: rgba(255,255,255,0.02); border: 0.5px solid rgba(255,255,255,0.06); margin-bottom: 8px;">
@@ -103,7 +103,7 @@
 
     <!-- Important notes -->
     <div style="padding: 14px 16px; border-radius: 10px; background: rgba(255,255,255,0.02); border: 0.5px solid rgba(255,255,255,0.06); margin-top: 28px; margin-bottom: 24px;">
-        <div style="font-size: 0.65rem; color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 8px;">Important</div>
+        <div class="section-label" style="margin-bottom: 8px;">Important</div>
         <div style="font-size: 0.75rem; color: var(--text-tertiary); line-height: 1.6;">
             This plan is guidance, not financial advice. It's based on the information you've provided and follows established financial planning principles. As your circumstances change, your plan adjusts automatically through monthly check-ins. You can modify your goals, timelines, and allocations at any time.
         </div>

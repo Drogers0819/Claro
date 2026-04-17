@@ -15,7 +15,7 @@
         {% if current_user.is_authenticated %}
         <a href="{{ url_for('pages.overview') }}" class="btn-primary btn-sm">Back to Claro</a>
         {% else %}
-        <a href="{{ url_for('pages.login') }}" style="font-size: 0.8rem; color: var(--roman-gold); text-decoration: none;">Sign in</a>
+        <a href="{{ url_for('pages.login') }}" style="font-size: 0.8rem; color: var(--text-secondary); text-decoration: underline; text-underline-offset: 2px;">Sign in</a>
         {% endif %}
     </div>
 </div>

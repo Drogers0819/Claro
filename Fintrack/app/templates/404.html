@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block title %}Page not found – Claro{% endblock %}
+
+{% block content %}
+<div class="empty-page-center">
+    <p style="font-size: 0.95rem; color: var(--text-primary); font-weight: 500; margin-bottom: 8px; max-width: 280px;">This page doesn't exist.</p>
+    <p style="font-size: 0.8rem; color: var(--text-tertiary); line-height: 1.6; margin-bottom: 20px; max-width: 280px;">The link may have changed or the page may have moved. Head back to your overview to pick up where you left off.</p>
+    <a href="{{ url_for('pages.overview') }}" class="btn-primary btn-sm">Back to overview</a>
+</div>
+{% endblock %}

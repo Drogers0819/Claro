@@ -8,8 +8,9 @@
 </div>
 
 {% if not smart_plan or smart_plan.error %}
-<div style="text-align: center; padding: 40px 20px;">
-    <p style="font-size: 0.95rem; color: var(--text-secondary); margin-bottom: 16px;">Complete your financial profile and add some goals to start checking in.</p>
+<div class="empty-page-center">
+    <p style="font-size: 0.95rem; color: var(--text-primary); font-weight: 500; margin-bottom: 8px; max-width: 280px;">Your monthly check-in.</p>
+    <p style="font-size: 0.8rem; color: var(--text-tertiary); line-height: 1.6; margin-bottom: 20px; max-width: 280px;">Set up your financial profile and add a goal to unlock your monthly check-in.</p>
     <a href="{{ url_for('pages.factfind') }}" class="btn-primary btn-sm">Set up your profile</a>
 </div>
 
@@ -18,14 +19,14 @@
 <div class="gold-card" style="margin-bottom: 24px;">
     <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 12px;">
         <span class="ai-pulse"></span>
-        <span class="metric-label" style="margin-bottom: 0; color: var(--roman-gold);">Done for {{ checkin_month }}</span>
+        <span style="font-size: 0.65rem; color: var(--roman-gold); text-transform: uppercase; letter-spacing: 0.06em;">Done for {{ checkin_month }}</span>
     </div>
     <p style="font-size: 0.9rem; color: var(--text-primary); line-height: 1.7;">You've already checked in for {{ checkin_month }}. Your plan has been updated with the figures you provided.</p>
 </div>
 
 {% if existing and existing.entries %}
 <div class="glass-card" style="margin-bottom: 24px;">
-    <div style="font-size: 0.72rem; color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 14px;">What you reported</div>
+    <div class="section-label" style="margin-bottom: 14px;">What you reported</div>
     {% for entry in existing.entries %}
     <div style="display: flex; justify-content: space-between; align-items: center; padding: 8px 0; {% if not loop.last %}border-bottom: 0.5px solid rgba(255,255,255,0.04);{% endif %}">
         <span style="font-size: 0.85rem; color: var(--text-primary);">{{ entry.pot_name }}</span>
@@ -66,10 +67,12 @@
                 <span style="font-size: 0.75rem; color: var(--text-tertiary);">Plan: £{{ "{:,.0f}".format(pot.planned) }}</span>
             </div>
             <div class="form-group" style="margin-bottom: 0;">
-                <input type="number" name="actual_{{ pot.name | replace(' ', '_') }}"
+                <label class="form-label" for="actual_{{ pot.name | replace(' ', '_') }}">Amount saved (£)</label>
+                <input type="number" id="actual_{{ pot.name | replace(' ', '_') }}"
+                       name="actual_{{ pot.name | replace(' ', '_') }}"
                        class="form-input" step="0.01" min="0"
                        value="{{ '{:.2f}'.format(pot.planned) }}"
-                       placeholder="Actual amount">
+                       placeholder="e.g. 250.00">
             </div>
         </div>
         {% endfor %}
@@ -85,7 +88,7 @@
 <!-- Past check-ins -->
 {% if past_checkins %}
 <div style="margin-top: 32px; padding-top: 24px; border-top: 0.5px solid rgba(255,255,255,0.06);">
-    <div style="font-size: 0.72rem; color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 14px;">History</div>
+    <div class="section-label" style="margin-bottom: 14px;">History</div>
     {% for ci in past_checkins %}
     <div style="display: flex; justify-content: space-between; align-items: center; padding: 8px 0; {% if not loop.last %}border-bottom: 0.5px solid rgba(255,255,255,0.04);{% endif %}">
         <span style="font-size: 0.85rem; color: var(--text-secondary);">
