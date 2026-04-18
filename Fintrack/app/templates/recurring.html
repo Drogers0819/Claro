@@ -40,7 +40,7 @@
     </div>
     <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 12px;">
         We found {{ savings.count }} potential saving{{ "s" if savings.count != 1 else "" }} worth up to
-        <span style="color: var(--roman-gold); font-weight: 600;">£{{ "{:,.2f}".format(savings.total_potential_annual_saving) }}/year</span>.
+        <span style="color: var(--text-primary); font-weight: 600;">£{{ "{:,.2f}".format(savings.total_potential_annual_saving) }}/year</span>.
     </p>
     {% for s in savings.opportunities %}
     <div style="font-size: 0.8rem; color: var(--text-secondary); padding: 8px 0;

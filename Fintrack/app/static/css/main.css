@@ -222,6 +222,11 @@ a:hover {
     display: none;
 }
 
+/* Mobile logo — hidden by default, shown inside header bar on mobile */
+.mobile-logo {
+    display: none;
+}
+
 /* Visibility helpers */
 .mobile-only { display: none; }
 @media (max-width: 768px) { .mobile-only { display: block; } }
@@ -233,18 +238,27 @@ a:hover {
     .mobile-header-bar {
         display: flex;
         align-items: center;
-        justify-content: flex-end;
+        justify-content: space-between;
         position: fixed;
         top: 0;
         left: 0;
         right: 0;
         height: calc(52px + env(safe-area-inset-top));
         padding-top: env(safe-area-inset-top);
+        padding-left: 16px;
         padding-right: 16px;
         z-index: 400;
         background: var(--bg-primary);
         border-bottom: 0.5px solid transparent;
         pointer-events: none;
+    }
+
+    .mobile-logo {
+        display: flex;
+        align-items: center;
+        pointer-events: all;
+        text-decoration: none;
+        flex-shrink: 0;
     }
 
     .mobile-settings-btn {
@@ -641,6 +655,44 @@ input[type="number"] {
 
 .form-input::placeholder {
     color: var(--text-tertiary);
+}
+
+/* ── Custom checkbox — theme-aware, never shows OS white box ── */
+input[type="checkbox"] {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 16px;
+    height: 16px;
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 3px;
+    background: rgba(255,255,255,0.04);
+    cursor: pointer;
+    position: relative;
+    flex-shrink: 0;
+    transition: border-color 0.2s ease, background 0.2s ease;
+}
+input[type="checkbox"]:checked {
+    background: var(--roman-gold);
+    border-color: var(--roman-gold);
+}
+input[type="checkbox"]:checked::after {
+    content: '';
+    position: absolute;
+    left: 4px;
+    top: 1px;
+    width: 5px;
+    height: 9px;
+    border: 1.5px solid #1a1a1a;
+    border-top: none;
+    border-left: none;
+    transform: rotate(45deg);
+}
+
+/* ── Small input variant — secondary/compact contexts ── */
+.form-input-sm {
+    padding: 10px 14px;
+    min-height: 40px;
+    font-size: 0.85rem;
 }
 
 /* Prevent browser autofill from applying white/yellow background */
@@ -1691,6 +1743,10 @@ body.theme-mist .glass-card.card-danger {
     opacity: 1;
 }
 
+.glass-card:hover .transaction-delete {
+    opacity: 1;
+}
+
 /* Exceeded state — left accent line, very subtle bg tint */
 .budget-row-danger {
     border-left: 2px solid rgba(252, 129, 129, 0.6);
@@ -1911,10 +1967,17 @@ body.theme-mist .budget-row-danger {
     .form-input,
     .form-select {
         font-size: 16px; /* prevents iOS zoom */
-        padding: 14px 16px;
+        padding: 11px 14px;
         border-radius: 10px;
-        min-height: 48px;
+        min-height: 44px;
         -webkit-appearance: none;
+    }
+
+    /* Compact input variant — still needs 16px to prevent iOS zoom */
+    .form-input-sm {
+        font-size: 16px;
+        padding: 7px 12px;
+        min-height: 36px;
     }
 
     .form-label {

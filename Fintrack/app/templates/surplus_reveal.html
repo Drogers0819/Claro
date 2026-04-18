@@ -4,16 +4,28 @@
 {% block content %}
 <div style="max-width: 560px; margin: 0 auto;">
 
+    <!-- Onboarding step indicator -->
+    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 24px;">
+        <a href="{{ url_for('pages.factfind') }}" style="font-size: 0.65rem; color: var(--text-tertiary); text-decoration: none; white-space: nowrap; display: inline-flex; align-items: center; gap: 2px;"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>Back</a>
+        <div style="display: flex; gap: 4px; flex: 1;">
+            <div style="flex: 1; height: 2px; border-radius: 1px; background: rgba(255,255,255,0.25);"></div>
+            <div style="flex: 1; height: 2px; border-radius: 1px; background: rgba(255,255,255,0.25);"></div>
+            <div style="flex: 1; height: 2px; border-radius: 1px; background: rgba(255,255,255,0.08);"></div>
+            <div style="flex: 1; height: 2px; border-radius: 1px; background: rgba(255,255,255,0.08);"></div>
+        </div>
+        <span style="font-size: 0.65rem; color: var(--text-tertiary); white-space: nowrap; letter-spacing: 0.04em;">Step 2 of 4</span>
+    </div>
+
     <div class="page-header">
         <h1>Here's what you have to work with</h1>
         <p style="font-size: 0.85rem; color: var(--text-tertiary); margin-top: 6px;">Before you choose your goals, let's see the real picture.</p>
     </div>
 
-    <!-- Surplus breakdown -->
-    <div class="glass-card" style="padding: 20px; margin-bottom: 20px;">
-        <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 16px;">
+    <!-- Surplus breakdown — bare, no card wrapper -->
+    <div style="margin-bottom: 20px; padding: 0 0 16px; border-bottom: 0.5px solid var(--glass-border);">
+        <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 12px;">
             <span style="font-size: 0.8rem; color: var(--text-tertiary);">Monthly income</span>
-            <span style="font-size: 1rem; color: var(--text-primary);">£{{ "{:,.0f}".format(income) }}</span>
+            <span style="font-size: 0.85rem; color: var(--text-secondary);">£{{ "{:,.0f}".format(income) }}</span>
         </div>
         <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 10px;">
             <span style="font-size: 0.8rem; color: var(--text-tertiary);">Rent / mortgage</span>
@@ -44,9 +56,12 @@
             <span style="font-size: 0.85rem; color: var(--text-secondary);">−£{{ "{:,.0f}".format(profile.transport_estimate or 0) }}</span>
         </div>
 
-        <div style="border-top: 0.5px solid var(--glass-border); padding-top: 14px; display: flex; justify-content: space-between; align-items: baseline;">
-            <span style="font-size: 0.85rem; color: var(--text-primary); font-weight: 500;">Your surplus</span>
-            <span style="font-size: 1.4rem; font-weight: 600; color: var(--roman-gold);">£{{ "{:,.0f}".format(surplus) }}<span style="font-size: 0.75rem; font-weight: 400; color: var(--text-tertiary);">/month</span></span>
+        <div style="display: flex; justify-content: space-between; align-items: baseline;">
+            <span style="font-size: 0.85rem; color: var(--text-secondary); font-weight: 500;">Your surplus</span>
+            <div>
+                <span style="font-size: 1.8rem; font-weight: 600; color: var(--text-primary); font-variant-numeric: tabular-nums;">£{{ "{:,.0f}".format(surplus) }}</span>
+                <span style="font-size: 0.75rem; font-weight: 400; color: var(--text-tertiary);">/month</span>
+            </div>
         </div>
     </div>
 
@@ -55,12 +70,12 @@
         This is the money available after all your fixed costs. On the next page you'll choose your goals, and we'll build a plan that puts every pound to work.
     </p>
 
-    <!-- Lifestyle budget question -->
+    <!-- Lifestyle budget question — bare, no card wrapper -->
     <form method="POST" action="{{ url_for('pages.surplus_reveal') }}">
-        <div class="glass-card" style="padding: 16px 20px; margin-bottom: 24px;">
-            <div style="font-size: 0.9rem; color: var(--text-primary); margin-bottom: 6px;">One more thing</div>
-            <p style="font-size: 0.78rem; color: var(--text-tertiary); margin-bottom: 14px; line-height: 1.5;">
-                After your savings and goal allocations are set, how much do you realistically need each month to still enjoy life? Think meals out, social plans, clothes, hobbies. The things that keep you sane.
+        <div style="margin-bottom: 24px; padding-top: 20px; border-top: 0.5px solid var(--glass-border);">
+            <div style="font-size: 0.95rem; color: var(--text-primary); font-weight: 500; margin-bottom: 4px;">Monthly lifestyle budget</div>
+            <p style="font-size: 0.78rem; color: var(--text-tertiary); margin-bottom: 16px; line-height: 1.5;">
+                How much do you need each month to still enjoy life — meals out, social plans, hobbies? We'll ring-fence this so your plan doesn't squeeze you.
             </p>
 
             <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 10px;">
@@ -74,41 +89,42 @@
                 {% set suggested = (surplus * pct.value / 100) | round(0) | int %}
                 <label class="amt-opt">
                     <input type="radio" name="lifestyle_budget" value="{{ suggested }}" style="display:none;" onchange="selLifestyle(this)">
-                    <span>{{ pct.label }} · £{{ suggested }}</span>
+                    <span>{{ pct.label }} · £{{ "{:,.0f}".format(suggested) }}</span>
                 </label>
                 {% endfor %}
             </div>
 
-            <input type="number" name="lifestyle_custom" id="lifestyle-custom" class="form-input" placeholder="Or enter your own amount (£)" step="10" min="0" max="{{ surplus | int }}" oninput="customLifestyle(this)" style="margin-top: 6px;">
+            <input type="number" name="lifestyle_custom" id="lifestyle-custom" class="form-input form-input-sm" placeholder="Or enter your own amount (£)" step="10" min="0" max="{{ surplus | int }}" oninput="customLifestyle(this)" style="margin-top: 6px;">
 
             <input type="hidden" name="lifestyle_budget" id="lifestyle-hidden" value="">
 
-            <p style="font-size: 0.7rem; color: var(--text-tertiary); margin-top: 10px;">
-                We'll set this aside as your lifestyle pot so the plan doesn't squeeze you. You can always adjust it later.
-            </p>
+            <p style="font-size: 0.7rem; color: var(--text-tertiary); margin-top: 10px;">Adjustable any time after your plan is built.</p>
         </div>
 
-        <button type="submit" class="btn-primary" style="width: 100%; padding: 16px; font-size: 0.95rem;">
-            Choose my goals →
+        <button type="submit" class="btn-primary" style="width: 100%; padding: 16px; font-size: 0.95rem; display: flex; align-items: center; justify-content: center; gap: 8px;">
+            Choose my goals
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
         </button>
     </form>
 
     {% else %}
-    <div class="glass-card" style="padding: 16px 20px; margin-bottom: 24px; border-color: rgba(220,80,80,0.2);">
+    <!-- Negative surplus state — bare, no card wrapper -->
+    <div style="margin-bottom: 24px;">
         <div style="font-size: 0.85rem; color: var(--text-primary); margin-bottom: 6px;">Your essentials exceed your income</div>
         <p style="font-size: 0.78rem; color: var(--text-tertiary); line-height: 1.5;">
             Right now there's no surplus to allocate. Double-check your numbers on the previous page. Even small adjustments can change the picture.
         </p>
     </div>
-    <a href="{{ url_for('pages.factfind') }}" class="btn-primary" style="display: block; text-align: center; padding: 16px; font-size: 0.95rem; text-decoration: none;">
-        ← Adjust my numbers
+    <a href="{{ url_for('pages.factfind') }}" class="btn-primary" style="display: flex; align-items: center; justify-content: center; gap: 8px; padding: 16px; font-size: 0.95rem; text-decoration: none;">
+        Adjust my numbers
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
     </a>
     {% endif %}
 </div>
 
 <style>
 .amt-opt span{display:inline-block;padding:8px 16px;border-radius:8px;border:1px solid rgba(255,255,255,0.08);background:rgba(255,255,255,0.02);font-size:0.8rem;color:var(--text-secondary);cursor:pointer;transition:all 0.2s ease;}
-.amt-opt input:checked+span{border-color:var(--roman-gold);background:rgba(197,163,93,0.1);color:var(--roman-gold);}
+.amt-opt input:checked+span{border-color:var(--roman-gold);background:rgba(255,255,255,0.06);color:var(--text-primary);}
 </style>
 
 <script>

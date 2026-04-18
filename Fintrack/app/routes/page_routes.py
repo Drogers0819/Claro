@@ -23,7 +23,7 @@ from app.services.simulator_service import (
 )
 import calendar
 from app.services.planner_service import generate_financial_plan, get_plan_summary, can_i_afford
-
+from app.services.whisper_service import generate_action_whisper
 page_bp = Blueprint("pages", __name__)
 
 
@@ -144,41 +144,8 @@ def _get_money_left():
     return money_left, days_remaining
 
 def _ensure_emergency_goal():
-    """Auto-create an emergency fund goal if the user doesn't have one."""
-    if not current_user.factfind_completed or not current_user.monthly_income:
-        return
-    if current_user.skip_emergency_fund:
-        return
-
-    # Check for any emergency goal — active OR completed
-    emergency_exists = Goal.query.filter_by(
-        user_id=current_user.id
-    ).filter(
-        db.or_(
-            Goal.name.ilike("%emergency%"),
-            Goal.name.ilike("%rainy day%"),
-            Goal.name.ilike("%safety net%")
-        )
-    ).first()
-
-    if not emergency_exists:
-        profile = current_user.profile_dict()
-        essentials = float(profile.get("rent_amount") or 0) + \
-                     float(profile.get("bills_amount") or 0) + \
-                     float(profile.get("groceries_estimate") or 0) + \
-                     float(profile.get("transport_estimate") or 0)
-        emergency_target = round(essentials * 3, 2)
-
-        emergency_goal = Goal(
-            user_id=current_user.id,
-            name="Emergency fund",
-            type="savings_target",
-            target_amount=emergency_target,
-            current_amount=0,
-            priority_rank=0
-        )
-        db.session.add(emergency_goal)
-        db.session.commit()
+    """Emergency fund is now opt-in via goal chips. No auto-creation."""
+    return
 
 
 def _build_whisper_data():
@@ -389,7 +356,7 @@ def register():
         db.session.commit()
 
         login_user(user)
-        return redirect(url_for("pages.welcome"))
+        return redirect(url_for("pages.factfind"))
 
     return render_template("register.html")
 
@@ -442,6 +409,10 @@ def overview():
         smart_plan = generate_financial_plan(user_profile, goals_data)
         if "error" not in smart_plan:
             plan_summary = get_plan_summary(smart_plan)
+            # Generate action whisper
+    action_whisper = None
+    if smart_plan and "error" not in smart_plan:
+        action_whisper = generate_action_whisper(current_user, smart_plan, data["goals"])
 
     # Money left (secondary stat)
     money_left, days_remaining = _get_money_left()
@@ -494,6 +465,7 @@ def overview():
         top_categories=categories,
         primary_goal=data["primary_goal"] if data["primary_goal"] else None,
         active_goals_count=data["active_goals"],
+        action_whisper=action_whisper,
     )
 
 
@@ -580,42 +552,6 @@ def plan():
         goals_data = data["goals"]
         smart_plan = generate_financial_plan(user_profile, goals_data)
 
-        # Auto-create emergency fund goal if none exists
-        emergency_exists = Goal.query.filter_by(
-            user_id=current_user.id, status="active"
-        ).filter(
-            db.or_(
-                Goal.name.ilike("%emergency%"),
-                Goal.name.ilike("%rainy day%"),
-                Goal.name.ilike("%safety net%")
-            )
-        ).first()
-
-        if not emergency_exists:
-            essentials = float(user_profile.get("rent_amount") or 0) + \
-                         float(user_profile.get("bills_amount") or 0) + \
-                         float(user_profile.get("groceries_estimate") or 0) + \
-                         float(user_profile.get("transport_estimate") or 0)
-            emergency_target = round(essentials * 3, 2)
-
-            emergency_goal = Goal(
-                user_id=current_user.id,
-                name="Emergency fund",
-                type="savings_target",
-                target_amount=emergency_target,
-                current_amount=0,
-                priority_rank=0
-            )
-            db.session.add(emergency_goal)
-            db.session.commit()
-
-        goals_data = [g.to_dict() for g in Goal.query.filter_by(
-            user_id=current_user.id, status="active"
-        ).order_by(Goal.priority_rank.asc()).all()]
-
-        smart_plan = generate_financial_plan(user_profile, goals_data)
-        if "error" not in smart_plan:
-            plan_summary = get_plan_summary(smart_plan)
 
     # Habit cost calculator
     habit_result = None
@@ -847,8 +783,12 @@ def goal_chips():
             target = None
             deadline = None
             must_hit = False
+            if chip == "emergency":
+                name = "Emergency fund"
+                target = request.form.get("emergency_custom") or request.form.get("emergency_amount")
 
-            if chip == "house":
+
+            elif chip == "house":
                 name = "House deposit"
                 target = request.form.get("house_custom") or request.form.get("house_amount")
                 months = request.form.get("house_timeline", type=int)
@@ -946,24 +886,6 @@ def goal_chips():
 
         db.session.commit()
 
-        # Handle emergency fund preference
-        from flask import session
-        has_emergency = request.form.get("has_emergency", "no")
-        if has_emergency == "skip":
-            current_user.skip_emergency_fund = True
-            db.session.commit()
-            session.pop("emergency_savings", None)
-        else:
-            current_user.skip_emergency_fund = False
-            db.session.commit()
-            emergency_savings = request.form.get("emergency_savings")
-            if emergency_savings:
-                try:
-                    amount = round(float(emergency_savings), 2)
-                    if amount > 0:
-                        session["emergency_savings"] = amount
-                except (ValueError, TypeError):
-                    pass
 
         return redirect(url_for("pages.plan_reveal"))
 
@@ -1064,10 +986,13 @@ def plan_review():
                 "reason": reason
             })
 
+    summary = get_plan_summary(plan) if "error" not in plan else ""
+
     return render_template("plan_review.html",
         plan=plan,
         reasoning=reasoning,
-        profile=user_profile
+        profile=user_profile,
+        summary=summary
     )
 
 # ─── SETTINGS ────────────────────────────────────────────
@@ -1149,10 +1074,13 @@ def factfind():
             other_commitments = 0
         current_user.other_commitments = other_commitments
         current_user.income_day = income_day
+        was_already_completed = current_user.factfind_completed
         current_user.factfind_completed = True
 
         db.session.commit()
-        flash("Financial profile saved", "success")
+        flash("Financial profile updated" if was_already_completed else "Financial profile saved", "success")
+        if was_already_completed:
+            return redirect(url_for("pages.settings"))
         return redirect(url_for("pages.surplus_reveal"))
 
     return render_template("factfind.html", profile=current_user.profile_dict())

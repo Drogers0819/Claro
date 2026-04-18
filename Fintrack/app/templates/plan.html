@@ -2,6 +2,10 @@
 {% block title %}Plan – Claro{% endblock %}
 
 {% block content %}
+<a href="{{ url_for('pages.overview') }}" style="display: inline-flex; align-items: center; gap: 6px; font-size: 0.75rem; color: var(--text-tertiary); text-decoration: none; margin-bottom: 16px;">
+    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+    Overview
+</a>
 <div class="page-header">
     <h1>Your plan</h1>
 </div>
@@ -74,8 +78,8 @@
     <!-- Ledger total -->
     <div style="padding: 18px 0 14px 0; border-top: 1px solid rgba(255,255,255,0.14); margin-top: 6px;">
         <div style="display: flex; justify-content: space-between; align-items: baseline;">
-            <span style="font-size: 0.7rem; color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.06em;">Total allocated</span>
-            <span style="font-size: 1rem; color: var(--text-primary); font-weight: 600; font-variant-numeric: tabular-nums;">£{{ "{:,.2f}".format(smart_plan.surplus) }}/mo</span>
+            <span style="font-size: 0.85rem; color: var(--text-primary); font-weight: 500;">Total allocated</span>
+            <span style="font-size: 1.1rem; color: var(--text-primary); font-weight: 600; font-variant-numeric: tabular-nums;">£{{ "{:,.2f}".format(smart_plan.surplus) }}/mo</span>
         </div>
     </div>
 </div>
@@ -187,7 +191,7 @@
         {{ habit_result.insight.headline }}
     </div>
     <p style="font-size: 0.8rem; color: var(--text-secondary); line-height: 1.7;">{{ habit_result.insight.detail }}</p>
-    <p style="font-size: 0.8rem; color: var(--roman-gold); font-style: italic; margin-top: 8px; padding-top: 8px; border-top: 0.5px solid var(--glass-border);">{{ habit_result.insight.reframe }}</p>
+    <p style="font-size: 0.8rem; color: var(--text-secondary); font-style: italic; margin-top: 8px; padding-top: 8px; border-top: 0.5px solid var(--glass-border);">{{ habit_result.insight.reframe }}</p>
     <div style="margin-top: 20px; padding-top: 16px; border-top: 0.5px solid var(--glass-border);">
         <div style="font-size: 0.7rem; color: var(--text-tertiary); margin-bottom: 16px;">What it adds up to</div>
         <div style="display: flex;">

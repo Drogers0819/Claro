@@ -36,22 +36,17 @@
 {% if not _p %}
 <!-- Step 1 not done: profile prompt -->
 <a href="{{ url_for('pages.factfind') }}" class="factfind-nudge">
-    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--roman-gold)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0; color: var(--text-tertiary);"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
     <span style="flex: 1; font-size: 0.8rem; color: var(--text-secondary);">Complete your profile to generate your financial plan</span>
     <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--text-tertiary)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0;"><path d="M9 18l6-6-6-6"/></svg>
 </a>
 
 {% elif not _g %}
-<!-- Profile done, no goals yet -->
-<div style="display: flex; align-items: center; gap: 10px; padding: 11px 16px; border-radius: 10px; background: rgba(197, 163, 93, 0.05); border: 0.5px solid var(--glass-border); margin-bottom: 24px;">
-    <div style="display: flex; gap: 4px; flex-shrink: 0;">
-        {% for done in [_p, _g] %}
-        <div style="width: 20px; height: 3px; border-radius: 2px; background: {% if done %}var(--roman-gold){% else %}var(--progress-track){% endif %};"></div>
-        {% endfor %}
-    </div>
-    <span style="flex: 1; font-size: 0.8rem; color: var(--text-secondary);">Add a goal and Claro will show you exactly when you'll get there.</span>
-    <a href="{{ url_for('pages.add_goal') }}" style="font-size: 0.75rem; color: var(--roman-gold); white-space: nowrap; text-decoration: none; flex-shrink: 0;">Add goal →</a>
-</div>
+<!-- Profile done, no goals yet — continue wizard -->
+<a href="{{ url_for('pages.goal_chips') }}" style="display: flex; align-items: center; gap: 10px; padding: 11px 16px; border-radius: 10px; background: rgba(255,255,255,0.02); border: 0.5px solid var(--glass-border); margin-bottom: 24px; text-decoration: none;">
+    <span style="flex: 1; font-size: 0.8rem; color: var(--text-secondary);">One step left — choose your goals to finish building your plan.</span>
+    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0; color: var(--text-tertiary);"><path d="M9 18l6-6-6-6"/></svg>
+</a>
 
 {% elif smart_plan and not smart_plan.error %}
 <!-- ════ PLAN STATUS — the hero ════ -->
@@ -81,6 +76,39 @@
         View full plan
     </a>
 </div>
+
+{% if action_whisper %}
+<!-- ACTION WHISPER -->
+<div style="display: flex; align-items: flex-start; gap: 12px; padding: 14px 16px; border-radius: 12px; background: rgba(197,163,93,0.04); border: 0.5px solid rgba(197,163,93,0.08); margin-bottom: 24px;">
+    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--roman-gold)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0; margin-top:1px; opacity:0.7;">
+        {% set ic = action_whisper.icon %}
+        {% if ic == 'bank' %}<polyline points="12 2 2 7 22 7"/><line x1="6" y1="18" x2="6" y2="7"/><line x1="10" y1="18" x2="10" y2="7"/><line x1="14" y1="18" x2="14" y2="7"/><line x1="18" y1="18" x2="18" y2="7"/><line x1="3" y1="22" x2="21" y2="22"/>
+        {% elif ic == 'check-circle' %}<path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>
+        {% elif ic == 'search' %}<circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+        {% elif ic == 'target' %}<circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/>
+        {% elif ic == 'trending-up' %}<polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/>
+        {% elif ic == 'calendar' %}<rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
+        {% elif ic == 'award' %}<circle cx="12" cy="8" r="6"/><path d="M15.477 12.89L17 22l-5-3-5 3 1.523-9.11"/>
+        {% elif ic == 'zap' %}<path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
+        {% elif ic == 'star' %}<polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+        {% elif ic == 'message-circle' %}<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+        {% elif ic == 'bar-chart-2' %}<line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/>
+        {% elif ic == 'pie-chart' %}<path d="M21.21 15.89A10 10 0 1 1 8 2.83"/><path d="M22 12A10 10 0 0 0 12 2v10z"/>
+        {% elif ic == 'clipboard-list' %}<rect x="9" y="2" width="6" height="4" rx="1"/><path d="M9 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2h-3"/><line x1="9" y1="12" x2="15" y2="12"/><line x1="9" y1="16" x2="13" y2="16"/>
+        {% else %}<path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
+        {% endif %}
+    </svg>
+    <div style="flex: 1;">
+        <p style="font-size: 0.82rem; color: var(--text-secondary); line-height: 1.6; margin: 0;">{{ action_whisper.message }}</p>
+        {% if action_whisper.action_label and action_whisper.action_url %}
+        <a href="{{ action_whisper.action_url }}" style="display: inline-flex; align-items: center; gap: 4px; margin-top: 8px; font-size: 0.75rem; color: var(--text-secondary); text-decoration: none;">
+            {{ action_whisper.action_label }}
+            <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+        </a>
+        {% endif %}
+    </div>
+</div>
+{% endif %}
 
 <!-- ════ ACTIVE POTS — compact progress ════ -->
 {% set goal_pots = smart_plan.pots %}

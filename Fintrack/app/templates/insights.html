@@ -46,7 +46,7 @@
         <div class="metric-value hero" style="margin: 4px 0;">£{{ "{:,.2f}".format(predictions.predictions.blended.predicted_total) }}</div>
         <div style="font-size: 0.75rem; color: var(--text-tertiary);">based on {{ predictions.spending_so_far.transaction_count }} transaction{{ "s" if predictions.spending_so_far.transaction_count != 1 else "" }}</div>
         {% if predictions.historical_months_available < 2 %}
-        <div style="font-size: 0.7rem; color: var(--text-tertiary); margin-top: 6px;">Limited history — predictions improve as you add more months.</div>
+        <div style="font-size: 0.7rem; color: var(--text-tertiary); margin-top: 6px;">Limited history. Predictions improve as you add more months.</div>
         {% endif %}
     </div>
     <!-- Supporting stats -->
@@ -73,8 +73,8 @@
 
 <!-- Comparison to average -->
 {% if predictions.comparison.status != "no_comparison" %}
-<div class="glass-card" style="margin-bottom: 32px;">
-    <div style="font-size: 0.72rem; color: var(--text-tertiary); margin-bottom: 12px;">Compared to your average</div>
+<div style="margin-bottom: 32px; padding-top: 24px; border-top: 0.5px solid var(--glass-border);">
+    <div class="section-label">Compared to your average</div>
 
     <!-- Hero: the difference — this is the insight -->
     {% if predictions.comparison.difference != 0 %}
@@ -104,12 +104,12 @@
 
 <!-- Budget status -->
 {% if budget_status %}
+<div style="margin-bottom: 32px; padding-top: 24px; border-top: 0.5px solid var(--glass-border);">
 <div class="section-label">Goal funding forecast</div>
-<div class="glass-card" style="margin-bottom: 32px;">
     <!-- Header: question + badge -->
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
         <div style="font-size: 0.8rem; color: var(--text-primary);">Can you fund your goals this month?</div>
-        <span class="badge {% if budget_status.status == 'healthy' %}badge-success{% elif budget_status.status == 'tight' %}badge-warning{% else %}badge-danger{% endif %}">
+        <span class="badge {% if budget_status.status == 'healthy' %}badge-default{% elif budget_status.status == 'tight' %}badge-warning{% else %}badge-danger{% endif %}">
             {{ budget_status.status }}
         </span>
     </div>

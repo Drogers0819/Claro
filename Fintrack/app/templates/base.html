@@ -29,7 +29,7 @@
         <aside class="sidebar">
             <div class="sidebar-logo-wrap" style="padding: 0 16px;">
                 <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Claro"
-                     style="width: 100%; max-width: 160px; height: auto; margin-bottom: 4px;">
+                     style="width: 40px; height: 40px; object-fit: contain;">
             </div>
 
             <nav class="sidebar-nav">
@@ -103,6 +103,9 @@
     </div>
     <!-- Mobile fixed header bar — solid background prevents avatar overlapping scrolled content -->
     <div class="mobile-header-bar">
+        <a href="{{ url_for('pages.overview') }}" class="mobile-logo" aria-label="Claro home">
+            <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Claro" style="height: 28px; width: auto; display: block;">
+        </a>
         <a href="{{ url_for('pages.settings') }}" class="mobile-settings-btn {% if request.endpoint == 'pages.settings' %}active{% endif %}" aria-label="Profile &amp; settings">
             {{ current_user.name[0] | upper }}
         </a>

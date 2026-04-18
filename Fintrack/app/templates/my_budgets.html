@@ -26,7 +26,7 @@
         <span style="font-size: 0.65rem; color: var(--roman-gold); text-transform: uppercase; letter-spacing: 0.06em;">Savings spotted</span>
     </div>
     <div style="display: flex; align-items: baseline; gap: 6px; margin-bottom: 4px;">
-        <div class="metric-value sm gold">£{{ "{:,.2f}".format(savings.total_potential_annual_saving) }}</div>
+        <div class="metric-value sm">£{{ "{:,.2f}".format(savings.total_potential_annual_saving) }}</div>
         <span style="font-size: 0.75rem; color: var(--text-tertiary);">/ year</span>
     </div>
     <div style="font-size: 0.75rem; color: var(--text-tertiary); margin-bottom: 16px;">potential saving on your subscriptions each year</div>
@@ -52,7 +52,7 @@
             <span style="font-size: 0.875rem; color: var(--text-primary); font-weight: 500;">{{ b.category_name }}</span>
             <div style="display: flex; align-items: center; gap: 6px;">
                 <!-- Spent / limit -->
-                <span style="font-size: 0.8rem; color: {% if b.status == 'exceeded' %}var(--danger){% else %}var(--text-secondary){% endif %};">
+                <span style="font-size: 0.8rem; color: var(--text-secondary);">
                     £{{ "{:,.2f}".format(b.spent) }}
                 </span>
                 <span id="limit-display-{{ b.budget_id }}" style="font-size: 0.8rem; color: var(--text-tertiary);">/ £{{ "{:,.2f}".format(b.monthly_limit) }}</span>

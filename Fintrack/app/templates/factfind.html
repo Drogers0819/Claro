@@ -4,14 +4,28 @@
 {% block content %}
 <div style="max-width: 560px;">
 
-<a href="{{ url_for('pages.settings') if profile.factfind_completed else url_for('pages.overview') }}" style="display: inline-flex; align-items: center; gap: 6px; font-size: 0.75rem; color: var(--text-tertiary); text-decoration: none; margin-bottom: 16px;">
+{% if not profile.factfind_completed %}
+<!-- Onboarding step indicator -->
+<div style="display: flex; align-items: center; gap: 10px; margin-bottom: 24px;">
+    <a href="{{ url_for('pages.welcome') }}" style="font-size: 0.65rem; color: var(--text-tertiary); text-decoration: none; white-space: nowrap; display: inline-flex; align-items: center; gap: 2px;"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>Back</a>
+    <div style="display: flex; gap: 4px; flex: 1;">
+        <div style="flex: 1; height: 2px; border-radius: 1px; background: rgba(255,255,255,0.25);"></div>
+        <div style="flex: 1; height: 2px; border-radius: 1px; background: rgba(255,255,255,0.08);"></div>
+        <div style="flex: 1; height: 2px; border-radius: 1px; background: rgba(255,255,255,0.08);"></div>
+        <div style="flex: 1; height: 2px; border-radius: 1px; background: rgba(255,255,255,0.08);"></div>
+    </div>
+    <span style="font-size: 0.65rem; color: var(--text-tertiary); white-space: nowrap; letter-spacing: 0.04em;">Step 1 of 4</span>
+</div>
+{% else %}
+<a href="{{ url_for('pages.settings') }}" style="display: inline-flex; align-items: center; gap: 6px; font-size: 0.75rem; color: var(--text-tertiary); text-decoration: none; margin-bottom: 16px;">
     <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
-    {% if profile.factfind_completed %}Settings{% else %}Overview{% endif %}
+    Settings
 </a>
+{% endif %}
 
 <div class="page-header">
     <h1>{% if profile.factfind_completed %}Your financial profile{% else %}Let's build your plan{% endif %}</h1>
-    <p>{% if profile.factfind_completed %}Update your details below.{% else %}This takes about 60 seconds. Five questions and we have everything we need.{% endif %}</p>
+    <p>{% if profile.factfind_completed %}Update your details below.{% else %}This takes about 60 seconds. Five sections and we have everything we need.{% endif %}</p>
 </div>
 
 <form method="POST" action="{{ url_for('pages.factfind') }}">
@@ -22,12 +36,13 @@
     <div class="grid-2">
         <div class="form-group" style="margin-bottom: 0;">
             <label class="form-label">Monthly take-home pay (£)</label>
-            <input type="number" name="monthly_income" class="form-input" step="0.01" min="0.01"
+            <input type="number" name="monthly_income" id="ff-income" class="form-input" step="0.01" min="0.01"
                    placeholder="e.g. 1700" required
+                   oninput="updatePartialProjection()"
                    value="{{ '%g' | format(profile.monthly_income) if profile.monthly_income else '' }}">
         </div>
         <div class="form-group" style="margin-bottom: 0;">
-            <label class="form-label">Pay day (day of month)</label>
+            <label class="form-label">Pay day (day of month) <span style="font-size: 0.7rem; color: var(--text-tertiary); font-weight: 400;">(optional)</span></label>
             <input type="number" name="income_day" class="form-input" min="1" max="31"
                    placeholder="e.g. 25"
                    value="{{ profile.income_day | int if profile.income_day else '' }}">
@@ -40,8 +55,9 @@
     <div class="grid-2">
         <div class="form-group" style="margin-bottom: 0;">
             <label class="form-label">Monthly rent or mortgage (£)</label>
-            <input type="number" name="rent_amount" class="form-input" step="0.01" min="0"
+            <input type="number" name="rent_amount" id="ff-rent" class="form-input" step="0.01" min="0"
                    placeholder="e.g. 800" required
+                   oninput="updatePartialProjection()"
                    value="{{ '%g' | format(profile.rent_amount) if profile.rent_amount else '' }}">
         </div>
         <div class="form-group" style="margin-bottom: 0;">
@@ -55,6 +71,16 @@
     <p style="font-size: 0.75rem; color: var(--text-tertiary); margin-top: 12px; margin-bottom: 0; font-style: italic;">
         Council tax, phone, utilities, internet and similar fixed costs.
     </p>
+
+    <!-- ─── PARTIAL PROJECTION — shown as soon as income + rent are entered ─── -->
+    <div id="partial-projection" style="display: none; margin: 16px 0 4px; padding: 14px 16px; border-radius: 12px; background: var(--roman-gold-dim); border: 0.5px solid var(--glass-border);">
+        <div style="font-size: 0.65rem; color: var(--roman-gold); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 6px;">Early estimate</div>
+        <div style="display: flex; align-items: baseline; gap: 6px;">
+            <span id="partial-surplus" style="font-size: 1.4rem; font-weight: 600; color: var(--text-primary); font-variant-numeric: tabular-nums;">£0</span>
+            <span style="font-size: 0.8rem; color: var(--text-secondary);">/month left after rent</span>
+        </div>
+        <p style="font-size: 0.7rem; color: var(--text-tertiary); margin-top: 4px; line-height: 1.5;">Based on income alone, before bills and spending. This will update as you fill in the rest.</p>
+    </div>
 
     <!-- ─── SUBSCRIPTIONS ─── -->
     <div style="display: flex; justify-content: space-between; align-items: baseline; margin-top: 28px; margin-bottom: 10px;">
@@ -99,8 +125,8 @@
     <!-- Custom subscription -->
     <div style="display: flex; gap: 8px; align-items: stretch; margin-bottom: 14px;">
         <input type="text" id="custom-sub-name" class="form-input" placeholder="Other subscription" style="flex: 1;">
-        <input type="number" id="custom-sub-cost" class="form-input" placeholder="£/mo" step="0.01" min="0" style="width: 88px;">
-        <button type="button" onclick="addCustomSub()" class="btn-secondary btn-sm" style="white-space: nowrap; align-self: stretch;">+ Add</button>
+        <input type="number" id="custom-sub-cost" class="form-input form-input-sm" placeholder="£/mo" step="0.01" min="0" style="width: 88px;">
+        <button type="button" onclick="addCustomSub()" class="btn-secondary btn-sm" style="white-space: nowrap; align-self: stretch;">Add</button>
     </div>
 
     <!-- Custom subs list -->
@@ -149,7 +175,7 @@
         <div id="pay-input-{{ p.id }}" style="display: none;">
             <div style="display: flex; align-items: center; gap: 10px; padding: 8px 14px; border-radius: 8px; background: rgba(255,255,255,0.02); border: 0.5px solid var(--glass-border);">
                 <span style="font-size: 0.78rem; color: var(--text-secondary); flex: 1;">{{ p.label }}</span>
-                <input type="number" class="form-input payment-amount" data-id="{{ p.id }}" placeholder="£/mo" step="0.01" min="0" oninput="updatePaymentTotal()" style="width: 90px; padding: 6px 10px; font-size: 0.8rem;">
+                <input type="number" class="form-input form-input-sm payment-amount" data-id="{{ p.id }}" placeholder="£/mo" step="0.01" min="0" oninput="updatePaymentTotal()" style="width: 90px;">
             </div>
         </div>
         {% endfor %}
@@ -157,8 +183,8 @@
         <!-- Custom payment -->
         <div style="display: flex; gap: 8px; align-items: stretch; margin-top: 4px;">
             <input type="text" id="custom-pay-name" class="form-input" placeholder="Other payment (e.g. car finance, ISA, pension)" style="flex: 1;">
-            <input type="number" id="custom-pay-cost" class="form-input" placeholder="£/mo" step="0.01" min="0" style="width: 88px;">
-            <button type="button" onclick="addCustomPayment()" class="btn-secondary btn-sm" style="white-space: nowrap; align-self: stretch;">+ Add</button>
+            <input type="number" id="custom-pay-cost" class="form-input form-input-sm" placeholder="£/mo" step="0.01" min="0" style="width: 88px;">
+            <button type="button" onclick="addCustomPayment()" class="btn-secondary btn-sm" style="white-space: nowrap; align-self: stretch;">Add</button>
         </div>
 
         <div id="custom-payments-list" style="margin-top: 6px;"></div>
@@ -177,13 +203,13 @@
 
     <div class="grid-2">
         <div class="form-group" style="margin-bottom: 0;">
-            <label class="form-label">Monthly groceries (£)</label>
+            <label class="form-label">Monthly groceries (£) <span style="font-size: 0.7rem; color: var(--text-tertiary); font-weight: 400;">(optional)</span></label>
             <input type="number" name="groceries_estimate" class="form-input" step="0.01" min="0"
                    placeholder="e.g. 250"
                    value="{{ '%g' | format(profile.groceries_estimate) if profile.groceries_estimate else '' }}">
         </div>
         <div class="form-group" style="margin-bottom: 0;">
-            <label class="form-label">Monthly transport (£)</label>
+            <label class="form-label">Monthly transport (£) <span style="font-size: 0.7rem; color: var(--text-tertiary); font-weight: 400;">(optional)</span></label>
             <input type="number" name="transport_estimate" class="form-input" step="0.01" min="0"
                    placeholder="e.g. 80"
                    value="{{ '%g' | format(profile.transport_estimate) if profile.transport_estimate else '' }}">
@@ -214,7 +240,7 @@
             {% if profile.factfind_completed %}
                 Update profile
             {% else %}
-                Save & continue →
+                Save & continue <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
             {% endif %}
         </button>
         {% if profile.factfind_completed %}
@@ -225,7 +251,7 @@
 </div>
 
 <style>
-.sub-chip.selected{border-color:var(--roman-gold)!important;background:rgba(197,163,93,0.1)!important;color:var(--roman-gold)!important;}
+.sub-chip.selected{border-color:var(--roman-gold)!important;background:rgba(255,255,255,0.06)!important;color:var(--text-primary)!important;}
 .custom-sub-item{display:flex;justify-content:space-between;align-items:center;padding:6px 12px;margin-bottom:6px;border-radius:8px;background:rgba(255,255,255,0.02);border:0.5px solid rgba(255,255,255,0.06);font-size:0.78rem;color:var(--text-secondary);}
 .custom-sub-remove{background:none;border:none;color:var(--text-tertiary);cursor:pointer;font-size:0.75rem;padding:2px 6px;}
 .custom-sub-remove:hover{color:var(--danger);}
@@ -358,6 +384,21 @@ function renderCustomPayments() {
             '<button type="button" class="custom-sub-remove" onclick="removeCustomPayment(' + i + ')">✕</button>';
         container.appendChild(div);
     });
+}
+
+function updatePartialProjection() {
+    var income = parseFloat(document.getElementById('ff-income').value) || 0;
+    var rent = parseFloat(document.getElementById('ff-rent').value) || 0;
+    var projection = document.getElementById('partial-projection');
+    var surplusEl = document.getElementById('partial-surplus');
+    if (income > 0 && rent > 0) {
+        var surplus = income - rent;
+        surplusEl.textContent = (surplus < 0 ? '\u2212' : '') + '\u00a3' + Math.abs(Math.round(surplus)).toLocaleString('en-GB');
+        surplusEl.style.color = surplus < 0 ? 'var(--danger)' : 'var(--text-primary)';
+        projection.style.display = 'block';
+    } else {
+        projection.style.display = 'none';
+    }
 }
 
 </script>

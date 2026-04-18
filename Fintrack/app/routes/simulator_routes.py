@@ -69,7 +69,7 @@ def project_all_goals():
                 "goal_id": goal.id,
                 "goal_name": goal.name,
                 "type": goal.type,
-                "message": "No target amount — ongoing allocation",
+                "message": "No target amount. Ongoing allocation.",
                 "monthly_allocation": float(goal.monthly_allocation) if goal.monthly_allocation else 0
             })
             continue
