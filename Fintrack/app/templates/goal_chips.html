@@ -45,25 +45,13 @@
 
     <form method="POST" action="{{ url_for('pages.goal_chips') }}" id="goalForm">
 
-        <!-- Emergency savings question — bare, no card wrapper -->
-        <div style="margin-bottom: 24px; padding-bottom: 20px; border-bottom: 0.5px solid var(--glass-border);">
-            <div style="font-size: 0.9rem; color: var(--text-primary); margin-bottom: 12px;">Do you have any savings set aside for emergencies?</div>
-            <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 10px;">
-                <label class="amt-opt"><input type="radio" name="has_emergency" value="no" style="display:none;" onchange="selOpt(this); document.getElementById('emergency-amount').style.display='none'; document.getElementById('emergency-skip-note').style.display='none';" checked><span>No, starting fresh</span></label>
-                <label class="amt-opt"><input type="radio" name="has_emergency" value="yes" style="display:none;" onchange="selOpt(this); document.getElementById('emergency-amount').style.display='block'; document.getElementById('emergency-skip-note').style.display='none';"><span>Yes, I have some</span></label>
-                <label class="amt-opt"><input type="radio" name="has_emergency" value="skip" style="display:none;" onchange="selOpt(this); document.getElementById('emergency-amount').style.display='none'; document.getElementById('emergency-skip-note').style.display='block';"><span>I'll manage my own safety net</span></label>
-            </div>
-            <div id="emergency-skip-note" style="display: none; padding: 10px 14px; border-radius: 8px; background: rgba(255,255,255,0.02); border: 0.5px solid rgba(255,255,255,0.06); margin-top: 6px;">
-                <span style="font-size: 0.75rem; color: var(--text-tertiary); line-height: 1.5;">No emergency fund will be included in your plan. Your full surplus will be allocated across your goals. You can add one later from the Goals page.</span>
-            </div>
-            <input type="number" name="emergency_savings" id="emergency-amount" class="form-input" style="display: none; margin-top: 10px;" placeholder="Roughly how much? (£)" step="100" min="0">
-        </div>
 
         <div style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 14px;">Now, what are you working toward?</div>
 
         <!-- Goal chips -->
         <div style="display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 28px;">
             {% set chips = [
+                {"id": "emergency", "label": "Emergency fund"},
                 {"id": "house", "label": "House deposit"},
                 {"id": "holiday", "label": "Holiday"},
                 {"id": "baby", "label": "Baby fund"},
@@ -86,6 +74,20 @@
 
         <!-- Detail sections -->
         <div id="goal-details" style="display: flex; flex-direction: column; gap: 14px; margin-bottom: 28px;">
+
+            <!-- Emergency fund -->
+            <div class="goal-detail" id="detail-emergency" style="display: none;">
+                <div class="glass-card" style="padding: 16px 20px;">
+                    <div style="font-size: 0.85rem; color: var(--text-primary); margin-bottom: 10px;">🛡️ Emergency fund — how much?</div>
+                    <p style="font-size: 0.75rem; color: var(--text-tertiary); margin-bottom: 10px; line-height: 1.5;">A safety net for unexpected costs. Most advisers recommend 3 months of essential expenses.</p>
+                    <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 10px;">
+                        <label class="amt-opt"><input type="radio" name="emergency_amount" value="1000" style="display:none;" onchange="selOpt(this)"><span>£1,000</span></label>
+                        <label class="amt-opt"><input type="radio" name="emergency_amount" value="3000" style="display:none;" onchange="selOpt(this)"><span>£3,000</span></label>
+                        <label class="amt-opt"><input type="radio" name="emergency_amount" value="5000" style="display:none;" onchange="selOpt(this)"><span>£5,000</span></label>
+                    </div>
+                    <input type="number" name="emergency_custom" class="form-input" placeholder="Or enter a custom amount" step="500" min="500">
+                </div>
+            </div>
 
             <!-- House deposit -->
             <div class="goal-detail" id="detail-house" style="display: none;">

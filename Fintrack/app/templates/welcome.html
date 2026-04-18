@@ -6,100 +6,29 @@
     <h1>Good {{ greeting }}, {{ current_user.name.split()[0] }}</h1>
 </div>
 
-<!-- Trial framing — most important thing to communicate first -->
+<!-- Trial framing -->
 <div style="display: flex; align-items: center; gap: 10px; padding: 12px 16px; border-radius: 10px; background: var(--roman-gold-dim); border: 0.5px solid var(--glass-border); margin-bottom: 24px; max-width: 560px;">
     <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--roman-gold)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0;"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
     <span style="font-size: 0.8rem; color: var(--text-secondary); line-height: 1.5;">Your 14-day full access has started. No card needed.</span>
 </div>
 
-<p style="font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 4px; max-width: 560px;">Two steps and Claro becomes genuinely useful.</p>
-<p style="font-size: 0.77rem; color: var(--text-tertiary); margin-bottom: 20px; max-width: 560px; line-height: 1.6;">Takes about 60 seconds. Your plan, goals, and monthly check-in are all built from this.</p>
+<p style="font-size: 0.82rem; color: var(--text-secondary); margin-bottom: 4px; max-width: 560px;">Let's build your financial plan.</p>
+<p style="font-size: 0.77rem; color: var(--text-tertiary); margin-bottom: 28px; max-width: 560px; line-height: 1.6;">Takes about 90 seconds. We'll ask about your income and costs, you'll choose your goals, and Claro builds a plan that puts every pound to work.</p>
 
-<!-- Progress strip -->
-<div style="display: flex; align-items: center; gap: 8px; margin-bottom: 32px; max-width: 560px;">
-    {% for i in range(2) %}
-    <div style="flex: 1; height: 3px; border-radius: 2px;
-        {% if i < steps_done %}background: rgba(255,255,255,0.25);
-        {% elif i == steps_done %}background: rgba(255,255,255,0.15);
-        {% else %}background: rgba(255,255,255,0.06);{% endif %}">
-    </div>
-    {% endfor %}
-    <span style="font-size: 0.7rem; color: var(--text-tertiary); white-space: nowrap; margin-left: 4px;">{{ steps_done }}/2 done</span>
-</div>
-
-<!-- Steps -->
-<div style="display: flex; flex-direction: column; gap: 12px; max-width: 560px;">
-
-    <!-- Step 1: Financial profile -->
-    <div class="glass-card" style="{% if profile_done %}opacity: 0.55;{% elif not profile_done %}border-color: rgba(255,255,255,0.15);{% endif %}">
+<div style="max-width: 560px;">
+    <div class="glass-card" style="border-color: rgba(197,163,93,0.3);">
         <div style="display: flex; align-items: flex-start; gap: 16px;">
-            <div style="flex-shrink: 0; width: 36px; height: 36px; border-radius: 50%;
-                display: flex; align-items: center; justify-content: center;
-                {% if profile_done %}background: rgba(72,187,120,0.1); color: rgba(72,187,120,0.8);
-                {% else %}background: rgba(255,255,255,0.05); color: var(--text-tertiary);{% endif %}">
-                {% if profile_done %}
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-                {% else %}
-                <span style="font-size: 0.8rem; font-family: var(--font-sans);">1</span>
-                {% endif %}
+            <div style="flex-shrink: 0; width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: rgba(255,255,255,0.05); color: var(--text-tertiary);">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
             </div>
             <div style="flex: 1;">
-                <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 4px;">
-                    <span style="font-size: 0.95rem; color: var(--text-primary);">Your financial profile</span>
-                    {% if profile_done %}
-                    <span style="font-size: 0.65rem; color: rgba(72,187,120,0.8); background: rgba(72,187,120,0.1); padding: 2px 8px; border-radius: 20px;">done</span>
-                    {% endif %}
-                </div>
-                <p style="font-size: 0.8rem; color: var(--text-tertiary); line-height: 1.6; margin-bottom: {% if not profile_done %}14px{% else %}0{% endif %};">
-                    Tell us your income, rent, and bills. Takes 60 seconds. Everything else in Claro depends on this.
+                <span style="font-size: 0.95rem; color: var(--text-primary); display: block; margin-bottom: 4px;">Your financial profile & goals</span>
+                <p style="font-size: 0.8rem; color: var(--text-tertiary); line-height: 1.6; margin-bottom: 14px;">
+                    Income, rent, bills, subscriptions — then choose what you're working toward. Claro handles the rest.
                 </p>
-                {% if not profile_done %}
-                <a href="{{ url_for('pages.factfind') }}" class="btn-primary btn-sm">Set up my profile</a>
-                {% endif %}
+                <a href="{{ url_for('pages.factfind') }}" class="btn-primary btn-sm">Get started</a>
             </div>
         </div>
     </div>
-
-    <!-- Step 2: First goal -->
-    {% set step2_active = profile_done and not goals_done %}
-    {% set step2_locked = not profile_done %}
-    <div class="glass-card" style="{% if goals_done %}opacity: 0.55;{% elif step2_active %}border-color: rgba(255,255,255,0.15);{% elif step2_locked %}opacity: 0.35;{% endif %}">
-        <div style="display: flex; align-items: flex-start; gap: 16px;">
-            <div style="flex-shrink: 0; width: 36px; height: 36px; border-radius: 50%;
-                display: flex; align-items: center; justify-content: center;
-                {% if goals_done %}background: rgba(72,187,120,0.1); color: rgba(72,187,120,0.8);
-                {% else %}background: rgba(255,255,255,0.05); color: var(--text-tertiary);{% endif %}">
-                {% if goals_done %}
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-                {% else %}
-                <span style="font-size: 0.8rem; font-family: var(--font-sans);">2</span>
-                {% endif %}
-            </div>
-            <div style="flex: 1;">
-                <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 4px;">
-                    <span style="font-size: 0.95rem; color: var(--text-primary);">Create your first goal</span>
-                    {% if goals_done %}
-                    <span style="font-size: 0.65rem; color: rgba(72,187,120,0.8); background: rgba(72,187,120,0.1); padding: 2px 8px; border-radius: 20px;">done</span>
-                    {% endif %}
-                </div>
-                <p style="font-size: 0.8rem; color: var(--text-tertiary); line-height: 1.6; margin-bottom: {% if step2_active %}14px{% else %}0{% endif %};">
-                    A house deposit, emergency fund, a holiday. Add a goal and Claro will show you exactly when you'll get there.
-                </p>
-                {% if step2_active %}
-                <a href="{{ url_for('pages.add_goal') }}" class="btn-primary btn-sm">Add a goal</a>
-                {% endif %}
-            </div>
-        </div>
-    </div>
-
-</div>
-
-<!-- Skip link -->
-<div style="margin-top: 24px; max-width: 560px;">
-    <a href="{{ url_for('pages.overview') }}" style="font-size: 0.75rem; color: var(--text-tertiary); text-decoration: none; display: inline-flex; align-items: center; gap: 4px;">
-        Skip for now
-        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
-    </a>
-    <span style="font-size: 0.72rem; color: var(--text-tertiary); opacity: 0.6;"> You can return to this page anytime from the overview.</span>
 </div>
 {% endblock %}

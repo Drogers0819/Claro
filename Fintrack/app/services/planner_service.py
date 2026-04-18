@@ -111,28 +111,10 @@ def _build_pots(surplus, essentials, goals, debts=None):
                 "goal_id": debt.get("goal_id")
             })
 
-    # Only add emergency pot if user has an emergency goal
-    has_emergency_goal = any(_is_emergency(g.get("name", "")) for g in goals)
-    if has_emergency_goal:
-        emergency_target = round(essentials * EMERGENCY_MONTHS, 2)
-        existing_emergency = _find_existing_savings(goals, "emergency")
-
-        pots.append({
-            "name": "Emergency fund",
-            "type": "emergency",
-            "target": emergency_target,
-            "current": existing_emergency,
-            "monthly_amount": 0,
-            "deadline": None,
-            "priority": 1,
-            "completed": existing_emergency >= emergency_target,
-            "goal_id": _find_goal_id(goals, "emergency")
-        })
+    # Emergency fund is now a regular goal — no special pot created here
 
     user_goals = _parse_goals(goals, today)
     for i, goal in enumerate(user_goals):
-        if goal["type"] == "emergency":
-            continue
         pots.append({
             "name": goal["name"],
             "type": goal.get("pot_type", "savings"),
@@ -180,19 +162,7 @@ def _parse_goals(goals, today):
         name = goal.get("name", "")
         goal_type = goal.get("type", "savings_target")
 
-        if _is_emergency(name):
-            parsed.append({
-                "name": name,
-                "type": "emergency",
-                "target": float(goal.get("target_amount") or 0),
-                "current": float(goal.get("current_amount") or 0),
-                "goal_id": goal.get("id") or goal.get("goal_id"),
-                "deadline": None,
-                "months_until_deadline": None,
-                "pot_type": "emergency"
-            })
-            continue
-
+        
         deadline = goal.get("deadline")
         if isinstance(deadline, str) and deadline:
             try:
@@ -230,15 +200,10 @@ def _parse_goals(goals, today):
         })
 
     with_deadline = [g for g in parsed if g["months_until_deadline"] is not None]
-    without_deadline = [g for g in parsed if g["months_until_deadline"] is None and g["type"] != "emergency"]
+    without_deadline = [g for g in parsed if g["months_until_deadline"] is None]
     with_deadline.sort(key=lambda g: g["months_until_deadline"])
 
     return with_deadline + without_deadline
-
-
-def _is_emergency(name):
-    lower = name.lower()
-    return any(term in lower for term in ["emergency", "rainy day", "safety net", "safety fund"])
 
 
 def _is_debt_goal(name):
@@ -311,10 +276,9 @@ def _staged_allocation(pots, surplus, essentials):
         return pots
 
     # ── Gather all active pots for proportional allocation ──
-    emergency = next((p for p in pots if p["type"] == "emergency" and not p["completed"]), None)
     debt_pots = [p for p in pots if (p["type"] == "debt" or _is_debt_goal(p.get("name", "")))
-                 and not p.get("completed") and p["type"] not in ("lifestyle", "buffer", "emergency")]
-    goal_pots = [p for p in pots if p["type"] not in ("lifestyle", "buffer", "emergency", "debt")
+                 and not p.get("completed") and p["type"] not in ("lifestyle", "buffer")]
+    goal_pots = [p for p in pots if p["type"] not in ("lifestyle", "buffer", "debt")
                  and not _is_debt_goal(p.get("name", ""))
                  and not p.get("completed")
                  and p.get("goal_id") not in funded_must_hits]
@@ -322,7 +286,7 @@ def _staged_allocation(pots, surplus, essentials):
     # Build allocation pool: every active pot with remaining > 0
     pool = []
 
-    for pot in debt_pots + ([emergency] if emergency else []) + goal_pots:
+    for pot in debt_pots + goal_pots:
         if not pot or pot.get("completed"):
             continue
         remaining = max((pot.get("target") or 0) - (pot.get("current") or 0), 0)
@@ -337,17 +301,12 @@ def _staged_allocation(pots, surplus, essentials):
         elif pot["type"] == "debt" or _is_debt_goal(pot.get("name", "")):
             # Debt: target aggressive clearance in 3 months
             monthly_need = remaining / 3
-        elif pot.get("type") == "emergency":
-            # Emergency: target completion in 12 months
-            monthly_need = remaining / 12
         else:
             # No deadline: spread over 12 months as a baseline
             monthly_need = remaining / 12
 
         # Priority weights
-        if pot["type"] == "emergency" or pot.get("type") == "emergency":
-            weight = 1.5
-        elif pot["type"] == "debt" or _is_debt_goal(pot.get("name", "")):
+        if pot["type"] == "debt" or _is_debt_goal(pot.get("name", "")):
             weight = 2.0
         elif months and months <= 6:
             weight = 4.0
@@ -758,7 +717,7 @@ def _generate_alerts(phases, monthly_projections, pots):
                                   f"Consider extending the deadline or adjusting the target."
                     })
 
-    paused_goals = [p for p in pots if p["type"] not in ("lifestyle", "buffer", "emergency", "debt")
+    paused_goals = [p for p in pots if p["type"] not in ("lifestyle", "buffer", "debt")
                     and not _is_debt_goal(p.get("name", ""))
                     and p["monthly_amount"] == 0 and not p.get("completed")]
     if paused_goals and debt_pots:
@@ -768,15 +727,6 @@ def _generate_alerts(phases, monthly_projections, pots):
             "severity": "info",
             "message": f"Your {names} {'is' if len(paused_goals) == 1 else 'are'} paused while debt is being cleared. "
                       f"This is the fastest way to free up money for your goals."
-        })
-
-    emergency = next((p for p in pots if p["type"] == "emergency"), None)
-    if emergency and not debt_pots and emergency["current"] < emergency["target"] * 0.5:
-        alerts.append({
-            "type": "low_emergency_fund",
-            "severity": "warning",
-            "message": f"Your emergency fund is below 50%. The plan prioritises building this to "
-                      f"£{emergency['target']:,.0f} ({EMERGENCY_MONTHS} months of essentials)."
         })
 
     return alerts
