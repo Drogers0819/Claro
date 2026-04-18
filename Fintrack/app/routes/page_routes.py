@@ -23,7 +23,7 @@ from app.services.simulator_service import (
 )
 import calendar
 from app.services.planner_service import generate_financial_plan, get_plan_summary, can_i_afford
-
+from app.services.whisper_service import generate_action_whisper
 page_bp = Blueprint("pages", __name__)
 
 
@@ -409,6 +409,10 @@ def overview():
         smart_plan = generate_financial_plan(user_profile, goals_data)
         if "error" not in smart_plan:
             plan_summary = get_plan_summary(smart_plan)
+            # Generate action whisper
+    action_whisper = None
+    if smart_plan and "error" not in smart_plan:
+        action_whisper = generate_action_whisper(current_user, smart_plan, data["goals"])
 
     # Money left (secondary stat)
     money_left, days_remaining = _get_money_left()
@@ -461,6 +465,7 @@ def overview():
         top_categories=categories,
         primary_goal=data["primary_goal"] if data["primary_goal"] else None,
         active_goals_count=data["active_goals"],
+        action_whisper=action_whisper,
     )
 
 

@@ -82,6 +82,19 @@
     </a>
 </div>
 
+{% if action_whisper %}
+<!-- ACTION WHISPER -->
+<div style="display: flex; align-items: flex-start; gap: 12px; padding: 14px 16px; border-radius: 12px; background: rgba(197,163,93,0.04); border: 0.5px solid rgba(197,163,93,0.08); margin-bottom: 24px;">
+    <span style="font-size: 1.2rem; flex-shrink: 0; margin-top: 1px;">{{ action_whisper.icon }}</span>
+    <div style="flex: 1;">
+        <p style="font-size: 0.82rem; color: var(--text-secondary); line-height: 1.6; margin: 0;">{{ action_whisper.message }}</p>
+        {% if action_whisper.action_label and action_whisper.action_url %}
+        <a href="{{ action_whisper.action_url }}" style="display: inline-block; margin-top: 8px; font-size: 0.75rem; color: var(--roman-gold); text-decoration: none;">{{ action_whisper.action_label }} →</a>
+        {% endif %}
+    </div>
+</div>
+{% endif %}
+
 <!-- ════ ACTIVE POTS — compact progress ════ -->
 {% set goal_pots = smart_plan.pots %}
 {% if goal_pots %}
