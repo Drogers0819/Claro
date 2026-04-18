@@ -53,7 +53,7 @@
             <div>
                 <span style="font-size: 0.85rem; color: var(--text-primary);">{{ pot.name | replace(' (must-hit)', '') }}</span>
                 {% if pot.completed %}
-                <span style="font-size: 0.65rem; padding: 2px 8px; border-radius: 4px; background: rgba(72,187,120,0.1); color: rgba(72,187,120,0.8); margin-left: 6px;">done</span>
+                <span style="font-size: 0.65rem; padding: 2px 8px; border-radius: 4px; background: var(--success-bg); color: var(--success-text); margin-left: 6px;">done</span>
                 {% endif %}
             </div>
             <span style="font-size: 0.85rem; color: var(--text-primary); font-weight: 500; font-variant-numeric: tabular-nums;">£{{ "{:,.2f}".format(pot.monthly_amount) }}/mo</span>
@@ -102,7 +102,7 @@
         {% if phase.completed_pots %}
         <div>
             {% for name in phase.completed_pots %}
-            <span style="font-size: 0.65rem; padding: 2px 8px; border-radius: 4px; background: rgba(72,187,120,0.08); color: rgba(72,187,120,0.7); margin-right: 4px;">{{ name }} · done</span>
+            <span style="font-size: 0.65rem; padding: 2px 8px; border-radius: 4px; background: var(--success-bg); color: var(--success-text); margin-right: 4px;">{{ name }} · done</span>
             {% endfor %}
         </div>
         {% endif %}

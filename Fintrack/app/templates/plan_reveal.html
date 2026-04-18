@@ -7,10 +7,10 @@
     <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 24px;">
         <a href="{{ url_for('pages.goal_chips') }}" style="font-size: 0.65rem; color: var(--text-tertiary); text-decoration: none; white-space: nowrap; display: inline-flex; align-items: center; gap: 2px;"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>Back</a>
         <div style="display: flex; gap: 4px; flex: 1;">
-            <div style="flex: 1; height: 2px; border-radius: 1px; background: rgba(255,255,255,0.25);"></div>
-            <div style="flex: 1; height: 2px; border-radius: 1px; background: rgba(255,255,255,0.25);"></div>
-            <div style="flex: 1; height: 2px; border-radius: 1px; background: rgba(255,255,255,0.25);"></div>
-            <div style="flex: 1; height: 2px; border-radius: 1px; background: rgba(255,255,255,0.25);"></div>
+            <div class="step-bar step-bar--complete"></div>
+            <div class="step-bar step-bar--complete"></div>
+            <div class="step-bar step-bar--complete"></div>
+            <div class="step-bar step-bar--complete"></div>
         </div>
         <span style="font-size: 0.65rem; color: var(--text-tertiary); white-space: nowrap; letter-spacing: 0.04em;">Step 4 of 4</span>
     </div>
@@ -21,11 +21,11 @@
 
     <!-- Income breakdown -->
     <div class="reveal-section" style="animation: fadeUp 0.6s ease 0.2s both;">
-        <div style="display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 0.5px solid rgba(255,255,255,0.06);">
+        <div style="display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 0.5px solid var(--glass-divider);">
             <span style="font-size: 0.85rem; color: var(--text-tertiary);">Your income</span>
             <span style="font-size: 0.85rem; color: var(--text-primary); font-weight: 500;">£{{ "{:,.0f}".format(plan.income) }}/month</span>
         </div>
-        <div style="display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 0.5px solid rgba(255,255,255,0.06);">
+        <div style="display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 0.5px solid var(--glass-divider);">
             <span style="font-size: 0.85rem; color: var(--text-tertiary);">Essentials</span>
             <span style="font-size: 0.85rem; color: var(--text-secondary);">−£{{ "{:,.0f}".format(plan.essentials) }}</span>
         </div>
@@ -41,11 +41,11 @@
 
         {% for pot in plan.pots %}
         {% if pot.monthly_amount > 0 %}
-        <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px 0; {% if not loop.last %}border-bottom: 0.5px solid rgba(255,255,255,0.04);{% endif %} animation: fadeUp 0.5s ease {{ 0.8 + loop.index0 * 0.15 }}s both;">
+        <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px 0; {% if not loop.last %}border-bottom: 0.5px solid var(--glass-border-subtle);{% endif %} animation: fadeUp 0.5s ease {{ 0.8 + loop.index0 * 0.15 }}s both;">
             <div>
                 <span style="font-size: 0.9rem; color: var(--text-primary);">{{ pot.name | replace(' (must-hit)', '') }}</span>
                 {% if pot.type == 'debt' or 'pay off' in pot.name|lower or 'credit' in pot.name|lower or 'loan' in pot.name|lower or 'overdraft' in pot.name|lower %}
-                <span style="font-size: 0.6rem; padding: 1px 6px; border-radius: 4px; background: rgba(255,255,255,0.06); color: var(--text-tertiary); margin-left: 6px;">priority</span>
+                <span style="font-size: 0.6rem; padding: 1px 6px; border-radius: 4px; background: var(--glass-divider); color: var(--text-tertiary); margin-left: 6px;">priority</span>
                 {% endif %}
                 {% if pot.months_to_target is defined and pot.months_to_target %}
                 <span style="font-size: 0.7rem; color: var(--text-tertiary); margin-left: 6px;">~{{ pot.months_to_target }} months</span>
@@ -63,7 +63,7 @@
             {% endif %}
         {% endfor %}
         {% if paused %}
-        <div style="margin-top: 12px; padding: 10px 14px; border-radius: 8px; background: rgba(255,255,255,0.02); border: 0.5px solid rgba(255,255,255,0.04);">
+        <div style="margin-top: 12px; padding: 10px 14px; border-radius: 8px; background: rgba(255,255,255,0.02); border: 0.5px solid var(--glass-border-subtle);">
             <span style="font-size: 0.75rem; color: var(--text-tertiary);">
                 {{ paused|map(attribute='name')|join(', ') }} · starts after higher priorities are cleared
             </span>
@@ -81,11 +81,11 @@
             <div style="display: flex; flex-direction: column; align-items: center;">
                 <div style="width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.7rem; font-weight: 500;
                     {% if loop.first %}background: rgba(255,255,255,0.1); color: var(--text-primary); border: 1px solid rgba(255,255,255,0.2);
-                    {% else %}background: rgba(255,255,255,0.04); color: var(--text-tertiary); border: 1px solid rgba(255,255,255,0.06);{% endif %}">
+                    {% else %}background: var(--glass-border-subtle); color: var(--text-tertiary); border: 1px solid var(--glass-divider);{% endif %}">
                     {{ phase.phase }}
                 </div>
                 {% if not loop.last %}
-                <div style="width: 1px; flex: 1; min-height: 20px; background: rgba(255,255,255,0.06); margin: 4px 0;"></div>
+                <div style="width: 1px; flex: 1; min-height: 20px; background: var(--glass-divider); margin: 4px 0;"></div>
                 {% endif %}
             </div>
             <div style="flex: 1; padding-top: 4px;">

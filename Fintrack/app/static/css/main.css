@@ -20,6 +20,19 @@
     --progress-track: rgba(255, 255, 255, 0.1);
     --popover-bg: #101e15;
 
+    /* Glass layer tokens */
+    --glass-border-subtle: rgba(255, 255, 255, 0.04);
+    --glass-divider: rgba(255, 255, 255, 0.06);
+    --glass-chip: rgba(255, 255, 255, 0.08);
+
+    /* Success color family */
+    --success-bg: rgba(72, 187, 120, 0.1);
+    --success-text: rgba(72, 187, 120, 0.8);
+
+    /* Danger color family */
+    --danger-bg: rgba(252, 129, 129, 0.08);
+    --danger-border: rgba(252, 129, 129, 0.2);
+
     /* Spacing scale */
     --space-xs: 8px;
     --space-sm: 12px;
@@ -1592,6 +1605,17 @@ body.theme-mist .badge-danger {
 
 .progress-fill.danger {
     background: var(--danger);
+}
+
+/* Step progress indicator (onboarding wizard) */
+.step-bar {
+    flex: 1;
+    height: 2px;
+    border-radius: 1px;
+    background: rgba(255, 255, 255, 0.1);
+}
+.step-bar--complete {
+    background: rgba(255, 255, 255, 0.5);
 }
 
 /* ===== THEME SWATCH ===== */

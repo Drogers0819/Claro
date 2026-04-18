@@ -663,6 +663,21 @@ Both require:
 - **Yes** → Show the button disabled with instructional text ("Select a goal above to continue"), not hidden
 - Never hide the primary CTA. Disabled + instruction = clear path. Hidden = dead end.
 
+### 12.3 Button disabled state implementation
+
+**When to disable:**
+- Required selection not made (goal_chips: no goals checked)
+- Required input empty (surplus_reveal: no budget selected; companion: no message typed)
+- Form has no unsaved changes (settings forms)
+
+**Pattern** (goal_chips.html is canonical):
+- Button starts with `disabled` attribute in HTML
+- Button text is instructional when disabled: "Select X above to continue"
+- JS updates `disabled` and button label text on every relevant user interaction — use `textContent` on a `<span>` inside the button, not `innerHTML`
+- `.btn-primary:disabled` in main.css handles visual state (opacity 0.38, cursor not-allowed)
+
+**Do NOT:** hide the button, show it with no instruction, or use a different visual treatment.
+
 ---
 
 ## 13. Notifications and Feedback

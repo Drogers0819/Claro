@@ -7,10 +7,10 @@
     <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 24px;">
         <a href="{{ url_for('pages.factfind') }}" style="font-size: 0.65rem; color: var(--text-tertiary); text-decoration: none; white-space: nowrap; display: inline-flex; align-items: center; gap: 2px;"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>Back</a>
         <div style="display: flex; gap: 4px; flex: 1;">
-            <div style="flex: 1; height: 2px; border-radius: 1px; background: rgba(255,255,255,0.25);"></div>
-            <div style="flex: 1; height: 2px; border-radius: 1px; background: rgba(255,255,255,0.25);"></div>
-            <div style="flex: 1; height: 2px; border-radius: 1px; background: rgba(255,255,255,0.08);"></div>
-            <div style="flex: 1; height: 2px; border-radius: 1px; background: rgba(255,255,255,0.08);"></div>
+            <div class="step-bar step-bar--complete"></div>
+            <div class="step-bar step-bar--complete"></div>
+            <div class="step-bar"></div>
+            <div class="step-bar"></div>
         </div>
         <span style="font-size: 0.65rem; color: var(--text-tertiary); white-space: nowrap; letter-spacing: 0.04em;">Step 2 of 4</span>
     </div>
@@ -100,8 +100,8 @@
             <p style="font-size: 0.7rem; color: var(--text-tertiary); margin-top: 10px;">Adjustable any time after your plan is built.</p>
         </div>
 
-        <button type="submit" class="btn-primary btn-full" style="display: flex; align-items: center; justify-content: center; gap: 8px;">
-            Choose my goals
+        <button type="submit" class="btn-primary btn-full" id="chooseBtn" style="display: flex; align-items: center; justify-content: center; gap: 8px;" disabled>
+            <span id="chooseBtnText">Select a budget above to continue</span>
             <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
         </button>
     </form>
@@ -121,22 +121,33 @@
     {% endif %}
 
 <style>
-.amt-opt span{display:inline-block;padding:8px 16px;border-radius:8px;border:1px solid rgba(255,255,255,0.08);background:rgba(255,255,255,0.02);font-size:0.8rem;color:var(--text-secondary);cursor:pointer;transition:all 0.2s ease;}
-.amt-opt input:checked+span{border-color:var(--roman-gold);background:rgba(255,255,255,0.06);color:var(--text-primary);}
+.amt-opt span{display:inline-block;padding:8px 16px;border-radius:8px;border:1px solid var(--glass-chip);background:rgba(255,255,255,0.02);font-size:0.8rem;color:var(--text-secondary);cursor:pointer;transition:all 0.2s ease;}
+.amt-opt input:checked+span{border-color:var(--roman-gold);background:var(--glass-divider);color:var(--text-primary);}
 </style>
 
 <script>
+function checkBudgetSelected() {
+    var val = document.getElementById('lifestyle-hidden').value;
+    var btn = document.getElementById('chooseBtn');
+    var label = document.getElementById('chooseBtnText');
+    var selected = val && parseFloat(val) > 0;
+    btn.disabled = !selected;
+    label.textContent = selected ? 'Choose my goals' : 'Select a budget above to continue';
+}
 function selLifestyle(radio) {
     document.getElementById('lifestyle-hidden').value = radio.value;
     document.getElementById('lifestyle-custom').value = '';
+    checkBudgetSelected();
 }
 function customLifestyle(input) {
     var val = input.value;
     if (val && parseFloat(val) > 0) {
         document.getElementById('lifestyle-hidden').value = val;
-        // Uncheck radio buttons
         document.querySelectorAll('input[name="lifestyle_budget"][type="radio"]').forEach(function(r) { r.checked = false; });
+    } else {
+        document.getElementById('lifestyle-hidden').value = '';
     }
+    checkBudgetSelected();
 }
 </script>
 {% endblock %}

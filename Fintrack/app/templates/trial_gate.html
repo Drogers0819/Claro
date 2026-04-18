@@ -17,7 +17,7 @@
         </div>
         {% for pot in plan.pots %}
         {% if pot.monthly_amount > 0 and pot.type not in ['lifestyle', 'buffer'] %}
-        <div style="display: flex; justify-content: space-between; align-items: center; padding: 7px 0; border-top: 0.5px solid rgba(255,255,255,0.04);">
+        <div style="display: flex; justify-content: space-between; align-items: center; padding: 7px 0; border-top: 0.5px solid var(--glass-border-subtle);">
             <span style="font-size: 0.8rem; color: var(--text-secondary);">{{ pot.name | replace(' (must-hit)', '') }}</span>
             <div style="text-align: right;">
                 <span style="font-size: 0.8rem; color: var(--text-primary); font-weight: 500;">£{{ "{:,.0f}".format(pot.monthly_amount) }}/mo</span>
@@ -107,7 +107,7 @@
                         ("Joint plan", false, false, true)
                     ] %}
                     {% for label, pro, plus, joint in rows %}
-                    <tr style="border-top: 0.5px solid rgba(255,255,255,0.04);">
+                    <tr style="border-top: 0.5px solid var(--glass-border-subtle);">
                         <td style="padding: 7px 0;">{{ label }}</td>
                         <td style="text-align: center; padding: 7px 8px;">
                             {% if pro == true %}✓{% elif pro == false %}×{% else %}{{ pro }}{% endif %}

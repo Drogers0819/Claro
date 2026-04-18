@@ -32,7 +32,7 @@
 <div class="glass-card" style="margin-bottom: 24px;">
     <div class="section-label" style="margin-bottom: 14px;">What you reported</div>
     {% for entry in existing.entries %}
-    <div style="display: flex; justify-content: space-between; align-items: center; padding: 8px 0; {% if not loop.last %}border-bottom: 0.5px solid rgba(255,255,255,0.04);{% endif %}">
+    <div style="display: flex; justify-content: space-between; align-items: center; padding: 8px 0; {% if not loop.last %}border-bottom: 0.5px solid var(--glass-border-subtle);{% endif %}">
         <span style="font-size: 0.85rem; color: var(--text-primary);">{{ entry.pot_name }}</span>
         <div style="text-align: right;">
             <span style="font-size: 0.85rem; {% if entry.difference >= 0 %}color: var(--text-primary){% else %}color: var(--danger){% endif %};">£{{ "{:,.2f}".format(entry.actual_amount) }}</span>
@@ -57,12 +57,12 @@
 
     <form method="POST" action="{{ url_for('pages.checkin') }}">
         {% for pot in pots %}
-        <div style="padding: 14px 0; {% if not loop.last %}border-bottom: 0.5px solid rgba(255,255,255,0.04);{% endif %}">
+        <div style="padding: 14px 0; {% if not loop.last %}border-bottom: 0.5px solid var(--glass-border-subtle);{% endif %}">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
                 <div>
                     <span style="font-size: 0.9rem; color: var(--text-primary);">{{ pot.name | replace(' (must-hit)', '') }}</span>
                     {% if pot.paused %}
-                    <span style="font-size: 0.6rem; padding: 1px 6px; border-radius: 4px; background: rgba(255,255,255,0.04); color: var(--text-tertiary); margin-left: 6px;">paused in plan</span>
+                    <span style="font-size: 0.6rem; padding: 1px 6px; border-radius: 4px; background: var(--glass-border-subtle); color: var(--text-tertiary); margin-left: 6px;">paused in plan</span>
                     {% endif %}
                     {% if pot.target %}
                     <span style="font-size: 0.7rem; color: var(--text-tertiary); margin-left: 6px;">£{{ "{:,.0f}".format(pot.current) }} of £{{ "{:,.0f}".format(pot.target) }}</span>
@@ -91,10 +91,10 @@
 
 <!-- Past check-ins -->
 {% if past_checkins %}
-<div style="margin-top: 32px; padding-top: 24px; border-top: 0.5px solid rgba(255,255,255,0.06);">
+<div style="margin-top: 32px; padding-top: 24px; border-top: 0.5px solid var(--glass-divider);">
     <div class="section-label" style="margin-bottom: 14px;">History</div>
     {% for ci in past_checkins %}
-    <div style="display: flex; justify-content: space-between; align-items: center; padding: 8px 0; {% if not loop.last %}border-bottom: 0.5px solid rgba(255,255,255,0.04);{% endif %}">
+    <div style="display: flex; justify-content: space-between; align-items: center; padding: 8px 0; {% if not loop.last %}border-bottom: 0.5px solid var(--glass-border-subtle);{% endif %}">
         <span style="font-size: 0.85rem; color: var(--text-secondary);">
             {{ ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"][ci.month - 1] }} {{ ci.year }}
         </span>

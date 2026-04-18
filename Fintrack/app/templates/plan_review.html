@@ -59,7 +59,7 @@
     <div class="section-label" style="margin-bottom: 14px;">Allocation breakdown</div>
 
     {% for item in reasoning %}
-    <div style="padding: 14px 0; {% if not loop.last %}border-bottom: 0.5px solid rgba(255,255,255,0.04);{% endif %}">
+    <div style="padding: 14px 0; {% if not loop.last %}border-bottom: 0.5px solid var(--glass-border-subtle);{% endif %}">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
             <div style="display: flex; align-items: center; gap: 8px;">
                 {% if item.type == 'emergency' %}
@@ -112,7 +112,7 @@
     <div class="section-label" style="margin-top: 28px; margin-bottom: 14px;">Things to note</div>
 
     {% for alert in plan.alerts %}
-    <div style="padding: 12px 14px; border-radius: 8px; background: rgba(255,255,255,0.02); border: 0.5px solid rgba(255,255,255,0.06); margin-bottom: 8px;">
+    <div style="padding: 12px 14px; border-radius: 8px; background: rgba(255,255,255,0.02); border: 0.5px solid var(--glass-divider); margin-bottom: 8px;">
         <div style="font-size: 0.78rem; color: var(--text-secondary); line-height: 1.5;">{{ alert.message }}</div>
     </div>
     {% endfor %}

@@ -50,7 +50,7 @@
 
 {% elif smart_plan and not smart_plan.error %}
 <!-- ════ PLAN STATUS — the hero ════ -->
-<div class="gold-card" style="margin-bottom: {% if action_whisper %}0{% else %}24px{% endif %};">
+<div class="gold-card" style="margin-bottom: 24px;">
     <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 12px;">
         <span class="ai-pulse"></span>
         <span style="font-size: 0.65rem; color: var(--roman-gold); text-transform: uppercase; letter-spacing: 0.06em;">Your plan</span>
@@ -60,50 +60,31 @@
     <div style="display: flex; gap: 12px; margin-top: 14px; padding-top: 12px; border-top: 0.5px solid var(--glass-border);">
         <div style="flex: 1;">
             <div style="font-size: 0.6rem; color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 2px;">Income</div>
-            <div style="font-size: 1.05rem; color: var(--text-primary); font-weight: 500;">£{{ "{:,.2f}".format(smart_plan.income) }}</div>
+            <div style="font-size: min(1.05rem, 3.5vw); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--text-primary); font-weight: 500;">£{{ "{:,.2f}".format(smart_plan.income) }}</div>
         </div>
         <div style="flex: 1;">
             <div style="font-size: 0.6rem; color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 2px;">Fixed costs</div>
-            <div style="font-size: 1.05rem; color: var(--text-secondary);">£{{ "{:,.2f}".format(smart_plan.essentials) }}</div>
+            <div style="font-size: min(1.05rem, 3.5vw); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--text-secondary);">£{{ "{:,.2f}".format(smart_plan.essentials) }}</div>
         </div>
         <div style="flex: 1;">
             <div style="font-size: 0.6rem; color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 2px;">Surplus</div>
-            <div style="font-size: 1.05rem; color: var(--text-secondary); font-weight: 500;">£{{ "{:,.2f}".format(smart_plan.surplus) }}</div>
+            <div style="font-size: min(1.05rem, 3.5vw); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--text-secondary); font-weight: 500;">£{{ "{:,.2f}".format(smart_plan.surplus) }}</div>
         </div>
     </div>
 
     <div style="margin-top: 14px; padding-top: 14px; border-top: 0.5px solid var(--glass-border);">
         <a href="{{ url_for('pages.plan') }}" class="btn-secondary btn-sm">View full plan</a>
     </div>
-</div>
 
-{% if action_whisper %}
-<!-- Action whisper — bare section below plan card, full message visible -->
-<div style="padding: 12px 0; margin-bottom: 24px; border-top: 0.5px solid var(--glass-border); display: flex; align-items: flex-start; gap: 10px;">
-    <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0; margin-top:3px; color: var(--text-tertiary); opacity:0.5;">
-        {% set ic = action_whisper.icon %}
-        {% if ic == 'bank' %}<path d="M12 2l10 5H2l10-5z"/><line x1="2" y1="7" x2="22" y2="7"/><line x1="6" y1="7" x2="6" y2="18"/><line x1="10" y1="7" x2="10" y2="18"/><line x1="14" y1="7" x2="14" y2="18"/><line x1="18" y1="7" x2="18" y2="18"/><line x1="3" y1="22" x2="21" y2="22"/>
-        {% elif ic == 'check-circle' %}<path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>
-        {% elif ic == 'calendar' %}<rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
-        {% elif ic == 'trending-up' %}<polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/>
-        {% elif ic == 'target' %}<circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/>
-        {% elif ic == 'clipboard-list' %}<path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/><line x1="9" y1="12" x2="15" y2="12"/><line x1="9" y1="16" x2="13" y2="16"/>
-        {% elif ic == 'award' %}<circle cx="12" cy="8" r="7"/><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"/>
-        {% elif ic == 'zap' %}<polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
-        {% elif ic == 'star' %}<polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
-        {% elif ic == 'message-circle' %}<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
-        {% elif ic == 'bar-chart-2' %}<line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/>
-        {% elif ic == 'search' %}<circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
-        {% else %}<path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>{% endif %}
-    </svg>
-    <div style="flex: 1;">
-        <p style="font-size: 0.82rem; color: var(--text-secondary); line-height: 1.5; margin: 0 0 6px;">{{ action_whisper.message }}</p>
+    {% if action_whisper %}
+    <div style="margin-top: 12px; padding-top: 10px; border-top: 0.5px solid var(--glass-divider);">
+        <p style="font-size: 0.78rem; color: var(--text-tertiary); line-height: 1.5; margin: 0 {% if action_whisper.action_url and action_whisper.action_label %}0 6px{% else %}0 0{% endif %};">{{ action_whisper.message }}</p>
         {% if action_whisper.action_url and action_whisper.action_label %}
-        <a href="{{ action_whisper.action_url }}" style="font-size: 0.75rem; color: var(--text-tertiary); text-decoration: underline; text-underline-offset: 2px;">{{ action_whisper.action_label }}</a>
+        <a href="{{ action_whisper.action_url }}" style="font-size: 0.72rem; color: var(--text-tertiary); text-decoration: underline; text-underline-offset: 2px;">{{ action_whisper.action_label }}</a>
         {% endif %}
     </div>
+    {% endif %}
 </div>
-{% endif %}
 
 <!-- Life check-in nudge — only shown when Claro decides it's time (Dan wires show_life_checkin_nudge) -->
 {% if show_life_checkin_nudge %}
@@ -132,7 +113,7 @@
             <div style="display: flex; align-items: center; gap: 6px;">
                 <span style="font-size: 0.85rem; color: var(--text-primary);">{{ pot.name | replace(' (must-hit)', '') }}</span>
                 {% if pot.completed %}
-                <span style="font-size: 0.6rem; padding: 1px 6px; border-radius: 4px; background: rgba(72,187,120,0.1); color: rgba(72,187,120,0.8);">done</span>
+                <span style="font-size: 0.6rem; padding: 1px 6px; border-radius: 4px; background: var(--success-bg); color: var(--success-text);">done</span>
                 {% endif %}
             </div>
             <div style="display: flex; align-items: center; gap: 6px;">
