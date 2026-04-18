@@ -25,7 +25,7 @@
     <div style="margin-bottom: 20px; padding: 0 0 16px; border-bottom: 0.5px solid var(--glass-border);">
         <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 12px;">
             <span style="font-size: 0.8rem; color: var(--text-tertiary);">Monthly income</span>
-            <span style="font-size: 1rem; color: var(--text-primary);">£{{ "{:,.0f}".format(income) }}</span>
+            <span style="font-size: 0.85rem; color: var(--text-secondary);">£{{ "{:,.0f}".format(income) }}</span>
         </div>
         <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 10px;">
             <span style="font-size: 0.8rem; color: var(--text-tertiary);">Rent / mortgage</span>
@@ -72,10 +72,10 @@
 
     <!-- Lifestyle budget question — bare, no card wrapper -->
     <form method="POST" action="{{ url_for('pages.surplus_reveal') }}">
-        <div style="margin-bottom: 24px;">
-            <div style="font-size: 0.9rem; color: var(--text-primary); margin-bottom: 6px;">One more thing</div>
-            <p style="font-size: 0.78rem; color: var(--text-tertiary); margin-bottom: 14px; line-height: 1.5;">
-                After your savings and goal allocations are set, how much do you realistically need each month to still enjoy life? Think meals out, social plans, clothes, hobbies. The things that keep you sane.
+        <div style="margin-bottom: 24px; padding-top: 20px; border-top: 0.5px solid var(--glass-border);">
+            <div style="font-size: 0.95rem; color: var(--text-primary); font-weight: 500; margin-bottom: 4px;">Monthly lifestyle budget</div>
+            <p style="font-size: 0.78rem; color: var(--text-tertiary); margin-bottom: 16px; line-height: 1.5;">
+                How much do you need each month to still enjoy life — meals out, social plans, hobbies? We'll ring-fence this so your plan doesn't squeeze you.
             </p>
 
             <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 10px;">
@@ -94,18 +94,16 @@
                 {% endfor %}
             </div>
 
-            <input type="number" name="lifestyle_custom" id="lifestyle-custom" class="form-input" placeholder="Or enter your own amount (£)" step="10" min="0" max="{{ surplus | int }}" oninput="customLifestyle(this)" style="margin-top: 6px;">
+            <input type="number" name="lifestyle_custom" id="lifestyle-custom" class="form-input form-input-sm" placeholder="Or enter your own amount (£)" step="10" min="0" max="{{ surplus | int }}" oninput="customLifestyle(this)" style="margin-top: 6px;">
 
             <input type="hidden" name="lifestyle_budget" id="lifestyle-hidden" value="">
 
-            <p style="font-size: 0.7rem; color: var(--text-tertiary); margin-top: 10px;">
-                We'll set this aside as your lifestyle pot so the plan doesn't squeeze you. You can always adjust it later.
-            </p>
+            <p style="font-size: 0.7rem; color: var(--text-tertiary); margin-top: 10px;">Adjustable any time after your plan is built.</p>
         </div>
 
         <button type="submit" class="btn-primary" style="width: 100%; padding: 16px; font-size: 0.95rem; display: flex; align-items: center; justify-content: center; gap: 8px;">
             Choose my goals
-            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
         </button>
     </form>
 
@@ -119,7 +117,7 @@
     </div>
     <a href="{{ url_for('pages.factfind') }}" class="btn-primary" style="display: flex; align-items: center; justify-content: center; gap: 8px; padding: 16px; font-size: 0.95rem; text-decoration: none;">
         Adjust my numbers
-        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
     </a>
     {% endif %}
 </div>

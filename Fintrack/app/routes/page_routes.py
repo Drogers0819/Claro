@@ -1074,10 +1074,13 @@ def factfind():
             other_commitments = 0
         current_user.other_commitments = other_commitments
         current_user.income_day = income_day
+        was_already_completed = current_user.factfind_completed
         current_user.factfind_completed = True
 
         db.session.commit()
-        flash("Financial profile saved", "success")
+        flash("Financial profile updated" if was_already_completed else "Financial profile saved", "success")
+        if was_already_completed:
+            return redirect(url_for("pages.settings"))
         return redirect(url_for("pages.surplus_reveal"))
 
     return render_template("factfind.html", profile=current_user.profile_dict())

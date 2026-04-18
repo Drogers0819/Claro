@@ -15,6 +15,46 @@
 
 <!-- Entries go below this line, newest first -->
 
+## 2026-04-18 — Centered h1 left as-is on "reveal" page
+**Mistake**: plan_reveal.html had `text-align: center` on the page-header and h1 ("Here's your plan."). The assumption was that a dramatic reveal moment warranted centering — treating it as a theatrical exception to the left-align rule.
+**Fix**: Removed `text-align: center` and the inline `font-size: 1.6rem` override. Left-aligned header, standard size.
+**Rule**: Page headers (`h1`, `.page-header`) are always left-aligned. There are no exceptions — not for reveals, not for emotional moments. Consistency IS the quality signal.
+
+## 2026-04-18 — Sign-out separator (border-top) created awkward visual gap on mobile
+**Mistake**: The mobile sign-out button on settings.html had `border-top: 0.5px solid var(--glass-border)` to visually separate it from the account section above. This created a cramped physical line that looked disconnected — the margin above felt too tight between the line and the content, while the margin below felt excessive.
+**Fix**: Removed `border-top` and `padding-top: 20px`. Increased `margin-top` from `32px` to `48px`. Changed color from `var(--text-tertiary)` to `var(--danger)` at `opacity: 0.65`.
+**Rule**: Don't use `border-top` to create semantic separation for a sign-out/destructive action. Use generous `margin-top` + danger color. Colour creates semantic hierarchy; borders create visual clutter when misapplied.
+
+## 2026-04-18 — glass-card on plan overview summary and methodology text in plan_review
+**Mistake**: plan_review.html had a `glass-card` around the "Plan overview" numbers (income/essentials/surplus) and a box-styled div around the methodology explanation text. Both are informational content, not discrete financial objects the user acts on.
+**Fix**: Plan overview section: removed `glass-card` class, replaced with bare div + `border-bottom` separator. Methodology text: removed box styling, changed to plain `<p>` in `var(--text-tertiary)`.
+**Rule**: If the content explains HOW the plan works or summarises numbers from elsewhere, it is not a glass-card candidate. Reserve cards for the things users interact with (goal cards, budget rows, transaction lists).
+
+## 2026-04-18 — Emoji icon strings in whisper_service.py rendered as raw text in production
+**Mistake**: whisper_service.py returned emoji strings (🏦 ✅ 🎯 📋 etc.) as the `icon` field. These were rendered directly in the overview template as text, not as icon glyphs, depending on font stack and OS.
+**Fix**: Replaced all emoji strings with semantic Lucide icon names (e.g. "bank", "check-circle", "target", "clipboard-list"). Overview template maps these names to inline SVG paths via a Jinja2 if/elif block. When adding new icon names to the service, always update the template mapping at the same time.
+**Rule**: Service files must never contain emoji. Icon references should be semantic string names that a template mapping can resolve to an inline SVG.
+
+## 2026-04-17 — Competing progress systems treated as a surface issue
+**Mistake**: Welcome page had a 2-step checklist ("Complete profile → Choose goals") while a separate 4-step onboarding wizard (factfind → surplus_reveal → goal_chips → plan_reveal) already covered the same ground. This was initially described as "architecturally fine but confusing" — which was settling for a known UX failure.
+**Fix**: Removed the welcome page from the new-user flow entirely. Register → factfind directly. The wizard handles full onboarding. Welcome page still exists but is no longer in the path.
+**Rule**: Two competing progress trackers for the same user journey is always a structural problem, not a surface one. One flow, one tracker. When you spot this pattern, the fix is to eliminate the redundant system — not add copy clarifying which one to follow.
+
+## 2026-04-17 — AI whisper (gold-card) placed on reveal/hero page instead of review page
+**Mistake**: plan_reveal.html had an AI commentary block (gold-card with Claro label) at the top of the page, immediately before the plan numbers. Reveal moments are the "wow" — a block of AI text before the numbers interrupts the payoff and dilutes it.
+**Fix**: Removed the gold-card from plan_reveal entirely. Moved it to plan_review (the detail/confirmation step) where users are actively reading and comparing — contextually appropriate for commentary.
+**Rule**: AI whisper blocks belong on review/detail pages only. Never on reveal or hero moments. Reveal pages should be clean — numbers first, no preamble.
+
+## 2026-04-17 — CTA hidden with `display: none` until condition met
+**Mistake**: goal_chips.html hid the "Build my plan" button entirely (`display: none`) until at least one chip was selected. Users had no affordance that a next step existed — the page appeared to have no exit.
+**Fix**: Changed to an always-visible disabled button with instructional text ("Select a goal above to continue"). `updateBtn()` enables the button, updates the label, and appends the Lucide arrow-right icon when a selection is made.
+**Rule**: Never hide the primary CTA behind a condition. Show it disabled with a short explanation of what the user needs to do. Disabled with hint = clear path forward. Hidden = dead end.
+
+## 2026-04-17 — Chip selected state used white opacity border instead of gold
+**Mistake**: `.goal-chip.selected` and `.sub-chip.selected` on goal_chips.html and factfind.html used `border-color: rgba(255,255,255,0.3)`. On a dark glass surface, this border is nearly imperceptible — the selected and unselected states look identical at a glance.
+**Fix**: Changed to `border-color: var(--roman-gold)` on all chip selected states across factfind, goal_chips, and surplus_reveal. Gold provides a clear, semantically consistent selection signal.
+**Rule**: Selected chip states always use `border-color: var(--roman-gold)`. White opacity borders are invisible on dark backgrounds — they communicate nothing. If it's selected, it must be obviously selected.
+
 ## 2026-04-17 — metric-label class misused for AI card pulse headers across 6 templates
 **Mistake**: `goal_detail.html`, `insights.html`, `checkin.html`, `recurring.html`, `macros.html`, `scenario.html` all used `.metric-label` class on AI card header labels (e.g. "Projection", "Prediction", "Savings spotted", "Claro") with a gold color override. `.metric-label` is for ≤3-word noun labels above numbers only — never for AI card headers.
 **Fix**: Replaced `.metric-label` + gold override with inline `font-size: 0.65rem; color: var(--roman-gold); text-transform: uppercase; letter-spacing: 0.06em;` — matching the pattern already established in overview.html, plan.html, budgets.html AI cards.

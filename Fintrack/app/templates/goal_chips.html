@@ -78,14 +78,14 @@
             <!-- Emergency fund -->
             <div class="goal-detail" id="detail-emergency" style="display: none;">
                 <div class="glass-card" style="padding: 16px 20px;">
-                    <div style="font-size: 0.85rem; color: var(--text-primary); margin-bottom: 10px;">🛡️ Emergency fund — how much?</div>
+                    <div style="font-size: 0.85rem; color: var(--text-primary); margin-bottom: 10px;">Emergency fund: how much?</div>
                     <p style="font-size: 0.75rem; color: var(--text-tertiary); margin-bottom: 10px; line-height: 1.5;">A safety net for unexpected costs. Most advisers recommend 3 months of essential expenses.</p>
                     <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 10px;">
                         <label class="amt-opt"><input type="radio" name="emergency_amount" value="1000" style="display:none;" onchange="selOpt(this)"><span>£1,000</span></label>
                         <label class="amt-opt"><input type="radio" name="emergency_amount" value="3000" style="display:none;" onchange="selOpt(this)"><span>£3,000</span></label>
                         <label class="amt-opt"><input type="radio" name="emergency_amount" value="5000" style="display:none;" onchange="selOpt(this)"><span>£5,000</span></label>
                     </div>
-                    <input type="number" name="emergency_custom" class="form-input" placeholder="Or enter a custom amount" step="500" min="500">
+                    <input type="number" name="emergency_custom" class="form-input form-input-sm" placeholder="Or enter a custom amount" step="500" min="500">
                 </div>
             </div>
 
@@ -98,7 +98,7 @@
                         <label class="amt-opt"><input type="radio" name="house_amount" value="15000" style="display:none;" onchange="selOpt(this)"><span>£15,000</span></label>
                         <label class="amt-opt"><input type="radio" name="house_amount" value="25000" style="display:none;" onchange="selOpt(this)"><span>£25,000</span></label>
                     </div>
-                    <input type="number" name="house_custom" class="form-input" style="margin-top: 10px;" placeholder="Or enter a custom amount" step="1000" min="1000">
+                    <input type="number" name="house_custom" class="form-input form-input-sm" style="margin-top: 10px;" placeholder="Or enter a custom amount" step="1000" min="1000">
                     <div class="timeline-label">When are you hoping to buy?</div>
                     <div style="display: flex; flex-wrap: wrap; gap: 8px;">
                         <label class="amt-opt"><input type="radio" name="house_timeline" value="6" style="display:none;" onchange="selOpt(this); checkMustHit('house', 6)"><span>6 months</span></label>
@@ -109,7 +109,7 @@
                     </div>
                     <div id="house-mustHit" class="must-hit-box" style="display: none;">
                         <label style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
-                            <input type="checkbox" name="house_must_hit" value="1" style="accent-color: var(--roman-gold); width: 16px; height: 16px;">
+                            <input type="checkbox" name="house_must_hit" value="1" style="width: 16px; height: 16px;">
                             <div>
                                 <span style="font-size: 0.8rem; color: var(--text-primary);">This is a hard deadline</span>
                                 <span class="must-hit-disclaimer">Allocations will prioritise this goal, which may reduce funding to other pots including your emergency fund</span>
@@ -129,10 +129,10 @@
                         <label class="amt-opt"><input type="radio" name="holiday_timeline" value="12" style="display:none;" onchange="selOpt(this); checkMustHit('holiday', 12)"><span>1 year</span></label>
                         <label class="amt-opt"><input type="radio" name="holiday_timeline" value="0" style="display:none;" onchange="selOpt(this); checkMustHit('holiday', 0)"><span>No rush</span></label>
                     </div>
-                    <input type="number" name="holiday_amount" class="form-input" placeholder="Budget (£) e.g. 2000" step="100" min="100">
+                    <input type="number" name="holiday_amount" class="form-input form-input-sm" placeholder="Budget (£) e.g. 2000" step="100" min="100">
                     <div id="holiday-mustHit" class="must-hit-box" style="display: none;">
                         <label style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
-                            <input type="checkbox" name="holiday_must_hit" value="1" style="accent-color: var(--roman-gold); width: 16px; height: 16px;">
+                            <input type="checkbox" name="holiday_must_hit" value="1" style="width: 16px; height: 16px;">
                             <div>
                                 <span style="font-size: 0.8rem; color: var(--text-primary);">This trip is booked. I have to go.</span>
                                 <span class="must-hit-disclaimer">Allocations will prioritise this goal, which may reduce funding to other pots including your emergency fund</span>
@@ -160,7 +160,7 @@
                     </div>
                     <div id="baby-mustHit" class="must-hit-box" style="display: none;">
                         <label style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
-                            <input type="checkbox" name="baby_must_hit" value="1" style="accent-color: var(--roman-gold); width: 16px; height: 16px;">
+                            <input type="checkbox" name="baby_must_hit" value="1" style="width: 16px; height: 16px;">
                             <div>
                                 <span style="font-size: 0.8rem; color: var(--text-primary);">This is a firm timeline</span>
                                 <span class="must-hit-disclaimer">Allocations will prioritise this goal, which may reduce funding to other pots including your emergency fund</span>
@@ -175,7 +175,7 @@
                 <div style="padding: 12px 0 16px; border-top: 0.5px solid var(--glass-border); margin-top: 8px;">
                     <div style="font-size: 0.85rem; color: var(--text-primary); margin-bottom: 10px; display: flex; align-items: center; gap: 7px;">{{ chip_icon('debt') }} What debt are you clearing?</div>
                     <input type="text" name="debt_name" class="form-input" placeholder="e.g. Credit card, overdraft" style="margin-bottom: 10px;">
-                    <input type="number" name="debt_amount" class="form-input" placeholder="How much do you owe? (£)" step="100" min="100">
+                    <input type="number" name="debt_amount" class="form-input form-input-sm" placeholder="How much do you owe? (£)" step="100" min="100">
                     <div class="timeline-label">When do you want this cleared?</div>
                     <div style="display: flex; flex-wrap: wrap; gap: 8px;">
                         <label class="amt-opt"><input type="radio" name="debt_timeline" value="3" style="display:none;" onchange="selOpt(this); checkMustHit('debt', 3)"><span>3 months</span></label>
@@ -185,7 +185,7 @@
                     </div>
                     <div id="debt-mustHit" class="must-hit-box" style="display: none;">
                         <label style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
-                            <input type="checkbox" name="debt_must_hit" value="1" style="accent-color: var(--roman-gold); width: 16px; height: 16px;">
+                            <input type="checkbox" name="debt_must_hit" value="1" style="width: 16px; height: 16px;">
                             <div>
                                 <span style="font-size: 0.8rem; color: var(--text-primary);">I need this cleared by this date</span>
                                 <span class="must-hit-disclaimer">Allocations will prioritise this goal, which may reduce funding to other pots including your emergency fund</span>
@@ -199,7 +199,7 @@
             <div class="goal-detail" id="detail-car" style="display: none;">
                 <div style="padding: 12px 0 16px; border-top: 0.5px solid var(--glass-border); margin-top: 8px;">
                     <div style="font-size: 0.85rem; color: var(--text-primary); margin-bottom: 10px; display: flex; align-items: center; gap: 7px;">{{ chip_icon('car') }} Car: roughly how much?</div>
-                    <input type="number" name="car_amount" class="form-input" placeholder="e.g. 5000" step="500" min="500">
+                    <input type="number" name="car_amount" class="form-input form-input-sm" placeholder="e.g. 5000" step="500" min="500">
                     <div class="timeline-label">When do you need it?</div>
                     <div style="display: flex; flex-wrap: wrap; gap: 8px;">
                         <label class="amt-opt"><input type="radio" name="car_timeline" value="3" style="display:none;" onchange="selOpt(this); checkMustHit('car', 3)"><span>3 months</span></label>
@@ -210,7 +210,7 @@
                     </div>
                     <div id="car-mustHit" class="must-hit-box" style="display: none;">
                         <label style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
-                            <input type="checkbox" name="car_must_hit" value="1" style="accent-color: var(--roman-gold); width: 16px; height: 16px;">
+                            <input type="checkbox" name="car_must_hit" value="1" style="width: 16px; height: 16px;">
                             <div>
                                 <span style="font-size: 0.8rem; color: var(--text-primary);">I need this by the deadline</span>
                                 <span class="must-hit-disclaimer">Allocations will prioritise this goal, which may reduce funding to other pots including your emergency fund</span>
@@ -229,7 +229,7 @@
                         <label class="amt-opt"><input type="radio" name="wedding_amount" value="10000" style="display:none;" onchange="selOpt(this)"><span>£10,000</span></label>
                         <label class="amt-opt"><input type="radio" name="wedding_amount" value="20000" style="display:none;" onchange="selOpt(this)"><span>£20,000</span></label>
                     </div>
-                    <input type="number" name="wedding_custom" class="form-input" placeholder="Or enter custom amount" step="1000" min="1000">
+                    <input type="number" name="wedding_custom" class="form-input form-input-sm" placeholder="Or enter custom amount" step="1000" min="1000">
                     <div class="timeline-label">When?</div>
                     <div style="display: flex; flex-wrap: wrap; gap: 8px;">
                         <label class="amt-opt"><input type="radio" name="wedding_timeline" value="6" style="display:none;" onchange="selOpt(this); checkMustHit('wedding', 6)"><span>6 months</span></label>
@@ -239,7 +239,7 @@
                     </div>
                     <div id="wedding-mustHit" class="must-hit-box" style="display: none;">
                         <label style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
-                            <input type="checkbox" name="wedding_must_hit" value="1" style="accent-color: var(--roman-gold); width: 16px; height: 16px;">
+                            <input type="checkbox" name="wedding_must_hit" value="1" style="width: 16px; height: 16px;">
                             <div>
                                 <span style="font-size: 0.8rem; color: var(--text-primary);">The date is set. Non-negotiable.</span>
                                 <span class="must-hit-disclaimer">Allocations will prioritise this goal, which may reduce funding to other pots including your emergency fund</span>
@@ -253,7 +253,7 @@
             <div class="goal-detail" id="detail-student" style="display: none;">
                 <div style="padding: 12px 0 16px; border-top: 0.5px solid var(--glass-border); margin-top: 8px;">
                     <div style="font-size: 0.85rem; color: var(--text-primary); margin-bottom: 10px; display: flex; align-items: center; gap: 7px;">{{ chip_icon('student') }} Student loan: how much to clear?</div>
-                    <input type="number" name="student_amount" class="form-input" placeholder="e.g. 3000" step="500" min="100">
+                    <input type="number" name="student_amount" class="form-input form-input-sm" placeholder="e.g. 3000" step="500" min="100">
                     <div class="timeline-label">When do you want this cleared?</div>
                     <div style="display: flex; flex-wrap: wrap; gap: 8px;">
                         <label class="amt-opt"><input type="radio" name="student_timeline" value="6" style="display:none;" onchange="selOpt(this); checkMustHit('student', 6)"><span>6 months</span></label>
@@ -263,7 +263,7 @@
                     </div>
                     <div id="student-mustHit" class="must-hit-box" style="display: none;">
                         <label style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
-                            <input type="checkbox" name="student_must_hit" value="1" style="accent-color: var(--roman-gold); width: 16px; height: 16px;">
+                            <input type="checkbox" name="student_must_hit" value="1" style="width: 16px; height: 16px;">
                             <div>
                                 <span style="font-size: 0.8rem; color: var(--text-primary);">I need this cleared by this date</span>
                                 <span class="must-hit-disclaimer">Allocations will prioritise this goal, which may reduce funding to other pots including your emergency fund</span>
@@ -278,7 +278,7 @@
                 <div style="padding: 12px 0 16px; border-top: 0.5px solid var(--glass-border); margin-top: 8px;">
                     <div style="font-size: 0.85rem; color: var(--text-primary); margin-bottom: 10px; display: flex; align-items: center; gap: 7px;">{{ chip_icon('purchase') }} What are you saving for?</div>
                     <input type="text" name="purchase_name" class="form-input" placeholder="e.g. Laptop, phone" style="margin-bottom: 10px;">
-                    <input type="number" name="purchase_amount" class="form-input" placeholder="How much? (£)" step="100" min="100">
+                    <input type="number" name="purchase_amount" class="form-input form-input-sm" placeholder="How much? (£)" step="100" min="100">
                     <div class="timeline-label">When do you need it?</div>
                     <div style="display: flex; flex-wrap: wrap; gap: 8px;">
                         <label class="amt-opt"><input type="radio" name="purchase_timeline" value="3" style="display:none;" onchange="selOpt(this); checkMustHit('purchase', 3)"><span>3 months</span></label>
@@ -288,7 +288,7 @@
                     </div>
                     <div id="purchase-mustHit" class="must-hit-box" style="display: none;">
                         <label style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
-                            <input type="checkbox" name="purchase_must_hit" value="1" style="accent-color: var(--roman-gold); width: 16px; height: 16px;">
+                            <input type="checkbox" name="purchase_must_hit" value="1" style="width: 16px; height: 16px;">
                             <div>
                                 <span style="font-size: 0.8rem; color: var(--text-primary);">I need this by the deadline</span>
                                 <span class="must-hit-disclaimer">Allocations will prioritise this goal, which may reduce funding to other pots including your emergency fund</span>
@@ -303,7 +303,7 @@
                 <div style="padding: 12px 0 16px; border-top: 0.5px solid var(--glass-border); margin-top: 8px;">
                     <div style="font-size: 0.85rem; color: var(--text-primary); margin-bottom: 10px; display: flex; align-items: center; gap: 7px;">{{ chip_icon('custom') }} What's the goal?</div>
                     <input type="text" name="custom_name" class="form-input" placeholder="e.g. Moving costs, driving lessons" style="margin-bottom: 10px;">
-                    <input type="number" name="custom_amount" class="form-input" placeholder="How much? (£)" step="100" min="100">
+                    <input type="number" name="custom_amount" class="form-input form-input-sm" placeholder="How much? (£)" step="100" min="100">
                     <div class="timeline-label">When do you need it?</div>
                     <div style="display: flex; flex-wrap: wrap; gap: 8px;">
                         <label class="amt-opt"><input type="radio" name="custom_timeline" value="3" style="display:none;" onchange="selOpt(this); checkMustHit('custom', 3)"><span>3 months</span></label>
@@ -313,7 +313,7 @@
                     </div>
                     <div id="custom-mustHit" class="must-hit-box" style="display: none;">
                         <label style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
-                            <input type="checkbox" name="custom_must_hit" value="1" style="accent-color: var(--roman-gold); width: 16px; height: 16px;">
+                            <input type="checkbox" name="custom_must_hit" value="1" style="width: 16px; height: 16px;">
                             <div>
                                 <span style="font-size: 0.8rem; color: var(--text-primary);">This is a hard deadline</span>
                                 <span class="must-hit-disclaimer">Allocations will prioritise this goal, which may reduce funding to other pots including your emergency fund</span>
@@ -359,10 +359,9 @@ function updateBtn(){
         var ns='http://www.w3.org/2000/svg';
         var svg=document.createElementNS(ns,'svg');
         svg.setAttribute('width','14');svg.setAttribute('height','14');svg.setAttribute('viewBox','0 0 24 24');
-        svg.setAttribute('fill','none');svg.setAttribute('stroke','currentColor');svg.setAttribute('stroke-width','2');
+        svg.setAttribute('fill','none');svg.setAttribute('stroke','currentColor');svg.setAttribute('stroke-width','1.5');
         svg.setAttribute('stroke-linecap','round');svg.setAttribute('stroke-linejoin','round');
-        var p1=document.createElementNS(ns,'path');p1.setAttribute('d','M5 12h14');svg.appendChild(p1);
-        var p2=document.createElementNS(ns,'path');p2.setAttribute('d','m12 5 7 7-7 7');svg.appendChild(p2);
+        var p1=document.createElementNS(ns,'path');p1.setAttribute('d','M9 18l6-6-6-6');svg.appendChild(p1);
         btn.appendChild(svg);
     }
 }

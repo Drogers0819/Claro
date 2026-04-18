@@ -98,10 +98,10 @@ def _standing_order_whisper(user, pots, active_pots, days_since_signup):
         # Day 0-1: First standing order
         pot = active_pots[0]
         return {
-            "message": f"First step: open your banking app and set up a standing order for £{pot['monthly_amount']:,.0f}/month to a \"{pot['name']}\" pot. Set it for the {pay_suffix} — the day after your pay lands.",
+            "message": f"First step: open your banking app and set up a standing order for £{pot['monthly_amount']:,.0f}/month to a \"{pot['name']}\" pot. Set it for the {pay_suffix}, the day after your pay lands.",
             "action_label": "I've done this",
             "action_url": None,
-            "icon": "🏦",
+            "icon": "bank",
             "type": "setup"
         }
 
@@ -112,17 +112,17 @@ def _standing_order_whisper(user, pots, active_pots, days_since_signup):
             "message": f"Next: set up £{pot['monthly_amount']:,.0f}/month to your \"{pot['name']}\" pot. Two standing orders and your plan is running on autopilot.",
             "action_label": "Done",
             "action_url": None,
-            "icon": "✅",
+            "icon": "check-circle",
             "type": "setup"
         }
 
     elif days_since_signup <= 5:
         # Day 4-5: Confirm setup
         return {
-            "message": "Check your bank app — have your standing orders gone through? Once they're running, your plan executes itself every month.",
+            "message": "Check your bank app. Have your standing orders gone through? Once they're running, your plan executes itself every month.",
             "action_label": None,
             "action_url": None,
-            "icon": "🔍",
+            "icon": "search",
             "type": "setup"
         }
 
@@ -133,7 +133,7 @@ def _standing_order_whisper(user, pots, active_pots, days_since_signup):
             "message": f"You're all set. £{total_allocated:,.0f}/month is now directed across your goals. Your next check-in will be at the end of the month.",
             "action_label": "View my plan",
             "action_url": "/plan",
-            "icon": "🎯",
+            "icon": "target",
             "type": "setup_complete"
         }
 
@@ -169,7 +169,7 @@ def _payday_whisper(user, plan, pots, today):
         "message": f"It's pay day. Here's where your £{surplus:,.0f} surplus goes: {alloc_text}.",
         "action_label": "View full plan",
         "action_url": "/plan",
-        "icon": "💰",
+        "icon": "trending-up",
         "type": "payday"
     }
 
@@ -185,18 +185,18 @@ def _checkin_whisper(today):
 
     if days_left == 0:
         return {
-            "message": "It's the last day of the month. Time for your monthly check-in — how much did you actually put toward each goal?",
+            "message": "It's the last day of the month. Time for your monthly check-in. How much did you actually put toward each goal?",
             "action_label": "Start check-in",
             "action_url": "/check-in",
-            "icon": "📋",
+            "icon": "clipboard-list",
             "type": "checkin"
         }
     else:
         return {
-            "message": f"Your monthly check-in is due in {days_left} day{'s' if days_left > 1 else ''}. Have your bank app handy — it takes 2 minutes.",
+            "message": f"Your monthly check-in is due in {days_left} day{'s' if days_left > 1 else ''}. Have your bank app handy. It takes 2 minutes.",
             "action_label": "Do it now",
             "action_url": "/check-in",
-            "icon": "📋",
+            "icon": "clipboard-list",
             "type": "checkin"
         }
 
@@ -228,7 +228,7 @@ def _milestone_whisper(pots, plan):
                 "message": f"You did it! {name} is fully funded.{redirect_msg}",
                 "action_label": "View goals",
                 "action_url": "/my-goals",
-                "icon": "🎉",
+                "icon": "award",
                 "type": "milestone"
             }
 
@@ -236,10 +236,10 @@ def _milestone_whisper(pots, plan):
             months = pot.get("months_to_target")
             time_msg = f" ~{months} months to go." if months else ""
             return {
-                "message": f"Your {name} is 75% funded — £{current:,.0f} of £{target:,.0f}.{time_msg} You're in the home stretch.",
+                "message": f"Your {name} is 75% funded · £{current:,.0f} of £{target:,.0f}.{time_msg} You're in the home stretch.",
                 "action_label": None,
                 "action_url": None,
-                "icon": "🔥",
+                "icon": "zap",
                 "type": "milestone"
             }
 
@@ -247,10 +247,10 @@ def _milestone_whisper(pots, plan):
             months = pot.get("months_to_target")
             time_msg = f" At this pace, it completes in ~{months} months." if months else ""
             return {
-                "message": f"Halfway there! Your {name} is 50% funded — £{current:,.0f} of £{target:,.0f}.{time_msg}",
+                "message": f"Halfway there. Your {name} is 50% funded · £{current:,.0f} of £{target:,.0f}.{time_msg}",
                 "action_label": None,
                 "action_url": None,
-                "icon": "⭐",
+                "icon": "star",
                 "type": "milestone"
             }
 
@@ -267,7 +267,7 @@ def _life_checkin_whisper(today, days_since_signup):
             "message": "Anything come up this month we should know about? A birthday, an unexpected bill, or a change at work? Quick updates keep your plan accurate.",
             "action_label": "Something changed",
             "action_url": "/check-in",
-            "icon": "💬",
+            "icon": "message-circle",
             "type": "life_checkin"
         }
 
@@ -295,7 +295,7 @@ def _directed_counter_whisper(user, plan):
         "message": f"Following your plan has directed £{total_directed:,.0f} toward your goals over {months_active} months. That's £{surplus:,.0f}/month working for your future.",
         "action_label": None,
         "action_url": None,
-        "icon": "📈",
+        "icon": "bar-chart-2",
         "type": "counter"
     }
 
@@ -325,7 +325,7 @@ def _default_whisper(plan, active_pots):
             "message": f"Your {closest['name']} is {closest_pct:.0%} funded.{time_msg} Your plan is working.",
             "action_label": "View plan",
             "action_url": "/plan",
-            "icon": "📊",
+            "icon": "pie-chart",
             "type": "status"
         }
 
@@ -335,7 +335,7 @@ def _default_whisper(plan, active_pots):
         "message": f"Your plan directs £{total:,.0f}/month across {len(active_pots)} goals. Set up your standing orders and it runs on autopilot.",
         "action_label": "View plan",
         "action_url": "/plan",
-        "icon": "🎯",
+        "icon": "target",
         "type": "status"
     }
 

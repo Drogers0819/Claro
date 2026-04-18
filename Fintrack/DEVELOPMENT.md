@@ -288,6 +288,35 @@ This document tracks my learning journey building FinTrack from the ground up. U
 
 ---
 
+## Session — Onboarding UX Audit: Chip States, CTA Patterns, Wizard Flow, AI Whisper Placement
+
+**Date:** 18 Apr 2026
+
+### What was done
+
+Second UI audit pass focused on the onboarding wizard and post-onboarding overview experience. Identified and fixed structural and interaction-level UX failures: competing progress systems (welcome 2-step checklist vs. 4-step wizard), invisible chip selected states, hidden primary CTAs, AI commentary on the wrong page, and inconsistent Lucide icon usage across CTA buttons.
+
+### Fixes shipped
+
+- **Onboarding architecture:** Removed welcome page from new-user flow. Register now routes directly to factfind (step 1 of 4). The wizard handles complete onboarding. Competing progress systems eliminated.
+- **Chip selected states:** `goal_chips`, `factfind`, `surplus_reveal` — selected chips now use `var(--roman-gold)` border, replacing the near-invisible `rgba(255,255,255,0.3)`.
+- **CTA pattern:** goal_chips "Build my plan" button changed from `display:none` (hidden until selection) to always-visible disabled state with instructional text. Enables + gains arrow icon on selection.
+- **AI whisper placement:** Removed gold-card commentary from `plan_reveal` (reveal/hero moment). Added to `plan_review` (detail/confirmation step) where it's contextually appropriate.
+- **Lucide icons:** All CTA arrow icons standardised to Lucide `arrow-right` SVG. Back links use Lucide `chevron-left`. DOM construction via `createElementNS` (innerHTML blocked by security hook).
+- **Step bar layout:** Back link moved to LEFT of bars on `goal_chips`, `surplus_reveal`, `plan_reveal`. Step counter stays RIGHT.
+- **Password strength (register):** Upgraded from 3-bar (length-only) to 4-bar system + per-requirement chips (8+ chars, Uppercase, Number, Symbol) — matches settings.html pattern.
+- **Settings:** Financial Profile section stripped of `glass-card` wrapper — now a flat bare section matching Account and Appearance.
+- **Optional fields:** `(optional)` indicators added to Target amount, Already saved, Monthly contribution, Target date on add_goal and edit_goal forms.
+- **Overview nudge:** No-goals nudge removed old 2-step progress bars and now links to `/goals/choose` (wizard) instead of the manual add-goal form.
+- **AGENTS.md:** Updated with registration routing rule, button icon rule, onboarding wizard architecture, and wizard page sequence.
+- **lessons.md:** Four new lessons added (chip states, hidden CTAs, AI whisper placement, competing progress systems).
+
+### Branch
+
+`test/onboarding-ui-audit` — pushed for Dan's review. May have conflicts with Dan's concurrent changes; resolve in next session.
+
+---
+
 ## Session — UI Audit: Colour Semantics, Card Usage, Hierarchy (All Active Routes)
 
 **Date:** 17 Apr 2026
