@@ -104,8 +104,8 @@
 
 
 {% elif projection.reachable is defined and not projection.reachable %}
-<div style="margin-bottom: 32px;">
-    <p class="empty-state" style="margin-bottom: 12px;">{{ projection.message }}</p>
+<div style="margin-bottom: 24px;">
+    <p class="empty-state" style="padding-bottom: 0; margin-bottom: 16px;">{{ projection.message }}</p>
     <a href="{{ url_for('pages.my_goals') }}" style="display: inline-flex; align-items: center; gap: 5px; font-size: 0.75rem; color: var(--text-secondary); text-decoration: underline; text-underline-offset: 2px;">
         Adjust this goal
         <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>

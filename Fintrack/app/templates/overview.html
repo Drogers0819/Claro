@@ -72,9 +72,9 @@
         </div>
     </div>
 
-    <a href="{{ url_for('pages.plan') }}" class="btn-secondary btn-sm" style="margin-top: 14px;">
-        View full plan
-    </a>
+    <div style="margin-top: 20px; padding-top: 14px; border-top: 0.5px solid rgba(197,163,93,0.12);">
+        <a href="{{ url_for('pages.plan') }}" class="btn-secondary btn-sm">View full plan</a>
+    </div>
 </div>
 
 {% if action_whisper %}
@@ -122,7 +122,7 @@
 <div style="margin-bottom: 24px; padding-top: 20px; border-top: 0.5px solid var(--glass-border);">
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
         <span class="section-label" style="margin-bottom: 0;">Your pots</span>
-        <a href="{{ url_for('pages.my_goals') }}" class="btn-secondary btn-sm">My goals</a>
+        <a href="{{ url_for('pages.my_goals') }}" style="font-size: 0.75rem; color: var(--text-secondary); text-decoration: none; display: inline-flex; align-items: center; gap: 3px; flex-shrink: 0;">My goals <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg></a>
     </div>
 
     {% for pot in goal_pots %}
@@ -177,7 +177,7 @@
 <div style="margin-bottom: 24px; padding-top: 20px; border-top: 0.5px solid var(--glass-border);">
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
         <span class="section-label" style="margin-bottom: 0;">This month</span>
-        <a href="{{ url_for('pages.my_money') }}" class="btn-secondary btn-sm">My money</a>
+        <a href="{{ url_for('pages.my_money') }}" style="font-size: 0.75rem; color: var(--text-secondary); text-decoration: none; display: inline-flex; align-items: center; gap: 3px; flex-shrink: 0;">My money <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg></a>
     </div>
 
     <div style="display: flex; gap: 12px; margin-bottom: 14px;">
