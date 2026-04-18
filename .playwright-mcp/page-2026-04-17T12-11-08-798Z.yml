@@ -1,0 +1,100 @@
+- generic [ref=e2]:
+  - complementary [ref=e3]:
+    - img "Claro" [ref=e5]
+    - navigation [ref=e6]:
+      - link "Overview" [ref=e7] [cursor=pointer]:
+        - /url: /overview
+        - img [ref=e9]
+        - text: Overview
+      - link "Check-in" [ref=e14] [cursor=pointer]:
+        - /url: /check-in
+        - img [ref=e16]
+        - text: Check-in
+      - link "Goals" [ref=e19] [cursor=pointer]:
+        - /url: /my-goals
+        - img [ref=e21]
+        - text: Goals
+      - link "Companion" [ref=e25] [cursor=pointer]:
+        - /url: /companion
+        - img [ref=e27]
+        - text: Companion
+      - link "Plan" [ref=e29] [cursor=pointer]:
+        - /url: /plan
+        - img [ref=e31]
+        - text: Plan
+    - generic [ref=e33]:
+      - link "VI Victoria Claro Free" [ref=e34] [cursor=pointer]:
+        - /url: /settings
+        - generic [ref=e35]: VI
+        - generic [ref=e36]:
+          - generic [ref=e37]: Victoria
+          - generic [ref=e38]: Claro Free
+        - img [ref=e39]
+      - button "Sign out" [ref=e43] [cursor=pointer]
+  - main [ref=e44]:
+    - heading "Good afternoon, Victoria." [level=1] [ref=e46]
+    - generic [ref=e47]:
+      - generic [ref=e50]: Your plan
+      - paragraph [ref=e51]: Your House deposit completes in ~8 months. After that, your £1,656/month surplus frees up entirely.
+      - generic [ref=e52]:
+        - generic [ref=e53]:
+          - generic [ref=e54]: Income
+          - generic [ref=e55]: £3,200.00
+        - generic [ref=e56]:
+          - generic [ref=e57]: Fixed costs
+          - generic [ref=e58]: £1,130.00
+        - generic [ref=e59]:
+          - generic [ref=e60]: Surplus
+          - generic [ref=e61]: £2,070.00
+      - link "View full plan" [ref=e62] [cursor=pointer]:
+        - /url: /plan
+    - generic [ref=e63]:
+      - generic [ref=e64]:
+        - generic [ref=e65]: Your pots
+        - link "My goals" [ref=e66] [cursor=pointer]:
+          - /url: /my-goals
+      - link "House deposit £1,656.00/mo £3,240.00 of £15,000.00 8 months" [ref=e67] [cursor=pointer]:
+        - /url: /simulator/goal/1
+        - generic [ref=e68]:
+          - generic [ref=e70]: House deposit
+          - generic [ref=e71]:
+            - generic [ref=e72]: £1,656.00/mo
+            - img [ref=e73]
+        - generic [ref=e77]:
+          - generic [ref=e78]: £3,240.00 of £15,000.00
+          - generic [ref=e79]: 8 months
+      - generic [ref=e81]:
+        - generic [ref=e83]: Lifestyle & family
+        - generic [ref=e85]: £310.50/mo
+      - generic [ref=e87]:
+        - generic [ref=e89]: Buffer
+        - generic [ref=e91]: £103.50/mo
+    - generic [ref=e92]:
+      - generic [ref=e93]:
+        - generic [ref=e94]: This month
+        - link "My money" [ref=e95] [cursor=pointer]:
+          - /url: /my-money
+      - generic [ref=e96]:
+        - generic [ref=e97]:
+          - generic [ref=e98]: Left to spend
+          - generic [ref=e99]: £1,728.32
+          - generic [ref=e100]: £132.00/day · 13 days
+        - generic [ref=e101]:
+          - generic [ref=e102]: Spent so far
+          - generic [ref=e103]: £1,471.68
+      - generic [ref=e104]:
+        - generic [ref=e105]:
+          - generic [ref=e106]:
+            - img [ref=e107]
+            - text: Bills
+          - generic [ref=e110]: £1,060.00
+        - generic [ref=e111]:
+          - generic [ref=e112]:
+            - img [ref=e113]
+            - text: Food
+          - generic [ref=e116]: £197.30
+        - generic [ref=e117]:
+          - generic [ref=e118]:
+            - img [ref=e119]
+            - text: Shopping
+          - generic [ref=e122]: £67.00

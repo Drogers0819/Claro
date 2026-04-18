@@ -1,0 +1,70 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - complementary [ref=e3]:
+      - navigation [ref=e4]:
+        - link "Overview" [ref=e5] [cursor=pointer]:
+          - /url: /overview
+          - img [ref=e7]
+          - text: Overview
+        - link "Check-in" [ref=e12] [cursor=pointer]:
+          - /url: /check-in
+          - img [ref=e14]
+          - text: Check-in
+        - link "Goals" [ref=e17] [cursor=pointer]:
+          - /url: /my-goals
+          - img [ref=e19]
+          - text: Goals
+        - link "Companion" [ref=e23] [cursor=pointer]:
+          - /url: /companion
+          - img [ref=e25]
+          - text: Companion
+        - link "Plan" [ref=e27] [cursor=pointer]:
+          - /url: /plan
+          - img [ref=e29]
+          - text: Plan
+    - main [ref=e31]:
+      - link "Overview" [ref=e32] [cursor=pointer]:
+        - /url: /overview
+        - img [ref=e33]
+        - text: Overview
+      - heading "Settings" [level=1] [ref=e36]
+      - generic [ref=e37]:
+        - button "Financial profile" [expanded] [ref=e38] [cursor=pointer]:
+          - generic [ref=e39]:
+            - img [ref=e40]
+            - generic [ref=e43]: Financial profile
+          - img [ref=e44]
+        - generic [ref=e46]:
+          - generic [ref=e47]:
+            - generic [ref=e48]: Your income and commitments
+            - link "Edit" [ref=e49] [cursor=pointer]:
+              - /url: /factfind
+          - generic [ref=e50]:
+            - generic [ref=e51]:
+              - generic [ref=e52]: Take-home pay
+              - generic [ref=e53]: £49,999.90/month
+            - generic [ref=e54]:
+              - generic [ref=e55]: Rent/mortgage
+              - generic [ref=e56]: £5,999.97/month
+            - generic [ref=e57]:
+              - generic [ref=e58]: Bills
+              - generic [ref=e59]: £7,080.00/month
+            - generic [ref=e60]:
+              - generic [ref=e61]: Available for goals
+              - generic [ref=e62]: £36,919.93/month
+      - button "Appearance" [ref=e64] [cursor=pointer]:
+        - generic [ref=e65]:
+          - img [ref=e66]
+          - generic [ref=e71]: Appearance
+        - img [ref=e72]
+      - button "Account" [ref=e75] [cursor=pointer]:
+        - generic [ref=e76]:
+          - img [ref=e77]
+          - generic [ref=e80]: Account
+        - img [ref=e81]
+      - button "Sign out" [ref=e85] [cursor=pointer]:
+        - img [ref=e86]
+        - text: Sign out
+  - link "Profile & settings" [ref=e89] [cursor=pointer]:
+    - /url: /settings
+    - text: T

@@ -1,0 +1,58 @@
+- generic [ref=e2]:
+  - heading "NoAppException" [level=1] [ref=e3]
+  - paragraph [ref=e5] [cursor=pointer]: "flask.cli.NoAppException: While importing 'run', an ImportError was raised: Traceback (most recent call last): File \"/Users/victoriataiwo/Documents/claro/Fintrack/venv/lib/python3.9/site-packages/flask/cli.py\", line 245, in locate_app __import__(module_name) File \"/Users/victoriataiwo/Documents/claro/Fintrack/run.py\", line 2, in <module> app = create_app() File \"/Users/victoriataiwo/Documents/claro/Fintrack/app/__init__.py\", line 79, in create_app from app.routes.companion_routes import companion_bp File \"/Users/victoriataiwo/Documents/claro/Fintrack/app/routes/companion_routes.py\", line 6, in <module> from app.services.companion_service import chat, check_rate_limit, increment_message_count File \"/Users/victoriataiwo/Documents/claro/Fintrack/app/services/companion_service.py\", line 11, in <module> from anthropic import Anthropic ModuleNotFoundError: No module named 'anthropic'"
+  - heading "Traceback (most recent call last)" [level=2] [ref=e6] [cursor=pointer]:
+    - text: Traceback
+    - emphasis [ref=e7]: (most recent call last)
+  - generic [ref=e8]:
+    - heading [level=3]
+    - list [ref=e9]:
+      - listitem [ref=e10]:
+        - generic [ref=e11]:
+          - heading "File \"/Users/victoriataiwo/Documents/claro/Fintrack/venv/lib/python3.9/site-packages/flask/cli.py\", line 974, in app" [level=4] [ref=e12]:
+            - text: File "/Users/victoriataiwo/Documents/claro/Fintrack/venv/lib/python3.9/site-packages/flask/cli.py", line
+            - emphasis [ref=e13]: "974"
+            - text: ", in"
+            - code [ref=e14]: app
+          - generic [ref=e16]: raise err from None
+      - listitem [ref=e17]:
+        - generic [ref=e18]:
+          - heading "File \"/Users/victoriataiwo/Documents/claro/Fintrack/venv/lib/python3.9/site-packages/flask/cli.py\", line 963, in run_command" [level=4] [ref=e19]:
+            - text: File "/Users/victoriataiwo/Documents/claro/Fintrack/venv/lib/python3.9/site-packages/flask/cli.py", line
+            - emphasis [ref=e20]: "963"
+            - text: ", in"
+            - code [ref=e21]: run_command
+          - generic [ref=e23]: "app: WSGIApplication = info.load_app() # pyright: ignore"
+      - listitem [ref=e24]:
+        - generic [ref=e25]:
+          - heading "File \"/Users/victoriataiwo/Documents/claro/Fintrack/venv/lib/python3.9/site-packages/flask/cli.py\", line 349, in load_app" [level=4] [ref=e26]:
+            - text: File "/Users/victoriataiwo/Documents/claro/Fintrack/venv/lib/python3.9/site-packages/flask/cli.py", line
+            - emphasis [ref=e27]: "349"
+            - text: ", in"
+            - code [ref=e28]: load_app
+          - generic [ref=e30]: app = locate_app(import_name, name)
+      - listitem [ref=e31]:
+        - generic [ref=e32]:
+          - heading "File \"/Users/victoriataiwo/Documents/claro/Fintrack/venv/lib/python3.9/site-packages/flask/cli.py\", line 250, in locate_app" [level=4] [ref=e33]:
+            - text: File "/Users/victoriataiwo/Documents/claro/Fintrack/venv/lib/python3.9/site-packages/flask/cli.py", line
+            - emphasis [ref=e34]: "250"
+            - text: ", in"
+            - code [ref=e35]: locate_app
+          - generic [ref=e37]: raise NoAppException(
+    - blockquote [ref=e38]: "flask.cli.NoAppException: While importing 'run', an ImportError was raised: Traceback (most recent call last): File \"/Users/victoriataiwo/Documents/claro/Fintrack/venv/lib/python3.9/site-packages/flask/cli.py\", line 245, in locate_app __import__(module_name) File \"/Users/victoriataiwo/Documents/claro/Fintrack/run.py\", line 2, in <module> app = create_app() File \"/Users/victoriataiwo/Documents/claro/Fintrack/app/__init__.py\", line 79, in create_app from app.routes.companion_routes import companion_bp File \"/Users/victoriataiwo/Documents/claro/Fintrack/app/routes/companion_routes.py\", line 6, in <module> from app.services.companion_service import chat, check_rate_limit, increment_message_count File \"/Users/victoriataiwo/Documents/claro/Fintrack/app/services/companion_service.py\", line 11, in <module> from anthropic import Anthropic ModuleNotFoundError: No module named 'anthropic'"
+  - generic [ref=e39]:
+    - text: The debugger caught an exception in your WSGI application. You can now look at the traceback which led to the error.
+    - generic [ref=e40]:
+      - paragraph [ref=e41]: To switch between the interactive traceback and the plaintext one, you can click on the "Traceback" headline. From the text traceback you can also create a paste of it. For code execution mouse-over the frame you want to debug and click on the console icon on the right side.
+      - paragraph [ref=e42]: "You can execute arbitrary Python code in the stack frames and there are some extra helpers available for introspection:"
+      - list [ref=e43]:
+        - listitem [ref=e44]:
+          - code [ref=e45]: dump()
+          - text: shows all variables in the frame
+        - listitem [ref=e46]:
+          - code [ref=e47]: dump(obj)
+          - text: dumps all that's known about the object
+  - generic [ref=e48]:
+    - text: Brought to you by
+    - strong [ref=e49]: DON'T PANIC
+    - text: ", your friendly Werkzeug powered traceback interpreter."

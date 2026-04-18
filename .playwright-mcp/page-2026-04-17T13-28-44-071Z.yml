@@ -1,0 +1,75 @@
+- generic [ref=e2]:
+  - complementary [ref=e3]:
+    - navigation [ref=e4]:
+      - link "Overview" [ref=e5] [cursor=pointer]:
+        - /url: /overview
+        - img [ref=e7]
+        - text: Overview
+      - link "Money" [ref=e12] [cursor=pointer]:
+        - /url: /my-money
+        - img [ref=e14]
+        - text: Money
+      - link "Check-in" [ref=e16] [cursor=pointer]:
+        - /url: /check-in
+        - img [ref=e18]
+        - text: Check-in
+      - link "Goals" [ref=e21] [cursor=pointer]:
+        - /url: /my-goals
+        - img [ref=e23]
+        - text: Goals
+      - link "Companion" [ref=e27] [cursor=pointer]:
+        - /url: /companion
+        - img [ref=e29]
+        - text: Companion
+      - link "Plan" [ref=e31] [cursor=pointer]:
+        - /url: /plan
+        - img [ref=e33]
+        - text: Plan
+  - link "Profile & settings" [ref=e35] [cursor=pointer]:
+    - /url: /settings
+    - text: V
+  - main [ref=e36]:
+    - link "Overview" [ref=e37] [cursor=pointer]:
+      - /url: /overview
+      - img [ref=e38]
+      - text: Overview
+    - heading "Settings" [level=1] [ref=e41]
+    - generic [ref=e42]:
+      - button "Financial profile" [expanded] [ref=e43] [cursor=pointer]:
+        - generic [ref=e44]:
+          - img [ref=e45]
+          - generic [ref=e48]: Financial profile
+        - img [ref=e49]
+      - generic [ref=e51]:
+        - generic [ref=e52]:
+          - generic [ref=e53]: Your income and commitments
+          - link "Edit" [ref=e54] [cursor=pointer]:
+            - /url: /factfind
+        - generic [ref=e55]:
+          - generic [ref=e56]:
+            - generic [ref=e57]: Take-home pay
+            - generic [ref=e58]: £3,200.00/month
+          - generic [ref=e59]:
+            - generic [ref=e60]: Rent/mortgage
+            - generic [ref=e61]: £950.00/month
+          - generic [ref=e62]:
+            - generic [ref=e63]: Bills
+            - generic [ref=e64]: £180.00/month
+          - generic [ref=e65]:
+            - generic [ref=e66]: Available for goals
+            - generic [ref=e67]: £2,070.00/month
+    - button "Appearance" [ref=e69] [cursor=pointer]:
+      - generic [ref=e70]:
+        - img [ref=e71]
+        - generic [ref=e76]: Appearance
+      - img [ref=e77]
+    - button "Account" [ref=e80] [cursor=pointer]:
+      - generic [ref=e81]:
+        - img [ref=e82]
+        - generic [ref=e85]: Account
+      - img [ref=e86]
+    - button "Security" [ref=e89] [cursor=pointer]:
+      - generic [ref=e90]:
+        - img [ref=e91]
+        - generic [ref=e94]: Security
+      - img [ref=e95]

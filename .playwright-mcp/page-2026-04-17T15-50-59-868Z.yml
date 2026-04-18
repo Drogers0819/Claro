@@ -1,0 +1,81 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - complementary [ref=e3]:
+      - navigation [ref=e4]:
+        - link "Overview" [ref=e5] [cursor=pointer]:
+          - /url: /overview
+          - img [ref=e7]
+          - text: Overview
+        - link "Money" [ref=e12] [cursor=pointer]:
+          - /url: /my-money
+          - img [ref=e14]
+          - text: Money
+        - link "Goals" [ref=e16] [cursor=pointer]:
+          - /url: /my-goals
+          - img [ref=e18]
+          - text: Goals
+        - link "Plan" [ref=e22] [cursor=pointer]:
+          - /url: /plan
+          - img [ref=e24]
+          - text: Plan
+        - button "More" [ref=e26] [cursor=pointer]:
+          - img [ref=e28]
+          - text: More
+    - main [ref=e32]:
+      - heading "My Money" [level=1] [ref=e34]
+      - link "Complete your financial profile to generate your plan" [ref=e35] [cursor=pointer]:
+        - /url: /factfind
+        - img [ref=e36]
+        - generic [ref=e38]: Complete your financial profile to generate your plan
+        - img [ref=e39]
+      - generic [ref=e41]:
+        - link "Predictions & insights AI forecast, patterns, spending story" [ref=e42] [cursor=pointer]:
+          - /url: /insights
+          - img [ref=e43]
+          - generic [ref=e44]:
+            - generic [ref=e45]: Predictions & insights
+            - generic [ref=e46]: AI forecast, patterns, spending story
+          - img [ref=e47]
+        - link "Recurring payments Subscriptions and regular bills" [ref=e49] [cursor=pointer]:
+          - /url: /recurring
+          - img [ref=e50]
+          - generic [ref=e55]:
+            - generic [ref=e56]: Recurring payments
+            - generic [ref=e57]: Subscriptions and regular bills
+          - img [ref=e58]
+        - link "Spending breakdown Where your money goes, by category" [ref=e60] [cursor=pointer]:
+          - /url: /analytics
+          - img [ref=e61]
+          - generic [ref=e64]:
+            - generic [ref=e65]: Spending breakdown
+            - generic [ref=e66]: Where your money goes, by category
+          - img [ref=e67]
+        - link "Budgets Spending limits by category" [ref=e69] [cursor=pointer]:
+          - /url: /my-budgets
+          - img [ref=e70]
+          - generic [ref=e73]:
+            - generic [ref=e74]: Budgets
+            - generic [ref=e75]: Spending limits by category
+          - img [ref=e76]
+      - generic [ref=e79]:
+        - paragraph [ref=e80]: No transactions yet.
+        - paragraph [ref=e81]: Upload a bank statement to import your transactions, or add them one by one.
+        - generic [ref=e82]:
+          - link "Upload statement" [ref=e83] [cursor=pointer]:
+            - /url: /upload
+          - link "or add manually" [ref=e84] [cursor=pointer]:
+            - /url: /add-transaction
+  - link "Profile & settings" [ref=e85] [cursor=pointer]:
+    - /url: /settings
+    - text: T
+  - dialog "More options":
+    - link "Check-in":
+      - /url: /check-in
+      - generic:
+        - img
+      - generic: Check-in
+    - link "Companion":
+      - /url: /companion
+      - generic:
+        - img
+      - generic: Companion

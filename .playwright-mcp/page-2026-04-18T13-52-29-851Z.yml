@@ -1,0 +1,93 @@
+- generic [ref=e1]:
+  - generic [ref=e2]:
+    - complementary [ref=e3]:
+      - navigation [ref=e4]:
+        - link "Overview" [ref=e5] [cursor=pointer]:
+          - /url: /overview
+          - img [ref=e7]
+          - text: Overview
+        - link "Check-in" [ref=e12] [cursor=pointer]:
+          - /url: /check-in
+          - img [ref=e14]
+          - text: Check-in
+        - link "Goals" [ref=e17] [cursor=pointer]:
+          - /url: /my-goals
+          - img [ref=e19]
+          - text: Goals
+        - link "Companion" [ref=e23] [cursor=pointer]:
+          - /url: /companion
+          - img [ref=e25]
+          - text: Companion
+        - link "Plan" [ref=e27] [cursor=pointer]:
+          - /url: /plan
+          - img [ref=e29]
+          - text: Plan
+    - main [ref=e31]:
+      - generic [ref=e32]:
+        - generic [ref=e33]:
+          - link "Back" [ref=e34] [cursor=pointer]:
+            - /url: /onboarding/surplus
+            - img [ref=e35]
+            - text: Back
+          - generic [ref=e42]: Step 3 of 4
+        - generic [ref=e43]:
+          - heading "What are you working toward?" [level=1] [ref=e44]
+          - paragraph [ref=e45]: Tap everything that applies. We'll figure out the rest.
+        - generic [ref=e46]:
+          - generic [ref=e47]: Now, what are you working toward?
+          - generic [ref=e48]:
+            - generic [ref=e50] [cursor=pointer]: Emergency fund
+            - generic [ref=e52] [cursor=pointer]:
+              - img [ref=e53]
+              - text: House deposit
+            - generic [ref=e57] [cursor=pointer]:
+              - img [ref=e58]
+              - text: Holiday
+            - generic [ref=e62] [cursor=pointer]:
+              - img [ref=e63]
+              - text: Baby fund
+            - generic [ref=e66] [cursor=pointer]:
+              - img [ref=e67]
+              - text: Pay off debt
+            - generic [ref=e70] [cursor=pointer]:
+              - img [ref=e71]
+              - text: Car
+            - generic [ref=e76] [cursor=pointer]:
+              - img [ref=e77]
+              - text: Wedding
+            - generic [ref=e83] [cursor=pointer]:
+              - img [ref=e84]
+              - text: Student loan
+            - generic [ref=e88] [cursor=pointer]:
+              - img [ref=e89]
+              - text: New purchase
+            - generic [ref=e92] [cursor=pointer]:
+              - img [ref=e93]
+              - text: Something else
+          - generic [ref=e99]:
+            - generic [ref=e100]:
+              - img [ref=e101]
+              - text: "House deposit: roughly how much?"
+            - generic [ref=e104]:
+              - generic [ref=e106] [cursor=pointer]: £10,000
+              - generic [ref=e108] [cursor=pointer]: £15,000
+              - generic [ref=e110] [cursor=pointer]: £25,000
+            - spinbutton [ref=e111]
+            - generic [ref=e112]: When are you hoping to buy?
+            - generic [ref=e113]:
+              - generic [ref=e115] [cursor=pointer]: 6 months
+              - generic [ref=e117] [cursor=pointer]: 1 year
+              - generic [ref=e119] [cursor=pointer]: 2 years
+              - generic [ref=e121] [cursor=pointer]: 3+ years
+              - generic [ref=e123] [cursor=pointer]: No rush
+            - generic [ref=e128] [cursor=pointer]:
+              - checkbox "This is a hard deadline Allocations will prioritise this goal, which may reduce funding to other pots including your emergency fund" [checked] [active] [ref=e129]
+              - generic [ref=e130]:
+                - text: This is a hard deadline
+                - generic [ref=e131]: Allocations will prioritise this goal, which may reduce funding to other pots including your emergency fund
+          - button "Build my plan" [ref=e124] [cursor=pointer]:
+            - text: Build my plan
+            - img [ref=e125]
+  - link "Profile & settings" [ref=e96] [cursor=pointer]:
+    - /url: /settings
+    - text: T

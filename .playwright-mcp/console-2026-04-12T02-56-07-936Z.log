@@ -1,0 +1,12 @@
+[      81ms] [VERBOSE] [DOM] Input elements should have autocomplete attributes (suggested: "current-password"): (More info: https://goo.gl/9p2vKq) %o @ http://localhost:5002/settings:0
+[      81ms] [VERBOSE] [DOM] Input elements should have autocomplete attributes (suggested: "current-password"): (More info: https://goo.gl/9p2vKq) %o @ http://localhost:5002/settings:0
+[      81ms] [VERBOSE] [DOM] Input elements should have autocomplete attributes (suggested: "new-password"): (More info: https://goo.gl/9p2vKq) %o @ http://localhost:5002/settings:0
+[      81ms] [VERBOSE] [DOM] Input elements should have autocomplete attributes (suggested: "new-password"): (More info: https://goo.gl/9p2vKq) %o @ http://localhost:5002/settings:0
+[   11275ms] [VERBOSE] [DOM] Input elements should have autocomplete attributes (suggested: "current-password"): (More info: https://goo.gl/9p2vKq) %o @ http://localhost:5002/settings:0
+[   11275ms] [VERBOSE] [DOM] Input elements should have autocomplete attributes (suggested: "current-password"): (More info: https://goo.gl/9p2vKq) %o @ http://localhost:5002/settings:0
+[   11275ms] [VERBOSE] [DOM] Input elements should have autocomplete attributes (suggested: "new-password"): (More info: https://goo.gl/9p2vKq) %o @ http://localhost:5002/settings:0
+[   11275ms] [VERBOSE] [DOM] Input elements should have autocomplete attributes (suggested: "new-password"): (More info: https://goo.gl/9p2vKq) %o @ http://localhost:5002/settings:0
+[  163431ms] TypeError: Cannot set property className of #<SVGElement> which has only a getter
+    at buildCustomSelect (http://localhost:5002/static/js/custom-select.js:42:27)
+    at NodeList.forEach (<anonymous>)
+    at HTMLDocument.<anonymous> (http://localhost:5002/static/js/custom-select.js:136:57)

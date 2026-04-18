@@ -1,0 +1,64 @@
+- generic [ref=e2]:
+  - complementary [ref=e3]:
+    - img "Claro" [ref=e5]
+    - navigation [ref=e6]:
+      - link "Overview" [ref=e7] [cursor=pointer]:
+        - /url: /overview
+        - img [ref=e9]
+        - text: Overview
+      - link "Check-in" [ref=e14] [cursor=pointer]:
+        - /url: /check-in
+        - img [ref=e16]
+        - text: Check-in
+      - link "Goals" [ref=e19] [cursor=pointer]:
+        - /url: /my-goals
+        - img [ref=e21]
+        - text: Goals
+      - link "Companion" [ref=e25] [cursor=pointer]:
+        - /url: /companion
+        - img [ref=e27]
+        - text: Companion
+      - link "Plan" [ref=e29] [cursor=pointer]:
+        - /url: /plan
+        - img [ref=e31]
+        - text: Plan
+    - button "TE Test Claro Free" [ref=e34] [cursor=pointer]:
+      - generic [ref=e35]: TE
+      - generic [ref=e36]:
+        - generic [ref=e37]: Test
+        - generic [ref=e38]: Claro Free
+      - img [ref=e39]
+  - main [ref=e43]:
+    - generic [ref=e44]:
+      - generic [ref=e45]:
+        - link "Back" [ref=e46] [cursor=pointer]:
+          - /url: /goals/choose
+          - img [ref=e47]
+          - text: Back
+        - generic [ref=e54]: Step 4 of 4
+      - heading "Here's your plan." [level=1] [ref=e56]
+      - generic [ref=e57]:
+        - generic [ref=e58]:
+          - generic [ref=e59]: Your income
+          - generic [ref=e60]: £50,000/month
+        - generic [ref=e61]:
+          - generic [ref=e62]: Essentials
+          - generic [ref=e63]: −£13,080
+        - generic [ref=e64]:
+          - generic [ref=e65]: Available for your goals
+          - generic [ref=e66]: £36,920/month
+      - generic [ref=e67]:
+        - generic [ref=e68]: Where it goes
+        - generic [ref=e69]:
+          - generic [ref=e70]: Emergency fund ~2 months
+          - generic [ref=e71]: £29,536/mo
+        - generic [ref=e72]:
+          - generic [ref=e73]: Lifestyle & family
+          - generic [ref=e74]: £5,538/mo
+        - generic [ref=e75]:
+          - generic [ref=e76]: Buffer
+          - generic [ref=e77]: £1,846/mo
+      - link "Review my plan" [ref=e78] [cursor=pointer]:
+        - /url: /onboarding/plan-review
+        - text: Review my plan
+        - img [ref=e79]

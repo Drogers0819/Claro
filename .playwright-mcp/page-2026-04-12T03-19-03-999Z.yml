@@ -1,0 +1,490 @@
+- generic [ref=e2]:
+  - complementary [ref=e3]:
+    - img "Claro" [ref=e5]
+    - navigation [ref=e6]:
+      - link "Overview" [ref=e7] [cursor=pointer]:
+        - /url: /overview
+        - img [ref=e9]
+        - text: Overview
+      - link "Money" [ref=e14] [cursor=pointer]:
+        - /url: /my-money
+        - img [ref=e16]
+        - text: Money
+      - link "Goals" [ref=e18] [cursor=pointer]:
+        - /url: /my-goals
+        - img [ref=e20]
+        - text: Goals
+      - link "Plan" [ref=e24] [cursor=pointer]:
+        - /url: /plan
+        - img [ref=e26]
+        - text: Plan
+      - link "Budgets" [ref=e28] [cursor=pointer]:
+        - /url: /my-budgets
+        - img [ref=e30]
+        - text: Budgets
+    - generic [ref=e31]:
+      - link "VI Victoria Claro Core" [ref=e32] [cursor=pointer]:
+        - /url: /settings
+        - generic [ref=e33]: VI
+        - generic [ref=e34]:
+          - generic [ref=e35]: Victoria
+          - generic [ref=e36]: Claro Core
+        - img [ref=e37]
+      - button "Sign out" [ref=e41] [cursor=pointer]
+  - main [ref=e42]:
+    - heading "My Money" [level=1] [ref=e44]
+    - generic [ref=e45]:
+      - generic [ref=e46]:
+        - generic [ref=e47]: April spending
+        - generic [ref=e48]:
+          - generic [ref=e49]: £1,471.68
+          - generic [ref=e50]: "% share · ↑↓ vs last month"
+      - generic [ref=e52]:
+        - generic [ref=e53]:
+          - img [ref=e54]
+          - generic [ref=e57]: Bills
+        - generic [ref=e58]:
+          - generic [ref=e59]: £1,060.00
+          - generic [ref=e60]: 72.0%
+      - generic [ref=e64]:
+        - generic [ref=e65]:
+          - img [ref=e66]
+          - generic [ref=e69]: Food
+        - generic [ref=e70]:
+          - generic [ref=e71]: £197.30
+          - generic [ref=e72]: 13.4%
+          - generic [ref=e73]: ↑
+      - generic [ref=e77]:
+        - generic [ref=e78]:
+          - img [ref=e79]
+          - generic [ref=e82]: Shopping
+        - generic [ref=e83]:
+          - generic [ref=e84]: £67.00
+          - generic [ref=e85]: 4.6%
+          - generic [ref=e86]: ↑
+      - generic [ref=e90]:
+        - generic [ref=e91]:
+          - img [ref=e92]
+          - generic [ref=e97]: Transport
+        - generic [ref=e98]:
+          - generic [ref=e99]: £60.40
+          - generic [ref=e100]: 4.1%
+          - generic [ref=e101]: ↑
+      - generic [ref=e105]:
+        - generic [ref=e106]:
+          - img [ref=e107]
+          - generic [ref=e109]: Health
+        - generic [ref=e110]:
+          - generic [ref=e111]: £35.00
+          - generic [ref=e112]: 2.4%
+      - generic [ref=e116]:
+        - generic [ref=e117]:
+          - img [ref=e118]
+          - generic [ref=e123]: Subscriptions
+        - generic [ref=e124]:
+          - generic [ref=e125]: £29.98
+          - generic [ref=e126]: 2.0%
+      - generic [ref=e130]:
+        - generic [ref=e131]:
+          - img [ref=e132]
+          - generic [ref=e135]: Entertainment
+        - generic [ref=e136]:
+          - generic [ref=e137]: £22.00
+          - generic [ref=e138]: 1.5%
+          - generic [ref=e139]: ↓
+    - generic [ref=e142]:
+      - generic [ref=e143]:
+        - generic [ref=e144]: All transactions
+        - generic [ref=e145]:
+          - link "Upload statement" [ref=e146] [cursor=pointer]:
+            - /url: /upload
+          - generic [ref=e147]: ·
+          - link "Add manually" [ref=e148] [cursor=pointer]:
+            - /url: /add-transaction
+      - generic [ref=e149]:
+        - generic [ref=e150]:
+          - generic [ref=e151]: Deliveroo
+          - generic [ref=e152]:
+            - text: 9 Apr ·
+            - button "Food" [ref=e153] [cursor=pointer]
+        - generic [ref=e154]: −£34.50
+        - button "Delete transaction" [ref=e156] [cursor=pointer]:
+          - img [ref=e157]
+      - generic [ref=e160]:
+        - generic [ref=e161]:
+          - generic [ref=e162]: Rent payment
+          - generic [ref=e163]:
+            - text: 8 Apr ·
+            - button "Bills" [ref=e164] [cursor=pointer]
+        - generic [ref=e165]: −£950.00
+        - button "Delete transaction" [ref=e167] [cursor=pointer]:
+          - img [ref=e168]
+      - generic [ref=e171]:
+        - generic [ref=e172]:
+          - generic [ref=e173]: Pret A Manger
+          - generic [ref=e174]:
+            - text: 8 Apr ·
+            - button "Food" [ref=e175] [cursor=pointer]
+        - generic [ref=e176]: −£8.50
+        - button "Delete transaction" [ref=e178] [cursor=pointer]:
+          - img [ref=e179]
+      - generic [ref=e182]:
+        - generic [ref=e183]:
+          - generic [ref=e184]: Uber
+          - generic [ref=e185]:
+            - text: 8 Apr ·
+            - button "Transport" [ref=e186] [cursor=pointer]
+        - generic [ref=e187]: −£12.40
+        - button "Delete transaction" [ref=e189] [cursor=pointer]:
+          - img [ref=e190]
+      - generic [ref=e193]:
+        - generic [ref=e194]:
+          - generic [ref=e195]: EDF Energy
+          - generic [ref=e196]:
+            - text: 7 Apr ·
+            - button "Bills" [ref=e197] [cursor=pointer]
+        - generic [ref=e198]: −£68.00
+        - button "Delete transaction" [ref=e200] [cursor=pointer]:
+          - img [ref=e201]
+      - generic [ref=e204]:
+        - generic [ref=e205]:
+          - generic [ref=e206]: Sky Broadband
+          - generic [ref=e207]:
+            - text: 7 Apr ·
+            - button "Bills" [ref=e208] [cursor=pointer]
+        - generic [ref=e209]: −£42.00
+        - button "Delete transaction" [ref=e211] [cursor=pointer]:
+          - img [ref=e212]
+      - generic [ref=e215]:
+        - generic [ref=e216]:
+          - generic [ref=e217]: Tesco
+          - generic [ref=e218]:
+            - text: 7 Apr ·
+            - button "Food" [ref=e219] [cursor=pointer]
+        - generic [ref=e220]: −£62.40
+        - button "Delete transaction" [ref=e222] [cursor=pointer]:
+          - img [ref=e223]
+      - generic [ref=e226]:
+        - generic [ref=e227]:
+          - generic [ref=e228]: Salary
+          - generic [ref=e229]:
+            - text: 6 Apr ·
+            - button "Income" [ref=e230] [cursor=pointer]
+        - generic [ref=e231]: +£3200.00
+        - button "Delete transaction" [ref=e233] [cursor=pointer]:
+          - img [ref=e234]
+      - generic [ref=e237]:
+        - generic [ref=e238]:
+          - generic [ref=e239]: TfL
+          - generic [ref=e240]:
+            - text: 6 Apr ·
+            - button "Transport" [ref=e241] [cursor=pointer]
+        - generic [ref=e242]: −£48.00
+        - button "Delete transaction" [ref=e244] [cursor=pointer]:
+          - img [ref=e245]
+      - generic [ref=e248]:
+        - generic [ref=e249]:
+          - generic [ref=e250]: Netflix
+          - generic [ref=e251]:
+            - text: 5 Apr ·
+            - button "Subscriptions" [ref=e252] [cursor=pointer]
+        - generic [ref=e253]: −£17.99
+        - button "Delete transaction" [ref=e255] [cursor=pointer]:
+          - img [ref=e256]
+      - generic [ref=e259]:
+        - generic [ref=e260]:
+          - generic [ref=e261]: Spotify
+          - generic [ref=e262]:
+            - text: 5 Apr ·
+            - button "Subscriptions" [ref=e263] [cursor=pointer]
+        - generic [ref=e264]: −£11.99
+        - button "Delete transaction" [ref=e266] [cursor=pointer]:
+          - img [ref=e267]
+      - generic [ref=e270]:
+        - generic [ref=e271]:
+          - generic [ref=e272]: Deliveroo
+          - generic [ref=e273]:
+            - text: 5 Apr ·
+            - button "Food" [ref=e274] [cursor=pointer]
+        - generic [ref=e275]: −£28.90
+        - button "Delete transaction" [ref=e277] [cursor=pointer]:
+          - img [ref=e278]
+      - generic [ref=e281]:
+        - generic [ref=e282]:
+          - generic [ref=e283]: Gym membership
+          - generic [ref=e284]:
+            - text: 4 Apr ·
+            - button "Health" [ref=e285] [cursor=pointer]
+        - generic [ref=e286]: −£35.00
+        - button "Delete transaction" [ref=e288] [cursor=pointer]:
+          - img [ref=e289]
+      - generic [ref=e292]:
+        - generic [ref=e293]:
+          - generic [ref=e294]: Pret A Manger
+          - generic [ref=e295]:
+            - text: 4 Apr ·
+            - button "Food" [ref=e296] [cursor=pointer]
+        - generic [ref=e297]: −£7.90
+        - button "Delete transaction" [ref=e299] [cursor=pointer]:
+          - img [ref=e300]
+      - generic [ref=e303]:
+        - generic [ref=e304]:
+          - generic [ref=e305]: ASOS
+          - generic [ref=e306]:
+            - text: 3 Apr ·
+            - button "Shopping" [ref=e307] [cursor=pointer]
+        - generic [ref=e308]: −£67.00
+        - button "Delete transaction" [ref=e310] [cursor=pointer]:
+          - img [ref=e311]
+      - generic [ref=e314]:
+        - generic [ref=e315]:
+          - generic [ref=e316]: Tesco
+          - generic [ref=e317]:
+            - text: 2 Apr ·
+            - button "Food" [ref=e318] [cursor=pointer]
+        - generic [ref=e319]: −£55.10
+        - button "Delete transaction" [ref=e321] [cursor=pointer]:
+          - img [ref=e322]
+      - generic [ref=e325]:
+        - generic [ref=e326]:
+          - generic [ref=e327]: Vue Cinema
+          - generic [ref=e328]:
+            - text: 1 Apr ·
+            - button "Entertainment" [ref=e329] [cursor=pointer]
+        - generic [ref=e330]: −£22.00
+        - button "Delete transaction" [ref=e332] [cursor=pointer]:
+          - img [ref=e333]
+      - generic [ref=e336]:
+        - generic [ref=e337]:
+          - generic [ref=e338]: Amazon
+          - generic [ref=e339]:
+            - text: 31 Mar ·
+            - button "Shopping" [ref=e340] [cursor=pointer]
+        - generic [ref=e341]: −£24.99
+        - button "Delete transaction" [ref=e343] [cursor=pointer]:
+          - img [ref=e344]
+      - generic [ref=e347]:
+        - generic [ref=e348]:
+          - generic [ref=e349]: Sainsbury's
+          - generic [ref=e350]:
+            - text: 30 Mar ·
+            - button "Food" [ref=e351] [cursor=pointer]
+        - generic [ref=e352]: −£38.20
+        - button "Delete transaction" [ref=e354] [cursor=pointer]:
+          - img [ref=e355]
+      - generic [ref=e358]:
+        - generic [ref=e359]:
+          - generic [ref=e360]: Uber
+          - generic [ref=e361]:
+            - text: 28 Mar ·
+            - button "Transport" [ref=e362] [cursor=pointer]
+        - generic [ref=e363]: −£9.80
+        - button "Delete transaction" [ref=e365] [cursor=pointer]:
+          - img [ref=e366]
+      - generic [ref=e369]:
+        - generic [ref=e370]:
+          - generic [ref=e371]: Ticketmaster
+          - generic [ref=e372]:
+            - text: 24 Mar ·
+            - button "Entertainment" [ref=e373] [cursor=pointer]
+        - generic [ref=e374]: −£85.00
+        - button "Delete transaction" [ref=e376] [cursor=pointer]:
+          - img [ref=e377]
+      - generic [ref=e380]:
+        - generic [ref=e381]:
+          - generic [ref=e382]: Rent payment
+          - generic [ref=e383]:
+            - text: 9 Mar ·
+            - button "Bills" [ref=e384] [cursor=pointer]
+        - generic [ref=e385]: −£950.00
+        - button "Delete transaction" [ref=e387] [cursor=pointer]:
+          - img [ref=e388]
+      - generic [ref=e391]:
+        - generic [ref=e392]:
+          - generic [ref=e393]: EDF Energy
+          - generic [ref=e394]:
+            - text: 8 Mar ·
+            - button "Bills" [ref=e395] [cursor=pointer]
+        - generic [ref=e396]: −£68.00
+        - button "Delete transaction" [ref=e398] [cursor=pointer]:
+          - img [ref=e399]
+      - generic [ref=e402]:
+        - generic [ref=e403]:
+          - generic [ref=e404]: Sky Broadband
+          - generic [ref=e405]:
+            - text: 8 Mar ·
+            - button "Bills" [ref=e406] [cursor=pointer]
+        - generic [ref=e407]: −£42.00
+        - button "Delete transaction" [ref=e409] [cursor=pointer]:
+          - img [ref=e410]
+      - generic [ref=e413]:
+        - generic [ref=e414]:
+          - generic [ref=e415]: Salary
+          - generic [ref=e416]:
+            - text: 7 Mar ·
+            - button "Income" [ref=e417] [cursor=pointer]
+        - generic [ref=e418]: +£3200.00
+        - button "Delete transaction" [ref=e420] [cursor=pointer]:
+          - img [ref=e421]
+      - generic [ref=e424]:
+        - generic [ref=e425]:
+          - generic [ref=e426]: TfL
+          - generic [ref=e427]:
+            - text: 7 Mar ·
+            - button "Transport" [ref=e428] [cursor=pointer]
+        - generic [ref=e429]: −£48.00
+        - button "Delete transaction" [ref=e431] [cursor=pointer]:
+          - img [ref=e432]
+      - generic [ref=e435]:
+        - generic [ref=e436]:
+          - generic [ref=e437]: Netflix
+          - generic [ref=e438]:
+            - text: 6 Mar ·
+            - button "Subscriptions" [ref=e439] [cursor=pointer]
+        - generic [ref=e440]: −£17.99
+        - button "Delete transaction" [ref=e442] [cursor=pointer]:
+          - img [ref=e443]
+      - generic [ref=e446]:
+        - generic [ref=e447]:
+          - generic [ref=e448]: Spotify
+          - generic [ref=e449]:
+            - text: 6 Mar ·
+            - button "Subscriptions" [ref=e450] [cursor=pointer]
+        - generic [ref=e451]: −£11.99
+        - button "Delete transaction" [ref=e453] [cursor=pointer]:
+          - img [ref=e454]
+      - generic [ref=e457]:
+        - generic [ref=e458]:
+          - generic [ref=e459]: Gym membership
+          - generic [ref=e460]:
+            - text: 5 Mar ·
+            - button "Health" [ref=e461] [cursor=pointer]
+        - generic [ref=e462]: −£35.00
+        - button "Delete transaction" [ref=e464] [cursor=pointer]:
+          - img [ref=e465]
+      - generic [ref=e468]:
+        - generic [ref=e469]:
+          - generic [ref=e470]: Deliveroo
+          - generic [ref=e471]:
+            - text: 4 Mar ·
+            - button "Food" [ref=e472] [cursor=pointer]
+        - generic [ref=e473]: −£18.50
+        - button "Delete transaction" [ref=e475] [cursor=pointer]:
+          - img [ref=e476]
+      - generic [ref=e479]:
+        - generic [ref=e480]:
+          - generic [ref=e481]: Tesco
+          - generic [ref=e482]:
+            - text: 2 Mar ·
+            - button "Food" [ref=e483] [cursor=pointer]
+        - generic [ref=e484]: −£54.30
+        - button "Delete transaction" [ref=e486] [cursor=pointer]:
+          - img [ref=e487]
+      - generic [ref=e490]:
+        - generic [ref=e491]:
+          - generic [ref=e492]: Vue Cinema
+          - generic [ref=e493]:
+            - text: 28 Feb ·
+            - button "Entertainment" [ref=e494] [cursor=pointer]
+        - generic [ref=e495]: −£19.50
+        - button "Delete transaction" [ref=e497] [cursor=pointer]:
+          - img [ref=e498]
+      - generic [ref=e501]:
+        - generic [ref=e502]:
+          - generic [ref=e503]: Boots
+          - generic [ref=e504]:
+            - text: 26 Feb ·
+            - button "Shopping" [ref=e505] [cursor=pointer]
+        - generic [ref=e506]: −£18.60
+        - button "Delete transaction" [ref=e508] [cursor=pointer]:
+          - img [ref=e509]
+      - generic [ref=e512]:
+        - generic [ref=e513]:
+          - generic [ref=e514]: Tesco
+          - generic [ref=e515]:
+            - text: 20 Feb ·
+            - button "Food" [ref=e516] [cursor=pointer]
+        - generic [ref=e517]: −£48.60
+        - button "Delete transaction" [ref=e519] [cursor=pointer]:
+          - img [ref=e520]
+      - generic [ref=e523]:
+        - generic [ref=e524]:
+          - generic [ref=e525]: Sainsbury's
+          - generic [ref=e526]:
+            - text: 15 Feb ·
+            - button "Food" [ref=e527] [cursor=pointer]
+        - generic [ref=e528]: −£32.10
+        - button "Delete transaction" [ref=e530] [cursor=pointer]:
+          - img [ref=e531]
+      - generic [ref=e534]:
+        - generic [ref=e535]:
+          - generic [ref=e536]: Rent payment
+          - generic [ref=e537]:
+            - text: 7 Feb ·
+            - button "Bills" [ref=e538] [cursor=pointer]
+        - generic [ref=e539]: −£950.00
+        - button "Delete transaction" [ref=e541] [cursor=pointer]:
+          - img [ref=e542]
+      - generic [ref=e545]:
+        - generic [ref=e546]:
+          - generic [ref=e547]: EDF Energy
+          - generic [ref=e548]:
+            - text: 6 Feb ·
+            - button "Bills" [ref=e549] [cursor=pointer]
+        - generic [ref=e550]: −£68.00
+        - button "Delete transaction" [ref=e552] [cursor=pointer]:
+          - img [ref=e553]
+      - generic [ref=e556]:
+        - generic [ref=e557]:
+          - generic [ref=e558]: Sky Broadband
+          - generic [ref=e559]:
+            - text: 6 Feb ·
+            - button "Bills" [ref=e560] [cursor=pointer]
+        - generic [ref=e561]: −£42.00
+        - button "Delete transaction" [ref=e563] [cursor=pointer]:
+          - img [ref=e564]
+      - generic [ref=e567]:
+        - generic [ref=e568]:
+          - generic [ref=e569]: Salary
+          - generic [ref=e570]:
+            - text: 5 Feb ·
+            - button "Income" [ref=e571] [cursor=pointer]
+        - generic [ref=e572]: +£3200.00
+        - button "Delete transaction" [ref=e574] [cursor=pointer]:
+          - img [ref=e575]
+      - generic [ref=e578]:
+        - generic [ref=e579]:
+          - generic [ref=e580]: TfL
+          - generic [ref=e581]:
+            - text: 5 Feb ·
+            - button "Transport" [ref=e582] [cursor=pointer]
+        - generic [ref=e583]: −£48.00
+        - button "Delete transaction" [ref=e585] [cursor=pointer]:
+          - img [ref=e586]
+      - generic [ref=e589]:
+        - generic [ref=e590]:
+          - generic [ref=e591]: Netflix
+          - generic [ref=e592]:
+            - text: 4 Feb ·
+            - button "Subscriptions" [ref=e593] [cursor=pointer]
+        - generic [ref=e594]: −£17.99
+        - button "Delete transaction" [ref=e596] [cursor=pointer]:
+          - img [ref=e597]
+      - generic [ref=e600]:
+        - generic [ref=e601]:
+          - generic [ref=e602]: Spotify
+          - generic [ref=e603]:
+            - text: 4 Feb ·
+            - button "Subscriptions" [ref=e604] [cursor=pointer]
+        - generic [ref=e605]: −£11.99
+        - button "Delete transaction" [ref=e607] [cursor=pointer]:
+          - img [ref=e608]
+      - generic [ref=e611]:
+        - generic [ref=e612]:
+          - generic [ref=e613]: Gym membership
+          - generic [ref=e614]:
+            - text: 3 Feb ·
+            - button "Health" [ref=e615] [cursor=pointer]
+        - generic [ref=e616]: −£35.00
+        - button "Delete transaction" [ref=e618] [cursor=pointer]:
+          - img [ref=e619]

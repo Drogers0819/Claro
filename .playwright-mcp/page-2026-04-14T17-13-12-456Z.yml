@@ -1,0 +1,53 @@
+- generic [ref=e2]:
+  - complementary [ref=e3]:
+    - navigation [ref=e4]:
+      - link "Overview" [ref=e5] [cursor=pointer]:
+        - /url: /overview
+        - img [ref=e7]
+        - text: Overview
+      - link "Check-in" [ref=e12] [cursor=pointer]:
+        - /url: /check-in
+        - img [ref=e14]
+        - text: Check-in
+      - link "Goals" [ref=e17] [cursor=pointer]:
+        - /url: /my-goals
+        - img [ref=e19]
+        - text: Goals
+      - link "Plan" [ref=e23] [cursor=pointer]:
+        - /url: /plan
+        - img [ref=e25]
+        - text: Plan
+  - link "Profile & settings" [ref=e27] [cursor=pointer]:
+    - /url: /settings
+    - text: V
+  - main [ref=e28]:
+    - link "Goals" [ref=e29] [cursor=pointer]:
+      - /url: /my-goals
+      - img [ref=e30]
+      - text: Goals
+    - heading "Edit goal" [level=1] [ref=e33]
+    - generic [ref=e35]:
+      - generic [ref=e36]:
+        - generic [ref=e37]: What's this goal called?
+        - textbox [ref=e38]: House deposit
+      - generic [ref=e39]:
+        - generic [ref=e40]:
+          - generic [ref=e41]: Target amount (£)
+          - spinbutton [ref=e42]: "15000.00"
+        - generic [ref=e43]:
+          - generic [ref=e44]: Already saved (£)
+          - spinbutton [ref=e45]: "3240.00"
+      - generic [ref=e46]:
+        - generic [ref=e47]:
+          - generic [ref=e48]: Monthly contribution (£)
+          - spinbutton [ref=e49]: "300.00"
+        - generic [ref=e50]:
+          - generic [ref=e51]: Target date (optional)
+          - textbox "Select date" [ref=e52]
+      - generic [ref=e53]:
+        - generic [ref=e54]: Priority (1 = most important)
+        - spinbutton [ref=e55]: "1"
+      - generic [ref=e56]:
+        - button "Save changes" [ref=e57] [cursor=pointer]
+        - link "Cancel" [ref=e58] [cursor=pointer]:
+          - /url: /my-goals

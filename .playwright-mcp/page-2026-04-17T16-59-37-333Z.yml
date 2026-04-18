@@ -1,0 +1,63 @@
+- generic [ref=e2]:
+  - complementary [ref=e3]:
+    - img "Claro" [ref=e5]
+    - navigation [ref=e6]:
+      - link "Overview" [ref=e7] [cursor=pointer]:
+        - /url: /overview
+        - img [ref=e9]
+        - text: Overview
+      - link "Check-in" [ref=e14] [cursor=pointer]:
+        - /url: /check-in
+        - img [ref=e16]
+        - text: Check-in
+      - link "Goals" [ref=e19] [cursor=pointer]:
+        - /url: /my-goals
+        - img [ref=e21]
+        - text: Goals
+      - link "Companion" [ref=e25] [cursor=pointer]:
+        - /url: /companion
+        - img [ref=e27]
+        - text: Companion
+      - link "Plan" [ref=e29] [cursor=pointer]:
+        - /url: /plan
+        - img [ref=e31]
+        - text: Plan
+    - button "TE Test Claro Free" [ref=e34] [cursor=pointer]:
+      - generic [ref=e35]: TE
+      - generic [ref=e36]:
+        - generic [ref=e37]: Test
+        - generic [ref=e38]: Claro Free
+      - img [ref=e39]
+  - main [ref=e43]:
+    - generic [ref=e44]:
+      - generic [ref=e51]:
+        - link "← Back" [ref=e52] [cursor=pointer]:
+          - /url: /goals/choose
+        - generic [ref=e53]: Step 4 of 4
+      - heading "Here's your plan." [level=1] [ref=e55]
+      - generic [ref=e56]:
+        - generic [ref=e57]:
+          - generic [ref=e58]: Your income
+          - generic [ref=e59]: £50,000/month
+        - generic [ref=e60]:
+          - generic [ref=e61]: Essentials
+          - generic [ref=e62]: −£13,080
+        - generic [ref=e63]:
+          - generic [ref=e64]: Available for your goals
+          - generic [ref=e65]: £36,920/month
+      - generic [ref=e66]:
+        - generic [ref=e67]: Where it goes
+        - generic [ref=e68]:
+          - generic [ref=e69]: Emergency fund ~2 months
+          - generic [ref=e70]: £29,536/mo
+        - generic [ref=e71]:
+          - generic [ref=e72]: Lifestyle & family
+          - generic [ref=e73]: £5,538/mo
+        - generic [ref=e74]:
+          - generic [ref=e75]: Buffer
+          - generic [ref=e76]: £1,846/mo
+      - generic [ref=e77]:
+        - generic [ref=e80]: Claro
+        - paragraph [ref=e81]: Your Emergency fund completes in ~2 months. After that, your £29,536/month surplus frees up entirely.
+      - link "Review my plan →" [ref=e82] [cursor=pointer]:
+        - /url: /onboarding/plan-review

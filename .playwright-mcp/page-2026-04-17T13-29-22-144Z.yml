@@ -1,0 +1,37 @@
+- generic [ref=e2]:
+  - complementary [ref=e3]:
+    - navigation [ref=e4]:
+      - link "Overview" [ref=e5] [cursor=pointer]:
+        - /url: /overview
+        - img [ref=e7]
+        - text: Overview
+      - link "Money" [ref=e12] [cursor=pointer]:
+        - /url: /my-money
+        - img [ref=e14]
+        - text: Money
+      - link "Check-in" [ref=e16] [cursor=pointer]:
+        - /url: /check-in
+        - img [ref=e18]
+        - text: Check-in
+      - link "Goals" [ref=e21] [cursor=pointer]:
+        - /url: /my-goals
+        - img [ref=e23]
+        - text: Goals
+      - link "Companion" [ref=e27] [cursor=pointer]:
+        - /url: /companion
+        - img [ref=e29]
+        - text: Companion
+      - link "Plan" [ref=e31] [cursor=pointer]:
+        - /url: /plan
+        - img [ref=e33]
+        - text: Plan
+  - link "Profile & settings" [ref=e35] [cursor=pointer]:
+    - /url: /settings
+    - text: V
+  - main [ref=e36]:
+    - heading "Your companion" [level=1] [ref=e38]
+    - generic [ref=e41]:
+      - generic [ref=e42]: Meet your AI financial companion
+      - paragraph [ref=e43]: Ask about your plan, run what-if scenarios, or get help understanding your finances. Available on Pro and above.
+      - link "Upgrade to Pro · £7.99/month" [ref=e44] [cursor=pointer]:
+        - /url: "#"

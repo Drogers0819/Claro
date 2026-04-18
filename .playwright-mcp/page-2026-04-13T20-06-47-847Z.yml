@@ -1,0 +1,141 @@
+- generic [ref=e2]:
+  - complementary [ref=e3]:
+    - img "Claro" [ref=e5]
+    - navigation [ref=e6]:
+      - link "Overview" [ref=e7] [cursor=pointer]:
+        - /url: /overview
+        - img [ref=e9]
+        - text: Overview
+      - link "Money" [ref=e14] [cursor=pointer]:
+        - /url: /my-money
+        - img [ref=e16]
+        - text: Money
+      - link "Goals" [ref=e18] [cursor=pointer]:
+        - /url: /my-goals
+        - img [ref=e20]
+        - text: Goals
+      - link "Plan" [ref=e24] [cursor=pointer]:
+        - /url: /plan
+        - img [ref=e26]
+        - text: Plan
+      - link "Budgets" [ref=e28] [cursor=pointer]:
+        - /url: /my-budgets
+        - img [ref=e30]
+        - text: Budgets
+    - generic [ref=e31]:
+      - link "VI Victoria Claro Core" [ref=e32] [cursor=pointer]:
+        - /url: /settings
+        - generic [ref=e33]: VI
+        - generic [ref=e34]:
+          - generic [ref=e35]: Victoria
+          - generic [ref=e36]: Claro Core
+        - img [ref=e37]
+      - button "Sign out" [ref=e41] [cursor=pointer]
+  - main [ref=e42]:
+    - link "Money" [ref=e43] [cursor=pointer]:
+      - /url: /my-money
+      - img [ref=e44]
+      - text: Money
+    - generic [ref=e46]:
+      - heading "Recurring payments" [level=1] [ref=e47]
+      - paragraph [ref=e48]: Regular outgoings spotted from your transaction history.
+    - generic [ref=e49]:
+      - generic [ref=e50]:
+        - generic [ref=e51]: Monthly Outgoing
+        - generic [ref=e52]: £1,172.98
+        - generic [ref=e53]: 7 recurring expenses
+      - generic [ref=e54]:
+        - generic [ref=e55]: Monthly Incoming
+        - generic [ref=e56]: £3,200.00
+        - generic [ref=e57]: 1 recurring income
+      - generic [ref=e58]:
+        - generic [ref=e59]: Annual Cost
+        - generic [ref=e60]: £14,075.76
+        - generic [ref=e61]: at current rate
+    - generic [ref=e62]:
+      - generic [ref=e65]: Savings spotted
+      - paragraph [ref=e66]: We found 2 potential savings worth up to £996.00/year.
+      - generic [ref=e67]: tfl costs £48.00/month. Worth reviewing if you're getting full value.
+      - generic [ref=e68]: puregym costs £35.00/month. Worth reviewing if you're getting full value.
+    - generic [ref=e69]: All recurring payments
+    - generic [ref=e70]:
+      - generic [ref=e72]:
+        - generic [ref=e73]:
+          - generic [ref=e74]:
+            - generic [ref=e75]: employer
+            - generic [ref=e76]: Monthly
+          - generic [ref=e77]: Income · 3 occurrences · Consistent amount
+          - generic [ref=e78]: "Last: 2026-04-06 · Next expected: 2026-05-06"
+        - generic [ref=e79]:
+          - generic [ref=e80]: +£3,200.00
+          - generic [ref=e81]: £3,200.00/month
+      - generic [ref=e83]:
+        - generic [ref=e84]:
+          - generic [ref=e85]:
+            - generic [ref=e86]: landlord
+            - generic [ref=e87]: Monthly
+          - generic [ref=e88]: Bills · 3 occurrences · Consistent amount
+          - generic [ref=e89]: "Last: 2026-04-08 · Next expected: 2026-05-08"
+        - generic [ref=e90]:
+          - generic [ref=e91]: −£950.00
+          - generic [ref=e92]: £950.00/month
+      - generic [ref=e94]:
+        - generic [ref=e95]:
+          - generic [ref=e96]:
+            - generic [ref=e97]: edf energy
+            - generic [ref=e98]: Monthly
+          - generic [ref=e99]: Bills · 3 occurrences · Consistent amount
+          - generic [ref=e100]: "Last: 2026-04-07 · Next expected: 2026-05-07"
+        - generic [ref=e101]:
+          - generic [ref=e102]: −£68.00
+          - generic [ref=e103]: £68.00/month
+      - generic [ref=e105]:
+        - generic [ref=e106]:
+          - generic [ref=e107]:
+            - generic [ref=e108]: tfl
+            - generic [ref=e109]: Monthly
+          - generic [ref=e110]: Transport · 3 occurrences · Consistent amount
+          - generic [ref=e111]: "Last: 2026-04-06 · Next expected: 2026-05-06"
+        - generic [ref=e112]:
+          - generic [ref=e113]: −£48.00
+          - generic [ref=e114]: £48.00/month
+      - generic [ref=e116]:
+        - generic [ref=e117]:
+          - generic [ref=e118]:
+            - generic [ref=e119]: sky
+            - generic [ref=e120]: Monthly
+          - generic [ref=e121]: Bills · 3 occurrences · Consistent amount
+          - generic [ref=e122]: "Last: 2026-04-07 · Next expected: 2026-05-07"
+        - generic [ref=e123]:
+          - generic [ref=e124]: −£42.00
+          - generic [ref=e125]: £42.00/month
+      - generic [ref=e127]:
+        - generic [ref=e128]:
+          - generic [ref=e129]:
+            - generic [ref=e130]: puregym
+            - generic [ref=e131]: Monthly
+          - generic [ref=e132]: Health · 3 occurrences · Consistent amount
+          - generic [ref=e133]: "Last: 2026-04-04 · Next expected: 2026-05-04"
+        - generic [ref=e134]:
+          - generic [ref=e135]: −£35.00
+          - generic [ref=e136]: £35.00/month
+      - generic [ref=e138]:
+        - generic [ref=e139]:
+          - generic [ref=e140]:
+            - generic [ref=e141]: netflix
+            - generic [ref=e142]: Monthly
+          - generic [ref=e143]: Subscriptions · 3 occurrences · Consistent amount
+          - generic [ref=e144]: "Last: 2026-04-05 · Next expected: 2026-05-05"
+        - generic [ref=e145]:
+          - generic [ref=e146]: −£17.99
+          - generic [ref=e147]: £17.99/month
+      - generic [ref=e149]:
+        - generic [ref=e150]:
+          - generic [ref=e151]:
+            - generic [ref=e152]: spotify
+            - generic [ref=e153]: Monthly
+          - generic [ref=e154]: Subscriptions · 3 occurrences · Consistent amount
+          - generic [ref=e155]: "Last: 2026-04-05 · Next expected: 2026-05-05"
+        - generic [ref=e156]:
+          - generic [ref=e157]: −£11.99
+          - generic [ref=e158]: £11.99/month

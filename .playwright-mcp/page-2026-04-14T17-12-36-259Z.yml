@@ -1,0 +1,69 @@
+- generic [ref=e2]:
+  - complementary [ref=e3]:
+    - navigation [ref=e4]:
+      - link "Overview" [ref=e5] [cursor=pointer]:
+        - /url: /overview
+        - img [ref=e7]
+        - text: Overview
+      - link "Check-in" [ref=e12] [cursor=pointer]:
+        - /url: /check-in
+        - img [ref=e14]
+        - text: Check-in
+      - link "Goals" [ref=e17] [cursor=pointer]:
+        - /url: /my-goals
+        - img [ref=e19]
+        - text: Goals
+      - link "Plan" [ref=e23] [cursor=pointer]:
+        - /url: /plan
+        - img [ref=e25]
+        - text: Plan
+  - link "Profile & settings" [ref=e27] [cursor=pointer]:
+    - /url: /settings
+    - text: V
+  - main [ref=e28]:
+    - generic [ref=e29]:
+      - link "Settings" [ref=e30] [cursor=pointer]:
+        - /url: /settings
+        - img [ref=e31]
+        - text: Settings
+      - generic [ref=e33]:
+        - heading "Your financial profile" [level=1] [ref=e34]
+        - paragraph [ref=e35]: This takes about 60 seconds. We use this to show you where your money goes and where it could take you.
+      - generic [ref=e36]:
+        - generic [ref=e37]: Income
+        - generic [ref=e38]:
+          - generic [ref=e39]:
+            - generic [ref=e40]: Monthly take-home pay (£)
+            - spinbutton [ref=e41]: "3200"
+          - generic [ref=e42]:
+            - generic [ref=e43]: Pay day (day of month)
+            - spinbutton [ref=e44]: "25"
+        - generic [ref=e45]: Commitments
+        - generic [ref=e46]:
+          - generic [ref=e47]:
+            - generic [ref=e48]: Monthly rent or mortgage (£)
+            - spinbutton [ref=e49]: "950"
+          - generic [ref=e50]:
+            - generic [ref=e51]: Monthly bills combined (£)
+            - spinbutton [ref=e52]: "180"
+        - paragraph [ref=e53]: Council tax, phone, utilities, internet and similar fixed costs.
+        - generic [ref=e54]: Living costs
+        - generic [ref=e55]:
+          - generic [ref=e56]:
+            - generic [ref=e57]: Monthly groceries (£)
+            - spinbutton [ref=e58]
+          - generic [ref=e59]:
+            - generic [ref=e60]: Monthly transport (£)
+            - spinbutton [ref=e61]
+        - paragraph [ref=e62]: Rough estimates are fine. We'll refine these from your bank statements.
+        - generic [ref=e63]:
+          - generic [ref=e64]: Available for goals
+          - generic [ref=e65]: £2,070/month
+          - paragraph [ref=e66]: After rent and bills.
+        - paragraph [ref=e67]:
+          - img [ref=e68]
+          - text: Encrypted in transit · never sold · never shared
+        - generic [ref=e71]:
+          - button "Update profile" [ref=e72] [cursor=pointer]
+          - link "Cancel" [ref=e73] [cursor=pointer]:
+            - /url: /settings

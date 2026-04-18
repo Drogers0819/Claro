@@ -1,0 +1,67 @@
+- generic [ref=e2]:
+  - complementary [ref=e3]:
+    - img "Claro" [ref=e91]
+    - navigation [ref=e4]:
+      - link "Overview" [ref=e5] [cursor=pointer]:
+        - /url: /overview
+        - img [ref=e7]
+        - text: Overview
+      - link "Check-in" [ref=e12] [cursor=pointer]:
+        - /url: /check-in
+        - img [ref=e14]
+        - text: Check-in
+      - link "Goals" [ref=e17] [cursor=pointer]:
+        - /url: /my-goals
+        - img [ref=e19]
+        - text: Goals
+      - link "Companion" [ref=e23] [cursor=pointer]:
+        - /url: /companion
+        - img [ref=e25]
+        - text: Companion
+      - link "Plan" [ref=e27] [cursor=pointer]:
+        - /url: /plan
+        - img [ref=e29]
+        - text: Plan
+    - button "TE Test Claro Free" [ref=e93] [cursor=pointer]:
+      - generic [ref=e94]: TE
+      - generic [ref=e95]:
+        - generic [ref=e96]: Test
+        - generic [ref=e97]: Claro Free
+      - img [ref=e98]
+  - main [ref=e31]:
+    - link "Overview" [ref=e32] [cursor=pointer]:
+      - /url: /overview
+      - img [ref=e33]
+      - text: Overview
+    - heading "Settings" [level=1] [ref=e36]
+    - button "Financial profile" [ref=e38] [cursor=pointer]:
+      - generic [ref=e39]:
+        - img [ref=e40]
+        - generic [ref=e43]: Financial profile
+      - img [ref=e44]
+    - generic [ref=e63]:
+      - button "Appearance" [expanded] [active] [ref=e64] [cursor=pointer]:
+        - generic [ref=e65]:
+          - img [ref=e66]
+          - generic [ref=e71]: Appearance
+        - img [ref=e72]
+      - generic [ref=e124]:
+        - paragraph [ref=e125]: Choose your look. Changes apply instantly.
+        - generic [ref=e127]:
+          - generic [ref=e130] [cursor=pointer]: Racing Green
+          - generic [ref=e133] [cursor=pointer]: Midnight Navy
+          - generic [ref=e136] [cursor=pointer]: Oxford Saddle
+          - generic [ref=e139] [cursor=pointer]: Amethyst
+          - generic [ref=e142] [cursor=pointer]: Rosso Corsa
+          - generic [ref=e145] [cursor=pointer]: Electric Cobalt
+          - generic [ref=e148] [cursor=pointer]: Ivory Estate
+          - generic [ref=e151] [cursor=pointer]: Pearl Essence
+          - generic [ref=e154] [cursor=pointer]: Sandstone
+          - generic [ref=e157] [cursor=pointer]: Morning Sage
+          - generic [ref=e160] [cursor=pointer]: Soft Lavender
+          - generic [ref=e163] [cursor=pointer]: Silver Mist
+    - button "Account" [ref=e75] [cursor=pointer]:
+      - generic [ref=e76]:
+        - img [ref=e77]
+        - generic [ref=e80]: Account
+      - img [ref=e81]

@@ -1,0 +1,77 @@
+- generic [ref=e2]:
+  - complementary [ref=e3]:
+    - navigation [ref=e4]:
+      - link "Overview" [ref=e5] [cursor=pointer]:
+        - /url: /overview
+        - img [ref=e7]
+        - text: Overview
+      - link "Check-in" [ref=e12] [cursor=pointer]:
+        - /url: /check-in
+        - img [ref=e14]
+        - text: Check-in
+      - link "Goals" [ref=e17] [cursor=pointer]:
+        - /url: /my-goals
+        - img [ref=e19]
+        - text: Goals
+      - link "Companion" [ref=e23] [cursor=pointer]:
+        - /url: /companion
+        - img [ref=e25]
+        - text: Companion
+      - link "Plan" [ref=e27] [cursor=pointer]:
+        - /url: /plan
+        - img [ref=e29]
+        - text: Plan
+  - link "Profile & settings" [ref=e31] [cursor=pointer]:
+    - /url: /settings
+    - text: V
+  - main [ref=e32]:
+    - link "Goals" [ref=e33] [cursor=pointer]:
+      - /url: /my-goals
+      - img [ref=e34]
+      - text: Goals
+    - heading "House deposit" [level=1] [ref=e37]
+    - generic [ref=e38]:
+      - generic [ref=e41]: Projection
+      - generic [ref=e42]: April 2029
+      - paragraph [ref=e43]: 36 months away at £300.00/month
+    - generic [ref=e44]:
+      - generic [ref=e45]: What if you changed your contribution?
+      - paragraph [ref=e46]: Move the slider to see your future change in real time.
+      - generic [ref=e47]:
+        - generic [ref=e48]: £0
+        - generic [ref=e49]: £2,070
+      - slider [ref=e50] [cursor=pointer]: "300"
+      - generic [ref=e51]: £300.00/month
+    - generic [ref=e52]:
+      - generic [ref=e53]: Timeline projection
+      - generic [ref=e56]:
+        - generic [ref=e57]: Investment growth adds
+        - generic [ref=e58]: +£1,067
+        - generic [ref=e59]: to your total
+    - generic [ref=e60]:
+      - generic [ref=e61]:
+        - generic [ref=e62]: £3,240.00
+        - generic [ref=e63]: of £15,000.00
+      - generic [ref=e66]: 21.6% complete
+    - generic [ref=e67]:
+      - generic [ref=e68]: Milestones
+      - generic [ref=e69]:
+        - generic [ref=e70]:
+          - generic [ref=e71]: 25%
+          - generic [ref=e72]: £3,863
+        - generic [ref=e73]: "#d Jun 2026"
+      - generic [ref=e74]:
+        - generic [ref=e75]:
+          - generic [ref=e76]: 50%
+          - generic [ref=e77]: £7,687
+        - generic [ref=e78]: "#d Jun 2027"
+      - generic [ref=e79]:
+        - generic [ref=e80]:
+          - generic [ref=e81]: 75%
+          - generic [ref=e82]: £11,329
+        - generic [ref=e83]: "#d May 2028"
+      - generic [ref=e84]:
+        - generic [ref=e85]:
+          - generic [ref=e86]: 100%
+          - generic [ref=e87]: £15,107
+        - generic [ref=e88]: "#d Apr 2029"

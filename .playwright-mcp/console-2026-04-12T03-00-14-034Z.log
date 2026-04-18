@@ -1,0 +1,4 @@
+[     226ms] TypeError: Cannot set property className of #<SVGElement> which has only a getter
+    at buildCustomSelect (http://localhost:5002/static/js/custom-select.js:42:27)
+    at NodeList.forEach (<anonymous>)
+    at HTMLDocument.<anonymous> (http://localhost:5002/static/js/custom-select.js:136:57)

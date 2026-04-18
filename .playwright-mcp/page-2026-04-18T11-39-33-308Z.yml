@@ -1,0 +1,83 @@
+- generic [ref=e2]:
+  - complementary [ref=e3]:
+    - img "Claro" [ref=e5]
+    - navigation [ref=e6]:
+      - link "Overview" [ref=e7] [cursor=pointer]:
+        - /url: /overview
+        - img [ref=e9]
+        - text: Overview
+      - link "Check-in" [ref=e14] [cursor=pointer]:
+        - /url: /check-in
+        - img [ref=e16]
+        - text: Check-in
+      - link "Goals" [ref=e19] [cursor=pointer]:
+        - /url: /my-goals
+        - img [ref=e21]
+        - text: Goals
+      - link "Companion" [ref=e25] [cursor=pointer]:
+        - /url: /companion
+        - img [ref=e27]
+        - text: Companion
+      - link "Plan" [ref=e29] [cursor=pointer]:
+        - /url: /plan
+        - img [ref=e31]
+        - text: Plan
+    - button "TE Test Claro Free" [ref=e34] [cursor=pointer]:
+      - generic [ref=e35]: TE
+      - generic [ref=e36]:
+        - generic [ref=e37]: Test
+        - generic [ref=e38]: Claro Free
+      - img [ref=e39]
+  - main [ref=e43]:
+    - generic [ref=e44]:
+      - generic [ref=e45]:
+        - link "Back" [ref=e46] [cursor=pointer]:
+          - /url: /onboarding/surplus
+          - img [ref=e47]
+          - text: Back
+        - generic [ref=e54]: Step 3 of 4
+      - generic [ref=e55]:
+        - heading "What are you working toward?" [level=1] [ref=e56]
+        - paragraph [ref=e57]: Tap everything that applies. We'll figure out the rest.
+      - generic [ref=e58]:
+        - generic [ref=e59]: Now, what are you working toward?
+        - generic [ref=e60]:
+          - generic [ref=e62] [cursor=pointer]: Emergency fund
+          - generic [ref=e64] [cursor=pointer]:
+            - img [ref=e65]
+            - text: House deposit
+          - generic [ref=e69] [cursor=pointer]:
+            - img [ref=e70]
+            - text: Holiday
+          - generic [ref=e74] [cursor=pointer]:
+            - img [ref=e75]
+            - text: Baby fund
+          - generic [ref=e78] [cursor=pointer]:
+            - img [ref=e79]
+            - text: Pay off debt
+          - generic [ref=e82] [cursor=pointer]:
+            - img [ref=e83]
+            - text: Car
+          - generic [ref=e88] [cursor=pointer]:
+            - img [ref=e89]
+            - text: Wedding
+          - generic [ref=e95] [cursor=pointer]:
+            - img [ref=e96]
+            - text: Student loan
+          - generic [ref=e100] [cursor=pointer]:
+            - img [ref=e101]
+            - text: New purchase
+          - generic [ref=e104] [cursor=pointer]:
+            - img [ref=e105]
+            - text: Something else
+        - generic [ref=e110]:
+          - generic [ref=e111]: 🛡️ Emergency fund — how much?
+          - paragraph [ref=e112]: A safety net for unexpected costs. Most advisers recommend 3 months of essential expenses.
+          - generic [ref=e113]:
+            - generic [ref=e115] [cursor=pointer]: £1,000
+            - generic [ref=e117] [cursor=pointer]: £3,000
+            - generic [ref=e119] [cursor=pointer]: £5,000
+          - spinbutton [ref=e120]
+        - button "Build my plan" [ref=e121] [cursor=pointer]:
+          - text: Build my plan
+          - img [ref=e122]

@@ -1,0 +1,106 @@
+- generic [ref=e2]:
+  - heading "TypeError" [level=1] [ref=e3]
+  - paragraph [ref=e5] [cursor=pointer]: "TypeError: float() argument must be a string or a number, not 'NoneType'"
+  - heading "Traceback (most recent call last)" [level=2] [ref=e6] [cursor=pointer]:
+    - text: Traceback
+    - emphasis [ref=e7]: (most recent call last)
+  - generic [ref=e8]:
+    - heading [level=3]
+    - list [ref=e9]:
+      - listitem [ref=e10]:
+        - generic [ref=e11]:
+          - heading "File \"/Users/victoriataiwo/Documents/claro/Fintrack/venv/lib/python3.9/site-packages/flask/app.py\", line 1536, in __call__" [level=4] [ref=e12]:
+            - text: File "/Users/victoriataiwo/Documents/claro/Fintrack/venv/lib/python3.9/site-packages/flask/app.py", line
+            - emphasis [ref=e13]: "1536"
+            - text: ", in"
+            - code [ref=e14]: __call__
+          - generic [ref=e16]: return self.wsgi_app(environ, start_response)
+      - listitem [ref=e17]:
+        - generic [ref=e18]:
+          - heading "File \"/Users/victoriataiwo/Documents/claro/Fintrack/venv/lib/python3.9/site-packages/flask/app.py\", line 1514, in wsgi_app" [level=4] [ref=e19]:
+            - text: File "/Users/victoriataiwo/Documents/claro/Fintrack/venv/lib/python3.9/site-packages/flask/app.py", line
+            - emphasis [ref=e20]: "1514"
+            - text: ", in"
+            - code [ref=e21]: wsgi_app
+          - generic [ref=e23]: response = self.handle_exception(e)
+      - listitem [ref=e24]:
+        - generic [ref=e25]:
+          - heading "File \"/Users/victoriataiwo/Documents/claro/Fintrack/venv/lib/python3.9/site-packages/flask/app.py\", line 1511, in wsgi_app" [level=4] [ref=e26]:
+            - text: File "/Users/victoriataiwo/Documents/claro/Fintrack/venv/lib/python3.9/site-packages/flask/app.py", line
+            - emphasis [ref=e27]: "1511"
+            - text: ", in"
+            - code [ref=e28]: wsgi_app
+          - generic [ref=e30]: response = self.full_dispatch_request()
+      - listitem [ref=e31]:
+        - generic [ref=e32]:
+          - heading "File \"/Users/victoriataiwo/Documents/claro/Fintrack/venv/lib/python3.9/site-packages/flask/app.py\", line 919, in full_dispatch_request" [level=4] [ref=e33]:
+            - text: File "/Users/victoriataiwo/Documents/claro/Fintrack/venv/lib/python3.9/site-packages/flask/app.py", line
+            - emphasis [ref=e34]: "919"
+            - text: ", in"
+            - code [ref=e35]: full_dispatch_request
+          - generic [ref=e37]: rv = self.handle_user_exception(e)
+      - listitem [ref=e38]:
+        - generic [ref=e39]:
+          - heading "File \"/Users/victoriataiwo/Documents/claro/Fintrack/venv/lib/python3.9/site-packages/flask/app.py\", line 917, in full_dispatch_request" [level=4] [ref=e40]:
+            - text: File "/Users/victoriataiwo/Documents/claro/Fintrack/venv/lib/python3.9/site-packages/flask/app.py", line
+            - emphasis [ref=e41]: "917"
+            - text: ", in"
+            - code [ref=e42]: full_dispatch_request
+          - generic [ref=e44]: rv = self.dispatch_request()
+      - listitem [ref=e45]:
+        - generic [ref=e46]:
+          - heading "File \"/Users/victoriataiwo/Documents/claro/Fintrack/venv/lib/python3.9/site-packages/flask/app.py\", line 902, in dispatch_request" [level=4] [ref=e47]:
+            - text: File "/Users/victoriataiwo/Documents/claro/Fintrack/venv/lib/python3.9/site-packages/flask/app.py", line
+            - emphasis [ref=e48]: "902"
+            - text: ", in"
+            - code [ref=e49]: dispatch_request
+          - generic [ref=e51]: "return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args) # type: ignore[no-any-return]"
+      - listitem [ref=e52]:
+        - generic [ref=e53]:
+          - heading "File \"/Users/victoriataiwo/Documents/claro/Fintrack/venv/lib/python3.9/site-packages/flask_login/utils.py\", line 290, in decorated_view" [level=4] [ref=e54]:
+            - text: File "/Users/victoriataiwo/Documents/claro/Fintrack/venv/lib/python3.9/site-packages/flask_login/utils.py", line
+            - emphasis [ref=e55]: "290"
+            - text: ", in"
+            - code [ref=e56]: decorated_view
+          - generic [ref=e58]: return current_app.ensure_sync(func)(*args, **kwargs)
+      - listitem [ref=e59]:
+        - generic [ref=e60]:
+          - heading "File \"/Users/victoriataiwo/Documents/claro/Fintrack/app/routes/page_routes.py\", line 1404, in insights" [level=4] [ref=e61]:
+            - text: File "/Users/victoriataiwo/Documents/claro/Fintrack/app/routes/page_routes.py", line
+            - emphasis [ref=e62]: "1404"
+            - text: ", in"
+            - code [ref=e63]: insights
+          - generic [ref=e65]: budget_status = calc_prediction_budget_status(
+      - listitem [ref=e66]:
+        - generic [ref=e67]:
+          - heading "File \"/Users/victoriataiwo/Documents/claro/Fintrack/app/services/prediction_service.py\", line 392, in calculate_budget_status" [level=4] [ref=e68]:
+            - text: File "/Users/victoriataiwo/Documents/claro/Fintrack/app/services/prediction_service.py", line
+            - emphasis [ref=e69]: "392"
+            - text: ", in"
+            - code [ref=e70]: calculate_budget_status
+          - generic [ref=e72]: total_goal_allocation = sum(
+      - listitem [ref=e73]:
+        - generic [ref=e74]:
+          - heading "File \"/Users/victoriataiwo/Documents/claro/Fintrack/app/services/prediction_service.py\", line 393, in <genexpr>" [level=4] [ref=e75]:
+            - text: File "/Users/victoriataiwo/Documents/claro/Fintrack/app/services/prediction_service.py", line
+            - emphasis [ref=e76]: "393"
+            - text: ", in"
+            - code [ref=e77]: <genexpr>
+          - generic [ref=e79]: float(g.get("monthly_allocation", 0))
+    - blockquote [ref=e80]: "TypeError: float() argument must be a string or a number, not 'NoneType'"
+  - generic [ref=e81]:
+    - text: The debugger caught an exception in your WSGI application. You can now look at the traceback which led to the error.
+    - generic [ref=e82]:
+      - paragraph [ref=e83]: To switch between the interactive traceback and the plaintext one, you can click on the "Traceback" headline. From the text traceback you can also create a paste of it. For code execution mouse-over the frame you want to debug and click on the console icon on the right side.
+      - paragraph [ref=e84]: "You can execute arbitrary Python code in the stack frames and there are some extra helpers available for introspection:"
+      - list [ref=e85]:
+        - listitem [ref=e86]:
+          - code [ref=e87]: dump()
+          - text: shows all variables in the frame
+        - listitem [ref=e88]:
+          - code [ref=e89]: dump(obj)
+          - text: dumps all that's known about the object
+  - generic [ref=e90]:
+    - text: Brought to you by
+    - strong [ref=e91]: DON'T PANIC
+    - text: ", your friendly Werkzeug powered traceback interpreter."

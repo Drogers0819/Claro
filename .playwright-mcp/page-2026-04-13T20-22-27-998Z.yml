@@ -1,0 +1,116 @@
+- generic [ref=e2]:
+  - complementary [ref=e3]:
+    - img "Claro" [ref=e5]
+    - navigation [ref=e6]:
+      - link "Overview" [ref=e7] [cursor=pointer]:
+        - /url: /overview
+        - img [ref=e9]
+        - text: Overview
+      - link "Money" [ref=e14] [cursor=pointer]:
+        - /url: /my-money
+        - img [ref=e16]
+        - text: Money
+      - link "Goals" [ref=e18] [cursor=pointer]:
+        - /url: /my-goals
+        - img [ref=e20]
+        - text: Goals
+      - link "Plan" [ref=e24] [cursor=pointer]:
+        - /url: /plan
+        - img [ref=e26]
+        - text: Plan
+      - link "Budgets" [ref=e28] [cursor=pointer]:
+        - /url: /my-budgets
+        - img [ref=e30]
+        - text: Budgets
+    - generic [ref=e31]:
+      - link "VI Victoria Claro Core" [ref=e32] [cursor=pointer]:
+        - /url: /settings
+        - generic [ref=e33]: VI
+        - generic [ref=e34]:
+          - generic [ref=e35]: Victoria
+          - generic [ref=e36]: Claro Core
+        - img [ref=e37]
+      - button "Sign out" [ref=e41] [cursor=pointer]
+  - main [ref=e42]:
+    - heading "Your plan" [level=1] [ref=e44]
+    - generic [ref=e45]:
+      - generic [ref=e48]: What you need to know
+      - paragraph [ref=e49]: Phase 1 of 2, building Emergency fund and House deposit. Emergency fund will be done in 3 months. £15,150 to go across all goals.
+    - generic [ref=e50]:
+      - generic [ref=e51]: How your £3,200/month is divided
+      - generic [ref=e52]:
+        - generic [ref=e53]:
+          - generic [ref=e54]: Essentials
+          - generic [ref=e55]: £1,130
+        - generic [ref=e56]: Rent £950 · Bills £180
+      - generic [ref=e57]:
+        - generic [ref=e58]:
+          - generic [ref=e59]: Emergency fund 3 months to go
+          - generic [ref=e60]: £1,166/mo
+        - generic [ref=e63]:
+          - generic [ref=e64]: £0
+          - generic [ref=e65]: £3,390
+      - generic [ref=e66]:
+        - generic [ref=e67]:
+          - generic [ref=e68]: House deposit 24 months to go
+          - generic [ref=e69]: £490/mo
+        - generic [ref=e73]:
+          - generic [ref=e74]: £3,240
+          - generic [ref=e75]: £15,000
+      - generic [ref=e77]:
+        - generic [ref=e78]: Lifestyle & family
+        - generic [ref=e79]: £310/mo
+      - generic [ref=e81]:
+        - generic [ref=e82]: Buffer
+        - generic [ref=e83]: £104/mo
+      - generic [ref=e85]:
+        - generic [ref=e86]: Surplus
+        - generic [ref=e87]: £2,070/mo
+    - generic [ref=e88]:
+      - generic [ref=e89]: Your plan phases
+      - generic [ref=e90]:
+        - generic [ref=e91]:
+          - generic [ref=e92]: Phase 1
+          - generic [ref=e93]: 3 months
+        - paragraph [ref=e94]: Building Emergency fund and House deposit. Emergency fund completed at end of phase.
+        - generic [ref=e95]: Emergency fund ✓
+      - generic [ref=e96]:
+        - generic [ref=e97]:
+          - generic [ref=e98]: Phase 2
+          - generic [ref=e99]: 7 months
+        - paragraph [ref=e100]: Building House deposit. House deposit completed at end of phase.
+        - generic [ref=e101]: House deposit ✓
+    - generic [ref=e102]:
+      - paragraph [ref=e104]: Your Emergency fund will be fully funded in 3 months. That money will automatically redirect to your next priority.
+      - paragraph [ref=e106]: Your emergency fund is below 50%. The plan prioritises building this to £3,390 (3 months of essentials).
+    - generic [ref=e107]:
+      - generic [ref=e108]: Can I afford this?
+      - paragraph [ref=e109]: Check a one-off expense against your plan.
+      - generic [ref=e110]:
+        - generic [ref=e111]:
+          - generic [ref=e112]:
+            - generic [ref=e113]: What is it?
+            - textbox "e.g. Lake District trip" [ref=e114]
+          - generic [ref=e115]:
+            - generic [ref=e116]: How much? (£)
+            - spinbutton [ref=e117]
+        - button "Check" [ref=e118] [cursor=pointer]
+    - generic [ref=e119]:
+      - generic [ref=e120]: Habit cost
+      - paragraph [ref=e121]: See what a daily or monthly habit really costs over time.
+      - generic [ref=e122]:
+        - generic [ref=e123]:
+          - generic [ref=e124]:
+            - generic [ref=e125]: Monthly amount (£)
+            - spinbutton [ref=e126]
+          - generic [ref=e127]:
+            - generic [ref=e128]: What's the spend?
+            - textbox "e.g. Netflix, takeaways..." [ref=e129]
+        - button "Show me" [ref=e130] [cursor=pointer]
+    - generic [ref=e131]:
+      - generic [ref=e132]: What if?
+      - paragraph [ref=e133]: Change your income, rent, or goal contributions and see the exact impact.
+      - link "Run a scenario" [ref=e134] [cursor=pointer]:
+        - /url: /scenario
+        - text: Run a scenario
+        - img [ref=e135]

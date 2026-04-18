@@ -1,0 +1,52 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - complementary [ref=e3]:
+      - navigation [ref=e4]:
+        - link "Overview" [ref=e5] [cursor=pointer]:
+          - /url: /overview
+          - img [ref=e7]
+          - text: Overview
+        - link "Check-in" [ref=e12] [cursor=pointer]:
+          - /url: /check-in
+          - img [ref=e14]
+          - text: Check-in
+        - link "Goals" [ref=e17] [cursor=pointer]:
+          - /url: /my-goals
+          - img [ref=e19]
+          - text: Goals
+        - link "Companion" [ref=e23] [cursor=pointer]:
+          - /url: /companion
+          - img [ref=e25]
+          - text: Companion
+        - link "Plan" [ref=e27] [cursor=pointer]:
+          - /url: /plan
+          - img [ref=e29]
+          - text: Plan
+    - main [ref=e31]:
+      - heading "Good afternoon, Test" [level=1] [ref=e33]
+      - generic [ref=e34]:
+        - img [ref=e35]
+        - generic [ref=e37]: Your 14-day full access has started. No card needed.
+      - paragraph [ref=e38]: Two steps and Claro becomes genuinely useful.
+      - paragraph [ref=e39]: Takes about 60 seconds. Your plan, goals, and monthly check-in are all built from this.
+      - generic [ref=e43]: 0/2 done
+      - generic [ref=e44]:
+        - generic [ref=e46]:
+          - generic [ref=e48]: "1"
+          - generic [ref=e49]:
+            - generic [ref=e51]: Your financial profile
+            - paragraph [ref=e52]: Tell us your income, rent, and bills. Takes 60 seconds. Everything else in Claro depends on this.
+            - link "Set up my profile" [ref=e53] [cursor=pointer]:
+              - /url: /factfind
+        - generic [ref=e55]:
+          - generic [ref=e57]: "2"
+          - generic [ref=e58]:
+            - generic [ref=e60]: Create your first goal
+            - paragraph [ref=e61]: A house deposit, emergency fund, a holiday. Add a goal and Claro will show you exactly when you'll get there.
+      - generic [ref=e62]:
+        - link "Skip for now →" [ref=e63] [cursor=pointer]:
+          - /url: /overview
+        - text: You can return to this page anytime from the overview.
+  - link "Profile & settings" [ref=e64] [cursor=pointer]:
+    - /url: /settings
+    - text: T

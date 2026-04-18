@@ -1,0 +1,97 @@
+- generic [ref=e2]:
+  - complementary [ref=e3]:
+    - img "Claro" [ref=e5]
+    - navigation [ref=e6]:
+      - link "Overview" [ref=e7] [cursor=pointer]:
+        - /url: /overview
+        - img [ref=e9]
+        - text: Overview
+      - link "Money" [ref=e14] [cursor=pointer]:
+        - /url: /my-money
+        - img [ref=e16]
+        - text: Money
+      - link "Goals" [ref=e18] [cursor=pointer]:
+        - /url: /my-goals
+        - img [ref=e20]
+        - text: Goals
+      - link "Plan" [ref=e24] [cursor=pointer]:
+        - /url: /plan
+        - img [ref=e26]
+        - text: Plan
+      - link "Budgets" [ref=e28] [cursor=pointer]:
+        - /url: /my-budgets
+        - img [ref=e30]
+        - text: Budgets
+    - generic [ref=e31]:
+      - link "VI Victoria Claro Core" [ref=e32] [cursor=pointer]:
+        - /url: /settings
+        - generic [ref=e33]: VI
+        - generic [ref=e34]:
+          - generic [ref=e35]: Victoria
+          - generic [ref=e36]: Claro Core
+        - img [ref=e37]
+      - button "Sign out" [ref=e41] [cursor=pointer]
+  - main [ref=e42]:
+    - heading "Good evening, Victoria." [level=1] [ref=e44]
+    - generic [ref=e45]:
+      - generic [ref=e48]: Your plan
+      - paragraph [ref=e49]: Phase 1 of 2, building Emergency fund and House deposit. Emergency fund will be done in 3 months. £15,150 to go across all goals.
+      - generic [ref=e50]:
+        - generic [ref=e51]:
+          - generic [ref=e52]: Phase
+          - generic [ref=e53]: 1 of 2
+        - generic [ref=e54]:
+          - generic [ref=e55]: Surplus
+          - generic [ref=e56]: £2,070/mo
+        - generic [ref=e57]:
+          - generic [ref=e58]: Lifestyle
+          - generic [ref=e59]: £310/mo
+      - link "View full plan" [ref=e60] [cursor=pointer]:
+        - /url: /plan
+        - text: View full plan
+        - img [ref=e61]
+    - generic [ref=e63]:
+      - generic [ref=e64]:
+        - generic [ref=e65]: Your pots
+        - link "1 goal" [ref=e66] [cursor=pointer]:
+          - /url: /my-goals
+      - generic [ref=e67]:
+        - generic [ref=e68]:
+          - generic [ref=e70]: Emergency fund
+          - generic [ref=e71]: £1,166/mo
+        - generic [ref=e73]:
+          - generic [ref=e74]: £0 of £3,390
+          - generic [ref=e75]: 3 months
+      - generic [ref=e76]:
+        - generic [ref=e77]:
+          - generic [ref=e79]: House deposit
+          - generic [ref=e80]: £490/mo
+        - generic [ref=e83]:
+          - generic [ref=e84]: £3,240 of £15,000
+          - generic [ref=e85]: 24 months
+    - generic [ref=e86]:
+      - paragraph [ref=e88]: Your Emergency fund will be fully funded in 3 months. That money will automatically redirect to your next priority.
+      - paragraph [ref=e90]: Your emergency fund is below 50%. The plan prioritises building this to £3,390 (3 months of essentials).
+    - generic [ref=e91]:
+      - generic [ref=e92]:
+        - generic [ref=e93]: This month
+        - link "Details" [ref=e94] [cursor=pointer]:
+          - /url: /my-money
+      - generic [ref=e95]:
+        - generic [ref=e96]:
+          - generic [ref=e97]: Left to spend
+          - generic [ref=e98]: £1,728
+          - generic [ref=e99]: £101/day · 17 days
+        - generic [ref=e100]:
+          - generic [ref=e101]: Spent so far
+          - generic [ref=e102]: £1,472
+      - generic [ref=e103]:
+        - generic [ref=e104]:
+          - generic [ref=e105]: 🏠 Bills
+          - generic [ref=e106]: £1,060
+        - generic [ref=e107]:
+          - generic [ref=e108]: 🍕 Food
+          - generic [ref=e109]: £197
+        - generic [ref=e110]:
+          - generic [ref=e111]: 🛍️ Shopping
+          - generic [ref=e112]: £67

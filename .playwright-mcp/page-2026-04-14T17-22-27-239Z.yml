@@ -1,0 +1,100 @@
+- generic [ref=e2]:
+  - complementary [ref=e3]:
+    - navigation [ref=e4]:
+      - link "Overview" [ref=e5] [cursor=pointer]:
+        - /url: /overview
+        - img [ref=e7]
+        - text: Overview
+      - link "Check-in" [ref=e12] [cursor=pointer]:
+        - /url: /check-in
+        - img [ref=e14]
+        - text: Check-in
+      - link "Goals" [ref=e17] [cursor=pointer]:
+        - /url: /my-goals
+        - img [ref=e19]
+        - text: Goals
+      - link "Plan" [ref=e23] [cursor=pointer]:
+        - /url: /plan
+        - img [ref=e25]
+        - text: Plan
+  - link "Profile & settings" [ref=e27] [cursor=pointer]:
+    - /url: /settings
+    - text: V
+  - main [ref=e28]:
+    - heading "Your plan" [level=1] [ref=e30]
+    - generic [ref=e31]:
+      - generic [ref=e34]: What you need to know
+      - paragraph [ref=e35]: Following the current plan, once your Emergency fund is complete (~3 months), that money redirects to boost your House deposit. £15,150 to go across all goals.
+    - generic [ref=e36]:
+      - generic [ref=e37]: Monthly breakdown
+      - generic [ref=e38]:
+        - generic [ref=e39]:
+          - generic [ref=e40]: Essentials
+          - generic [ref=e41]: £1,130
+        - generic [ref=e42]: Rent £950 · Bills £180
+      - generic [ref=e43]:
+        - generic [ref=e44]:
+          - generic [ref=e45]: Emergency fund 3 months to go
+          - generic [ref=e46]: £1,656/mo
+        - generic [ref=e49]:
+          - generic [ref=e50]: £0
+          - generic [ref=e51]: £3,390
+      - generic [ref=e53]:
+        - generic [ref=e54]: Lifestyle & family
+        - generic [ref=e55]: £310/mo
+      - generic [ref=e57]:
+        - generic [ref=e58]: Buffer
+        - generic [ref=e59]: £104/mo
+      - generic [ref=e61]:
+        - generic [ref=e62]: Surplus
+        - generic [ref=e63]: £2,070/mo
+    - generic [ref=e64]:
+      - generic [ref=e65]: Your plan phases
+      - generic [ref=e66]:
+        - generic [ref=e67]:
+          - generic [ref=e68]:
+            - generic [ref=e69]: Phase 1
+            - generic [ref=e70]: current
+          - generic [ref=e71]: 3 months
+        - paragraph [ref=e72]: Building Emergency fund. Emergency fund completed at end of phase.
+        - generic [ref=e73]: Emergency fund · done
+      - generic [ref=e74]:
+        - generic [ref=e75]:
+          - generic [ref=e77]: Phase 2
+          - generic [ref=e78]: 8 months
+        - paragraph [ref=e79]: Building House deposit. House deposit completed at end of phase.
+        - generic [ref=e80]: House deposit · done
+    - generic [ref=e81]:
+      - paragraph [ref=e82]: Your Emergency fund will be fully funded in 3 months. That money will automatically redirect to your next priority.
+      - paragraph [ref=e83]: Your emergency fund is below 50%. The plan prioritises building this to £3,390 (3 months of essentials).
+    - generic [ref=e84]:
+      - generic [ref=e85]: Can I afford this?
+      - paragraph [ref=e86]: Check a one-off expense against your plan.
+      - generic [ref=e87]:
+        - generic [ref=e88]:
+          - generic [ref=e89]:
+            - generic [ref=e90]: What is it?
+            - textbox "e.g. Lake District trip" [ref=e91]
+          - generic [ref=e92]:
+            - generic [ref=e93]: How much? (£)
+            - spinbutton [ref=e94]
+        - button "Check" [ref=e95] [cursor=pointer]
+    - generic [ref=e96]:
+      - generic [ref=e97]: Habit cost
+      - paragraph [ref=e98]: See what a daily or monthly habit really costs over time.
+      - generic [ref=e99]:
+        - generic [ref=e100]:
+          - generic [ref=e101]:
+            - generic [ref=e102]: Monthly amount (£)
+            - spinbutton [ref=e103]
+          - generic [ref=e104]:
+            - generic [ref=e105]: What's the spend?
+            - textbox "e.g. Netflix, takeaways..." [ref=e106]
+        - button "Show me" [ref=e107] [cursor=pointer]
+    - generic [ref=e108]:
+      - generic [ref=e109]: What if?
+      - paragraph [ref=e110]: Change your income, rent, or goal contributions and see the exact impact.
+      - link "Run a scenario" [ref=e111] [cursor=pointer]:
+        - /url: /scenario
+        - text: Run a scenario
+        - img [ref=e112]

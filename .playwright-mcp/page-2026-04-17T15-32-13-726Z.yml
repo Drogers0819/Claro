@@ -1,0 +1,45 @@
+- generic [ref=e2]:
+  - complementary [ref=e3]:
+    - img "Claro" [ref=e5]
+    - navigation [ref=e6]:
+      - link "Overview" [ref=e7] [cursor=pointer]:
+        - /url: /overview
+        - img [ref=e9]
+        - text: Overview
+      - link "Money" [ref=e14] [cursor=pointer]:
+        - /url: /my-money
+        - img [ref=e16]
+        - text: Money
+      - link "Check-in" [ref=e18] [cursor=pointer]:
+        - /url: /check-in
+        - img [ref=e20]
+        - text: Check-in
+      - link "Goals" [ref=e23] [cursor=pointer]:
+        - /url: /my-goals
+        - img [ref=e25]
+        - text: Goals
+      - link "Companion" [ref=e29] [cursor=pointer]:
+        - /url: /companion
+        - img [ref=e31]
+        - text: Companion
+      - link "Plan" [ref=e33] [cursor=pointer]:
+        - /url: /plan
+        - img [ref=e35]
+        - text: Plan
+    - button "TE Test Claro Free" [ref=e38] [cursor=pointer]:
+      - generic [ref=e39]: TE
+      - generic [ref=e40]:
+        - generic [ref=e41]: Test
+        - generic [ref=e42]: Claro Free
+      - img [ref=e43]
+  - main [ref=e47]:
+    - link "Money" [ref=e48] [cursor=pointer]:
+      - /url: /my-money
+      - img [ref=e49]
+      - text: Money
+    - heading "Recurring payments" [level=1] [ref=e52]
+    - generic [ref=e53]:
+      - paragraph [ref=e54]: No patterns found yet
+      - paragraph [ref=e55]: Upload at least 2 months of bank statements and Claro will automatically detect your subscriptions, bills, and regular outgoings.
+      - link "Upload a statement" [ref=e56] [cursor=pointer]:
+        - /url: /upload

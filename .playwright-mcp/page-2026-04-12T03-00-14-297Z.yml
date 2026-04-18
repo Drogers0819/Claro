@@ -1,0 +1,90 @@
+- generic [ref=e2]:
+  - complementary [ref=e3]:
+    - img "Claro" [ref=e5]
+    - navigation [ref=e6]:
+      - link "Overview" [ref=e7] [cursor=pointer]:
+        - /url: /overview
+        - img [ref=e9]
+        - text: Overview
+      - link "Money" [ref=e14] [cursor=pointer]:
+        - /url: /my-money
+        - img [ref=e16]
+        - text: Money
+      - link "Goals" [ref=e18] [cursor=pointer]:
+        - /url: /my-goals
+        - img [ref=e20]
+        - text: Goals
+      - link "Plan" [ref=e24] [cursor=pointer]:
+        - /url: /plan
+        - img [ref=e26]
+        - text: Plan
+      - link "Budgets" [ref=e28] [cursor=pointer]:
+        - /url: /my-budgets
+        - img [ref=e30]
+        - text: Budgets
+    - generic [ref=e31]:
+      - link "VI Victoria Claro Core" [ref=e32] [cursor=pointer]:
+        - /url: /settings
+        - generic [ref=e33]: VI
+        - generic [ref=e34]:
+          - generic [ref=e35]: Victoria
+          - generic [ref=e36]: Claro Core
+        - img [ref=e37]
+      - button "Sign out" [ref=e41] [cursor=pointer]
+  - main [ref=e42]:
+    - heading "My Budgets" [level=1] [ref=e44]
+    - generic [ref=e45]:
+      - generic [ref=e48]: Worth a look
+      - generic [ref=e49]:
+        - generic [ref=e50]: £996
+        - generic [ref=e51]: / year
+      - generic [ref=e52]: potential saving on your subscriptions each year
+      - generic [ref=e53]:
+        - generic [ref=e54]: tfl
+        - generic [ref=e55]: £48/mo
+      - generic [ref=e56]:
+        - generic [ref=e57]: puregym
+        - generic [ref=e58]: £35/mo
+    - generic [ref=e59]:
+      - generic [ref=e60]:
+        - generic [ref=e61]:
+          - generic [ref=e62]: Bills
+          - generic [ref=e63]:
+            - generic [ref=e64]: £1,060
+            - generic [ref=e65]: / £499
+            - button "Edit limit" [ref=e66] [cursor=pointer]:
+              - img [ref=e67]
+            - button "Remove budget" [ref=e71] [cursor=pointer]:
+              - img [ref=e72]
+        - generic [ref=e78]: £561 over budget
+      - generic [ref=e79]:
+        - generic [ref=e80]:
+          - generic [ref=e81]: Education
+          - generic [ref=e82]:
+            - generic [ref=e83]: £0
+            - generic [ref=e84]: / £200
+            - button "Edit limit" [ref=e85] [cursor=pointer]:
+              - img [ref=e86]
+            - button "Remove budget" [ref=e90] [cursor=pointer]:
+              - img [ref=e91]
+        - generic [ref=e96]: £11.11/day for 18 days
+    - generic [ref=e97]:
+      - generic [ref=e98]: Set a spending limit
+      - generic [ref=e99]:
+        - generic [ref=e100]:
+          - combobox [ref=e102] [cursor=pointer]:
+            - option "Choose category" [selected]
+            - option "Entertainment"
+            - option "Food"
+            - option "Health"
+            - option "Income"
+            - option "Other"
+            - option "Shopping"
+            - option "Subscriptions"
+            - option "Transport"
+          - spinbutton [ref=e104]
+        - button "Set budget" [ref=e106] [cursor=pointer]
+      - paragraph [ref=e107]:
+        - text: See your regular payments under
+        - link "Money → Recurring" [ref=e108] [cursor=pointer]:
+          - /url: /recurring

@@ -1,0 +1,46 @@
+- generic [ref=e2]:
+  - complementary [ref=e3]:
+    - img "Claro" [ref=e5]
+    - navigation [ref=e6]:
+      - link "Overview" [ref=e7] [cursor=pointer]:
+        - /url: /overview
+        - img [ref=e9]
+        - text: Overview
+      - link "Money" [ref=e14] [cursor=pointer]:
+        - /url: /my-money
+        - img [ref=e16]
+        - text: Money
+      - link "Check-in" [ref=e18] [cursor=pointer]:
+        - /url: /check-in
+        - img [ref=e20]
+        - text: Check-in
+      - link "Goals" [ref=e23] [cursor=pointer]:
+        - /url: /my-goals
+        - img [ref=e25]
+        - text: Goals
+      - link "Companion" [ref=e29] [cursor=pointer]:
+        - /url: /companion
+        - img [ref=e31]
+        - text: Companion
+      - link "Plan" [ref=e33] [cursor=pointer]:
+        - /url: /plan
+        - img [ref=e35]
+        - text: Plan
+    - button "TE Test Claro Free" [ref=e38] [cursor=pointer]:
+      - generic [ref=e39]: TE
+      - generic [ref=e40]:
+        - generic [ref=e41]: Test
+        - generic [ref=e42]: Claro Free
+      - img [ref=e43]
+  - main [ref=e47]:
+    - heading "Good afternoon, Test." [level=1] [ref=e49]
+    - link "Complete your profile to generate your financial plan" [ref=e50] [cursor=pointer]:
+      - /url: /factfind
+      - img [ref=e51]
+      - generic [ref=e53]: Complete your profile to generate your financial plan
+      - img [ref=e54]
+    - generic [ref=e56]:
+      - generic [ref=e57]: Make your plan smarter
+      - paragraph [ref=e58]: Upload a bank statement and Claro will learn your real spending patterns to refine your plan.
+      - link "Upload a statement" [ref=e59] [cursor=pointer]:
+        - /url: /upload

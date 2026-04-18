@@ -1,0 +1,174 @@
+- generic [ref=e2]:
+  - complementary [ref=e3]:
+    - navigation [ref=e4]:
+      - link "Overview" [ref=e5] [cursor=pointer]:
+        - /url: /overview
+        - img [ref=e7]
+        - text: Overview
+      - link "Money" [ref=e12] [cursor=pointer]:
+        - /url: /my-money
+        - img [ref=e14]
+        - text: Money
+      - link "Goals" [ref=e16] [cursor=pointer]:
+        - /url: /my-goals
+        - img [ref=e18]
+        - text: Goals
+      - link "Plan" [ref=e22] [cursor=pointer]:
+        - /url: /plan
+        - img [ref=e24]
+        - text: Plan
+      - link "Budgets" [ref=e26] [cursor=pointer]:
+        - /url: /my-budgets
+        - img [ref=e28]
+        - text: Budgets
+  - link "Profile & settings" [ref=e29] [cursor=pointer]:
+    - /url: /settings
+    - text: V
+  - main [ref=e30]:
+    - link "Money" [ref=e31] [cursor=pointer]:
+      - /url: /my-money
+      - img [ref=e32]
+      - text: Money
+    - generic [ref=e34]:
+      - heading "Recurring payments" [level=1] [ref=e35]
+      - paragraph [ref=e36]: Regular outgoings spotted from your transaction history.
+    - generic [ref=e37]:
+      - generic [ref=e38]:
+        - generic [ref=e39]: Monthly Outgoing
+        - generic [ref=e40]: £1217.82
+        - generic [ref=e41]: 9 recurring expenses
+      - generic [ref=e42]:
+        - generic [ref=e43]: Monthly Incoming
+        - generic [ref=e44]: £3200.00
+        - generic [ref=e45]: 1 recurring income
+      - generic [ref=e46]:
+        - generic [ref=e47]: Annual Cost
+        - generic [ref=e48]: £14613.84
+        - generic [ref=e49]: at current rate
+    - generic [ref=e50]:
+      - generic [ref=e53]: Savings spotted
+      - paragraph [ref=e54]: We found 2 potential savings worth up to £996.00/year.
+      - generic [ref=e55]: tfl costs £48.00/month. Worth reviewing if you're getting full value.
+      - generic [ref=e56]: puregym costs £35.00/month. Worth reviewing if you're getting full value.
+    - generic [ref=e57]: All recurring payments
+    - generic [ref=e58]:
+      - generic [ref=e59]:
+        - generic [ref=e60]:
+          - generic [ref=e61]:
+            - generic [ref=e62]:
+              - generic [ref=e63]: employer
+              - generic [ref=e64]: Monthly
+            - generic [ref=e65]: Income · 3 occurrences · Consistent amount
+            - generic [ref=e66]: "Last: 2026-04-06 · Next expected: 2026-05-06"
+          - generic [ref=e67]:
+            - generic [ref=e68]: +£3200.00
+            - generic [ref=e69]: £3200.00/month
+        - generic [ref=e73]: 80% confidence
+      - generic [ref=e74]:
+        - generic [ref=e75]:
+          - generic [ref=e76]:
+            - generic [ref=e77]:
+              - generic [ref=e78]: landlord
+              - generic [ref=e79]: Monthly
+            - generic [ref=e80]: Bills · 3 occurrences · Consistent amount
+            - generic [ref=e81]: "Last: 2026-04-08 · Next expected: 2026-05-08"
+          - generic [ref=e82]:
+            - generic [ref=e83]: −£950.00
+            - generic [ref=e84]: £950.00/month
+        - generic [ref=e88]: 80% confidence
+      - generic [ref=e89]:
+        - generic [ref=e90]:
+          - generic [ref=e91]:
+            - generic [ref=e92]:
+              - generic [ref=e93]: edf energy
+              - generic [ref=e94]: Monthly
+            - generic [ref=e95]: Bills · 3 occurrences · Consistent amount
+            - generic [ref=e96]: "Last: 2026-04-07 · Next expected: 2026-05-07"
+          - generic [ref=e97]:
+            - generic [ref=e98]: −£68.00
+            - generic [ref=e99]: £68.00/month
+        - generic [ref=e103]: 80% confidence
+      - generic [ref=e104]:
+        - generic [ref=e105]:
+          - generic [ref=e106]:
+            - generic [ref=e107]:
+              - generic [ref=e108]: tfl
+              - generic [ref=e109]: Monthly
+            - generic [ref=e110]: Transport · 3 occurrences · Consistent amount
+            - generic [ref=e111]: "Last: 2026-04-06 · Next expected: 2026-05-06"
+          - generic [ref=e112]:
+            - generic [ref=e113]: −£48.00
+            - generic [ref=e114]: £48.00/month
+        - generic [ref=e118]: 80% confidence
+      - generic [ref=e119]:
+        - generic [ref=e120]:
+          - generic [ref=e121]:
+            - generic [ref=e122]:
+              - generic [ref=e123]: sky
+              - generic [ref=e124]: Monthly
+            - generic [ref=e125]: Bills · 3 occurrences · Consistent amount
+            - generic [ref=e126]: "Last: 2026-04-07 · Next expected: 2026-05-07"
+          - generic [ref=e127]:
+            - generic [ref=e128]: −£42.00
+            - generic [ref=e129]: £42.00/month
+        - generic [ref=e133]: 80% confidence
+      - generic [ref=e134]:
+        - generic [ref=e135]:
+          - generic [ref=e136]:
+            - generic [ref=e137]:
+              - generic [ref=e138]: puregym
+              - generic [ref=e139]: Monthly
+            - generic [ref=e140]: Health · 3 occurrences · Consistent amount
+            - generic [ref=e141]: "Last: 2026-04-04 · Next expected: 2026-05-04"
+          - generic [ref=e142]:
+            - generic [ref=e143]: −£35.00
+            - generic [ref=e144]: £35.00/month
+        - generic [ref=e148]: 80% confidence
+      - generic [ref=e149]:
+        - generic [ref=e150]:
+          - generic [ref=e151]:
+            - generic [ref=e152]:
+              - generic [ref=e153]: uber
+              - generic [ref=e154]: Every 2 weeks
+            - generic [ref=e155]: Transport · 2 occurrences · Amount varies
+            - generic [ref=e156]: "Last: 2026-04-08 · Next expected: 2026-04-19"
+          - generic [ref=e157]:
+            - generic [ref=e158]: −£11.10
+            - generic [ref=e159]: £24.09/month
+        - generic [ref=e163]: 75% confidence
+      - generic [ref=e164]:
+        - generic [ref=e165]:
+          - generic [ref=e166]:
+            - generic [ref=e167]:
+              - generic [ref=e168]: vue
+              - generic [ref=e169]: Monthly
+            - generic [ref=e170]: Entertainment · 2 occurrences · Consistent amount
+            - generic [ref=e171]: "Last: 2026-04-01 · Next expected: 2026-05-03"
+          - generic [ref=e172]:
+            - generic [ref=e173]: −£20.75
+            - generic [ref=e174]: £20.75/month
+        - generic [ref=e178]: 75% confidence
+      - generic [ref=e179]:
+        - generic [ref=e180]:
+          - generic [ref=e181]:
+            - generic [ref=e182]:
+              - generic [ref=e183]: netflix
+              - generic [ref=e184]: Monthly
+            - generic [ref=e185]: Subscriptions · 3 occurrences · Consistent amount
+            - generic [ref=e186]: "Last: 2026-04-05 · Next expected: 2026-05-05"
+          - generic [ref=e187]:
+            - generic [ref=e188]: −£17.99
+            - generic [ref=e189]: £17.99/month
+        - generic [ref=e193]: 80% confidence
+      - generic [ref=e194]:
+        - generic [ref=e195]:
+          - generic [ref=e196]:
+            - generic [ref=e197]:
+              - generic [ref=e198]: spotify
+              - generic [ref=e199]: Monthly
+            - generic [ref=e200]: Subscriptions · 3 occurrences · Consistent amount
+            - generic [ref=e201]: "Last: 2026-04-05 · Next expected: 2026-05-05"
+          - generic [ref=e202]:
+            - generic [ref=e203]: −£11.99
+            - generic [ref=e204]: £11.99/month
+        - generic [ref=e208]: 80% confidence

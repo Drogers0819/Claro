@@ -1,0 +1,36 @@
+- generic [ref=e2]:
+  - complementary [ref=e3]:
+    - img "Claro" [ref=e5]
+    - navigation [ref=e6]:
+      - link "Overview" [ref=e7] [cursor=pointer]:
+        - /url: /overview
+        - img [ref=e9]
+        - text: Overview
+      - link "Check-in" [ref=e14] [cursor=pointer]:
+        - /url: /check-in
+        - img [ref=e16]
+        - text: Check-in
+      - link "Goals" [ref=e19] [cursor=pointer]:
+        - /url: /my-goals
+        - img [ref=e21]
+        - text: Goals
+      - link "Companion" [ref=e25] [cursor=pointer]:
+        - /url: /companion
+        - img [ref=e27]
+        - text: Companion
+      - link "Plan" [ref=e29] [cursor=pointer]:
+        - /url: /plan
+        - img [ref=e31]
+        - text: Plan
+    - button "TE Test Claro Free" [ref=e34] [cursor=pointer]:
+      - generic [ref=e35]: TE
+      - generic [ref=e36]:
+        - generic [ref=e37]: Test
+        - generic [ref=e38]: Claro Free
+      - img [ref=e39]
+  - main [ref=e43]:
+    - generic [ref=e44]:
+      - paragraph [ref=e45]: This page doesn't exist.
+      - paragraph [ref=e46]: The link may have changed or the page may have moved. Head back to your overview to pick up where you left off.
+      - link "Back to overview" [ref=e47] [cursor=pointer]:
+        - /url: /overview

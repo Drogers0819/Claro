@@ -1,0 +1,57 @@
+- generic [ref=e2]:
+  - complementary [ref=e3]:
+    - img "Claro" [ref=e5]
+    - navigation [ref=e6]:
+      - link "Overview" [ref=e7] [cursor=pointer]:
+        - /url: /overview
+        - img [ref=e9]
+        - text: Overview
+      - link "Money" [ref=e14] [cursor=pointer]:
+        - /url: /my-money
+        - img [ref=e16]
+        - text: Money
+      - link "Goals" [ref=e18] [cursor=pointer]:
+        - /url: /my-goals
+        - img [ref=e20]
+        - text: Goals
+      - link "Plan" [ref=e24] [cursor=pointer]:
+        - /url: /plan
+        - img [ref=e26]
+        - text: Plan
+      - link "Budgets" [ref=e28] [cursor=pointer]:
+        - /url: /my-budgets
+        - img [ref=e30]
+        - text: Budgets
+    - generic [ref=e31]:
+      - link "VI Victoria Claro Core" [ref=e32] [cursor=pointer]:
+        - /url: /settings
+        - generic [ref=e33]: VI
+        - generic [ref=e34]:
+          - generic [ref=e35]: Victoria
+          - generic [ref=e36]: Claro Core
+        - img [ref=e37]
+      - button "Sign out" [ref=e41] [cursor=pointer]
+  - main [ref=e42]:
+    - generic [ref=e43]:
+      - heading "Plan" [level=1] [ref=e44]
+      - paragraph [ref=e45]: Pick any monthly spend and see its true cost over 5, 10, and 20 years.
+    - generic [ref=e46]:
+      - generic [ref=e47]:
+        - generic [ref=e48]: What's this really costing you?
+        - generic [ref=e49]: Enter any monthly spend — coffee, subscriptions, takeaways — and see what it grows into if invested instead.
+      - generic [ref=e50]:
+        - generic [ref=e51]:
+          - generic [ref=e52]:
+            - generic [ref=e53]: Monthly amount (£)
+            - spinbutton [ref=e54]
+          - generic [ref=e55]:
+            - generic [ref=e56]: What's the spend?
+            - textbox "e.g. Netflix, takeaways..." [ref=e57]
+        - button "Show me" [ref=e58] [cursor=pointer]
+    - generic [ref=e59]:
+      - generic [ref=e60]: What if?
+      - paragraph [ref=e61]: What if you earned £500 more? Moved somewhere cheaper? Cut your subscriptions? Adjust income, rent, or goal contributions and see exactly how your goals shift.
+      - link "Run the numbers" [ref=e62] [cursor=pointer]:
+        - /url: /scenario
+        - text: Run the numbers
+        - img [ref=e63]

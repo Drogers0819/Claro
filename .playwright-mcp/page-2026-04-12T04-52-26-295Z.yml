@@ -1,0 +1,71 @@
+- generic [ref=e2]:
+  - complementary [ref=e3]:
+    - navigation [ref=e4]:
+      - link "Overview" [ref=e5] [cursor=pointer]:
+        - /url: /overview
+        - img [ref=e7]
+        - text: Overview
+      - link "Money" [ref=e12] [cursor=pointer]:
+        - /url: /my-money
+        - img [ref=e14]
+        - text: Money
+      - link "Goals" [ref=e16] [cursor=pointer]:
+        - /url: /my-goals
+        - img [ref=e18]
+        - text: Goals
+      - link "Plan" [ref=e22] [cursor=pointer]:
+        - /url: /plan
+        - img [ref=e24]
+        - text: Plan
+      - link "Budgets" [ref=e26] [cursor=pointer]:
+        - /url: /my-budgets
+        - img [ref=e28]
+        - text: Budgets
+  - link "Profile & settings" [ref=e29] [cursor=pointer]:
+    - /url: /settings
+    - text: V
+  - main [ref=e30]:
+    - link "Overview" [ref=e31] [cursor=pointer]:
+      - /url: /overview
+      - img [ref=e32]
+      - text: Overview
+    - heading "Settings" [level=1] [ref=e35]
+    - generic [ref=e36]:
+      - button "Financial profile" [expanded] [ref=e37] [cursor=pointer]:
+        - generic [ref=e38]:
+          - img [ref=e39]
+          - generic [ref=e42]: Financial profile
+        - img [ref=e43]
+      - generic [ref=e45]:
+        - generic [ref=e46]:
+          - generic [ref=e47]: Your income and commitments
+          - link "Edit" [ref=e48] [cursor=pointer]:
+            - /url: /factfind
+        - generic [ref=e49]:
+          - generic [ref=e50]:
+            - generic [ref=e51]: Take-home pay
+            - generic [ref=e52]: £3,200/month
+          - generic [ref=e53]:
+            - generic [ref=e54]: Rent/mortgage
+            - generic [ref=e55]: £950/month
+          - generic [ref=e56]:
+            - generic [ref=e57]: Bills
+            - generic [ref=e58]: £180/month
+          - generic [ref=e59]:
+            - generic [ref=e60]: Available for goals
+            - generic [ref=e61]: £2,070/month
+    - button "Appearance" [ref=e63] [cursor=pointer]:
+      - generic [ref=e64]:
+        - img [ref=e65]
+        - generic [ref=e70]: Appearance
+      - img [ref=e71]
+    - button "Account" [ref=e74] [cursor=pointer]:
+      - generic [ref=e75]:
+        - img [ref=e76]
+        - generic [ref=e79]: Account
+      - img [ref=e80]
+    - button "Security" [ref=e83] [cursor=pointer]:
+      - generic [ref=e84]:
+        - img [ref=e85]
+        - generic [ref=e88]: Security
+      - img [ref=e89]

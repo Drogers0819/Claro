@@ -1,0 +1,79 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - complementary [ref=e3]:
+      - navigation [ref=e4]:
+        - link "Overview" [ref=e5] [cursor=pointer]:
+          - /url: /overview
+          - img [ref=e7]
+          - text: Overview
+        - link "Check-in" [ref=e12] [cursor=pointer]:
+          - /url: /check-in
+          - img [ref=e14]
+          - text: Check-in
+        - link "Goals" [ref=e17] [cursor=pointer]:
+          - /url: /my-goals
+          - img [ref=e19]
+          - text: Goals
+        - link "Companion" [ref=e23] [cursor=pointer]:
+          - /url: /companion
+          - img [ref=e25]
+          - text: Companion
+        - link "Plan" [ref=e27] [cursor=pointer]:
+          - /url: /plan
+          - img [ref=e29]
+          - text: Plan
+    - main [ref=e31]:
+      - generic [ref=e32]:
+        - link "Back" [ref=e33] [cursor=pointer]:
+          - /url: /plan-reveal
+          - img [ref=e34]
+          - text: Back
+        - generic [ref=e36]:
+          - heading "Your plan, explained" [level=1] [ref=e37]
+          - paragraph [ref=e38]: Here's the reasoning behind every allocation. Nothing is hidden.
+        - generic [ref=e39]:
+          - generic [ref=e42]: Claro
+          - paragraph [ref=e43]: Your Emergency fund completes in ~1 months. After that, your £3,000/month surplus frees up entirely.
+        - generic [ref=e44]:
+          - generic [ref=e45]: Plan overview
+          - generic [ref=e46]:
+            - generic [ref=e47]: Monthly income
+            - generic [ref=e48]: £50,000
+          - generic [ref=e49]:
+            - generic [ref=e50]: Essential costs
+            - generic [ref=e51]: −£13,080
+          - generic [ref=e52]:
+            - generic [ref=e53]: Surplus allocated
+            - generic [ref=e54]: £36,920/mo
+        - paragraph [ref=e55]: "This plan follows a professional financial planning methodology: build a safety net, clear debt, then fund your goals by urgency. Every pot receives funding simultaneously, with priority goals receiving a larger share. When a pot completes, its allocation redistributes automatically."
+        - generic [ref=e56]: Allocation breakdown
+        - generic [ref=e57]:
+          - generic [ref=e58]:
+            - generic [ref=e59]:
+              - img [ref=e60]
+              - generic [ref=e64]: Emergency fund
+            - generic [ref=e65]: £3,000/mo
+          - generic [ref=e66]: £3,000 target · ~1 months
+          - generic [ref=e67]: With no fixed deadline, we've spread this across 1 months at £3,000/month. As other goals complete, this will accelerate.
+        - generic [ref=e68]:
+          - generic [ref=e69]:
+            - generic [ref=e70]:
+              - img [ref=e71]
+              - generic [ref=e74]: Lifestyle & family
+            - generic [ref=e75]: £32,074/mo
+          - generic [ref=e76]: "Your lifestyle pot keeps the plan sustainable. This is the money that lets you enjoy the month: meals out, social plans, hobbies. Without it, plans get abandoned."
+        - generic [ref=e77]:
+          - generic [ref=e78]:
+            - generic [ref=e79]:
+              - img [ref=e80]
+              - generic [ref=e85]: Buffer
+            - generic [ref=e86]: £1,846/mo
+          - generic [ref=e87]: A small buffer protects against minor overspending without touching your goals. Think of it as your plan's shock absorber.
+        - link "Start following this plan" [ref=e88] [cursor=pointer]:
+          - /url: /overview
+          - text: Start following this plan
+          - img [ref=e89]
+        - paragraph [ref=e91]: Guidance only, not financial advice. Based on the information you've provided. Adjusts automatically as your circumstances change.
+  - link "Profile & settings" [ref=e92] [cursor=pointer]:
+    - /url: /settings
+    - text: T

@@ -1,0 +1,156 @@
+- generic [ref=e2]:
+  - complementary [ref=e3]:
+    - navigation [ref=e4]:
+      - link "Overview" [ref=e5] [cursor=pointer]:
+        - /url: /overview
+        - img [ref=e7]
+        - text: Overview
+      - link "Money" [ref=e12] [cursor=pointer]:
+        - /url: /my-money
+        - img [ref=e14]
+        - text: Money
+      - link "Goals" [ref=e16] [cursor=pointer]:
+        - /url: /my-goals
+        - img [ref=e18]
+        - text: Goals
+      - link "Plan" [ref=e22] [cursor=pointer]:
+        - /url: /plan
+        - img [ref=e24]
+        - text: Plan
+      - link "Budgets" [ref=e26] [cursor=pointer]:
+        - /url: /my-budgets
+        - img [ref=e28]
+        - text: Budgets
+  - main [ref=e29]:
+    - link "Money" [ref=e30] [cursor=pointer]:
+      - /url: /my-money
+      - img [ref=e31]
+      - text: Money
+    - generic [ref=e33]:
+      - heading "April outlook" [level=1] [ref=e34]
+      - paragraph [ref=e35]: Day 12 of 30 · 18 days remaining
+    - generic [ref=e37]:
+      - generic [ref=e38]: Month progress
+      - generic [ref=e39]: 40.0%
+    - generic [ref=e42]:
+      - generic [ref=e45]: Prediction
+      - paragraph [ref=e46]: "\"You're on track to spend £2,280.34 this month. That's £932.57 above your usual pace at this point. Your Shopping spending is 668% above average this month.\""
+    - generic [ref=e47]:
+      - generic [ref=e48]:
+        - generic [ref=e49]: Spent so far
+        - generic [ref=e50]: £1471.68
+        - generic [ref=e51]: 16 transactions
+      - generic [ref=e52]:
+        - generic [ref=e53]: Predicted total
+        - generic [ref=e54]: £2280.34
+        - generic [ref=e55]: 57% confidence
+      - generic [ref=e56]:
+        - generic [ref=e57]: Daily average
+        - generic [ref=e58]: £122.64
+        - generic [ref=e59]: /day
+    - generic [ref=e60]:
+      - generic [ref=e61]:
+        - generic [ref=e62]: Compared to your average
+        - generic [ref=e63]: above average
+      - generic [ref=e64]:
+        - generic [ref=e65]:
+          - generic [ref=e66]: Expected at this point
+          - generic [ref=e67]: £539.11
+        - generic [ref=e68]:
+          - generic [ref=e69]: Actual
+          - generic [ref=e70]: £1471.68 (+£932.57)
+    - generic [ref=e71]: Goal funding forecast
+    - generic [ref=e72]:
+      - generic [ref=e73]:
+        - generic [ref=e74]: Can you fund your goals this month?
+        - generic [ref=e75]: over budget
+      - paragraph [ref=e76]: You're on track to overspend by £210 this month. Small cuts now will help.
+      - generic [ref=e77]:
+        - generic [ref=e78]:
+          - generic [ref=e79]: Predicted spending
+          - generic [ref=e80]: £2280.34
+        - generic [ref=e81]:
+          - generic [ref=e82]: Goal allocations
+          - generic [ref=e83]: £300.00
+        - generic [ref=e84]:
+          - generic [ref=e85]: Remaining
+          - generic [ref=e86]: −£510.34
+    - generic [ref=e87]: Category forecast
+    - generic [ref=e88]:
+      - generic [ref=e89]:
+        - generic [ref=e90]:
+          - generic [ref=e91]:
+            - generic [ref=e92]: Bills
+            - generic [ref=e93]: ↑ 150% above
+          - generic [ref=e94]:
+            - generic [ref=e95]: £1696.00
+            - generic [ref=e96]: predicted
+        - generic [ref=e97]:
+          - generic [ref=e98]: "Spent so far: £1060.00"
+          - generic [ref=e99]: "Average: £1060.00"
+      - generic [ref=e100]:
+        - generic [ref=e101]:
+          - generic [ref=e102]:
+            - generic [ref=e103]: Food
+            - generic [ref=e104]: ↑ 414% above
+          - generic [ref=e105]:
+            - generic [ref=e106]: £254.81
+            - generic [ref=e107]: predicted
+        - generic [ref=e108]:
+          - generic [ref=e109]: "Spent so far: £197.30"
+          - generic [ref=e110]: "Average: £95.85"
+      - generic [ref=e111]:
+        - generic [ref=e112]:
+          - generic [ref=e113]:
+            - generic [ref=e114]: Transport
+            - generic [ref=e115]: ↑ 185% above
+          - generic [ref=e116]:
+            - generic [ref=e117]: £92.14
+            - generic [ref=e118]: predicted
+        - generic [ref=e119]:
+          - generic [ref=e120]: "Spent so far: £60.40"
+          - generic [ref=e121]: "Average: £52.90"
+      - generic [ref=e122]:
+        - generic [ref=e123]:
+          - generic [ref=e124]:
+            - generic [ref=e125]: Shopping
+            - generic [ref=e126]: ↑ 668% above
+          - generic [ref=e127]:
+            - generic [ref=e128]: £80.08
+            - generic [ref=e129]: predicted
+        - generic [ref=e130]:
+          - generic [ref=e131]: "Spent so far: £67.00"
+          - generic [ref=e132]: "Average: £21.80"
+      - generic [ref=e133]:
+        - generic [ref=e134]:
+          - generic [ref=e135]:
+            - generic [ref=e136]: Health
+            - generic [ref=e137]: ↑ 150% above
+          - generic [ref=e138]:
+            - generic [ref=e139]: £56.00
+            - generic [ref=e140]: predicted
+        - generic [ref=e141]:
+          - generic [ref=e142]: "Spent so far: £35.00"
+          - generic [ref=e143]: "Average: £35.00"
+      - generic [ref=e144]:
+        - generic [ref=e145]:
+          - generic [ref=e146]:
+            - generic [ref=e147]: Entertainment
+            - generic [ref=e148]: on track
+          - generic [ref=e149]:
+            - generic [ref=e150]: £53.35
+            - generic [ref=e151]: predicted
+        - generic [ref=e152]:
+          - generic [ref=e153]: "Spent so far: £22.00"
+          - generic [ref=e154]: "Average: £52.25"
+      - generic [ref=e155]:
+        - generic [ref=e156]:
+          - generic [ref=e157]:
+            - generic [ref=e158]: Subscriptions
+            - generic [ref=e159]: ↑ 150% above
+          - generic [ref=e160]:
+            - generic [ref=e161]: £47.97
+            - generic [ref=e162]: predicted
+        - generic [ref=e163]:
+          - generic [ref=e164]: "Spent so far: £29.98"
+          - generic [ref=e165]: "Average: £29.98"

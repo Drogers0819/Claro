@@ -1,0 +1,82 @@
+- generic [ref=e2]:
+  - complementary [ref=e3]:
+    - img "Claro" [ref=e5]
+    - navigation [ref=e6]:
+      - link "Overview" [ref=e7] [cursor=pointer]:
+        - /url: /overview
+        - img [ref=e9]
+        - text: Overview
+      - link "Money" [ref=e14] [cursor=pointer]:
+        - /url: /my-money
+        - img [ref=e16]
+        - text: Money
+      - link "Check-in" [ref=e18] [cursor=pointer]:
+        - /url: /check-in
+        - img [ref=e20]
+        - text: Check-in
+      - link "Goals" [ref=e23] [cursor=pointer]:
+        - /url: /my-goals
+        - img [ref=e25]
+        - text: Goals
+      - link "Companion" [ref=e29] [cursor=pointer]:
+        - /url: /companion
+        - img [ref=e31]
+        - text: Companion
+      - link "Plan" [ref=e33] [cursor=pointer]:
+        - /url: /plan
+        - img [ref=e35]
+        - text: Plan
+    - generic [ref=e37]:
+      - link "VI Victoria Claro Free" [ref=e38] [cursor=pointer]:
+        - /url: /settings
+        - generic [ref=e39]: VI
+        - generic [ref=e40]:
+          - generic [ref=e41]: Victoria
+          - generic [ref=e42]: Claro Free
+        - img [ref=e43]
+      - button "Sign out" [ref=e47] [cursor=pointer]
+  - main [ref=e48]:
+    - link "Overview" [ref=e49] [cursor=pointer]:
+      - /url: /overview
+      - img [ref=e50]
+      - text: Overview
+    - heading "Settings" [level=1] [ref=e53]
+    - generic [ref=e54]:
+      - button "Financial profile" [expanded] [ref=e55] [cursor=pointer]:
+        - generic [ref=e56]:
+          - img [ref=e57]
+          - generic [ref=e60]: Financial profile
+        - img [ref=e61]
+      - generic [ref=e63]:
+        - generic [ref=e64]:
+          - generic [ref=e65]: Your income and commitments
+          - link "Edit" [ref=e66] [cursor=pointer]:
+            - /url: /factfind
+        - generic [ref=e67]:
+          - generic [ref=e68]:
+            - generic [ref=e69]: Take-home pay
+            - generic [ref=e70]: £3,200.00/month
+          - generic [ref=e71]:
+            - generic [ref=e72]: Rent/mortgage
+            - generic [ref=e73]: £950.00/month
+          - generic [ref=e74]:
+            - generic [ref=e75]: Bills
+            - generic [ref=e76]: £180.00/month
+          - generic [ref=e77]:
+            - generic [ref=e78]: Available for goals
+            - generic [ref=e79]: £2,070.00/month
+    - button "Appearance" [ref=e81] [cursor=pointer]:
+      - generic [ref=e82]:
+        - img [ref=e83]
+        - generic [ref=e88]: Appearance
+      - img [ref=e89]
+    - button "Account" [ref=e92] [cursor=pointer]:
+      - generic [ref=e93]:
+        - img [ref=e94]
+        - generic [ref=e97]: Account
+      - img [ref=e98]
+    - button "Security" [ref=e101] [cursor=pointer]:
+      - generic [ref=e102]:
+        - img [ref=e103]
+        - generic [ref=e106]: Security
+      - img [ref=e107]

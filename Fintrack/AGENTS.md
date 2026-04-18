@@ -57,8 +57,8 @@ Active templates: `overview`, `my_money`, `my_goals`, `plan`, `my_budgets`, `set
 
 ## Mobile header bar
 
-- **Layout**: `.mobile-header-bar` is a fixed bar at the top on mobile, `justify-content: space-between`, `padding: 0 16px`. Logo (36×36) on the LEFT, avatar (36×36) on the RIGHT — equal physical footprint, equal edge padding.
-- **Logo**: `<a class="mobile-logo">` wrapping `<img src="logo.png" style="width:36px;height:36px;object-fit:contain;">`. Use `object-fit: contain` — the logo PNG has internal transparent space; matching container dimensions keeps visual balance consistent with the avatar.
+- **Layout**: `.mobile-header-bar` is a fixed bar (52px + safe area), `justify-content: space-between`, `padding: 0 16px`. Logo on LEFT, avatar on RIGHT.
+- **Logo**: `<a class="mobile-logo">` with `<img style="height:24px;width:auto;">`. PNG is landscape (636×334) — set height only, let width auto. Do NOT match the avatar circle height (36px): the logo mark is optically denser. 24px in a 52px bar gives 14px clear space each side. The avatar letter inside its 36px circle reads much smaller — do not use the circle container as the optical reference.
 - **Avatar** (`.mobile-settings-btn`): `position: static` inside the bar on mobile. `viewport-fit=cover` is set in the viewport meta — use `env(safe-area-inset-top)` aware positioning for the bar itself.
 - Main content top padding: `max(16px, calc(env(safe-area-inset-top) + 10px))`. Do not add `padding-top` to page-header or this alignment breaks.
 - Avatar bottom edge: ~50px (no notch) / ~77px (notch). To push a sub-row (count + CTA) below the avatar zone: increase `margin-bottom` on the page-header. Never use `padding-top` on the header (breaks alignment) or `padding-right` on the sub-row (misaligns right edge with surrounding content).

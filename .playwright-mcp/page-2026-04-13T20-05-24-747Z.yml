@@ -1,0 +1,59 @@
+- generic [ref=e2]:
+  - complementary [ref=e3]:
+    - img "Claro" [ref=e5]
+    - navigation [ref=e6]:
+      - link "Overview" [ref=e7] [cursor=pointer]:
+        - /url: /overview
+        - img [ref=e9]
+        - text: Overview
+      - link "Money" [ref=e14] [cursor=pointer]:
+        - /url: /my-money
+        - img [ref=e16]
+        - text: Money
+      - link "Goals" [ref=e18] [cursor=pointer]:
+        - /url: /my-goals
+        - img [ref=e20]
+        - text: Goals
+      - link "Plan" [ref=e24] [cursor=pointer]:
+        - /url: /plan
+        - img [ref=e26]
+        - text: Plan
+      - link "Budgets" [ref=e28] [cursor=pointer]:
+        - /url: /my-budgets
+        - img [ref=e30]
+        - text: Budgets
+    - generic [ref=e31]:
+      - link "VI Victoria Claro Core" [ref=e32] [cursor=pointer]:
+        - /url: /settings
+        - generic [ref=e33]: VI
+        - generic [ref=e34]:
+          - generic [ref=e35]: Victoria
+          - generic [ref=e36]: Claro Core
+        - img [ref=e37]
+      - button "Sign out" [ref=e41] [cursor=pointer]
+  - main [ref=e42]:
+    - link "Plan" [ref=e43] [cursor=pointer]:
+      - /url: /plan
+      - img [ref=e44]
+      - text: Plan
+    - generic [ref=e46]:
+      - heading "What if?" [level=1] [ref=e47]
+      - paragraph [ref=e48]: Adjust any number and see exactly how it affects your goals.
+    - generic [ref=e50]:
+      - generic [ref=e51]: Income & commitments
+      - generic [ref=e52]:
+        - generic [ref=e53]:
+          - generic [ref=e54]: Monthly income (£)
+          - spinbutton [ref=e55]: "3200"
+        - generic [ref=e56]:
+          - generic [ref=e57]: Rent & bills (£)
+          - spinbutton [ref=e58]: "1130"
+      - generic [ref=e59]:
+        - generic [ref=e60]: Goal savings per month
+        - paragraph [ref=e61]: Adjust any number to see what changes.
+        - generic [ref=e62]:
+          - generic [ref=e63]:
+            - generic [ref=e64]: House deposit
+            - generic [ref=e65]: currently £300/mo
+          - spinbutton [ref=e66]: "300"
+      - button "See the impact" [ref=e68] [cursor=pointer]

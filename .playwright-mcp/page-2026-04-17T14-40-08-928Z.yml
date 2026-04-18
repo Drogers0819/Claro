@@ -1,0 +1,75 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - complementary [ref=e3]:
+      - navigation [ref=e4]:
+        - link "Overview" [ref=e5] [cursor=pointer]:
+          - /url: /overview
+          - img [ref=e7]
+          - text: Overview
+        - link "Money" [ref=e12] [cursor=pointer]:
+          - /url: /my-money
+          - img [ref=e14]
+          - text: Money
+        - link "Check-in" [ref=e16] [cursor=pointer]:
+          - /url: /check-in
+          - img [ref=e18]
+          - text: Check-in
+        - link "Goals" [ref=e21] [cursor=pointer]:
+          - /url: /my-goals
+          - img [ref=e23]
+          - text: Goals
+        - link "Companion" [ref=e27] [cursor=pointer]:
+          - /url: /companion
+          - img [ref=e29]
+          - text: Companion
+        - link "Plan" [ref=e31] [cursor=pointer]:
+          - /url: /plan
+          - img [ref=e33]
+          - text: Plan
+    - main [ref=e35]:
+      - heading "My Money" [level=1] [ref=e37]
+      - link "Complete your financial profile to generate your plan" [ref=e38] [cursor=pointer]:
+        - /url: /factfind
+        - img [ref=e39]
+        - generic [ref=e41]: Complete your financial profile to generate your plan
+        - img [ref=e42]
+      - generic [ref=e44]:
+        - link "Predictions & insights AI forecast, patterns, spending story" [ref=e45] [cursor=pointer]:
+          - /url: /insights
+          - img [ref=e46]
+          - generic [ref=e47]:
+            - generic [ref=e48]: Predictions & insights
+            - generic [ref=e49]: AI forecast, patterns, spending story
+          - img [ref=e50]
+        - link "Recurring payments Subscriptions and regular bills" [ref=e52] [cursor=pointer]:
+          - /url: /recurring
+          - img [ref=e53]
+          - generic [ref=e58]:
+            - generic [ref=e59]: Recurring payments
+            - generic [ref=e60]: Subscriptions and regular bills
+          - img [ref=e61]
+        - link "Spending breakdown Where your money goes, by category" [ref=e63] [cursor=pointer]:
+          - /url: /analytics
+          - img [ref=e64]
+          - generic [ref=e67]:
+            - generic [ref=e68]: Spending breakdown
+            - generic [ref=e69]: Where your money goes, by category
+          - img [ref=e70]
+        - link "Budgets Spending limits by category" [ref=e72] [cursor=pointer]:
+          - /url: /my-budgets
+          - img [ref=e73]
+          - generic [ref=e76]:
+            - generic [ref=e77]: Budgets
+            - generic [ref=e78]: Spending limits by category
+          - img [ref=e79]
+      - generic [ref=e82]:
+        - paragraph [ref=e83]: No transactions yet.
+        - paragraph [ref=e84]: Upload a bank statement to import your transactions, or add them one by one.
+        - generic [ref=e85]:
+          - link "Upload statement" [ref=e86] [cursor=pointer]:
+            - /url: /upload
+          - link "or add manually" [ref=e87] [cursor=pointer]:
+            - /url: /add-transaction
+  - link "Profile & settings" [ref=e88] [cursor=pointer]:
+    - /url: /settings
+    - text: T

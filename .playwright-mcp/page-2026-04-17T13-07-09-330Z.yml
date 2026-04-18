@@ -1,0 +1,41 @@
+- generic [ref=e2]:
+  - complementary [ref=e3]:
+    - img "Claro" [ref=e5]
+    - navigation [ref=e6]:
+      - link "Overview" [ref=e7] [cursor=pointer]:
+        - /url: /overview
+        - img [ref=e9]
+        - text: Overview
+      - link "Money" [ref=e14] [cursor=pointer]:
+        - /url: /my-money
+        - img [ref=e16]
+        - text: Money
+      - link "Check-in" [ref=e18] [cursor=pointer]:
+        - /url: /check-in
+        - img [ref=e20]
+        - text: Check-in
+      - link "Goals" [ref=e23] [cursor=pointer]:
+        - /url: /my-goals
+        - img [ref=e25]
+        - text: Goals
+      - link "Companion" [ref=e29] [cursor=pointer]:
+        - /url: /companion
+        - img [ref=e31]
+        - text: Companion
+      - link "Plan" [ref=e33] [cursor=pointer]:
+        - /url: /plan
+        - img [ref=e35]
+        - text: Plan
+    - button "VI Victoria Claro Free" [ref=e38] [cursor=pointer]:
+      - generic [ref=e39]: VI
+      - generic [ref=e40]:
+        - generic [ref=e41]: Victoria
+        - generic [ref=e42]: Claro Free
+      - img [ref=e43]
+  - main [ref=e47]:
+    - heading "Your companion" [level=1] [ref=e49]
+    - generic [ref=e52]:
+      - generic [ref=e53]: Meet your AI financial companion
+      - paragraph [ref=e54]: Ask about your plan, run what-if scenarios, or get help understanding your finances. Available on Pro and above.
+      - link "Upgrade to Pro · £7.99/month" [ref=e55] [cursor=pointer]:
+        - /url: "#"

@@ -1,0 +1,165 @@
+- generic [ref=e2]:
+  - complementary [ref=e3]:
+    - navigation [ref=e4]:
+      - link "Overview" [ref=e5] [cursor=pointer]:
+        - /url: /overview
+        - img [ref=e7]
+        - text: Overview
+      - link "Check-in" [ref=e12] [cursor=pointer]:
+        - /url: /check-in
+        - img [ref=e14]
+        - text: Check-in
+      - link "Goals" [ref=e17] [cursor=pointer]:
+        - /url: /my-goals
+        - img [ref=e19]
+        - text: Goals
+      - link "Companion" [ref=e23] [cursor=pointer]:
+        - /url: /companion
+        - img [ref=e25]
+        - text: Companion
+      - link "Plan" [ref=e27] [cursor=pointer]:
+        - /url: /plan
+        - img [ref=e29]
+        - text: Plan
+  - link "Profile & settings" [ref=e31] [cursor=pointer]:
+    - /url: /settings
+    - text: V
+  - main [ref=e32]:
+    - generic [ref=e33]:
+      - link "Settings" [ref=e34] [cursor=pointer]:
+        - /url: /settings
+        - img [ref=e35]
+        - text: Settings
+      - generic [ref=e37]:
+        - heading "Your financial profile" [level=1] [ref=e38]
+        - paragraph [ref=e39]: Update your details below.
+      - generic [ref=e40]:
+        - generic [ref=e41]: Income
+        - generic [ref=e42]:
+          - generic [ref=e43]:
+            - generic [ref=e44]: Monthly take-home pay (£)
+            - spinbutton [ref=e45]: "3200"
+          - generic [ref=e46]:
+            - generic [ref=e47]: Pay day (day of month)
+            - spinbutton [ref=e48]: "25"
+        - generic [ref=e49]: Commitments
+        - generic [ref=e50]:
+          - generic [ref=e51]:
+            - generic [ref=e52]: Monthly rent or mortgage (£)
+            - spinbutton [ref=e53]: "950"
+          - generic [ref=e54]:
+            - generic [ref=e55]: Monthly bills combined (£)
+            - spinbutton [ref=e56]: "180"
+        - paragraph [ref=e57]: Council tax, phone, utilities, internet and similar fixed costs.
+        - generic [ref=e58]: Subscriptions
+        - paragraph [ref=e59]: Tap any you pay for. We'll add up the total.
+        - generic [ref=e60]:
+          - generic [ref=e62] [cursor=pointer]:
+            - text: Netflix
+            - generic [ref=e63]: £10.99
+          - generic [ref=e65] [cursor=pointer]:
+            - text: Spotify
+            - generic [ref=e66]: £10.99
+          - generic [ref=e68] [cursor=pointer]:
+            - text: Amazon Prime
+            - generic [ref=e69]: £8.99
+          - generic [ref=e71] [cursor=pointer]:
+            - text: Disney+
+            - generic [ref=e72]: £7.99
+          - generic [ref=e74] [cursor=pointer]:
+            - text: Apple Music
+            - generic [ref=e75]: £10.99
+          - generic [ref=e77] [cursor=pointer]:
+            - text: Apple TV+
+            - generic [ref=e78]: £8.99
+          - generic [ref=e80] [cursor=pointer]:
+            - text: YouTube Premium
+            - generic [ref=e81]: £12.99
+          - generic [ref=e83] [cursor=pointer]:
+            - text: NOW TV
+            - generic [ref=e84]: £6.99
+          - generic [ref=e86] [cursor=pointer]:
+            - text: Sky
+            - generic [ref=e87]: £26.00
+          - generic [ref=e89] [cursor=pointer]:
+            - text: Gym membership
+            - generic [ref=e90]: £30.00
+          - generic [ref=e92] [cursor=pointer]:
+            - text: Crunchyroll
+            - generic [ref=e93]: £4.99
+          - generic [ref=e95] [cursor=pointer]:
+            - text: Audible
+            - generic [ref=e96]: £7.99
+          - generic [ref=e98] [cursor=pointer]:
+            - text: Xbox Game Pass
+            - generic [ref=e99]: £12.99
+          - generic [ref=e101] [cursor=pointer]:
+            - text: PS Plus
+            - generic [ref=e102]: £10.99
+          - generic [ref=e104] [cursor=pointer]:
+            - text: iCloud+
+            - generic [ref=e105]: £2.99
+          - generic [ref=e107] [cursor=pointer]:
+            - text: ChatGPT Plus
+            - generic [ref=e108]: £20.00
+          - generic [ref=e110] [cursor=pointer]:
+            - text: Notion
+            - generic [ref=e111]: £8.00
+          - generic [ref=e113] [cursor=pointer]:
+            - text: Adobe CC
+            - generic [ref=e114]: £19.97
+          - generic [ref=e116] [cursor=pointer]:
+            - text: Deliveroo Plus
+            - generic [ref=e117]: £3.49
+          - generic [ref=e119] [cursor=pointer]:
+            - text: Just Eat+
+            - generic [ref=e120]: £5.99
+        - generic [ref=e121]:
+          - textbox "Other subscription" [ref=e122]
+          - spinbutton [ref=e123]
+          - button "+ Add" [ref=e124] [cursor=pointer]
+        - generic [ref=e125]:
+          - generic [ref=e126]: Subscriptions total
+          - generic [ref=e127]: £0.00
+        - generic [ref=e128]: Other regular payments
+        - paragraph [ref=e129]: Tap any that apply and enter the monthly amount.
+        - generic [ref=e130]:
+          - generic [ref=e131]:
+            - generic [ref=e133] [cursor=pointer]: Car finance / PCP
+            - generic [ref=e135] [cursor=pointer]: Car insurance
+            - generic [ref=e137] [cursor=pointer]: ISA contributions
+            - generic [ref=e139] [cursor=pointer]: Pension (additional)
+            - generic [ref=e141] [cursor=pointer]: LISA contributions
+            - generic [ref=e143] [cursor=pointer]: Childcare
+            - generic [ref=e145] [cursor=pointer]: Child maintenance
+            - generic [ref=e147] [cursor=pointer]: Private health / dental
+            - generic [ref=e149] [cursor=pointer]: Loan repayment
+            - generic [ref=e151] [cursor=pointer]: Storage unit
+            - generic [ref=e153] [cursor=pointer]: Parking permit
+          - generic [ref=e154]:
+            - textbox "Other payment (e.g. car finance, ISA, pension)" [ref=e155]
+            - spinbutton [ref=e156]
+            - button "+ Add" [ref=e157] [cursor=pointer]
+        - generic [ref=e158]:
+          - generic [ref=e159]: Other payments total
+          - generic [ref=e160]: £0.00
+        - generic [ref=e161]: Living costs
+        - generic [ref=e162]:
+          - generic [ref=e163]:
+            - generic [ref=e164]: Monthly groceries (£)
+            - spinbutton [ref=e165]
+          - generic [ref=e166]:
+            - generic [ref=e167]: Monthly transport (£)
+            - spinbutton [ref=e168]
+        - paragraph [ref=e169]: Rough estimates are fine. We'll refine these over time.
+        - generic [ref=e170]:
+          - generic [ref=e171]: Available for goals
+          - generic [ref=e172]: £2,070/month
+          - paragraph [ref=e173]: After all commitments and living costs.
+        - paragraph [ref=e174]:
+          - img [ref=e175]
+          - text: Encrypted in transit · never sold · never shared
+        - generic [ref=e178]:
+          - button "Update profile" [ref=e179] [cursor=pointer]
+          - link "Cancel" [ref=e180] [cursor=pointer]:
+            - /url: /settings

@@ -1,0 +1,77 @@
+- generic [ref=e2]:
+  - complementary [ref=e3]:
+    - img "Claro" [ref=e5]
+    - navigation [ref=e6]:
+      - link "Overview" [ref=e7] [cursor=pointer]:
+        - /url: /overview
+        - img [ref=e9]
+        - text: Overview
+      - link "Money" [ref=e14] [cursor=pointer]:
+        - /url: /my-money
+        - img [ref=e16]
+        - text: Money
+      - link "Goals" [ref=e18] [cursor=pointer]:
+        - /url: /my-goals
+        - img [ref=e20]
+        - text: Goals
+      - link "Plan" [ref=e24] [cursor=pointer]:
+        - /url: /plan
+        - img [ref=e26]
+        - text: Plan
+      - link "Budgets" [ref=e28] [cursor=pointer]:
+        - /url: /my-budgets
+        - img [ref=e30]
+        - text: Budgets
+    - generic [ref=e31]:
+      - link "VI Victoria Claro Core" [ref=e32] [cursor=pointer]:
+        - /url: /settings
+        - generic [ref=e33]: VI
+        - generic [ref=e34]:
+          - generic [ref=e35]: Victoria
+          - generic [ref=e36]: Claro Core
+        - img [ref=e37]
+      - button "Sign out" [ref=e41] [cursor=pointer]
+  - main [ref=e42]:
+    - generic [ref=e43]:
+      - link "Settings" [ref=e44] [cursor=pointer]:
+        - /url: /settings
+        - img [ref=e45]
+        - text: Settings
+      - generic [ref=e47]:
+        - heading "Your financial profile" [level=1] [ref=e48]
+        - paragraph [ref=e49]: This takes about 60 seconds. We use this to show you where your money goes and where it could take you.
+      - generic [ref=e50]:
+        - generic [ref=e51]: Income
+        - generic [ref=e52]:
+          - generic [ref=e53]:
+            - generic [ref=e54]: Monthly take-home pay (£)
+            - spinbutton [ref=e55]: "3200"
+          - generic [ref=e56]:
+            - generic [ref=e57]: Pay day (day of month)
+            - spinbutton [ref=e58]: "25"
+        - generic [ref=e59]: Commitments
+        - generic [ref=e60]:
+          - generic [ref=e61]:
+            - generic [ref=e62]: Monthly rent or mortgage (£)
+            - spinbutton [ref=e63]: "950"
+          - generic [ref=e64]:
+            - generic [ref=e65]: Monthly bills combined (£)
+            - spinbutton [ref=e66]: "180"
+        - paragraph [ref=e67]: Council tax, phone, utilities, internet and similar fixed costs.
+        - generic [ref=e68]: Living costs
+        - generic [ref=e69]:
+          - generic [ref=e70]:
+            - generic [ref=e71]: Monthly groceries (£)
+            - spinbutton [ref=e72]
+          - generic [ref=e73]:
+            - generic [ref=e74]: Monthly transport (£)
+            - spinbutton [ref=e75]
+        - paragraph [ref=e76]: Rough estimates are fine — we'll refine these from your bank statements.
+        - generic [ref=e77]:
+          - generic [ref=e78]: Available for goals
+          - generic [ref=e79]: £2,070/month
+          - paragraph [ref=e80]: After rent and bills.
+        - paragraph [ref=e81]:
+          - img [ref=e82]
+          - text: Encrypted in transit · never sold · never shared
+        - button "Update profile" [ref=e85] [cursor=pointer]

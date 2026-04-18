@@ -1,0 +1,268 @@
+- generic [ref=e2]:
+  - heading "OperationalError" [level=1] [ref=e3]
+  - paragraph [ref=e5] [cursor=pointer]: "sqlalchemy.exc.OperationalError: (sqlite3.OperationalError) no such column: users.subscriptions_total [SQL: SELECT users.id AS users_id, users.email AS users_email, users.password_hash AS users_password_hash, users.name AS users_name, users.created_at AS users_created_at, users.monthly_income AS users_monthly_income, users.rent_amount AS users_rent_amount, users.bills_amount AS users_bills_amount, users.groceries_estimate AS users_groceries_estimate, users.transport_estimate AS users_transport_estimate, users.subscriptions_total AS users_subscriptions_total, users.other_commitments AS users_other_commitments, users.lifestyle_budget AS users_lifestyle_budget, users.income_day AS users_income_day, users.factfind_completed AS users_factfind_completed, users.skip_emergency_fund AS users_skip_emergency_fund, users.subscription_tier AS users_subscription_tier, users.trial_ends_at AS users_trial_ends_at, users.companion_messages_today AS users_companion_messages_today, users.companion_last_reset AS users_companion_last_reset, users.theme AS users_theme FROM users WHERE users.id = ?] [parameters: (1,)] (Background on this error at: https://sqlalche.me/e/20/e3q8)"
+  - heading "Traceback (most recent call last)" [level=2] [ref=e6] [cursor=pointer]:
+    - text: Traceback
+    - emphasis [ref=e7]: (most recent call last)
+  - generic [ref=e8]:
+    - heading [level=3]
+    - list [ref=e9]:
+      - listitem [ref=e10]:
+        - generic [ref=e11]:
+          - heading "File \"/Users/victoriataiwo/Documents/claro/Fintrack/venv/lib/python3.9/site-packages/sqlalchemy/engine/base.py\", line 1967, in _exec_single_context" [level=4] [ref=e12]:
+            - text: File "/Users/victoriataiwo/Documents/claro/Fintrack/venv/lib/python3.9/site-packages/sqlalchemy/engine/base.py", line
+            - emphasis [ref=e13]: "1967"
+            - text: ", in"
+            - code [ref=e14]: _exec_single_context
+          - generic [ref=e16]: self.dialect.do_execute(
+      - listitem [ref=e17]:
+        - generic [ref=e18]:
+          - heading "File \"/Users/victoriataiwo/Documents/claro/Fintrack/venv/lib/python3.9/site-packages/sqlalchemy/engine/default.py\", line 952, in do_execute" [level=4] [ref=e19]:
+            - text: File "/Users/victoriataiwo/Documents/claro/Fintrack/venv/lib/python3.9/site-packages/sqlalchemy/engine/default.py", line
+            - emphasis [ref=e20]: "952"
+            - text: ", in"
+            - code [ref=e21]: do_execute
+          - generic [ref=e23]: cursor.execute(statement, parameters)
+      - listitem [ref=e24]:
+        - generic [ref=e25]: "The above exception was the direct cause of the following exception:"
+      - listitem [ref=e26]:
+        - generic [ref=e27]:
+          - heading "File \"/Users/victoriataiwo/Documents/claro/Fintrack/venv/lib/python3.9/site-packages/flask/app.py\", line 1536, in __call__" [level=4] [ref=e28]:
+            - text: File "/Users/victoriataiwo/Documents/claro/Fintrack/venv/lib/python3.9/site-packages/flask/app.py", line
+            - emphasis [ref=e29]: "1536"
+            - text: ", in"
+            - code [ref=e30]: __call__
+          - generic [ref=e32]: return self.wsgi_app(environ, start_response)
+      - listitem [ref=e33]:
+        - generic [ref=e34]:
+          - heading "File \"/Users/victoriataiwo/Documents/claro/Fintrack/venv/lib/python3.9/site-packages/flask/app.py\", line 1514, in wsgi_app" [level=4] [ref=e35]:
+            - text: File "/Users/victoriataiwo/Documents/claro/Fintrack/venv/lib/python3.9/site-packages/flask/app.py", line
+            - emphasis [ref=e36]: "1514"
+            - text: ", in"
+            - code [ref=e37]: wsgi_app
+          - generic [ref=e39]: response = self.handle_exception(e)
+      - listitem [ref=e40]:
+        - generic [ref=e41]:
+          - heading "File \"/Users/victoriataiwo/Documents/claro/Fintrack/venv/lib/python3.9/site-packages/flask/app.py\", line 1511, in wsgi_app" [level=4] [ref=e42]:
+            - text: File "/Users/victoriataiwo/Documents/claro/Fintrack/venv/lib/python3.9/site-packages/flask/app.py", line
+            - emphasis [ref=e43]: "1511"
+            - text: ", in"
+            - code [ref=e44]: wsgi_app
+          - generic [ref=e46]: response = self.full_dispatch_request()
+      - listitem [ref=e47]:
+        - generic [ref=e48]:
+          - heading "File \"/Users/victoriataiwo/Documents/claro/Fintrack/venv/lib/python3.9/site-packages/flask/app.py\", line 919, in full_dispatch_request" [level=4] [ref=e49]:
+            - text: File "/Users/victoriataiwo/Documents/claro/Fintrack/venv/lib/python3.9/site-packages/flask/app.py", line
+            - emphasis [ref=e50]: "919"
+            - text: ", in"
+            - code [ref=e51]: full_dispatch_request
+          - generic [ref=e53]: rv = self.handle_user_exception(e)
+      - listitem [ref=e54]:
+        - generic [ref=e55]:
+          - heading "File \"/Users/victoriataiwo/Documents/claro/Fintrack/venv/lib/python3.9/site-packages/flask/app.py\", line 917, in full_dispatch_request" [level=4] [ref=e56]:
+            - text: File "/Users/victoriataiwo/Documents/claro/Fintrack/venv/lib/python3.9/site-packages/flask/app.py", line
+            - emphasis [ref=e57]: "917"
+            - text: ", in"
+            - code [ref=e58]: full_dispatch_request
+          - generic [ref=e60]: rv = self.dispatch_request()
+      - listitem [ref=e61]:
+        - generic [ref=e62]:
+          - heading "File \"/Users/victoriataiwo/Documents/claro/Fintrack/venv/lib/python3.9/site-packages/flask/app.py\", line 902, in dispatch_request" [level=4] [ref=e63]:
+            - text: File "/Users/victoriataiwo/Documents/claro/Fintrack/venv/lib/python3.9/site-packages/flask/app.py", line
+            - emphasis [ref=e64]: "902"
+            - text: ", in"
+            - code [ref=e65]: dispatch_request
+          - generic [ref=e67]: "return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args) # type: ignore[no-any-return]"
+      - listitem [ref=e68]:
+        - generic [ref=e69]:
+          - heading "File \"/Users/victoriataiwo/Documents/claro/Fintrack/app/routes/page_routes.py\", line 359, in index" [level=4] [ref=e70]:
+            - text: File "/Users/victoriataiwo/Documents/claro/Fintrack/app/routes/page_routes.py", line
+            - emphasis [ref=e71]: "359"
+            - text: ", in"
+            - code [ref=e72]: index
+          - generic [ref=e74]: "if current_user.is_authenticated:"
+      - listitem [ref=e75]:
+        - generic [ref=e76]:
+          - heading "File \"/Users/victoriataiwo/Documents/claro/Fintrack/venv/lib/python3.9/site-packages/werkzeug/local.py\", line 318, in __get__" [level=4] [ref=e77]:
+            - text: File "/Users/victoriataiwo/Documents/claro/Fintrack/venv/lib/python3.9/site-packages/werkzeug/local.py", line
+            - emphasis [ref=e78]: "318"
+            - text: ", in"
+            - code [ref=e79]: __get__
+          - generic [ref=e81]: obj = instance._get_current_object()
+      - listitem [ref=e82]:
+        - generic [ref=e83]:
+          - heading "File \"/Users/victoriataiwo/Documents/claro/Fintrack/venv/lib/python3.9/site-packages/werkzeug/local.py\", line 526, in _get_current_object" [level=4] [ref=e84]:
+            - text: File "/Users/victoriataiwo/Documents/claro/Fintrack/venv/lib/python3.9/site-packages/werkzeug/local.py", line
+            - emphasis [ref=e85]: "526"
+            - text: ", in"
+            - code [ref=e86]: _get_current_object
+          - generic [ref=e88]: return get_name(local())
+      - listitem [ref=e89]:
+        - generic [ref=e90]:
+          - heading "File \"/Users/victoriataiwo/Documents/claro/Fintrack/venv/lib/python3.9/site-packages/flask_login/utils.py\", line 25, in <lambda>" [level=4] [ref=e91]:
+            - text: File "/Users/victoriataiwo/Documents/claro/Fintrack/venv/lib/python3.9/site-packages/flask_login/utils.py", line
+            - emphasis [ref=e92]: "25"
+            - text: ", in"
+            - code [ref=e93]: <lambda>
+          - generic [ref=e95]: "current_user = LocalProxy(lambda: _get_user())"
+      - listitem [ref=e96]:
+        - generic [ref=e97]:
+          - heading "File \"/Users/victoriataiwo/Documents/claro/Fintrack/venv/lib/python3.9/site-packages/flask_login/utils.py\", line 370, in _get_user" [level=4] [ref=e98]:
+            - text: File "/Users/victoriataiwo/Documents/claro/Fintrack/venv/lib/python3.9/site-packages/flask_login/utils.py", line
+            - emphasis [ref=e99]: "370"
+            - text: ", in"
+            - code [ref=e100]: _get_user
+          - generic [ref=e102]: current_app.login_manager._load_user()
+      - listitem [ref=e103]:
+        - generic [ref=e104]:
+          - heading "File \"/Users/victoriataiwo/Documents/claro/Fintrack/venv/lib/python3.9/site-packages/flask_login/login_manager.py\", line 364, in _load_user" [level=4] [ref=e105]:
+            - text: File "/Users/victoriataiwo/Documents/claro/Fintrack/venv/lib/python3.9/site-packages/flask_login/login_manager.py", line
+            - emphasis [ref=e106]: "364"
+            - text: ", in"
+            - code [ref=e107]: _load_user
+          - generic [ref=e109]: user = self._user_callback(user_id)
+      - listitem [ref=e110]:
+        - generic [ref=e111]:
+          - heading "File \"/Users/victoriataiwo/Documents/claro/Fintrack/app/models/user.py\", line 7, in load_user" [level=4] [ref=e112]:
+            - text: File "/Users/victoriataiwo/Documents/claro/Fintrack/app/models/user.py", line
+            - emphasis [ref=e113]: "7"
+            - text: ", in"
+            - code [ref=e114]: load_user
+          - generic [ref=e116]: return db.session.get(User, int(user_id))
+      - listitem [ref=e117]:
+        - generic [ref=e118]:
+          - heading "File \"/Users/victoriataiwo/Documents/claro/Fintrack/venv/lib/python3.9/site-packages/sqlalchemy/orm/scoping.py\", line 1044, in get" [level=4] [ref=e119]:
+            - text: File "/Users/victoriataiwo/Documents/claro/Fintrack/venv/lib/python3.9/site-packages/sqlalchemy/orm/scoping.py", line
+            - emphasis [ref=e120]: "1044"
+            - text: ", in"
+            - code [ref=e121]: get
+          - generic [ref=e123]: return self._proxied.get(
+      - listitem [ref=e124]:
+        - generic [ref=e125]:
+          - heading "File \"/Users/victoriataiwo/Documents/claro/Fintrack/venv/lib/python3.9/site-packages/sqlalchemy/orm/session.py\", line 3680, in get" [level=4] [ref=e126]:
+            - text: File "/Users/victoriataiwo/Documents/claro/Fintrack/venv/lib/python3.9/site-packages/sqlalchemy/orm/session.py", line
+            - emphasis [ref=e127]: "3680"
+            - text: ", in"
+            - code [ref=e128]: get
+          - generic [ref=e130]: return self._get_impl(
+      - listitem [ref=e131]:
+        - generic [ref=e132]:
+          - heading "File \"/Users/victoriataiwo/Documents/claro/Fintrack/venv/lib/python3.9/site-packages/sqlalchemy/orm/session.py\", line 3859, in _get_impl" [level=4] [ref=e133]:
+            - text: File "/Users/victoriataiwo/Documents/claro/Fintrack/venv/lib/python3.9/site-packages/sqlalchemy/orm/session.py", line
+            - emphasis [ref=e134]: "3859"
+            - text: ", in"
+            - code [ref=e135]: _get_impl
+          - generic [ref=e137]: return db_load_fn(
+      - listitem [ref=e138]:
+        - generic [ref=e139]:
+          - heading "File \"/Users/victoriataiwo/Documents/claro/Fintrack/venv/lib/python3.9/site-packages/sqlalchemy/orm/loading.py\", line 695, in load_on_pk_identity" [level=4] [ref=e140]:
+            - text: File "/Users/victoriataiwo/Documents/claro/Fintrack/venv/lib/python3.9/site-packages/sqlalchemy/orm/loading.py", line
+            - emphasis [ref=e141]: "695"
+            - text: ", in"
+            - code [ref=e142]: load_on_pk_identity
+          - generic [ref=e144]: session.execute(
+      - listitem [ref=e145]:
+        - generic [ref=e146]:
+          - heading "File \"/Users/victoriataiwo/Documents/claro/Fintrack/venv/lib/python3.9/site-packages/sqlalchemy/orm/session.py\", line 2351, in execute" [level=4] [ref=e147]:
+            - text: File "/Users/victoriataiwo/Documents/claro/Fintrack/venv/lib/python3.9/site-packages/sqlalchemy/orm/session.py", line
+            - emphasis [ref=e148]: "2351"
+            - text: ", in"
+            - code [ref=e149]: execute
+          - generic [ref=e151]: return self._execute_internal(
+      - listitem [ref=e152]:
+        - generic [ref=e153]:
+          - heading "File \"/Users/victoriataiwo/Documents/claro/Fintrack/venv/lib/python3.9/site-packages/sqlalchemy/orm/session.py\", line 2249, in _execute_internal" [level=4] [ref=e154]:
+            - text: File "/Users/victoriataiwo/Documents/claro/Fintrack/venv/lib/python3.9/site-packages/sqlalchemy/orm/session.py", line
+            - emphasis [ref=e155]: "2249"
+            - text: ", in"
+            - code [ref=e156]: _execute_internal
+          - generic [ref=e158]: "result: Result[Any] = compile_state_cls.orm_execute_statement("
+      - listitem [ref=e159]:
+        - generic [ref=e160]:
+          - heading "File \"/Users/victoriataiwo/Documents/claro/Fintrack/venv/lib/python3.9/site-packages/sqlalchemy/orm/context.py\", line 306, in orm_execute_statement" [level=4] [ref=e161]:
+            - text: File "/Users/victoriataiwo/Documents/claro/Fintrack/venv/lib/python3.9/site-packages/sqlalchemy/orm/context.py", line
+            - emphasis [ref=e162]: "306"
+            - text: ", in"
+            - code [ref=e163]: orm_execute_statement
+          - generic [ref=e165]: result = conn.execute(
+      - listitem [ref=e166]:
+        - generic [ref=e167]:
+          - heading "File \"/Users/victoriataiwo/Documents/claro/Fintrack/venv/lib/python3.9/site-packages/sqlalchemy/engine/base.py\", line 1419, in execute" [level=4] [ref=e168]:
+            - text: File "/Users/victoriataiwo/Documents/claro/Fintrack/venv/lib/python3.9/site-packages/sqlalchemy/engine/base.py", line
+            - emphasis [ref=e169]: "1419"
+            - text: ", in"
+            - code [ref=e170]: execute
+          - generic [ref=e172]: return meth(
+      - listitem [ref=e173]:
+        - generic [ref=e174]:
+          - heading "File \"/Users/victoriataiwo/Documents/claro/Fintrack/venv/lib/python3.9/site-packages/sqlalchemy/sql/elements.py\", line 527, in _execute_on_connection" [level=4] [ref=e175]:
+            - text: File "/Users/victoriataiwo/Documents/claro/Fintrack/venv/lib/python3.9/site-packages/sqlalchemy/sql/elements.py", line
+            - emphasis [ref=e176]: "527"
+            - text: ", in"
+            - code [ref=e177]: _execute_on_connection
+          - generic [ref=e179]: return connection._execute_clauseelement(
+      - listitem [ref=e180]:
+        - generic [ref=e181]:
+          - heading "File \"/Users/victoriataiwo/Documents/claro/Fintrack/venv/lib/python3.9/site-packages/sqlalchemy/engine/base.py\", line 1641, in _execute_clauseelement" [level=4] [ref=e182]:
+            - text: File "/Users/victoriataiwo/Documents/claro/Fintrack/venv/lib/python3.9/site-packages/sqlalchemy/engine/base.py", line
+            - emphasis [ref=e183]: "1641"
+            - text: ", in"
+            - code [ref=e184]: _execute_clauseelement
+          - generic [ref=e186]: ret = self._execute_context(
+      - listitem [ref=e187]:
+        - generic [ref=e188]:
+          - heading "File \"/Users/victoriataiwo/Documents/claro/Fintrack/venv/lib/python3.9/site-packages/sqlalchemy/engine/base.py\", line 1846, in _execute_context" [level=4] [ref=e189]:
+            - text: File "/Users/victoriataiwo/Documents/claro/Fintrack/venv/lib/python3.9/site-packages/sqlalchemy/engine/base.py", line
+            - emphasis [ref=e190]: "1846"
+            - text: ", in"
+            - code [ref=e191]: _execute_context
+          - generic [ref=e193]: return self._exec_single_context(
+      - listitem [ref=e194]:
+        - generic [ref=e195]:
+          - heading "File \"/Users/victoriataiwo/Documents/claro/Fintrack/venv/lib/python3.9/site-packages/sqlalchemy/engine/base.py\", line 1986, in _exec_single_context" [level=4] [ref=e196]:
+            - text: File "/Users/victoriataiwo/Documents/claro/Fintrack/venv/lib/python3.9/site-packages/sqlalchemy/engine/base.py", line
+            - emphasis [ref=e197]: "1986"
+            - text: ", in"
+            - code [ref=e198]: _exec_single_context
+          - generic [ref=e200]: self._handle_dbapi_exception(
+      - listitem [ref=e201]:
+        - generic [ref=e202]:
+          - heading "File \"/Users/victoriataiwo/Documents/claro/Fintrack/venv/lib/python3.9/site-packages/sqlalchemy/engine/base.py\", line 2363, in _handle_dbapi_exception" [level=4] [ref=e203]:
+            - text: File "/Users/victoriataiwo/Documents/claro/Fintrack/venv/lib/python3.9/site-packages/sqlalchemy/engine/base.py", line
+            - emphasis [ref=e204]: "2363"
+            - text: ", in"
+            - code [ref=e205]: _handle_dbapi_exception
+          - generic [ref=e207]: raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+      - listitem [ref=e208]:
+        - generic [ref=e209]:
+          - heading "File \"/Users/victoriataiwo/Documents/claro/Fintrack/venv/lib/python3.9/site-packages/sqlalchemy/engine/base.py\", line 1967, in _exec_single_context" [level=4] [ref=e210]:
+            - text: File "/Users/victoriataiwo/Documents/claro/Fintrack/venv/lib/python3.9/site-packages/sqlalchemy/engine/base.py", line
+            - emphasis [ref=e211]: "1967"
+            - text: ", in"
+            - code [ref=e212]: _exec_single_context
+          - generic [ref=e214]: self.dialect.do_execute(
+      - listitem [ref=e215]:
+        - generic [ref=e216]:
+          - heading "File \"/Users/victoriataiwo/Documents/claro/Fintrack/venv/lib/python3.9/site-packages/sqlalchemy/engine/default.py\", line 952, in do_execute" [level=4] [ref=e217]:
+            - text: File "/Users/victoriataiwo/Documents/claro/Fintrack/venv/lib/python3.9/site-packages/sqlalchemy/engine/default.py", line
+            - emphasis [ref=e218]: "952"
+            - text: ", in"
+            - code [ref=e219]: do_execute
+          - generic [ref=e221]: cursor.execute(statement, parameters)
+    - blockquote [ref=e222]: "sqlalchemy.exc.OperationalError: (sqlite3.OperationalError) no such column: users.subscriptions_total [SQL: SELECT users.id AS users_id, users.email AS users_email, users.password_hash AS users_password_hash, users.name AS users_name, users.created_at AS users_created_at, users.monthly_income AS users_monthly_income, users.rent_amount AS users_rent_amount, users.bills_amount AS users_bills_amount, users.groceries_estimate AS users_groceries_estimate, users.transport_estimate AS users_transport_estimate, users.subscriptions_total AS users_subscriptions_total, users.other_commitments AS users_other_commitments, users.lifestyle_budget AS users_lifestyle_budget, users.income_day AS users_income_day, users.factfind_completed AS users_factfind_completed, users.skip_emergency_fund AS users_skip_emergency_fund, users.subscription_tier AS users_subscription_tier, users.trial_ends_at AS users_trial_ends_at, users.companion_messages_today AS users_companion_messages_today, users.companion_last_reset AS users_companion_last_reset, users.theme AS users_theme FROM users WHERE users.id = ?] [parameters: (1,)] (Background on this error at: https://sqlalche.me/e/20/e3q8)"
+  - generic [ref=e223]:
+    - text: The debugger caught an exception in your WSGI application. You can now look at the traceback which led to the error.
+    - generic [ref=e224]:
+      - paragraph [ref=e225]: To switch between the interactive traceback and the plaintext one, you can click on the "Traceback" headline. From the text traceback you can also create a paste of it. For code execution mouse-over the frame you want to debug and click on the console icon on the right side.
+      - paragraph [ref=e226]: "You can execute arbitrary Python code in the stack frames and there are some extra helpers available for introspection:"
+      - list [ref=e227]:
+        - listitem [ref=e228]:
+          - code [ref=e229]: dump()
+          - text: shows all variables in the frame
+        - listitem [ref=e230]:
+          - code [ref=e231]: dump(obj)
+          - text: dumps all that's known about the object
+  - generic [ref=e232]:
+    - text: Brought to you by
+    - strong [ref=e233]: DON'T PANIC
+    - text: ", your friendly Werkzeug powered traceback interpreter."

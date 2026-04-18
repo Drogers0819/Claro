@@ -1,0 +1,76 @@
+- generic [ref=e2]:
+  - complementary [ref=e3]:
+    - navigation [ref=e4]:
+      - link "Overview" [ref=e5] [cursor=pointer]:
+        - /url: /overview
+        - img [ref=e7]
+        - text: Overview
+      - link "Money" [ref=e12] [cursor=pointer]:
+        - /url: /my-money
+        - img [ref=e14]
+        - text: Money
+      - link "Goals" [ref=e16] [cursor=pointer]:
+        - /url: /my-goals
+        - img [ref=e18]
+        - text: Goals
+      - link "Plan" [ref=e22] [cursor=pointer]:
+        - /url: /plan
+        - img [ref=e24]
+        - text: Plan
+      - link "Budgets" [ref=e26] [cursor=pointer]:
+        - /url: /my-budgets
+        - img [ref=e28]
+        - text: Budgets
+  - link "Profile & settings" [ref=e29] [cursor=pointer]:
+    - /url: /settings
+    - text: V
+  - main [ref=e30]:
+    - heading "My Budgets" [level=1] [ref=e32]
+    - generic [ref=e33]:
+      - generic [ref=e36]: Worth a look
+      - generic [ref=e37]:
+        - generic [ref=e38]: £996
+        - generic [ref=e39]: / year
+      - generic [ref=e40]: potential saving on your subscriptions each year
+      - generic [ref=e41]:
+        - generic [ref=e42]: tfl
+        - generic [ref=e43]: £48/mo
+      - generic [ref=e44]:
+        - generic [ref=e45]: puregym
+        - generic [ref=e46]: £35/mo
+    - generic [ref=e47]:
+      - generic [ref=e48]:
+        - generic [ref=e49]:
+          - generic [ref=e50]: Bills
+          - generic [ref=e51]:
+            - generic [ref=e52]: £1,060
+            - generic [ref=e53]: / £499
+            - button "Edit limit" [ref=e54] [cursor=pointer]:
+              - img [ref=e55]
+            - button "Remove budget" [ref=e59] [cursor=pointer]:
+              - img [ref=e60]
+        - generic [ref=e66]: £561 over budget
+      - generic [ref=e67]:
+        - generic [ref=e68]:
+          - generic [ref=e69]: Education
+          - generic [ref=e70]:
+            - generic [ref=e71]: £0
+            - generic [ref=e72]: / £200
+            - button "Edit limit" [ref=e73] [cursor=pointer]:
+              - img [ref=e74]
+            - button "Remove budget" [ref=e78] [cursor=pointer]:
+              - img [ref=e79]
+        - generic [ref=e84]: £11.11/day for 18 days
+    - generic [ref=e85]:
+      - generic [ref=e86]: Set a spending limit
+      - generic [ref=e87]:
+        - generic [ref=e88]:
+          - combobox [ref=e91] [cursor=pointer]:
+            - generic [ref=e92]: Choose category
+            - img [ref=e93]
+          - spinbutton [ref=e96]
+        - button "Set budget" [ref=e98] [cursor=pointer]
+      - paragraph [ref=e99]:
+        - text: See your regular payments under
+        - link "Recurring payments" [ref=e100] [cursor=pointer]:
+          - /url: /recurring

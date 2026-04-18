@@ -1,0 +1,170 @@
+- generic [ref=e2]:
+  - complementary [ref=e3]:
+    - navigation [ref=e4]:
+      - link "Overview" [ref=e5] [cursor=pointer]:
+        - /url: /overview
+        - img [ref=e7]
+        - text: Overview
+      - link "Money" [ref=e12] [cursor=pointer]:
+        - /url: /my-money
+        - img [ref=e14]
+        - text: Money
+      - link "Goals" [ref=e16] [cursor=pointer]:
+        - /url: /my-goals
+        - img [ref=e18]
+        - text: Goals
+      - link "Plan" [ref=e22] [cursor=pointer]:
+        - /url: /plan
+        - img [ref=e24]
+        - text: Plan
+      - link "Budgets" [ref=e26] [cursor=pointer]:
+        - /url: /my-budgets
+        - img [ref=e28]
+        - text: Budgets
+  - link "Profile & settings" [ref=e29] [cursor=pointer]:
+    - /url: /settings
+    - text: V
+  - main [ref=e30]:
+    - link "Money" [ref=e31] [cursor=pointer]:
+      - /url: /my-money
+      - img [ref=e32]
+      - text: Money
+    - generic [ref=e34]:
+      - heading "Where your money goes" [level=1] [ref=e35]
+      - paragraph [ref=e36]: April 2026
+    - generic [ref=e37]:
+      - generic [ref=e38]:
+        - generic [ref=e39]: Total Spending
+        - generic [ref=e40]: £1471.68
+      - generic [ref=e41]:
+        - generic [ref=e42]: Categories Used
+        - generic [ref=e43]: "7"
+      - generic [ref=e44]:
+        - generic [ref=e45]: Biggest Category
+        - generic [ref=e46]:
+          - img [ref=e47]
+          - generic [ref=e50]: Bills
+    - generic [ref=e51]: Spending by category
+    - generic [ref=e52]:
+      - generic [ref=e53]:
+        - generic [ref=e54]:
+          - generic [ref=e55]:
+            - img [ref=e56]
+            - generic [ref=e59]: Bills
+          - generic [ref=e60]: £1060.00 72.0%
+        - generic [ref=e63]: 3 transactions
+      - generic [ref=e64]:
+        - generic [ref=e65]:
+          - generic [ref=e66]:
+            - img [ref=e67]
+            - generic [ref=e70]: Food
+          - generic [ref=e71]: £197.30 13.4%
+        - generic [ref=e74]: 6 transactions
+      - generic [ref=e75]:
+        - generic [ref=e76]:
+          - generic [ref=e77]:
+            - img [ref=e78]
+            - generic [ref=e81]: Shopping
+          - generic [ref=e82]: £67.00 4.6%
+        - generic [ref=e85]: 1 transaction
+      - generic [ref=e86]:
+        - generic [ref=e87]:
+          - generic [ref=e88]:
+            - img [ref=e89]
+            - generic [ref=e94]: Transport
+          - generic [ref=e95]: £60.40 4.1%
+        - generic [ref=e98]: 2 transactions
+      - generic [ref=e99]:
+        - generic [ref=e100]:
+          - generic [ref=e101]:
+            - img [ref=e102]
+            - generic [ref=e104]: Health
+          - generic [ref=e105]: £35.00 2.4%
+        - generic [ref=e108]: 1 transaction
+      - generic [ref=e109]:
+        - generic [ref=e110]:
+          - generic [ref=e111]:
+            - img [ref=e112]
+            - generic [ref=e117]: Subscriptions
+          - generic [ref=e118]: £29.98 2.0%
+        - generic [ref=e121]: 2 transactions
+      - generic [ref=e122]:
+        - generic [ref=e123]:
+          - generic [ref=e124]:
+            - img [ref=e125]
+            - generic [ref=e128]: Entertainment
+          - generic [ref=e129]: £22.00 1.5%
+        - generic [ref=e132]: 1 transaction
+    - generic [ref=e133]: Compared to last month
+    - generic [ref=e134]:
+      - generic [ref=e135]:
+        - generic [ref=e136]:
+          - generic [ref=e137]:
+            - img [ref=e138]
+            - generic [ref=e141]: Food
+          - generic [ref=e142]: "Last month: £111.00"
+        - generic [ref=e143]:
+          - generic [ref=e144]: £197.30
+          - generic [ref=e145]:
+            - img [ref=e146]
+            - generic [ref=e148]: 77.7% (+£86.30)
+      - generic [ref=e149]:
+        - generic [ref=e150]:
+          - generic [ref=e151]:
+            - img [ref=e152]
+            - generic [ref=e155]: Entertainment
+          - generic [ref=e156]: "Last month: £85.00"
+        - generic [ref=e157]:
+          - generic [ref=e158]: £22.00
+          - generic [ref=e159]:
+            - img [ref=e160]
+            - generic [ref=e162]: "-74.1% (−£63.00)"
+      - generic [ref=e163]:
+        - generic [ref=e164]:
+          - generic [ref=e165]:
+            - img [ref=e166]
+            - generic [ref=e169]: Shopping
+          - generic [ref=e170]: "Last month: £24.99"
+        - generic [ref=e171]:
+          - generic [ref=e172]: £67.00
+          - generic [ref=e173]:
+            - img [ref=e174]
+            - generic [ref=e176]: 168.1% (+£42.01)
+      - generic [ref=e177]:
+        - generic [ref=e178]:
+          - generic [ref=e179]:
+            - img [ref=e180]
+            - generic [ref=e185]: Transport
+          - generic [ref=e186]: "Last month: £57.80"
+        - generic [ref=e187]:
+          - generic [ref=e188]: £60.40
+          - generic [ref=e189]:
+            - img [ref=e190]
+            - generic [ref=e192]: 4.5% (+£2.60)
+      - generic [ref=e193]:
+        - generic [ref=e194]:
+          - generic [ref=e195]:
+            - img [ref=e196]
+            - generic [ref=e199]: Bills
+          - generic [ref=e200]: "Last month: £1060.00"
+        - generic [ref=e201]:
+          - generic [ref=e202]: £1060.00
+          - generic [ref=e204]: 0.0% (£0.00)
+      - generic [ref=e205]:
+        - generic [ref=e206]:
+          - generic [ref=e207]:
+            - img [ref=e208]
+            - generic [ref=e210]: Health
+          - generic [ref=e211]: "Last month: £35.00"
+        - generic [ref=e212]:
+          - generic [ref=e213]: £35.00
+          - generic [ref=e215]: 0.0% (£0.00)
+      - generic [ref=e216]:
+        - generic [ref=e217]:
+          - generic [ref=e218]:
+            - img [ref=e219]
+            - generic [ref=e224]: Subscriptions
+          - generic [ref=e225]: "Last month: £29.98"
+        - generic [ref=e226]:
+          - generic [ref=e227]: £29.98
+          - generic [ref=e229]: 0.0% (£0.00)

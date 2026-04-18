@@ -1,0 +1,71 @@
+- generic [ref=e2]:
+  - complementary [ref=e3]:
+    - img "Claro" [ref=e91]
+    - navigation [ref=e4]:
+      - link "Overview" [ref=e5] [cursor=pointer]:
+        - /url: /overview
+        - img [ref=e7]
+        - text: Overview
+      - link "Check-in" [ref=e12] [cursor=pointer]:
+        - /url: /check-in
+        - img [ref=e14]
+        - text: Check-in
+      - link "Goals" [ref=e17] [cursor=pointer]:
+        - /url: /my-goals
+        - img [ref=e19]
+        - text: Goals
+      - link "Companion" [ref=e23] [cursor=pointer]:
+        - /url: /companion
+        - img [ref=e25]
+        - text: Companion
+      - link "Plan" [ref=e27] [cursor=pointer]:
+        - /url: /plan
+        - img [ref=e29]
+        - text: Plan
+    - button "TE Test Claro Free" [ref=e93] [cursor=pointer]:
+      - generic [ref=e94]: TE
+      - generic [ref=e95]:
+        - generic [ref=e96]: Test
+        - generic [ref=e97]: Claro Free
+      - img [ref=e98]
+  - main [ref=e31]:
+    - link "Overview" [ref=e32] [cursor=pointer]:
+      - /url: /overview
+      - img [ref=e33]
+      - text: Overview
+    - heading "Settings" [level=1] [ref=e36]
+    - button "Financial profile" [ref=e38] [cursor=pointer]:
+      - generic [ref=e39]:
+        - img [ref=e40]
+        - generic [ref=e43]: Financial profile
+      - img [ref=e44]
+    - button "Appearance" [ref=e64] [cursor=pointer]:
+      - generic [ref=e65]:
+        - img [ref=e66]
+        - generic [ref=e71]: Appearance
+      - img [ref=e72]
+    - generic [ref=e74]:
+      - button "Account" [expanded] [active] [ref=e75] [cursor=pointer]:
+        - generic [ref=e76]:
+          - img [ref=e77]
+          - generic [ref=e80]: Account
+        - img [ref=e81]
+      - generic [ref=e102]:
+        - generic [ref=e104]:
+          - generic [ref=e105]: Name
+          - generic [ref=e106]:
+            - generic [ref=e107]: Test User
+            - button "Edit" [ref=e108] [cursor=pointer]
+        - generic [ref=e110]:
+          - generic [ref=e111]: Email
+          - generic [ref=e112]:
+            - generic [ref=e113]: test@claro.com
+            - button "Edit" [ref=e114] [cursor=pointer]
+        - generic [ref=e116]:
+          - generic [ref=e117]: Password
+          - generic [ref=e118]:
+            - generic [ref=e119]: ••••••••
+            - button "Change" [ref=e120] [cursor=pointer]
+        - generic [ref=e121]:
+          - generic [ref=e122]: Member since
+          - generic [ref=e123]: April 2026

@@ -1,0 +1,49 @@
+- generic [ref=e2]:
+  - complementary [ref=e3]:
+    - navigation [ref=e4]:
+      - link "Overview" [ref=e5] [cursor=pointer]:
+        - /url: /overview
+        - img [ref=e7]
+        - text: Overview
+      - link "Check-in" [ref=e12] [cursor=pointer]:
+        - /url: /check-in
+        - img [ref=e14]
+        - text: Check-in
+      - link "Goals" [ref=e17] [cursor=pointer]:
+        - /url: /my-goals
+        - img [ref=e19]
+        - text: Goals
+      - link "Companion" [ref=e23] [cursor=pointer]:
+        - /url: /companion
+        - img [ref=e25]
+        - text: Companion
+      - link "Plan" [ref=e27] [cursor=pointer]:
+        - /url: /plan
+        - img [ref=e29]
+        - text: Plan
+  - link "Profile & settings" [ref=e31] [cursor=pointer]:
+    - /url: /settings
+    - text: V
+  - main [ref=e32]:
+    - generic [ref=e33]:
+      - generic [ref=e34]:
+        - heading "What are you working toward?" [level=1] [ref=e35]
+        - paragraph [ref=e36]: Tap everything that applies. We'll figure out the rest.
+      - generic [ref=e37]:
+        - generic [ref=e38]:
+          - generic [ref=e39]: Do you have any savings set aside for emergencies?
+          - generic [ref=e40]:
+            - generic [ref=e42] [cursor=pointer]: No, starting fresh
+            - generic [ref=e44] [cursor=pointer]: Yes, I have some
+            - generic [ref=e46] [cursor=pointer]: I'll manage my own safety net
+        - generic [ref=e47]: Now, what are you working toward?
+        - generic [ref=e48]:
+          - generic [ref=e50] [cursor=pointer]: House deposit
+          - generic [ref=e52] [cursor=pointer]: Holiday
+          - generic [ref=e54] [cursor=pointer]: Baby fund
+          - generic [ref=e56] [cursor=pointer]: Pay off debt
+          - generic [ref=e58] [cursor=pointer]: Car
+          - generic [ref=e60] [cursor=pointer]: Wedding
+          - generic [ref=e62] [cursor=pointer]: Student loan
+          - generic [ref=e64] [cursor=pointer]: New purchase
+          - generic [ref=e66] [cursor=pointer]: Something else

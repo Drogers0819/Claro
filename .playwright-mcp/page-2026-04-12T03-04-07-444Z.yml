@@ -1,0 +1,74 @@
+- generic [ref=e2]:
+  - complementary [ref=e3]:
+    - navigation [ref=e4]:
+      - link "Overview" [ref=e5] [cursor=pointer]:
+        - /url: /overview
+        - img [ref=e7]
+        - text: Overview
+      - link "Money" [ref=e12] [cursor=pointer]:
+        - /url: /my-money
+        - img [ref=e14]
+        - text: Money
+      - link "Goals" [ref=e16] [cursor=pointer]:
+        - /url: /my-goals
+        - img [ref=e18]
+        - text: Goals
+      - link "Plan" [ref=e22] [cursor=pointer]:
+        - /url: /plan
+        - img [ref=e24]
+        - text: Plan
+      - link "Budgets" [ref=e26] [cursor=pointer]:
+        - /url: /my-budgets
+        - img [ref=e28]
+        - text: Budgets
+  - main [ref=e29]:
+    - link "Goals" [ref=e30] [cursor=pointer]:
+      - /url: /my-goals
+      - img [ref=e31]
+      - text: Goals
+    - heading "House deposit" [level=1] [ref=e34]
+    - generic [ref=e35]:
+      - generic [ref=e38]: Projection
+      - generic [ref=e39]: April 2029
+      - paragraph [ref=e40]: 36 months away at £300.00/month
+    - generic [ref=e41]:
+      - generic [ref=e42]: What if you changed your contribution?
+      - paragraph [ref=e43]: Move the slider to see your future change in real time.
+      - generic [ref=e44]:
+        - generic [ref=e45]: £0
+        - generic [ref=e46]: £2070
+      - slider [ref=e47] [cursor=pointer]: "300"
+      - generic [ref=e48]: £300.00/month
+    - generic [ref=e49]:
+      - generic [ref=e50]: Timeline projection
+      - generic [ref=e53]:
+        - generic [ref=e54]: Investment growth adds
+        - generic [ref=e55]: +£1,067
+        - generic [ref=e56]: to your total
+    - generic [ref=e57]:
+      - generic [ref=e58]:
+        - generic [ref=e59]: £3,240.00
+        - generic [ref=e60]: of £15,000.00
+      - generic [ref=e63]: 21.6% complete
+    - generic [ref=e64]:
+      - generic [ref=e65]: Milestones
+      - generic [ref=e66]:
+        - generic [ref=e67]:
+          - generic [ref=e68]: 25%
+          - generic [ref=e69]: £3,863
+        - generic [ref=e70]: 2026-06-12
+      - generic [ref=e71]:
+        - generic [ref=e72]:
+          - generic [ref=e73]: 50%
+          - generic [ref=e74]: £7,687
+        - generic [ref=e75]: 2027-06-12
+      - generic [ref=e76]:
+        - generic [ref=e77]:
+          - generic [ref=e78]: 75%
+          - generic [ref=e79]: £11,329
+        - generic [ref=e80]: 2028-05-12
+      - generic [ref=e81]:
+        - generic [ref=e82]:
+          - generic [ref=e83]: 100%
+          - generic [ref=e84]: £15,107
+        - generic [ref=e85]: 2029-04-12

@@ -1,0 +1,73 @@
+- generic [ref=e2]:
+  - complementary [ref=e3]:
+    - navigation [ref=e4]:
+      - link "Overview" [ref=e5] [cursor=pointer]:
+        - /url: /overview
+        - img [ref=e7]
+        - text: Overview
+      - link "Check-in" [ref=e12] [cursor=pointer]:
+        - /url: /check-in
+        - img [ref=e14]
+        - text: Check-in
+      - link "Goals" [ref=e17] [cursor=pointer]:
+        - /url: /my-goals
+        - img [ref=e19]
+        - text: Goals
+      - link "Plan" [ref=e23] [cursor=pointer]:
+        - /url: /plan
+        - img [ref=e25]
+        - text: Plan
+  - link "Profile & settings" [ref=e27] [cursor=pointer]:
+    - /url: /settings
+    - text: V
+  - main [ref=e28]:
+    - link "Goals" [ref=e29] [cursor=pointer]:
+      - /url: /my-goals
+      - img [ref=e30]
+      - text: Goals
+    - heading "House deposit" [level=1] [ref=e33]
+    - generic [ref=e34]:
+      - generic [ref=e37]: Projection
+      - generic [ref=e38]: April 2029
+      - paragraph [ref=e39]: 36 months away at £300.00/month
+    - generic [ref=e40]:
+      - generic [ref=e41]: What if you changed your contribution?
+      - paragraph [ref=e42]: Move the slider to see your future change in real time.
+      - generic [ref=e43]:
+        - generic [ref=e44]: £0
+        - generic [ref=e45]: £2,070
+      - slider [ref=e46] [cursor=pointer]: "300"
+      - generic [ref=e47]: £300.00/month
+    - generic [ref=e48]:
+      - generic [ref=e49]: Timeline projection
+      - generic [ref=e52]:
+        - generic [ref=e53]: Investment growth adds
+        - generic [ref=e54]: +£1,067
+        - generic [ref=e55]: to your total
+    - generic [ref=e56]:
+      - generic [ref=e57]:
+        - generic [ref=e58]: £3,240.00
+        - generic [ref=e59]: of £15,000.00
+      - generic [ref=e62]: 21.6% complete
+    - generic [ref=e63]:
+      - generic [ref=e64]: Milestones
+      - generic [ref=e65]:
+        - generic [ref=e66]:
+          - generic [ref=e67]: 25%
+          - generic [ref=e68]: £3,863
+        - generic [ref=e69]: 14 Jun 2026
+      - generic [ref=e70]:
+        - generic [ref=e71]:
+          - generic [ref=e72]: 50%
+          - generic [ref=e73]: £7,687
+        - generic [ref=e74]: 14 Jun 2027
+      - generic [ref=e75]:
+        - generic [ref=e76]:
+          - generic [ref=e77]: 75%
+          - generic [ref=e78]: £11,329
+        - generic [ref=e79]: 14 May 2028
+      - generic [ref=e80]:
+        - generic [ref=e81]:
+          - generic [ref=e82]: 100%
+          - generic [ref=e83]: £15,107
+        - generic [ref=e84]: 14 Apr 2029

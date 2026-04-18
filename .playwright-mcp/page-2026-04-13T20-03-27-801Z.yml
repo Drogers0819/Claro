@@ -1,0 +1,69 @@
+- generic [ref=e2]:
+  - complementary [ref=e3]:
+    - img "Claro" [ref=e5]
+    - navigation [ref=e6]:
+      - link "Overview" [ref=e7] [cursor=pointer]:
+        - /url: /overview
+        - img [ref=e9]
+        - text: Overview
+      - link "Money" [ref=e14] [cursor=pointer]:
+        - /url: /my-money
+        - img [ref=e16]
+        - text: Money
+      - link "Goals" [ref=e18] [cursor=pointer]:
+        - /url: /my-goals
+        - img [ref=e20]
+        - text: Goals
+      - link "Plan" [ref=e24] [cursor=pointer]:
+        - /url: /plan
+        - img [ref=e26]
+        - text: Plan
+      - link "Budgets" [ref=e28] [cursor=pointer]:
+        - /url: /my-budgets
+        - img [ref=e30]
+        - text: Budgets
+    - generic [ref=e31]:
+      - link "VI Victoria Claro Core" [ref=e32] [cursor=pointer]:
+        - /url: /settings
+        - generic [ref=e33]: VI
+        - generic [ref=e34]:
+          - generic [ref=e35]: Victoria
+          - generic [ref=e36]: Claro Core
+        - img [ref=e37]
+      - button "Sign out" [ref=e41] [cursor=pointer]
+  - main [ref=e42]:
+    - link "Goals" [ref=e43] [cursor=pointer]:
+      - /url: /my-goals
+      - img [ref=e44]
+      - text: Goals
+    - generic [ref=e46]:
+      - heading "Add a goal" [level=1] [ref=e47]
+      - paragraph [ref=e48]: What are you working toward?
+    - generic [ref=e50]:
+      - generic [ref=e51]:
+        - generic [ref=e52]: Goal name
+        - textbox "e.g. Manchester house deposit" [ref=e53]
+      - generic [ref=e54]:
+        - generic [ref=e55]:
+          - generic [ref=e56]: Goal type
+          - combobox [ref=e58] [cursor=pointer]:
+            - generic [ref=e59]: Saving toward a target
+            - img [ref=e60]
+        - generic [ref=e62]:
+          - generic [ref=e63]: Priority (1 = highest)
+          - spinbutton [ref=e64]: "1"
+      - generic [ref=e65]:
+        - generic [ref=e66]:
+          - generic [ref=e67]: Target amount (£)
+          - spinbutton [ref=e68]
+        - generic [ref=e69]:
+          - generic [ref=e70]: Already saved (£)
+          - spinbutton [ref=e71]: "0"
+      - generic [ref=e72]:
+        - generic [ref=e73]:
+          - generic [ref=e74]: Monthly contribution (£)
+          - spinbutton [ref=e75]
+        - generic [ref=e76]:
+          - generic [ref=e77]: Target date (optional)
+          - textbox "Select date" [ref=e78]
+      - button "Create goal" [ref=e79] [cursor=pointer]

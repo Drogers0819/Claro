@@ -1,0 +1,106 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - complementary [ref=e3]:
+      - navigation [ref=e4]:
+        - link "Overview" [ref=e5] [cursor=pointer]:
+          - /url: /overview
+          - img [ref=e7]
+          - text: Overview
+        - link "Check-in" [ref=e12] [cursor=pointer]:
+          - /url: /check-in
+          - img [ref=e14]
+          - text: Check-in
+        - link "Goals" [ref=e17] [cursor=pointer]:
+          - /url: /my-goals
+          - img [ref=e19]
+          - text: Goals
+        - link "Companion" [ref=e23] [cursor=pointer]:
+          - /url: /companion
+          - img [ref=e25]
+          - text: Companion
+        - link "Plan" [ref=e27] [cursor=pointer]:
+          - /url: /plan
+          - img [ref=e29]
+          - text: Plan
+    - main [ref=e31]:
+      - link "Money" [ref=e32] [cursor=pointer]:
+        - /url: /my-money
+        - img [ref=e33]
+        - text: Money
+      - generic [ref=e35]:
+        - generic [ref=e36]: Insights
+        - heading "April outlook" [level=1] [ref=e37]
+        - paragraph [ref=e38]: Day 17 of 30 · 13 days remaining
+      - generic [ref=e39]:
+        - generic [ref=e42]: Prediction
+        - paragraph [ref=e43]: "\"You're on track to spend £90.20 this month. You're £117.96 under your usual pace. Nice work. Good news: Food spending is 100% below average.\""
+      - generic [ref=e45]:
+        - generic [ref=e46]: Month progress
+        - generic [ref=e47]: 56.7%
+      - generic [ref=e50]:
+        - paragraph [ref=e51]: No spending recorded yet
+        - paragraph [ref=e52]: Upload a bank statement or add transactions and Claro will start tracking your spending for this month.
+        - link "Upload a statement" [ref=e53] [cursor=pointer]:
+          - /url: /upload
+      - generic [ref=e54]:
+        - generic [ref=e55]: Compared to your average
+        - generic [ref=e56]:
+          - generic [ref=e57]: −£117.96
+          - generic [ref=e58]: below your usual spending at this point
+        - generic [ref=e59]:
+          - generic [ref=e60]: Expected £117.96 · Actual £0.00
+          - generic [ref=e61]: below average
+      - generic [ref=e62]:
+        - generic [ref=e63]: Goal funding forecast
+        - generic [ref=e64]:
+          - generic [ref=e65]: Can you fund your goals this month?
+          - generic [ref=e66]: healthy
+        - paragraph [ref=e67]: On track. You'll have £49,910 left after all your goals this month.
+        - generic [ref=e68]:
+          - generic [ref=e69]: Remaining after spending and goals
+          - generic [ref=e70]: £49,909.71
+        - generic [ref=e71]:
+          - generic [ref=e72]:
+            - generic [ref=e73]: Predicted spending
+            - generic [ref=e74]: £90.20
+          - generic [ref=e75]:
+            - generic [ref=e76]: Goal allocations
+            - generic [ref=e77]: £0.00
+      - generic [ref=e78]: Category forecast
+      - generic [ref=e79]:
+        - generic [ref=e80]:
+          - generic [ref=e81]:
+            - generic [ref=e82]:
+              - generic [ref=e83]: Food
+              - generic [ref=e84]: ↓ 100% below
+            - generic [ref=e85]:
+              - generic [ref=e86]: £117.20
+              - generic [ref=e87]: predicted
+          - generic [ref=e88]:
+            - generic [ref=e89]: "Spent so far: £0.00"
+            - generic [ref=e90]: "Average: £117.20"
+        - generic [ref=e91]:
+          - generic [ref=e92]:
+            - generic [ref=e93]:
+              - generic [ref=e94]: Entertainment
+              - generic [ref=e95]: ↓ 100% below
+            - generic [ref=e96]:
+              - generic [ref=e97]: £50.96
+              - generic [ref=e98]: predicted
+          - generic [ref=e99]:
+            - generic [ref=e100]: "Spent so far: £0.00"
+            - generic [ref=e101]: "Average: £50.96"
+        - generic [ref=e102]:
+          - generic [ref=e103]:
+            - generic [ref=e104]:
+              - generic [ref=e105]: Health
+              - generic [ref=e106]: ↓ 100% below
+            - generic [ref=e107]:
+              - generic [ref=e108]: £40.00
+              - generic [ref=e109]: predicted
+          - generic [ref=e110]:
+            - generic [ref=e111]: "Spent so far: £0.00"
+            - generic [ref=e112]: "Average: £40.00"
+  - link "Profile & settings" [ref=e113] [cursor=pointer]:
+    - /url: /settings
+    - text: T

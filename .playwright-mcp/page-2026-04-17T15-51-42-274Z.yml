@@ -1,0 +1,61 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - complementary [ref=e3]:
+      - navigation [ref=e4]:
+        - link "Overview" [ref=e5] [cursor=pointer]:
+          - /url: /overview
+          - img [ref=e7]
+          - text: Overview
+        - link "Money" [ref=e12] [cursor=pointer]:
+          - /url: /my-money
+          - img [ref=e14]
+          - text: Money
+        - link "Goals" [ref=e16] [cursor=pointer]:
+          - /url: /my-goals
+          - img [ref=e18]
+          - text: Goals
+        - link "Plan" [ref=e22] [cursor=pointer]:
+          - /url: /plan
+          - img [ref=e24]
+          - text: Plan
+        - button "More" [ref=e26] [cursor=pointer]:
+          - img [ref=e28]
+          - text: More
+    - main [ref=e32]:
+      - link "Money" [ref=e33] [cursor=pointer]:
+        - /url: /my-money
+        - img [ref=e34]
+        - text: Money
+      - heading "My Budgets" [level=1] [ref=e37]
+      - link "Complete your financial profile to generate your plan" [ref=e38] [cursor=pointer]:
+        - /url: /factfind
+        - img [ref=e39]
+        - generic [ref=e41]: Complete your financial profile to generate your plan
+        - img [ref=e42]
+      - generic [ref=e44]:
+        - generic [ref=e45]: Set a spending limit
+        - generic [ref=e46]:
+          - generic [ref=e47]:
+            - combobox [ref=e50] [cursor=pointer]:
+              - generic [ref=e51]: Choose category
+              - img [ref=e52]
+            - spinbutton [ref=e55]
+          - button "Set budget" [ref=e57] [cursor=pointer]
+        - paragraph [ref=e58]:
+          - text: See your regular payments under
+          - link "Recurring payments" [ref=e59] [cursor=pointer]:
+            - /url: /recurring
+  - link "Profile & settings" [ref=e60] [cursor=pointer]:
+    - /url: /settings
+    - text: T
+  - dialog "More options":
+    - link "Check-in":
+      - /url: /check-in
+      - generic:
+        - img
+      - generic: Check-in
+    - link "Companion":
+      - /url: /companion
+      - generic:
+        - img
+      - generic: Companion

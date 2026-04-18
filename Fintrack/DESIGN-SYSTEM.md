@@ -718,9 +718,11 @@ Always comma-separated thousands: `"{:,.0f}".format(value)`. Negative amounts: U
 | Context | Size | Rule |
 |---|---|---|
 | Desktop sidebar | 40×40px | `object-fit: contain` — compact mark only, no text |
-| Mobile header | `height: 36px; width: auto` | Height matches avatar circle — width adjusts proportionally |
+| Mobile header | `height: 24px; width: auto` | Mark has breathing room within 52px bar — never fill the full bar height |
 
-The logo PNG is landscape (636×334). Using a square container with `object-fit: contain` constrains by width, making the mark shorter than the avatar. Always set `height` to match the avatar and let `width: auto` handle the aspect ratio.
+The logo PNG is landscape (636×334). Always set `height` explicitly and let `width: auto` handle aspect ratio. Do not use a square container — `object-fit: contain` constrains by width and makes the mark shorter than expected.
+
+**Optical sizing rule:** The logo mark is a dense visual object — it needs proportionally more clear space than a circle avatar. In a 52px bar, `height: 24px` leaves 14px above and below (27% padding each side). `height: 36px` only leaves 8px (15%) — visually cramped even though the avatar circle is also 36px. The letter inside the avatar circle optically reads much smaller than 36px, creating a misleading reference point.
 
 ### 17.2 Mobile header bar layout
 

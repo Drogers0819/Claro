@@ -1,0 +1,98 @@
+- generic [ref=e2]:
+  - heading "ValueError" [level=1] [ref=e3]
+  - paragraph [ref=e5] [cursor=pointer]: "ValueError: Invalid salt"
+  - heading "Traceback (most recent call last)" [level=2] [ref=e6] [cursor=pointer]:
+    - text: Traceback
+    - emphasis [ref=e7]: (most recent call last)
+  - generic [ref=e8]:
+    - heading [level=3]
+    - list [ref=e9]:
+      - listitem [ref=e10]:
+        - generic [ref=e11]:
+          - heading "File \"/Users/victoriataiwo/Documents/claro/Fintrack/venv/lib/python3.9/site-packages/flask/app.py\", line 1536, in __call__" [level=4] [ref=e12]:
+            - text: File "/Users/victoriataiwo/Documents/claro/Fintrack/venv/lib/python3.9/site-packages/flask/app.py", line
+            - emphasis [ref=e13]: "1536"
+            - text: ", in"
+            - code [ref=e14]: __call__
+          - generic [ref=e16]: return self.wsgi_app(environ, start_response)
+      - listitem [ref=e17]:
+        - generic [ref=e18]:
+          - heading "File \"/Users/victoriataiwo/Documents/claro/Fintrack/venv/lib/python3.9/site-packages/flask/app.py\", line 1514, in wsgi_app" [level=4] [ref=e19]:
+            - text: File "/Users/victoriataiwo/Documents/claro/Fintrack/venv/lib/python3.9/site-packages/flask/app.py", line
+            - emphasis [ref=e20]: "1514"
+            - text: ", in"
+            - code [ref=e21]: wsgi_app
+          - generic [ref=e23]: response = self.handle_exception(e)
+      - listitem [ref=e24]:
+        - generic [ref=e25]:
+          - heading "File \"/Users/victoriataiwo/Documents/claro/Fintrack/venv/lib/python3.9/site-packages/flask/app.py\", line 1511, in wsgi_app" [level=4] [ref=e26]:
+            - text: File "/Users/victoriataiwo/Documents/claro/Fintrack/venv/lib/python3.9/site-packages/flask/app.py", line
+            - emphasis [ref=e27]: "1511"
+            - text: ", in"
+            - code [ref=e28]: wsgi_app
+          - generic [ref=e30]: response = self.full_dispatch_request()
+      - listitem [ref=e31]:
+        - generic [ref=e32]:
+          - heading "File \"/Users/victoriataiwo/Documents/claro/Fintrack/venv/lib/python3.9/site-packages/flask/app.py\", line 919, in full_dispatch_request" [level=4] [ref=e33]:
+            - text: File "/Users/victoriataiwo/Documents/claro/Fintrack/venv/lib/python3.9/site-packages/flask/app.py", line
+            - emphasis [ref=e34]: "919"
+            - text: ", in"
+            - code [ref=e35]: full_dispatch_request
+          - generic [ref=e37]: rv = self.handle_user_exception(e)
+      - listitem [ref=e38]:
+        - generic [ref=e39]:
+          - heading "File \"/Users/victoriataiwo/Documents/claro/Fintrack/venv/lib/python3.9/site-packages/flask/app.py\", line 917, in full_dispatch_request" [level=4] [ref=e40]:
+            - text: File "/Users/victoriataiwo/Documents/claro/Fintrack/venv/lib/python3.9/site-packages/flask/app.py", line
+            - emphasis [ref=e41]: "917"
+            - text: ", in"
+            - code [ref=e42]: full_dispatch_request
+          - generic [ref=e44]: rv = self.dispatch_request()
+      - listitem [ref=e45]:
+        - generic [ref=e46]:
+          - heading "File \"/Users/victoriataiwo/Documents/claro/Fintrack/venv/lib/python3.9/site-packages/flask/app.py\", line 902, in dispatch_request" [level=4] [ref=e47]:
+            - text: File "/Users/victoriataiwo/Documents/claro/Fintrack/venv/lib/python3.9/site-packages/flask/app.py", line
+            - emphasis [ref=e48]: "902"
+            - text: ", in"
+            - code [ref=e49]: dispatch_request
+          - generic [ref=e51]: "return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args) # type: ignore[no-any-return]"
+      - listitem [ref=e52]:
+        - generic [ref=e53]:
+          - heading "File \"/Users/victoriataiwo/Documents/claro/Fintrack/app/routes/page_routes.py\", line 408, in login" [level=4] [ref=e54]:
+            - text: File "/Users/victoriataiwo/Documents/claro/Fintrack/app/routes/page_routes.py", line
+            - emphasis [ref=e55]: "408"
+            - text: ", in"
+            - code [ref=e56]: login
+          - generic [ref=e58]: "if not user or not user.check_password(password):"
+      - listitem [ref=e59]:
+        - generic [ref=e60]:
+          - heading "File \"/Users/victoriataiwo/Documents/claro/Fintrack/app/models/user.py\", line 49, in check_password" [level=4] [ref=e61]:
+            - text: File "/Users/victoriataiwo/Documents/claro/Fintrack/app/models/user.py", line
+            - emphasis [ref=e62]: "49"
+            - text: ", in"
+            - code [ref=e63]: check_password
+          - generic [ref=e65]: return bcrypt.check_password_hash(self.password_hash, password)
+      - listitem [ref=e66]:
+        - generic [ref=e67]:
+          - heading "File \"/Users/victoriataiwo/Documents/claro/Fintrack/venv/lib/python3.9/site-packages/flask_bcrypt.py\", line 225, in check_password_hash" [level=4] [ref=e68]:
+            - text: File "/Users/victoriataiwo/Documents/claro/Fintrack/venv/lib/python3.9/site-packages/flask_bcrypt.py", line
+            - emphasis [ref=e69]: "225"
+            - text: ", in"
+            - code [ref=e70]: check_password_hash
+          - generic [ref=e72]: return hmac.compare_digest(bcrypt.hashpw(password, pw_hash), pw_hash)
+    - blockquote [ref=e73]: "ValueError: Invalid salt"
+  - generic [ref=e74]:
+    - text: The debugger caught an exception in your WSGI application. You can now look at the traceback which led to the error.
+    - generic [ref=e75]:
+      - paragraph [ref=e76]: To switch between the interactive traceback and the plaintext one, you can click on the "Traceback" headline. From the text traceback you can also create a paste of it. For code execution mouse-over the frame you want to debug and click on the console icon on the right side.
+      - paragraph [ref=e77]: "You can execute arbitrary Python code in the stack frames and there are some extra helpers available for introspection:"
+      - list [ref=e78]:
+        - listitem [ref=e79]:
+          - code [ref=e80]: dump()
+          - text: shows all variables in the frame
+        - listitem [ref=e81]:
+          - code [ref=e82]: dump(obj)
+          - text: dumps all that's known about the object
+  - generic [ref=e83]:
+    - text: Brought to you by
+    - strong [ref=e84]: DON'T PANIC
+    - text: ", your friendly Werkzeug powered traceback interpreter."

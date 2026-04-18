@@ -1,0 +1,41 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - complementary [ref=e3]:
+      - navigation [ref=e4]:
+        - link "Overview" [ref=e5] [cursor=pointer]:
+          - /url: /overview
+          - img [ref=e7]
+          - text: Overview
+        - link "Check-in" [ref=e12] [cursor=pointer]:
+          - /url: /check-in
+          - img [ref=e14]
+          - text: Check-in
+        - link "Goals" [ref=e17] [cursor=pointer]:
+          - /url: /my-goals
+          - img [ref=e19]
+          - text: Goals
+        - link "Companion" [ref=e23] [cursor=pointer]:
+          - /url: /companion
+          - img [ref=e25]
+          - text: Companion
+        - link "Plan" [ref=e27] [cursor=pointer]:
+          - /url: /plan
+          - img [ref=e29]
+          - text: Plan
+    - main [ref=e31]:
+      - heading "Monthly check-in" [level=1] [ref=e33]
+      - generic [ref=e34]:
+        - paragraph [ref=e35]: March 2026
+        - paragraph [ref=e36]: Looking back at March 2026. How much did you actually put toward each pot? Be honest. The plan adjusts to reality, not the other way around.
+        - generic [ref=e37]:
+          - generic [ref=e38]:
+            - generic [ref=e39]:
+              - generic [ref=e40]: Emergency fund £0 of £39,240
+              - generic [ref=e41]: "Plan: £29,536"
+            - generic [ref=e42]:
+              - generic [ref=e43]: Amount saved (£)
+              - spinbutton "Amount saved (£)" [ref=e44]: "29535.95"
+          - button "Confirm check-in" [ref=e45] [cursor=pointer]
+  - link "Profile & settings" [ref=e46] [cursor=pointer]:
+    - /url: /settings
+    - text: T

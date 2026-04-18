@@ -1,0 +1,33 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - complementary [ref=e3]:
+      - navigation [ref=e4]:
+        - link "Overview" [ref=e5] [cursor=pointer]:
+          - /url: /overview
+          - img [ref=e7]
+          - text: Overview
+        - link "Check-in" [ref=e12] [cursor=pointer]:
+          - /url: /check-in
+          - img [ref=e14]
+          - text: Check-in
+        - link "Goals" [ref=e17] [cursor=pointer]:
+          - /url: /my-goals
+          - img [ref=e19]
+          - text: Goals
+        - link "Companion" [ref=e23] [cursor=pointer]:
+          - /url: /companion
+          - img [ref=e25]
+          - text: Companion
+        - link "Plan" [ref=e27] [cursor=pointer]:
+          - /url: /plan
+          - img [ref=e29]
+          - text: Plan
+    - main [ref=e31]:
+      - generic [ref=e32]:
+        - paragraph [ref=e33]: This page doesn't exist.
+        - paragraph [ref=e34]: The link may have changed or the page may have moved. Head back to your overview to pick up where you left off.
+        - link "Back to overview" [ref=e35] [cursor=pointer]:
+          - /url: /overview
+  - link "Profile & settings" [ref=e36] [cursor=pointer]:
+    - /url: /settings
+    - text: T

@@ -1,0 +1,50 @@
+- generic [ref=e2]:
+  - complementary [ref=e3]:
+    - navigation [ref=e4]:
+      - link "Overview" [ref=e5] [cursor=pointer]:
+        - /url: /overview
+        - img [ref=e7]
+        - text: Overview
+      - link "Money" [ref=e12] [cursor=pointer]:
+        - /url: /my-money
+        - img [ref=e14]
+        - text: Money
+      - link "Goals" [ref=e16] [cursor=pointer]:
+        - /url: /my-goals
+        - img [ref=e18]
+        - text: Goals
+      - link "Plan" [ref=e22] [cursor=pointer]:
+        - /url: /plan
+        - img [ref=e24]
+        - text: Plan
+      - link "Budgets" [ref=e26] [cursor=pointer]:
+        - /url: /my-budgets
+        - img [ref=e28]
+        - text: Budgets
+  - link "Profile & settings" [ref=e29] [cursor=pointer]:
+    - /url: /settings
+    - text: V
+  - main [ref=e30]:
+    - generic [ref=e31]:
+      - heading "Plan" [level=1] [ref=e32]
+      - paragraph [ref=e33]: Pick any monthly spend and see its true cost over 5, 10, and 20 years.
+    - generic [ref=e34]:
+      - generic [ref=e35]:
+        - generic [ref=e36]: What's this really costing you?
+        - generic [ref=e37]: Coffee, takeaways, subscriptions. Enter the monthly cost and see what it grows into if invested instead.
+      - generic [ref=e38]:
+        - generic [ref=e39]:
+          - generic [ref=e40]:
+            - generic [ref=e41]: Monthly amount (£)
+            - spinbutton [ref=e42]
+          - generic [ref=e43]:
+            - generic [ref=e44]: What's the spend?
+            - textbox "e.g. Netflix, takeaways..." [ref=e45]
+        - button "Show me" [ref=e46] [cursor=pointer]
+    - generic [ref=e47]:
+      - generic [ref=e48]: What if?
+      - paragraph [ref=e49]: Change your income, rent, or goal contributions and see the exact impact on your goal timelines.
+      - link "Run the numbers" [ref=e50] [cursor=pointer]:
+        - /url: /scenario
+        - text: Run the numbers
+        - img [ref=e51]

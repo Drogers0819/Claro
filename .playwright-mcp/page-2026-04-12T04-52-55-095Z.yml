@@ -1,0 +1,65 @@
+- generic [ref=e2]:
+  - complementary [ref=e3]:
+    - navigation [ref=e4]:
+      - link "Overview" [ref=e5] [cursor=pointer]:
+        - /url: /overview
+        - img [ref=e7]
+        - text: Overview
+      - link "Money" [ref=e12] [cursor=pointer]:
+        - /url: /my-money
+        - img [ref=e14]
+        - text: Money
+      - link "Goals" [ref=e16] [cursor=pointer]:
+        - /url: /my-goals
+        - img [ref=e18]
+        - text: Goals
+      - link "Plan" [ref=e22] [cursor=pointer]:
+        - /url: /plan
+        - img [ref=e24]
+        - text: Plan
+      - link "Budgets" [ref=e26] [cursor=pointer]:
+        - /url: /my-budgets
+        - img [ref=e28]
+        - text: Budgets
+  - link "Profile & settings" [ref=e29] [cursor=pointer]:
+    - /url: /settings
+    - text: V
+  - main [ref=e30]:
+    - link "Money" [ref=e31] [cursor=pointer]:
+      - /url: /my-money
+      - img [ref=e32]
+      - text: Money
+    - generic [ref=e34]:
+      - heading "Upload bank statement" [level=1] [ref=e35]
+      - paragraph [ref=e36]: We'll detect your bank automatically and categorise your transactions.
+    - generic [ref=e38]:
+      - generic [ref=e39]:
+        - generic [ref=e40]: Bank statement (CSV)
+        - button "Click to choose your CSV file No file chosen"
+        - generic [ref=e41] [cursor=pointer]:
+          - img [ref=e42]
+          - generic [ref=e45]: Click to choose your CSV file
+          - generic [ref=e46]: No file chosen
+      - generic [ref=e47]:
+        - paragraph [ref=e48]: How to export your CSV
+        - generic [ref=e49]:
+          - generic [ref=e50]:
+            - generic [ref=e51]: Monzo
+            - generic [ref=e52]: Account tab → Statements → Download CSV
+          - generic [ref=e53]:
+            - generic [ref=e54]: Starling
+            - generic [ref=e55]: Spending → top-right menu → Download CSV
+          - generic [ref=e56]:
+            - generic [ref=e57]: Barclays
+            - generic [ref=e58]: My Finances → Download transactions → CSV
+          - generic [ref=e59]:
+            - generic [ref=e60]: HSBC
+            - generic [ref=e61]: Accounts → Statement → Download (.csv)
+          - generic [ref=e62]:
+            - generic [ref=e63]: Lloyds
+            - generic [ref=e64]: My Account → Export transactions → CSV
+          - generic [ref=e65]:
+            - generic [ref=e66]: Nationwide
+            - generic [ref=e67]: My Accounts → Download → CSV format
+        - paragraph [ref=e68]: Choose the largest date range available for the best picture.
+      - button "Upload & import" [ref=e69] [cursor=pointer]

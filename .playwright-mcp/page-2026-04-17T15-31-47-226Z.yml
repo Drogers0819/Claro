@@ -1,0 +1,54 @@
+- generic [ref=e2]:
+  - complementary [ref=e3]:
+    - img "Claro" [ref=e5]
+    - navigation [ref=e6]:
+      - link "Overview" [ref=e7] [cursor=pointer]:
+        - /url: /overview
+        - img [ref=e9]
+        - text: Overview
+      - link "Money" [ref=e14] [cursor=pointer]:
+        - /url: /my-money
+        - img [ref=e16]
+        - text: Money
+      - link "Check-in" [ref=e18] [cursor=pointer]:
+        - /url: /check-in
+        - img [ref=e20]
+        - text: Check-in
+      - link "Goals" [ref=e23] [cursor=pointer]:
+        - /url: /my-goals
+        - img [ref=e25]
+        - text: Goals
+      - link "Companion" [ref=e29] [cursor=pointer]:
+        - /url: /companion
+        - img [ref=e31]
+        - text: Companion
+      - link "Plan" [ref=e33] [cursor=pointer]:
+        - /url: /plan
+        - img [ref=e35]
+        - text: Plan
+    - button "TE Test Claro Free" [ref=e38] [cursor=pointer]:
+      - generic [ref=e39]: TE
+      - generic [ref=e40]:
+        - generic [ref=e41]: Test
+        - generic [ref=e42]: Claro Free
+      - img [ref=e43]
+  - main [ref=e47]:
+    - link "Money" [ref=e48] [cursor=pointer]:
+      - /url: /my-money
+      - img [ref=e49]
+      - text: Money
+    - generic [ref=e51]:
+      - heading "April outlook" [level=1] [ref=e52]
+      - paragraph [ref=e53]: Day 17 of 30 · 13 days remaining
+    - generic [ref=e54]:
+      - generic [ref=e57]: Prediction
+      - paragraph [ref=e58]: "\"Keep tracking your spending to unlock predictions.\""
+    - generic [ref=e60]:
+      - generic [ref=e61]: Month progress
+      - generic [ref=e62]: 56.7%
+    - generic [ref=e65]:
+      - paragraph [ref=e66]: No spending recorded yet
+      - paragraph [ref=e67]: Upload a bank statement or add transactions and Claro will start tracking your spending for this month.
+      - link "Upload a statement" [ref=e68] [cursor=pointer]:
+        - /url: /upload
+    - paragraph [ref=e69]: Predictions improve with more data. Upload additional months of bank statements to see more accurate forecasts.

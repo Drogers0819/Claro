@@ -1,0 +1,28 @@
+- generic [ref=e3]:
+  - generic [ref=e4]:
+    - img "Claro" [ref=e5]
+    - paragraph [ref=e6]: Your money, finally clear.
+    - paragraph [ref=e7]: Upload a statement. Claro categorises, predicts, and plans for you.
+  - generic [ref=e8]:
+    - generic [ref=e9]:
+      - generic [ref=e10]:
+        - generic [ref=e11]: Full name
+        - textbox "Sarah Johnson" [ref=e12]
+      - generic [ref=e13]:
+        - generic [ref=e14]: Email
+        - textbox "you@email.com" [ref=e15]
+      - generic [ref=e16]:
+        - generic [ref=e17]: Password
+        - generic [ref=e18]:
+          - textbox "At least 8 characters" [ref=e19]
+          - button "Show password" [ref=e20] [cursor=pointer]:
+            - img [ref=e21]
+      - button "Create my account" [ref=e24] [cursor=pointer]
+      - generic [ref=e25]:
+        - img [ref=e26]
+        - generic [ref=e29]: Encrypted in transit · never sold · never shared
+    - paragraph [ref=e30]:
+      - text: Already have an account?
+      - link "Sign in" [ref=e31] [cursor=pointer]:
+        - /url: /login
+  - paragraph [ref=e32]: Built by a financial planner who spent five years watching people make life-changing money decisions without ever being shown the full picture.

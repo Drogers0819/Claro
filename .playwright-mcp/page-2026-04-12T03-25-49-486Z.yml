@@ -1,0 +1,76 @@
+- generic [ref=e2]:
+  - complementary [ref=e3]:
+    - navigation [ref=e4]:
+      - link "Overview" [ref=e5] [cursor=pointer]:
+        - /url: /overview
+        - img [ref=e7]
+        - text: Overview
+      - link "Money" [ref=e12] [cursor=pointer]:
+        - /url: /my-money
+        - img [ref=e14]
+        - text: Money
+      - link "Goals" [ref=e16] [cursor=pointer]:
+        - /url: /my-goals
+        - img [ref=e18]
+        - text: Goals
+      - link "Plan" [ref=e22] [cursor=pointer]:
+        - /url: /plan
+        - img [ref=e24]
+        - text: Plan
+      - link "Budgets" [ref=e26] [cursor=pointer]:
+        - /url: /my-budgets
+        - img [ref=e28]
+        - text: Budgets
+  - main [ref=e29]:
+    - generic [ref=e30]:
+      - heading "Good morning, Victoria." [level=1] [ref=e31]
+      - link "Profile & settings" [ref=e32] [cursor=pointer]:
+        - /url: /settings
+        - text: V
+    - generic [ref=e33]:
+      - generic [ref=e34]: Left to spend this month
+      - generic [ref=e35]: £298.32
+      - generic [ref=e36]: £16.57/day for 18 days left
+      - generic [ref=e37]:
+        - generic [ref=e38]: You're on track to overspend by £210 this month. Small cuts now will help.
+        - generic [ref=e39]: over budget
+    - generic [ref=e40]:
+      - generic [ref=e42]:
+        - generic [ref=e43]: Goal
+        - generic [ref=e44]: House deposit
+      - generic [ref=e45]:
+        - generic [ref=e46]: £3240.00
+        - generic [ref=e47]: of £15000.00
+      - generic [ref=e50]:
+        - generic [ref=e51]: On track for April 2029
+        - generic [ref=e52]: You're spending a little more than usual. Ease off and you could pull this date forward.
+    - generic [ref=e53]:
+      - generic [ref=e54]:
+        - generic [ref=e55]: Recent activity
+        - link "View all" [ref=e56] [cursor=pointer]:
+          - /url: /my-money
+      - generic [ref=e57]:
+        - generic [ref=e58]:
+          - generic [ref=e59]: Deliveroo
+          - generic [ref=e60]: 9 Apr · Food
+        - generic [ref=e61]: −£34.50
+      - generic [ref=e62]:
+        - generic [ref=e63]:
+          - generic [ref=e64]: Rent payment
+          - generic [ref=e65]: 8 Apr · Bills
+        - generic [ref=e66]: −£950.00
+      - generic [ref=e67]:
+        - generic [ref=e68]:
+          - generic [ref=e69]: Pret A Manger
+          - generic [ref=e70]: 8 Apr · Food
+        - generic [ref=e71]: −£8.50
+      - generic [ref=e72]:
+        - generic [ref=e73]:
+          - generic [ref=e74]: Uber
+          - generic [ref=e75]: 8 Apr · Transport
+        - generic [ref=e76]: −£12.40
+      - generic [ref=e77]:
+        - generic [ref=e78]:
+          - generic [ref=e79]: EDF Energy
+          - generic [ref=e80]: 7 Apr · Bills
+        - generic [ref=e81]: −£68.00

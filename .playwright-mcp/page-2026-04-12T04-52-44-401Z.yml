@@ -1,0 +1,58 @@
+- generic [ref=e2]:
+  - complementary [ref=e3]:
+    - navigation [ref=e4]:
+      - link "Overview" [ref=e5] [cursor=pointer]:
+        - /url: /overview
+        - img [ref=e7]
+        - text: Overview
+      - link "Money" [ref=e12] [cursor=pointer]:
+        - /url: /my-money
+        - img [ref=e14]
+        - text: Money
+      - link "Goals" [ref=e16] [cursor=pointer]:
+        - /url: /my-goals
+        - img [ref=e18]
+        - text: Goals
+      - link "Plan" [ref=e22] [cursor=pointer]:
+        - /url: /plan
+        - img [ref=e24]
+        - text: Plan
+      - link "Budgets" [ref=e26] [cursor=pointer]:
+        - /url: /my-budgets
+        - img [ref=e28]
+        - text: Budgets
+  - link "Profile & settings" [ref=e29] [cursor=pointer]:
+    - /url: /settings
+    - text: V
+  - main [ref=e30]:
+    - link "Money" [ref=e31] [cursor=pointer]:
+      - /url: /my-money
+      - img [ref=e32]
+      - text: Money
+    - heading "Add a transaction" [level=1] [ref=e35]
+    - generic [ref=e37]:
+      - generic [ref=e38]:
+        - generic [ref=e39]:
+          - generic [ref=e40]: Amount (£)
+          - spinbutton [ref=e41]
+        - generic [ref=e42]:
+          - generic [ref=e43]: Type
+          - combobox [ref=e45] [cursor=pointer]:
+            - generic [ref=e46]: Expense
+            - img [ref=e47]
+      - generic [ref=e49]:
+        - generic [ref=e50]: Description
+        - textbox "e.g. Tesco weekly shop" [ref=e51]
+      - generic [ref=e52]:
+        - generic [ref=e53]:
+          - generic [ref=e54]: Category
+          - combobox [ref=e56] [cursor=pointer]:
+            - generic [ref=e57]: Other
+            - img [ref=e58]
+        - generic [ref=e60]:
+          - generic [ref=e61]: Date
+          - textbox "Select date" [ref=e62]: 12 Apr 2026
+      - generic [ref=e63]:
+        - generic [ref=e64]: Merchant (optional)
+        - textbox "e.g. Tesco, Netflix, Uber" [ref=e65]
+      - button "Record transaction" [ref=e66] [cursor=pointer]

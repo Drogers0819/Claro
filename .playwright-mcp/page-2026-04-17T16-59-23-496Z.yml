@@ -1,0 +1,70 @@
+- generic [ref=e2]:
+  - complementary [ref=e3]:
+    - img "Claro" [ref=e5]
+    - navigation [ref=e6]:
+      - link "Overview" [ref=e7] [cursor=pointer]:
+        - /url: /overview
+        - img [ref=e9]
+        - text: Overview
+      - link "Check-in" [ref=e14] [cursor=pointer]:
+        - /url: /check-in
+        - img [ref=e16]
+        - text: Check-in
+      - link "Goals" [ref=e19] [cursor=pointer]:
+        - /url: /my-goals
+        - img [ref=e21]
+        - text: Goals
+      - link "Companion" [ref=e25] [cursor=pointer]:
+        - /url: /companion
+        - img [ref=e27]
+        - text: Companion
+      - link "Plan" [ref=e29] [cursor=pointer]:
+        - /url: /plan
+        - img [ref=e31]
+        - text: Plan
+    - button "TE Test Claro Free" [ref=e34] [cursor=pointer]:
+      - generic [ref=e35]: TE
+      - generic [ref=e36]:
+        - generic [ref=e37]: Test
+        - generic [ref=e38]: Claro Free
+      - img [ref=e39]
+  - main [ref=e43]:
+    - link "Overview" [ref=e44] [cursor=pointer]:
+      - /url: /overview
+      - img [ref=e45]
+      - text: Overview
+    - heading "Settings" [level=1] [ref=e48]
+    - generic [ref=e49]:
+      - button "Financial profile" [expanded] [ref=e50] [cursor=pointer]:
+        - generic [ref=e51]:
+          - img [ref=e52]
+          - generic [ref=e55]: Financial profile
+        - img [ref=e56]
+      - generic [ref=e58]:
+        - generic [ref=e59]:
+          - generic [ref=e60]: Your income and commitments
+          - link "Edit" [ref=e61] [cursor=pointer]:
+            - /url: /factfind
+        - generic [ref=e62]:
+          - generic [ref=e63]:
+            - generic [ref=e64]: Take-home pay
+            - generic [ref=e65]: £49,999.91/month
+          - generic [ref=e66]:
+            - generic [ref=e67]: Rent/mortgage
+            - generic [ref=e68]: £5,999.97/month
+          - generic [ref=e69]:
+            - generic [ref=e70]: Bills
+            - generic [ref=e71]: £7,080.00/month
+          - generic [ref=e72]:
+            - generic [ref=e73]: Available for goals
+            - generic [ref=e74]: £36,919.94/month
+    - button "Appearance" [ref=e76] [cursor=pointer]:
+      - generic [ref=e77]:
+        - img [ref=e78]
+        - generic [ref=e83]: Appearance
+      - img [ref=e84]
+    - button "Account" [ref=e87] [cursor=pointer]:
+      - generic [ref=e88]:
+        - img [ref=e89]
+        - generic [ref=e92]: Account
+      - img [ref=e93]

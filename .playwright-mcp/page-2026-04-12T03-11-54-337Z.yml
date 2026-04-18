@@ -1,0 +1,58 @@
+- generic [ref=e2]:
+  - complementary [ref=e3]:
+    - navigation [ref=e4]:
+      - link "Overview" [ref=e5] [cursor=pointer]:
+        - /url: /overview
+        - img [ref=e7]
+        - text: Overview
+      - link "Money" [ref=e12] [cursor=pointer]:
+        - /url: /my-money
+        - img [ref=e14]
+        - text: Money
+      - link "Goals" [ref=e16] [cursor=pointer]:
+        - /url: /my-goals
+        - img [ref=e18]
+        - text: Goals
+      - link "Plan" [ref=e22] [cursor=pointer]:
+        - /url: /plan
+        - img [ref=e24]
+        - text: Plan
+      - link "Budgets" [ref=e26] [cursor=pointer]:
+        - /url: /my-budgets
+        - img [ref=e28]
+        - text: Budgets
+  - main [ref=e29]:
+    - generic [ref=e30]:
+      - link "Settings" [ref=e31] [cursor=pointer]:
+        - /url: /settings
+        - img [ref=e32]
+        - text: Settings
+      - generic [ref=e34]:
+        - heading "Your financial profile" [level=1] [ref=e35]
+        - paragraph [ref=e36]: This takes about 60 seconds. We use this to show you where your money goes and where it could take you.
+      - generic [ref=e37]:
+        - generic [ref=e38]: Income
+        - generic [ref=e39]:
+          - generic [ref=e40]:
+            - generic [ref=e41]: Monthly take-home pay (£)
+            - spinbutton [ref=e42]: "3200"
+          - generic [ref=e43]:
+            - generic [ref=e44]: Pay day (day of month)
+            - spinbutton [ref=e45]: "25"
+        - generic [ref=e46]: Commitments
+        - generic [ref=e47]:
+          - generic [ref=e48]:
+            - generic [ref=e49]: Monthly rent or mortgage (£)
+            - spinbutton [ref=e50]: "950"
+          - generic [ref=e51]:
+            - generic [ref=e52]: Monthly bills combined (£)
+            - spinbutton [ref=e53]: "180"
+        - paragraph [ref=e54]: Council tax, phone, utilities, internet and similar fixed costs.
+        - generic [ref=e55]:
+          - generic [ref=e56]: Available for your goals
+          - generic [ref=e57]: £2,070/month
+          - paragraph [ref=e58]: After rent and bills.
+        - paragraph [ref=e59]:
+          - img [ref=e60]
+          - text: Encrypted in transit · never sold · never shared
+        - button "Update profile" [ref=e63] [cursor=pointer]

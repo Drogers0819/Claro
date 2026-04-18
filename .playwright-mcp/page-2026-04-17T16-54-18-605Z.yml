@@ -1,0 +1,63 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - complementary [ref=e3]:
+      - navigation [ref=e4]:
+        - link "Overview" [ref=e5] [cursor=pointer]:
+          - /url: /overview
+          - img [ref=e7]
+          - text: Overview
+        - link "Check-in" [ref=e12] [cursor=pointer]:
+          - /url: /check-in
+          - img [ref=e14]
+          - text: Check-in
+        - link "Goals" [ref=e17] [cursor=pointer]:
+          - /url: /my-goals
+          - img [ref=e19]
+          - text: Goals
+        - link "Companion" [ref=e23] [cursor=pointer]:
+          - /url: /companion
+          - img [ref=e25]
+          - text: Companion
+        - link "Plan" [ref=e27] [cursor=pointer]:
+          - /url: /plan
+          - img [ref=e29]
+          - text: Plan
+    - main [ref=e31]:
+      - link "Money" [ref=e32] [cursor=pointer]:
+        - /url: /my-money
+        - img [ref=e33]
+        - text: Money
+      - generic [ref=e35]:
+        - generic [ref=e36]: Insights
+        - heading "April outlook" [level=1] [ref=e37]
+        - paragraph [ref=e38]: Day 17 of 30 · 13 days remaining
+      - generic [ref=e39]:
+        - generic [ref=e42]: Prediction
+        - paragraph [ref=e43]: "\"Keep tracking your spending to unlock predictions.\""
+      - generic [ref=e45]:
+        - generic [ref=e46]: Month progress
+        - generic [ref=e47]: 56.7%
+      - generic [ref=e50]:
+        - paragraph [ref=e51]: No spending recorded yet
+        - paragraph [ref=e52]: Upload a bank statement or add transactions and Claro will start tracking your spending for this month.
+        - link "Upload a statement" [ref=e53] [cursor=pointer]:
+          - /url: /upload
+      - generic [ref=e54]: Goal funding forecast
+      - generic [ref=e55]:
+        - generic [ref=e56]:
+          - generic [ref=e57]: Can you fund your goals this month?
+          - generic [ref=e58]: healthy
+        - paragraph [ref=e59]: On track. You'll have £50,000 left after all your goals this month.
+        - generic [ref=e60]:
+          - generic [ref=e61]: Remaining after spending and goals
+          - generic [ref=e62]: £49,999.91
+        - generic [ref=e63]:
+          - generic [ref=e64]:
+            - generic [ref=e65]: Predicted spending
+            - generic [ref=e66]: £0.00
+          - generic [ref=e67]:
+            - generic [ref=e68]: Goal allocations
+            - generic [ref=e69]: £0.00
+  - link "Profile & settings" [ref=e70] [cursor=pointer]:
+    - /url: /settings
+    - text: T

@@ -1,0 +1,63 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - complementary [ref=e3]:
+      - navigation [ref=e4]:
+        - link "Overview" [ref=e5] [cursor=pointer]:
+          - /url: /overview
+          - img [ref=e7]
+          - text: Overview
+        - link "Money" [ref=e12] [cursor=pointer]:
+          - /url: /my-money
+          - img [ref=e14]
+          - text: Money
+        - link "Goals" [ref=e16] [cursor=pointer]:
+          - /url: /my-goals
+          - img [ref=e18]
+          - text: Goals
+        - link "Plan" [ref=e22] [cursor=pointer]:
+          - /url: /plan
+          - img [ref=e24]
+          - text: Plan
+        - button "More" [ref=e26] [cursor=pointer]:
+          - img [ref=e28]
+          - text: More
+    - main [ref=e32]:
+      - heading "Your plan" [level=1] [ref=e34]
+      - generic [ref=e35]:
+        - paragraph [ref=e36]: Build your financial plan.
+        - paragraph [ref=e37]: Complete your financial profile and Claro will calculate exactly how much to put toward each goal each month.
+        - link "Set up your profile" [ref=e38] [cursor=pointer]:
+          - /url: /factfind
+      - generic [ref=e39]:
+        - generic [ref=e40]: Habit cost
+        - paragraph [ref=e41]: See what a daily or monthly habit really costs over time.
+        - generic [ref=e42]:
+          - generic [ref=e43]:
+            - generic [ref=e44]:
+              - generic [ref=e45]: Monthly amount (£)
+              - spinbutton [ref=e46]
+            - generic [ref=e47]:
+              - generic [ref=e48]: What's the spend?
+              - textbox "e.g. Netflix, takeaways..." [ref=e49]
+          - button "Show me" [ref=e50] [cursor=pointer]
+      - generic [ref=e51]:
+        - generic [ref=e52]: What if?
+        - paragraph [ref=e53]: Change your income, rent, or goal contributions and see the exact impact.
+        - link "Run a scenario" [ref=e54] [cursor=pointer]:
+          - /url: /scenario
+          - text: Run a scenario
+          - img [ref=e55]
+  - link "Profile & settings" [ref=e57] [cursor=pointer]:
+    - /url: /settings
+    - text: T
+  - dialog "More options":
+    - link "Check-in":
+      - /url: /check-in
+      - generic:
+        - img
+      - generic: Check-in
+    - link "Companion":
+      - /url: /companion
+      - generic:
+        - img
+      - generic: Companion

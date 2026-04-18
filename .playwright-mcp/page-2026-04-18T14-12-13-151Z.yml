@@ -1,0 +1,84 @@
+- generic [ref=e2]:
+  - complementary [ref=e3]:
+    - img "Claro" [ref=e5]
+    - navigation [ref=e6]:
+      - link "Overview" [ref=e7] [cursor=pointer]:
+        - /url: /overview
+        - img [ref=e9]
+        - text: Overview
+      - link "Check-in" [ref=e14] [cursor=pointer]:
+        - /url: /check-in
+        - img [ref=e16]
+        - text: Check-in
+      - link "Goals" [ref=e19] [cursor=pointer]:
+        - /url: /my-goals
+        - img [ref=e21]
+        - text: Goals
+      - link "Companion" [ref=e25] [cursor=pointer]:
+        - /url: /companion
+        - img [ref=e27]
+        - text: Companion
+      - link "Plan" [ref=e29] [cursor=pointer]:
+        - /url: /plan
+        - img [ref=e31]
+        - text: Plan
+    - button "TE Test Claro Free" [ref=e34] [cursor=pointer]:
+      - generic [ref=e35]: TE
+      - generic [ref=e36]:
+        - generic [ref=e37]: Test
+        - generic [ref=e38]: Claro Free
+      - img [ref=e39]
+  - main [ref=e43]:
+    - heading "Good afternoon, Test." [level=1] [ref=e45]
+    - generic [ref=e46]:
+      - generic [ref=e49]: Your plan
+      - paragraph [ref=e50]: Your House deposit completes in ~12 months. After that, your £1,250/month surplus frees up entirely.
+      - generic [ref=e51]:
+        - generic [ref=e52]:
+          - generic [ref=e53]: Income
+          - generic [ref=e54]: £49,999.90
+        - generic [ref=e55]:
+          - generic [ref=e56]: Fixed costs
+          - generic [ref=e57]: £13,079.97
+        - generic [ref=e58]:
+          - generic [ref=e59]: Surplus
+          - generic [ref=e60]: £36,919.93
+      - link "View full plan" [ref=e61] [cursor=pointer]:
+        - /url: /plan
+    - generic [ref=e62]:
+      - img [ref=e63]
+      - paragraph [ref=e66]: "First step: open your banking app and set up a standing order for £1,250/month to a \"House deposit\" pot. Set it for the 600th, the day after your pay lands."
+    - generic [ref=e67]:
+      - generic [ref=e68]:
+        - generic [ref=e69]: Your pots
+        - link "My goals" [ref=e70] [cursor=pointer]:
+          - /url: /my-goals
+      - link "House deposit £1,250.00/mo £0.00 of £15,000.00 12 months" [ref=e71] [cursor=pointer]:
+        - /url: /simulator/goal/5
+        - generic [ref=e72]:
+          - generic [ref=e74]: House deposit
+          - generic [ref=e75]:
+            - generic [ref=e76]: £1,250.00/mo
+            - img [ref=e77]
+        - generic [ref=e80]:
+          - generic [ref=e81]: £0.00 of £15,000.00
+          - generic [ref=e82]: 12 months
+      - generic [ref=e84]:
+        - generic [ref=e86]: Lifestyle & family
+        - generic [ref=e88]: £33,823.93/mo
+      - generic [ref=e90]:
+        - generic [ref=e92]: Buffer
+        - generic [ref=e94]: £1,846.00/mo
+    - generic [ref=e95]:
+      - generic [ref=e96]:
+        - generic [ref=e97]: This month
+        - link "My money" [ref=e98] [cursor=pointer]:
+          - /url: /my-money
+      - generic [ref=e99]:
+        - generic [ref=e100]:
+          - generic [ref=e101]: Left to spend
+          - generic [ref=e102]: £49,999.90
+          - generic [ref=e103]: £4,166.00/day · 12 days
+        - generic [ref=e104]:
+          - generic [ref=e105]: Spent so far
+          - generic [ref=e106]: £0.00

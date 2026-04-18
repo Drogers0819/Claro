@@ -1,0 +1,92 @@
+- generic [ref=e2]:
+  - complementary [ref=e3]:
+    - navigation [ref=e4]:
+      - link "Overview" [ref=e5] [cursor=pointer]:
+        - /url: /overview
+        - img [ref=e7]
+        - text: Overview
+      - link "Check-in" [ref=e12] [cursor=pointer]:
+        - /url: /check-in
+        - img [ref=e14]
+        - text: Check-in
+      - link "Goals" [ref=e17] [cursor=pointer]:
+        - /url: /my-goals
+        - img [ref=e19]
+        - text: Goals
+      - link "Plan" [ref=e23] [cursor=pointer]:
+        - /url: /plan
+        - img [ref=e25]
+        - text: Plan
+  - link "Profile & settings" [ref=e27] [cursor=pointer]:
+    - /url: /settings
+    - text: V
+  - main [ref=e28]:
+    - heading "Good evening, Victoria." [level=1] [ref=e30]
+    - generic [ref=e31]:
+      - generic [ref=e34]: Your plan
+      - paragraph [ref=e35]: Following the current plan, once your Emergency fund is complete (~3 months), that money redirects to boost your House deposit. £15,150 to go across all goals.
+      - generic [ref=e36]:
+        - generic [ref=e37]:
+          - generic [ref=e38]: Income
+          - generic [ref=e39]: £3,200
+        - generic [ref=e40]:
+          - generic [ref=e41]: Fixed costs
+          - generic [ref=e42]: £1,130
+        - generic [ref=e43]:
+          - generic [ref=e44]: Surplus
+          - generic [ref=e45]: £2,070
+      - link "View full plan" [ref=e46] [cursor=pointer]:
+        - /url: /plan
+    - generic [ref=e47]:
+      - generic [ref=e48]:
+        - generic [ref=e49]: Your pots
+        - link "My goals" [ref=e50] [cursor=pointer]:
+          - /url: /my-goals
+      - link "Emergency fund £1,656/mo £0 of £3,390 3 months" [ref=e51] [cursor=pointer]:
+        - /url: /simulator/goal/2
+        - generic [ref=e52]:
+          - generic [ref=e54]: Emergency fund
+          - generic [ref=e55]:
+            - generic [ref=e56]: £1,656/mo
+            - img [ref=e57]
+        - generic [ref=e60]:
+          - generic [ref=e61]: £0 of £3,390
+          - generic [ref=e62]: 3 months
+      - generic [ref=e64]:
+        - generic [ref=e66]: Lifestyle & family
+        - generic [ref=e68]: £310/mo
+      - generic [ref=e70]:
+        - generic [ref=e72]: Buffer
+        - generic [ref=e74]: £104/mo
+    - generic [ref=e75]:
+      - paragraph [ref=e76]: Your Emergency fund will be fully funded in 3 months. That money will automatically redirect to your next priority.
+      - paragraph [ref=e77]: Your emergency fund is below 50%. The plan prioritises building this to £3,390 (3 months of essentials).
+    - generic [ref=e78]:
+      - generic [ref=e79]:
+        - generic [ref=e80]: This month
+        - link "My money" [ref=e81] [cursor=pointer]:
+          - /url: /my-money
+      - generic [ref=e82]:
+        - generic [ref=e83]:
+          - generic [ref=e84]: Left to spend
+          - generic [ref=e85]: £1,728
+          - generic [ref=e86]: £108/day · 16 days
+        - generic [ref=e87]:
+          - generic [ref=e88]: Spent so far
+          - generic [ref=e89]: £1,472
+      - generic [ref=e90]:
+        - generic [ref=e91]:
+          - generic [ref=e92]:
+            - img [ref=e93]
+            - text: Bills
+          - generic [ref=e96]: £1,060
+        - generic [ref=e97]:
+          - generic [ref=e98]:
+            - img [ref=e99]
+            - text: Food
+          - generic [ref=e102]: £197
+        - generic [ref=e103]:
+          - generic [ref=e104]:
+            - img [ref=e105]
+            - text: Shopping
+          - generic [ref=e108]: £67

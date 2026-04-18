@@ -1,0 +1,67 @@
+- generic [ref=e2]:
+  - complementary [ref=e3]:
+    - navigation [ref=e4]:
+      - link "Overview" [ref=e5] [cursor=pointer]:
+        - /url: /overview
+        - img [ref=e7]
+        - text: Overview
+      - link "Money" [ref=e12] [cursor=pointer]:
+        - /url: /my-money
+        - img [ref=e14]
+        - text: Money
+      - link "Goals" [ref=e16] [cursor=pointer]:
+        - /url: /my-goals
+        - img [ref=e18]
+        - text: Goals
+      - link "Plan" [ref=e22] [cursor=pointer]:
+        - /url: /plan
+        - img [ref=e24]
+        - text: Plan
+      - link "Budgets" [ref=e26] [cursor=pointer]:
+        - /url: /my-budgets
+        - img [ref=e28]
+        - text: Budgets
+  - main [ref=e29]:
+    - generic [ref=e30]:
+      - heading "Plan" [level=1] [ref=e31]
+      - paragraph [ref=e32]: Pick any monthly spend and see its true cost over 5, 10, and 20 years.
+    - generic [ref=e33]:
+      - generic [ref=e34]:
+        - generic [ref=e35]: What's this really costing you?
+        - generic [ref=e36]: Coffee, takeaways, subscriptions. Enter the monthly cost and see what it grows into if invested instead.
+      - generic [ref=e37]:
+        - generic [ref=e38]:
+          - generic [ref=e39]:
+            - generic [ref=e40]: Monthly amount (£)
+            - spinbutton [ref=e41]: "50"
+          - generic [ref=e42]:
+            - generic [ref=e43]: What's the spend?
+            - textbox "e.g. Netflix, takeaways..." [ref=e44]: coffee
+        - button "Show me" [ref=e45] [cursor=pointer]
+    - generic [ref=e46]:
+      - generic [ref=e49]: Claro
+      - generic [ref=e50]: £50/month costs you £7,387 over 10 years
+      - paragraph [ref=e51]: That's not just £6,000 spent. It's also £1,387 in growth you never earned.
+      - paragraph [ref=e52]: Put £25 of that into savings each month and it becomes £3,694 in 10 years.
+      - generic [ref=e53]:
+        - generic [ref=e54]: What it adds up to
+        - generic [ref=e55]:
+          - generic [ref=e56]:
+            - generic [ref=e57]: 5 yr
+            - generic [ref=e58]: £3,326
+            - generic [ref=e59]: incl. £326 growth
+          - generic [ref=e60]:
+            - generic [ref=e61]: 10 yr
+            - generic [ref=e62]: £7,387
+            - generic [ref=e63]: incl. £1,387 growth
+          - generic [ref=e64]:
+            - generic [ref=e65]: 20 yr
+            - generic [ref=e66]: £18,400
+            - generic [ref=e67]: incl. £6,400 growth
+    - generic [ref=e68]:
+      - generic [ref=e69]: What if?
+      - paragraph [ref=e70]: Change your income, rent, or goal contributions and see the exact impact on your goal timelines.
+      - link "Run the numbers" [ref=e71] [cursor=pointer]:
+        - /url: /scenario
+        - text: Run the numbers
+        - img [ref=e72]

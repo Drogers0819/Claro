@@ -1,0 +1,60 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - complementary [ref=e3]:
+      - navigation [ref=e4]:
+        - link "Overview" [ref=e5] [cursor=pointer]:
+          - /url: /overview
+          - img [ref=e7]
+          - text: Overview
+        - link "Check-in" [ref=e12] [cursor=pointer]:
+          - /url: /check-in
+          - img [ref=e14]
+          - text: Check-in
+        - link "Goals" [ref=e17] [cursor=pointer]:
+          - /url: /my-goals
+          - img [ref=e19]
+          - text: Goals
+        - link "Companion" [ref=e23] [cursor=pointer]:
+          - /url: /companion
+          - img [ref=e25]
+          - text: Companion
+        - link "Plan" [ref=e27] [cursor=pointer]:
+          - /url: /plan
+          - img [ref=e29]
+          - text: Plan
+    - main [ref=e31]:
+      - generic [ref=e32]:
+        - generic [ref=e39]:
+          - link "← Back" [ref=e40] [cursor=pointer]:
+            - /url: /goals/choose
+          - generic [ref=e41]: Step 4 of 4
+        - heading "Here's your plan." [level=1] [ref=e43]
+        - generic [ref=e44]:
+          - generic [ref=e45]:
+            - generic [ref=e46]: Your income
+            - generic [ref=e47]: £50,000/month
+          - generic [ref=e48]:
+            - generic [ref=e49]: Essentials
+            - generic [ref=e50]: −£13,080
+          - generic [ref=e51]:
+            - generic [ref=e52]: Available for your goals
+            - generic [ref=e53]: £36,920/month
+        - generic [ref=e54]:
+          - generic [ref=e55]: Where it goes
+          - generic [ref=e56]:
+            - generic [ref=e57]: Emergency fund ~2 months
+            - generic [ref=e58]: £29,536/mo
+          - generic [ref=e59]:
+            - generic [ref=e60]: Lifestyle & family
+            - generic [ref=e61]: £5,538/mo
+          - generic [ref=e62]:
+            - generic [ref=e63]: Buffer
+            - generic [ref=e64]: £1,846/mo
+        - generic [ref=e65]:
+          - generic [ref=e68]: Claro
+          - paragraph [ref=e69]: Your Emergency fund completes in ~2 months. After that, your £29,536/month surplus frees up entirely.
+        - link "Review my plan →" [ref=e70] [cursor=pointer]:
+          - /url: /onboarding/plan-review
+  - link "Profile & settings" [ref=e71] [cursor=pointer]:
+    - /url: /settings
+    - text: T

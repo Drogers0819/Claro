@@ -1,0 +1,66 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - complementary [ref=e3]:
+      - navigation [ref=e4]:
+        - link "Overview" [ref=e5] [cursor=pointer]:
+          - /url: /overview
+          - img [ref=e7]
+          - text: Overview
+        - link "Money" [ref=e12] [cursor=pointer]:
+          - /url: /my-money
+          - img [ref=e14]
+          - text: Money
+        - link "Goals" [ref=e16] [cursor=pointer]:
+          - /url: /my-goals
+          - img [ref=e18]
+          - text: Goals
+        - link "Plan" [ref=e22] [cursor=pointer]:
+          - /url: /plan
+          - img [ref=e24]
+          - text: Plan
+        - button "More" [ref=e26] [cursor=pointer]:
+          - img [ref=e28]
+          - text: More
+    - main [ref=e32]:
+      - link "Overview" [ref=e33] [cursor=pointer]:
+        - /url: /overview
+        - img [ref=e34]
+        - text: Overview
+      - heading "Settings" [level=1] [ref=e37]
+      - link "Complete your financial profile to generate your plan" [ref=e38] [cursor=pointer]:
+        - /url: /factfind
+        - img [ref=e39]
+        - generic [ref=e41]: Complete your financial profile to generate your plan
+        - img [ref=e42]
+      - button "Financial profile" [ref=e45] [cursor=pointer]:
+        - generic [ref=e46]:
+          - img [ref=e47]
+          - generic [ref=e50]: Financial profile
+        - img [ref=e51]
+      - button "Appearance" [ref=e54] [cursor=pointer]:
+        - generic [ref=e55]:
+          - img [ref=e56]
+          - generic [ref=e61]: Appearance
+        - img [ref=e62]
+      - button "Account" [ref=e65] [cursor=pointer]:
+        - generic [ref=e66]:
+          - img [ref=e67]
+          - generic [ref=e70]: Account
+        - img [ref=e71]
+      - button "Sign out" [ref=e75] [cursor=pointer]:
+        - img [ref=e76]
+        - text: Sign out
+  - link "Profile & settings" [ref=e79] [cursor=pointer]:
+    - /url: /settings
+    - text: T
+  - dialog "More options":
+    - link "Check-in":
+      - /url: /check-in
+      - generic:
+        - img
+      - generic: Check-in
+    - link "Companion":
+      - /url: /companion
+      - generic:
+        - img
+      - generic: Companion

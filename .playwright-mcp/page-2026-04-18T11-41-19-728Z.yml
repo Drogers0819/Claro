@@ -1,0 +1,61 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - complementary [ref=e3]:
+      - navigation [ref=e4]:
+        - link "Overview" [ref=e5] [cursor=pointer]:
+          - /url: /overview
+          - img [ref=e7]
+          - text: Overview
+        - link "Check-in" [ref=e12] [cursor=pointer]:
+          - /url: /check-in
+          - img [ref=e14]
+          - text: Check-in
+        - link "Goals" [ref=e17] [cursor=pointer]:
+          - /url: /my-goals
+          - img [ref=e19]
+          - text: Goals
+        - link "Companion" [ref=e23] [cursor=pointer]:
+          - /url: /companion
+          - img [ref=e25]
+          - text: Companion
+        - link "Plan" [ref=e27] [cursor=pointer]:
+          - /url: /plan
+          - img [ref=e29]
+          - text: Plan
+    - main [ref=e31]:
+      - generic [ref=e32]:
+        - generic [ref=e33]:
+          - link "Back" [ref=e34] [cursor=pointer]:
+            - /url: /goals/choose
+            - img [ref=e35]
+            - text: Back
+          - generic [ref=e42]: Step 4 of 4
+        - heading "Here's your plan." [level=1] [ref=e44]
+        - generic [ref=e45]:
+          - generic [ref=e46]:
+            - generic [ref=e47]: Your income
+            - generic [ref=e48]: £50,000/month
+          - generic [ref=e49]:
+            - generic [ref=e50]: Essentials
+            - generic [ref=e51]: −£13,080
+          - generic [ref=e52]:
+            - generic [ref=e53]: Available for your goals
+            - generic [ref=e54]: £36,920/month
+        - generic [ref=e55]:
+          - generic [ref=e56]: Where it goes
+          - generic [ref=e57]:
+            - generic [ref=e58]: Emergency fund ~2 months
+            - generic [ref=e59]: £29,536/mo
+          - generic [ref=e60]:
+            - generic [ref=e61]: Lifestyle & family
+            - generic [ref=e62]: £5,538/mo
+          - generic [ref=e63]:
+            - generic [ref=e64]: Buffer
+            - generic [ref=e65]: £1,846/mo
+        - link "Review my plan" [ref=e66] [cursor=pointer]:
+          - /url: /onboarding/plan-review
+          - text: Review my plan
+          - img [ref=e67]
+  - link "Profile & settings" [ref=e69] [cursor=pointer]:
+    - /url: /settings
+    - text: T

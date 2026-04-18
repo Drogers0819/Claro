@@ -1,0 +1,49 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - complementary [ref=e3]:
+      - navigation [ref=e4]:
+        - link "Overview" [ref=e5] [cursor=pointer]:
+          - /url: /overview
+          - img [ref=e7]
+          - text: Overview
+        - link "Money" [ref=e12] [cursor=pointer]:
+          - /url: /my-money
+          - img [ref=e14]
+          - text: Money
+        - link "Goals" [ref=e16] [cursor=pointer]:
+          - /url: /my-goals
+          - img [ref=e18]
+          - text: Goals
+        - link "Plan" [ref=e22] [cursor=pointer]:
+          - /url: /plan
+          - img [ref=e24]
+          - text: Plan
+        - button "More" [ref=e26] [cursor=pointer]:
+          - img [ref=e28]
+          - text: More
+    - main [ref=e32]:
+      - heading "Good afternoon, Test." [level=1] [ref=e34]
+      - link "Complete your profile to generate your financial plan" [ref=e35] [cursor=pointer]:
+        - /url: /factfind
+        - img [ref=e36]
+        - generic [ref=e38]: Complete your profile to generate your financial plan
+        - img [ref=e39]
+      - generic [ref=e41]:
+        - paragraph [ref=e42]: No transactions yet
+        - paragraph [ref=e43]: Upload a bank statement and Claro will learn your real spending patterns to refine your plan.
+        - link "Upload a statement" [ref=e44] [cursor=pointer]:
+          - /url: /upload
+  - link "Profile & settings" [ref=e45] [cursor=pointer]:
+    - /url: /settings
+    - text: T
+  - dialog "More options":
+    - link "Check-in":
+      - /url: /check-in
+      - generic:
+        - img
+      - generic: Check-in
+    - link "Companion":
+      - /url: /companion
+      - generic:
+        - img
+      - generic: Companion

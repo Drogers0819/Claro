@@ -1,0 +1,68 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - complementary [ref=e3]:
+      - navigation [ref=e4]:
+        - link "Overview" [ref=e5] [cursor=pointer]:
+          - /url: /overview
+          - img [ref=e7]
+          - text: Overview
+        - link "Check-in" [ref=e12] [cursor=pointer]:
+          - /url: /check-in
+          - img [ref=e14]
+          - text: Check-in
+        - link "Goals" [ref=e17] [cursor=pointer]:
+          - /url: /my-goals
+          - img [ref=e19]
+          - text: Goals
+        - link "Companion" [ref=e23] [cursor=pointer]:
+          - /url: /companion
+          - img [ref=e25]
+          - text: Companion
+        - link "Plan" [ref=e27] [cursor=pointer]:
+          - /url: /plan
+          - img [ref=e29]
+          - text: Plan
+    - main [ref=e31]:
+      - generic [ref=e32]:
+        - generic [ref=e39]:
+          - link "← Back" [ref=e40] [cursor=pointer]:
+            - /url: /factfind
+          - generic [ref=e41]: Step 2 of 4
+        - generic [ref=e42]:
+          - heading "Here's what you have to work with" [level=1] [ref=e43]
+          - paragraph [ref=e44]: Before you choose your goals, let's see the real picture.
+        - generic [ref=e45]:
+          - generic [ref=e46]:
+            - generic [ref=e47]: Monthly income
+            - generic [ref=e48]: £50,000
+          - generic [ref=e49]:
+            - generic [ref=e50]: Rent / mortgage
+            - generic [ref=e51]: −£6,000
+          - generic [ref=e52]:
+            - generic [ref=e53]: Bills
+            - generic [ref=e54]: −£7,080
+          - generic [ref=e55]:
+            - generic [ref=e56]: Groceries
+            - generic [ref=e57]: −£0
+          - generic [ref=e58]:
+            - generic [ref=e59]: Transport
+            - generic [ref=e60]: −£0
+          - generic [ref=e61]:
+            - generic [ref=e62]: Your surplus
+            - generic [ref=e63]: £36,920 /month
+        - paragraph [ref=e64]: This is the money available after all your fixed costs. On the next page you'll choose your goals, and we'll build a plan that puts every pound to work.
+        - generic [ref=e65]:
+          - generic [ref=e66]:
+            - generic [ref=e67]: One more thing
+            - paragraph [ref=e68]: After your savings and goal allocations are set, how much do you realistically need each month to still enjoy life? Think meals out, social plans, clothes, hobbies. The things that keep you sane.
+            - generic [ref=e69]:
+              - generic [ref=e71] [cursor=pointer]: Minimal · £3692
+              - generic [ref=e73] [cursor=pointer]: Comfortable · £5538
+              - generic [ref=e75] [cursor=pointer]: Flexible · £7384
+              - generic [ref=e77] [cursor=pointer]: Generous · £9230
+            - spinbutton [ref=e78]
+            - paragraph [ref=e79]: We'll set this aside as your lifestyle pot so the plan doesn't squeeze you. You can always adjust it later.
+          - button "Choose my goals →" [ref=e80] [cursor=pointer]
+  - link "Profile & settings" [ref=e81] [cursor=pointer]:
+    - /url: /settings
+    - text: T

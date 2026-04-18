@@ -1,0 +1,53 @@
+- generic [ref=e2]:
+  - complementary [ref=e3]:
+    - navigation [ref=e4]:
+      - link "Overview" [ref=e5] [cursor=pointer]:
+        - /url: /overview
+        - img [ref=e7]
+        - text: Overview
+      - link "Check-in" [ref=e12] [cursor=pointer]:
+        - /url: /check-in
+        - img [ref=e14]
+        - text: Check-in
+      - link "Goals" [ref=e17] [cursor=pointer]:
+        - /url: /my-goals
+        - img [ref=e19]
+        - text: Goals
+      - link "Plan" [ref=e23] [cursor=pointer]:
+        - /url: /plan
+        - img [ref=e25]
+        - text: Plan
+  - link "Profile & settings" [ref=e27] [cursor=pointer]:
+    - /url: /settings
+    - text: V
+  - main [ref=e28]:
+    - link "Plan" [ref=e29] [cursor=pointer]:
+      - /url: /plan
+      - img [ref=e30]
+      - text: Plan
+    - generic [ref=e32]:
+      - heading "What if?" [level=1] [ref=e33]
+      - paragraph [ref=e34]: Adjust any number and see exactly how it affects your goals.
+    - generic [ref=e36]:
+      - generic [ref=e37]: Income & commitments
+      - generic [ref=e38]:
+        - generic [ref=e39]:
+          - generic [ref=e40]: Monthly income (£)
+          - spinbutton [ref=e41]: "3200"
+        - generic [ref=e42]:
+          - generic [ref=e43]: Rent & bills (£)
+          - spinbutton [ref=e44]: "1130"
+      - generic [ref=e45]:
+        - generic [ref=e46]: Goal savings per month
+        - paragraph [ref=e47]: Adjust any number to see what changes.
+        - generic [ref=e48]:
+          - generic [ref=e49]:
+            - generic [ref=e50]: Emergency fund
+            - generic [ref=e51]: currently £0/mo
+          - spinbutton [ref=e52]: "0"
+        - generic [ref=e53]:
+          - generic [ref=e54]:
+            - generic [ref=e55]: House deposit
+            - generic [ref=e56]: currently £300/mo
+          - spinbutton [ref=e57]: "300"
+      - button "See the impact" [ref=e59] [cursor=pointer]

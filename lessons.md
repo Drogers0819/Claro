@@ -15,6 +15,11 @@
 
 <!-- Entries go below this line, newest first -->
 
+## 2026-04-18 — Logo height matched to avatar container, not optical size
+**Mistake**: Set mobile logo to `height: 36px` to match the avatar circle container (also 36px). The logo mark filled nearly the full 52px header height — only 8px breathing room each side. The avatar "T" inside its 36px circle reads optically much smaller, making the logo appear to burst out of the bar while the avatar looked contained.
+**Fix**: Reduced to `height: 24px` — 14px clear space above and below in the 52px bar. Logo mark and avatar letter now have equivalent optical weight and breathing room.
+**Rule**: Never use an adjacent element's container as the optical reference for a logo. Match perceived visual density, not container size — a single letter in a circle occupies ~50% of the circle, while a logo mark occupies ~80-95% of its bounds. Give the logo proportionally more clear space.
+
 ## 2026-04-18 — SVG `<polyline>` missing right slope on landmark/bank icon (persisted two sessions)
 **Mistake**: The bank icon used `<polyline points="12 2 2 7 22 7"/>` for the roof. A polyline draws segments between points in order but does NOT close back to the start — this draws only the LEFT slope (12,2)→(2,7) and the BASE (2,7)→(22,7). The right slope (12,2)→(22,7) was never drawn. A partial fix in a previous session corrected column y-positions but left the polyline intact, so the roof line remained visually broken.
 **Fix**: Replaced with `<path d="M12 2l10 5H2l10-5z"/>` — the `z` command closes the path back to (12,2), ensuring all three roof edges are drawn. Added explicit `<line x1="2" y1="7" x2="22" y2="7"/>` for the eave.

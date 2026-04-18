@@ -1,0 +1,157 @@
+- generic [ref=e2]:
+  - complementary [ref=e3]:
+    - navigation [ref=e4]:
+      - link "Overview" [ref=e5] [cursor=pointer]:
+        - /url: /overview
+        - img [ref=e7]
+        - text: Overview
+      - link "Money" [ref=e12] [cursor=pointer]:
+        - /url: /my-money
+        - img [ref=e14]
+        - text: Money
+      - link "Goals" [ref=e16] [cursor=pointer]:
+        - /url: /my-goals
+        - img [ref=e18]
+        - text: Goals
+      - link "Plan" [ref=e22] [cursor=pointer]:
+        - /url: /plan
+        - img [ref=e24]
+        - text: Plan
+      - link "Budgets" [ref=e26] [cursor=pointer]:
+        - /url: /my-budgets
+        - img [ref=e28]
+        - text: Budgets
+  - link "Profile & settings" [ref=e29] [cursor=pointer]:
+    - /url: /settings
+    - text: V
+  - main [ref=e30]:
+    - link "Money" [ref=e31] [cursor=pointer]:
+      - /url: /my-money
+      - img [ref=e32]
+      - text: Money
+    - generic [ref=e34]:
+      - heading "April outlook" [level=1] [ref=e35]
+      - paragraph [ref=e36]: Day 12 of 30 · 18 days remaining
+    - generic [ref=e38]:
+      - generic [ref=e39]: Month progress
+      - generic [ref=e40]: 40.0%
+    - generic [ref=e43]:
+      - generic [ref=e46]: Prediction
+      - paragraph [ref=e47]: "\"You're on track to spend £2,280.34 this month. That's £932.57 above your usual pace at this point. Your Shopping spending is 668% above average this month.\""
+    - generic [ref=e48]:
+      - generic [ref=e49]:
+        - generic [ref=e50]: Predicted total
+        - generic [ref=e51]: £2,280.34
+        - generic [ref=e52]: 57% confidence
+      - generic [ref=e53]:
+        - generic [ref=e54]:
+          - generic [ref=e55]: Spent so far
+          - generic [ref=e56]: £1,471.68
+          - generic [ref=e57]: 16 transactions
+        - generic [ref=e58]:
+          - generic [ref=e59]: Daily average
+          - generic [ref=e60]: £122.64
+          - generic [ref=e61]: /day
+    - generic [ref=e62]:
+      - generic [ref=e63]: Compared to your average
+      - generic [ref=e64]:
+        - generic [ref=e65]: +£932.57
+        - generic [ref=e66]: above your usual spending at this point
+      - generic [ref=e67]:
+        - generic [ref=e68]: Expected £539.11 · Actual £1,471.68
+        - generic [ref=e69]: above average
+    - generic [ref=e70]: Goal funding forecast
+    - generic [ref=e71]:
+      - generic [ref=e72]:
+        - generic [ref=e73]: Can you fund your goals this month?
+        - generic [ref=e74]: over budget
+      - paragraph [ref=e75]: You're on track to overspend by £210 this month. Small cuts now will help.
+      - generic [ref=e76]:
+        - generic [ref=e77]: Remaining after spending and goals
+        - generic [ref=e78]: −£510.34
+      - generic [ref=e79]:
+        - generic [ref=e80]:
+          - generic [ref=e81]: Predicted spending
+          - generic [ref=e82]: £2,280.34
+        - generic [ref=e83]:
+          - generic [ref=e84]: Goal allocations
+          - generic [ref=e85]: £300.00
+    - generic [ref=e86]: Category forecast
+    - generic [ref=e87]:
+      - generic [ref=e88]:
+        - generic [ref=e89]:
+          - generic [ref=e90]:
+            - generic [ref=e91]: Bills
+            - generic [ref=e92]: ↑ 150% above
+          - generic [ref=e93]:
+            - generic [ref=e94]: £1696.00
+            - generic [ref=e95]: predicted
+        - generic [ref=e96]:
+          - generic [ref=e97]: "Spent so far: £1060.00"
+          - generic [ref=e98]: "Average: £1060.00"
+      - generic [ref=e99]:
+        - generic [ref=e100]:
+          - generic [ref=e101]:
+            - generic [ref=e102]: Food
+            - generic [ref=e103]: ↑ 414% above
+          - generic [ref=e104]:
+            - generic [ref=e105]: £254.81
+            - generic [ref=e106]: predicted
+        - generic [ref=e107]:
+          - generic [ref=e108]: "Spent so far: £197.30"
+          - generic [ref=e109]: "Average: £95.85"
+      - generic [ref=e110]:
+        - generic [ref=e111]:
+          - generic [ref=e112]:
+            - generic [ref=e113]: Transport
+            - generic [ref=e114]: ↑ 185% above
+          - generic [ref=e115]:
+            - generic [ref=e116]: £92.14
+            - generic [ref=e117]: predicted
+        - generic [ref=e118]:
+          - generic [ref=e119]: "Spent so far: £60.40"
+          - generic [ref=e120]: "Average: £52.90"
+      - generic [ref=e121]:
+        - generic [ref=e122]:
+          - generic [ref=e123]:
+            - generic [ref=e124]: Shopping
+            - generic [ref=e125]: ↑ 668% above
+          - generic [ref=e126]:
+            - generic [ref=e127]: £80.08
+            - generic [ref=e128]: predicted
+        - generic [ref=e129]:
+          - generic [ref=e130]: "Spent so far: £67.00"
+          - generic [ref=e131]: "Average: £21.80"
+      - generic [ref=e132]:
+        - generic [ref=e133]:
+          - generic [ref=e134]:
+            - generic [ref=e135]: Health
+            - generic [ref=e136]: ↑ 150% above
+          - generic [ref=e137]:
+            - generic [ref=e138]: £56.00
+            - generic [ref=e139]: predicted
+        - generic [ref=e140]:
+          - generic [ref=e141]: "Spent so far: £35.00"
+          - generic [ref=e142]: "Average: £35.00"
+      - generic [ref=e143]:
+        - generic [ref=e144]:
+          - generic [ref=e145]:
+            - generic [ref=e146]: Entertainment
+            - generic [ref=e147]: on track
+          - generic [ref=e148]:
+            - generic [ref=e149]: £53.35
+            - generic [ref=e150]: predicted
+        - generic [ref=e151]:
+          - generic [ref=e152]: "Spent so far: £22.00"
+          - generic [ref=e153]: "Average: £52.25"
+      - generic [ref=e154]:
+        - generic [ref=e155]:
+          - generic [ref=e156]:
+            - generic [ref=e157]: Subscriptions
+            - generic [ref=e158]: ↑ 150% above
+          - generic [ref=e159]:
+            - generic [ref=e160]: £47.97
+            - generic [ref=e161]: predicted
+        - generic [ref=e162]:
+          - generic [ref=e163]: "Spent so far: £29.98"
+          - generic [ref=e164]: "Average: £29.98"

@@ -1,0 +1,60 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - complementary [ref=e3]:
+      - navigation [ref=e4]:
+        - link "Overview" [ref=e5] [cursor=pointer]:
+          - /url: /overview
+          - img [ref=e7]
+          - text: Overview
+        - link "Money" [ref=e12] [cursor=pointer]:
+          - /url: /my-money
+          - img [ref=e14]
+          - text: Money
+        - link "Check-in" [ref=e16] [cursor=pointer]:
+          - /url: /check-in
+          - img [ref=e18]
+          - text: Check-in
+        - link "Goals" [ref=e21] [cursor=pointer]:
+          - /url: /my-goals
+          - img [ref=e23]
+          - text: Goals
+        - link "Companion" [ref=e27] [cursor=pointer]:
+          - /url: /companion
+          - img [ref=e29]
+          - text: Companion
+        - link "Plan" [ref=e31] [cursor=pointer]:
+          - /url: /plan
+          - img [ref=e33]
+          - text: Plan
+    - main [ref=e35]:
+      - link "Overview" [ref=e36] [cursor=pointer]:
+        - /url: /overview
+        - img [ref=e37]
+        - text: Overview
+      - heading "Settings" [level=1] [ref=e40]
+      - link "Complete your financial profile to generate your plan" [ref=e41] [cursor=pointer]:
+        - /url: /factfind
+        - img [ref=e42]
+        - generic [ref=e44]: Complete your financial profile to generate your plan
+        - img [ref=e45]
+      - button "Financial profile" [ref=e48] [cursor=pointer]:
+        - generic [ref=e49]:
+          - img [ref=e50]
+          - generic [ref=e53]: Financial profile
+        - img [ref=e54]
+      - button "Appearance" [ref=e57] [cursor=pointer]:
+        - generic [ref=e58]:
+          - img [ref=e59]
+          - generic [ref=e64]: Appearance
+        - img [ref=e65]
+      - button "Account" [ref=e68] [cursor=pointer]:
+        - generic [ref=e69]:
+          - img [ref=e70]
+          - generic [ref=e73]: Account
+        - img [ref=e74]
+      - button "Sign out" [ref=e78] [cursor=pointer]:
+        - img [ref=e79]
+        - text: Sign out
+  - link "Profile & settings" [ref=e82] [cursor=pointer]:
+    - /url: /settings
+    - text: T

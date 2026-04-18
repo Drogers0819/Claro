@@ -1,0 +1,57 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - complementary [ref=e3]:
+      - navigation [ref=e4]:
+        - link "Overview" [ref=e5] [cursor=pointer]:
+          - /url: /overview
+          - img [ref=e7]
+          - text: Overview
+        - link "Money" [ref=e12] [cursor=pointer]:
+          - /url: /my-money
+          - img [ref=e14]
+          - text: Money
+        - link "Goals" [ref=e16] [cursor=pointer]:
+          - /url: /my-goals
+          - img [ref=e18]
+          - text: Goals
+        - link "Plan" [ref=e22] [cursor=pointer]:
+          - /url: /plan
+          - img [ref=e24]
+          - text: Plan
+        - button "More" [ref=e26] [cursor=pointer]:
+          - img [ref=e28]
+          - text: More
+    - main [ref=e32]:
+      - link "Money" [ref=e33] [cursor=pointer]:
+        - /url: /my-money
+        - img [ref=e34]
+        - text: Money
+      - generic [ref=e36]:
+        - generic [ref=e37]: Insights
+        - heading "April outlook" [level=1] [ref=e38]
+        - paragraph [ref=e39]: Day 17 of 30 · 13 days remaining
+      - generic [ref=e40]:
+        - generic [ref=e43]: Prediction
+        - paragraph [ref=e44]: "\"Keep tracking your spending to unlock predictions.\""
+      - generic [ref=e46]:
+        - generic [ref=e47]: Month progress
+        - generic [ref=e48]: 56.7%
+      - generic [ref=e51]:
+        - paragraph [ref=e52]: No spending recorded yet
+        - paragraph [ref=e53]: Upload a bank statement or add transactions and Claro will start tracking your spending for this month.
+        - link "Upload a statement" [ref=e54] [cursor=pointer]:
+          - /url: /upload
+  - link "Profile & settings" [ref=e55] [cursor=pointer]:
+    - /url: /settings
+    - text: T
+  - dialog "More options":
+    - link "Check-in":
+      - /url: /check-in
+      - generic:
+        - img
+      - generic: Check-in
+    - link "Companion":
+      - /url: /companion
+      - generic:
+        - img
+      - generic: Companion
