@@ -14,7 +14,9 @@
     <form method="POST" action="{{ url_for('pages.edit_goal', goal_id=goal.id) }}">
         <div class="form-group">
             <label class="form-label">What's this goal called?</label>
-            <input type="text" name="name" class="form-input" value="{{ goal.name }}" required>
+            <input type="text" name="name" class="form-input" value="{{ goal.name }}" required
+                oninvalid="this.setCustomValidity('Please enter a name for your goal')"
+                oninput="this.setCustomValidity('')">
         </div>
 
         <div class="grid-2">
@@ -49,12 +51,14 @@
         <div class="form-group" style="margin-bottom: 24px;">
             <label class="form-label">Priority (1 = most important)</label>
             <input type="number" name="priority_rank" class="form-input" min="1"
-                   value="{{ goal.priority_rank }}" required>
+                   value="{{ goal.priority_rank }}" required
+                   oninvalid="this.setCustomValidity('Please enter a priority rank — 1 means this goal comes first')"
+                   oninput="this.setCustomValidity('')">
         </div>
 
-        <div style="display: flex; align-items: center; gap: 14px;">
-            <button type="submit" class="btn-primary">Save changes</button>
-            <a href="{{ url_for('pages.my_goals') }}" class="btn-secondary btn-sm">Cancel</a>
+        <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 4px;">
+            <button type="submit" class="btn-primary btn-full">Save changes</button>
+            <a href="{{ url_for('pages.my_goals') }}" style="text-align: center; font-size: 0.82rem; color: var(--text-tertiary); text-decoration: none;">Cancel</a>
         </div>
     </form>
 </div>

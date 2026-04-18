@@ -15,7 +15,9 @@
     <form method="POST" action="{{ url_for('pages.add_goal') }}">
         <div class="form-group">
             <label class="form-label">Goal name</label>
-            <input type="text" name="name" class="form-input" placeholder="e.g. Manchester house deposit" required>
+            <input type="text" name="name" class="form-input" placeholder="e.g. Manchester house deposit" required
+                oninvalid="this.setCustomValidity('Please enter a name for your goal')"
+                oninput="this.setCustomValidity('')">
         </div>
 
         <div class="grid-2">
@@ -55,9 +57,9 @@
             </div>
         </div>
 
-        <div style="display: flex; align-items: center; gap: 14px;">
-            <button type="submit" class="btn-primary">Create goal</button>
-            <a href="{{ url_for('pages.my_goals') }}" style="font-size: 0.82rem; color: var(--text-tertiary); text-decoration: none;">Cancel</a>
+        <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 4px;">
+            <button type="submit" class="btn-primary btn-full">Create goal</button>
+            <a href="{{ url_for('pages.my_goals') }}" style="text-align: center; font-size: 0.82rem; color: var(--text-tertiary); text-decoration: none;">Cancel</a>
         </div>
     </form>
 </div>

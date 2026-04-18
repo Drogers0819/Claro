@@ -316,6 +316,22 @@ Never use `var(--text-primary)` on gold-card body text. The italic + gold border
 
 Never use Unicode `→`, `←`, `▶`. Never use emoji.
 
+### 4.4 Primary + Cancel button pairs
+
+**Rule:** Never place a primary button and a cancel link side-by-side at unequal visual weights. The result looks broken — one element dominates and the other reads as orphaned text.
+
+**Correct pattern — stacked:**
+```html
+<div style="display: flex; flex-direction: column; gap: 10px; margin-top: 4px;">
+    <button type="submit" class="btn-primary btn-full">Save changes</button>
+    <a href="..." style="text-align: center; font-size: 0.82rem; color: var(--text-tertiary); text-decoration: none;">Cancel</a>
+</div>
+```
+- Primary button: full-width (`.btn-full`), clearly the main action
+- Cancel: centered text link below — understated, unambiguous escape
+
+**Why not side-by-side:** `btn-primary` is `inline-flex` so it takes natural content width. A plain text Cancel link alongside it creates a mismatched pair where the primary button either looks cramped or the cancel looks abandoned.
+
 ---
 
 ## 5. Forms
@@ -353,7 +369,21 @@ No "large" variant exists — if a field feels small, use standard. If standard 
 
 **Mobile font-size rule (iOS Safari):** Any `<input>` or `<select>` with `font-size < 16px` triggers automatic page zoom on iOS Safari when focused. Both `form-input` and `form-input-sm` must override to `font-size: 16px` inside the `@media (max-width: 768px)` breakpoint — visual compactness is achieved through padding reduction, not font-size reduction.
 
-### 5.4 Should this form be in a card?
+### 5.4 Validation error messages
+
+Never rely on the browser's default "Please fill in this field" / "required" message — it is generic, unhelpful, and looks inconsistent across browsers.
+
+Every `required` field must have a custom `oninvalid` message that explains what belongs there:
+```html
+<input type="text" name="name" class="form-input" required
+    oninvalid="this.setCustomValidity('Please enter a name for your goal')"
+    oninput="this.setCustomValidity('')">
+```
+- `oninvalid`: message shown when submit is triggered on an empty field
+- `oninput`: clears the message as soon as the user starts typing (prevents the error persisting mid-edit)
+- Message format: "Please [action] — [brief why if needed]". Sentence case, no period.
+
+### 5.5 Should this form be in a card?
 
 **Decision rule:** Does this page have app chrome (sidebar, bottom nav)?
 - **No app chrome** (login, register) → `.glass-card` wrapper acceptable — the card provides the visual container
@@ -688,16 +718,16 @@ Always comma-separated thousands: `"{:,.0f}".format(value)`. Negative amounts: U
 | Context | Size | Rule |
 |---|---|---|
 | Desktop sidebar | 40×40px | `object-fit: contain` — compact mark only, no text |
-| Mobile header | 36×36px | `object-fit: contain` — matches avatar footprint exactly |
+| Mobile header | `height: 36px; width: auto` | Height matches avatar circle — width adjusts proportionally |
 
-Use `object-fit: contain` on all logo `<img>` elements. The PNG has internal transparent space — matching container dimensions to the avatar (both 36×36 on mobile) keeps visual balance equal on both edges.
+The logo PNG is landscape (636×334). Using a square container with `object-fit: contain` constrains by width, making the mark shorter than the avatar. Always set `height` to match the avatar and let `width: auto` handle the aspect ratio.
 
 ### 17.2 Mobile header bar layout
 
 - **Structure**: `.mobile-header-bar` — fixed bar, `justify-content: space-between`, `padding: 0 16px`.
-- **Left**: `<a class="mobile-logo">` with the 36×36 logo image — links to overview.
-- **Right**: `.mobile-settings-btn` avatar circle — links to settings.
-- Both elements occupy the same physical footprint so edge spacing is visually equal without needing asymmetric padding.
+- **Left**: `<a class="mobile-logo">` with `<img style="height:36px;width:auto;">` — links to overview.
+- **Right**: `.mobile-settings-btn` avatar circle (36×36) — links to settings.
+- Setting logo `height: 36px` matches the avatar's visual circle height. Don't use a square container — the PNG is landscape and `object-fit: contain` in a square would make the mark appear shorter than the avatar.
 - The bar is hidden on desktop (`display: none` above 768px breakpoint).
 
 ---

@@ -15,7 +15,9 @@
         <div class="grid-2">
             <div class="form-group">
                 <label class="form-label">Amount (£)</label>
-                <input type="number" name="amount" class="form-input" step="0.01" min="0.01" placeholder="0.00" required>
+                <input type="number" name="amount" class="form-input" step="0.01" min="0.01" placeholder="0.00" required
+                    oninvalid="this.setCustomValidity('Please enter an amount greater than 0')"
+                    oninput="this.setCustomValidity('')">
             </div>
             <div class="form-group">
                 <label class="form-label">Type</label>
@@ -28,7 +30,9 @@
 
         <div class="form-group">
             <label class="form-label">Description</label>
-            <input type="text" name="description" class="form-input" placeholder="e.g. Tesco weekly shop" required>
+            <input type="text" name="description" class="form-input" placeholder="e.g. Tesco weekly shop" required
+                oninvalid="this.setCustomValidity('Please add a short description for this transaction')"
+                oninput="this.setCustomValidity('')">
         </div>
 
         <div class="grid-2">
@@ -53,9 +57,9 @@
             <input type="text" name="merchant" class="form-input" placeholder="e.g. Tesco, Netflix, Uber">
         </div>
 
-        <div style="display: flex; align-items: center; gap: 14px;">
-            <button type="submit" class="btn-primary">Record transaction</button>
-            <a href="{{ url_for('pages.my_money') }}" style="font-size: 0.82rem; color: var(--text-tertiary); text-decoration: none;">Cancel</a>
+        <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 4px;">
+            <button type="submit" class="btn-primary btn-full">Record transaction</button>
+            <a href="{{ url_for('pages.my_money') }}" style="text-align: center; font-size: 0.82rem; color: var(--text-tertiary); text-decoration: none;">Cancel</a>
         </div>
     </form>
 </div>

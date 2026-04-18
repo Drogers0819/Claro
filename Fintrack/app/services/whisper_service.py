@@ -270,7 +270,6 @@ def _life_checkin_whisper(today, days_since_signup, user=None):
     if 13 <= today.day <= 16:
         return {
             "message": "Anything come up this month we should know about? A birthday, an unexpected bill, or a change at work? Quick updates keep your plan accurate.",
-<<<<<<< HEAD
             "action_label": "Quick check-in",
             "action_url": "/life-checkin",
             "icon": "message-circle",

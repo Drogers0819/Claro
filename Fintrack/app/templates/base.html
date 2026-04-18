@@ -104,7 +104,7 @@
     <!-- Mobile fixed header bar — solid background prevents avatar overlapping scrolled content -->
     <div class="mobile-header-bar">
         <a href="{{ url_for('pages.overview') }}" class="mobile-logo" aria-label="Claro home">
-            <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Claro" style="width: 36px; height: 36px; object-fit: contain; display: block;">
+            <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Claro" style="height: 36px; width: auto; display: block;">
         </a>
         <a href="{{ url_for('pages.settings') }}" class="mobile-settings-btn {% if request.endpoint == 'pages.settings' %}active{% endif %}" aria-label="Profile &amp; settings">
             {{ current_user.name[0] | upper }}
