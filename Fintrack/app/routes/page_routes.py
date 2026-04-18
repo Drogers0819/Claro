@@ -24,6 +24,7 @@ from app.services.simulator_service import (
 import calendar
 from app.services.planner_service import generate_financial_plan, get_plan_summary, can_i_afford
 from app.services.whisper_service import generate_action_whisper
+from app.services.withdrawal_service import get_withdrawal_options
 from app.models.life_checkin import LifeCheckIn
 page_bp = Blueprint("pages", __name__)
 
@@ -992,6 +993,33 @@ def plan_review():
         reasoning=reasoning,
         profile=user_profile
     )
+
+# ─── WITHDRAWAL ───────────────────────────────────────────
+
+@page_bp.route("/withdraw", methods=["GET", "POST"])
+@login_required
+def withdraw():
+    if not current_user.factfind_completed or not current_user.monthly_income:
+        flash("Complete your financial profile first.", "error")
+        return redirect(url_for("pages.factfind"))
+
+    user_profile = current_user.profile_dict()
+    goals_data = [g.to_dict() for g in Goal.query.filter_by(
+        user_id=current_user.id, status="active"
+    ).order_by(Goal.priority_rank.asc()).all()]
+
+    plan = generate_financial_plan(user_profile, goals_data)
+    result = None
+
+    if request.method == "POST" and "error" not in plan:
+        try:
+            amount = round(float(request.form.get("amount", 0)), 2)
+            if amount > 0:
+                result = get_withdrawal_options(plan, amount)
+        except (ValueError, TypeError):
+            flash("Please enter a valid amount.", "error")
+
+    return render_template("withdraw.html", plan=plan, result=result)
 
 # ─── LIFE CHECK-IN ────────────────────────────────────────
 
