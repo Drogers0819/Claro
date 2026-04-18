@@ -1112,6 +1112,43 @@ def life_checkin():
 
     return render_template("life_checkin.html")
 
+# ─── TRIAL GATE ───────────────────────────────────────────
+
+@page_bp.route("/trial")
+@login_required
+def trial_gate():
+    if not current_user.factfind_completed:
+        return redirect(url_for("pages.factfind"))
+
+    user_profile = current_user.profile_dict()
+    goals_data = [g.to_dict() for g in Goal.query.filter_by(
+        user_id=current_user.id, status="active"
+    ).order_by(Goal.priority_rank.asc()).all()]
+
+    plan = generate_financial_plan(user_profile, goals_data)
+
+    # Calculate trial end date (14 days from now)
+    from datetime import timedelta
+    trial_end = (date.today() + timedelta(days=14)).strftime("%d %B %Y")
+
+    return render_template("trial_gate.html",
+        plan=plan,
+        trial_end_date=trial_end
+    )
+
+
+@page_bp.route("/checkout")
+@login_required
+def checkout():
+    # Placeholder — Stripe integration goes here
+    # For now, set user to trial and redirect to overview
+    from datetime import timedelta
+    current_user.subscription_tier = "pro_plus"
+    current_user.trial_ends_at = datetime.utcnow() + timedelta(days=14)
+    db.session.commit()
+    flash("Your 14-day Pro+ trial has started.", "success")
+    return redirect(url_for("pages.overview"))
+
 # ─── SETTINGS ────────────────────────────────────────────
 
 @page_bp.route("/settings")
