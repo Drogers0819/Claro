@@ -560,10 +560,19 @@ a:hover {
     box-shadow: 0 4px 16px var(--roman-gold-dim);
 }
 
+.btn-primary:disabled,
+.btn-primary[disabled] {
+    opacity: 0.38;
+    cursor: not-allowed;
+    filter: none;
+    box-shadow: none;
+    pointer-events: auto;
+}
+
 .btn-secondary {
     background: transparent;
     color: var(--roman-gold);
-    border: 1px solid rgba(197, 163, 93, 0.3);
+    border: 1px solid var(--roman-gold-glow);
     font-weight: 500;
     transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
 }
@@ -1151,8 +1160,9 @@ input[type="number"] {
 
 .tx-action-primary {
     font-size: 0.75rem;
-    color: var(--roman-gold);
-    text-decoration: none;
+    color: var(--text-secondary);
+    text-decoration: underline;
+    text-underline-offset: 2px;
     font-weight: 500;
     white-space: nowrap;
 }

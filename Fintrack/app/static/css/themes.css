@@ -63,6 +63,7 @@ body.theme-rosso {
     /* Accent — blue for interactive elements only */
     --roman-gold: #63B3ED;
     --roman-gold-dim: rgba(99, 179, 237, 0.08);
+    --roman-gold-glow: rgba(99, 179, 237, 0.25);
     --gold-whisper-bg: rgba(99, 179, 237, 0.05);
     --gold-whisper-border: rgba(99, 179, 237, 0.08);
 
