@@ -130,7 +130,9 @@ Active templates: `overview`, `my_money`, `my_goals`, `plan`, `my_budgets`, `set
 ## Theme-aware CSS tokens
 
 - **`--progress-track`**: dark fallback defined in `:root` as `rgba(255,255,255,0.1)`. Light themes override in `body.theme-*` selector in `themes.css` as `rgba(0,0,0,0.08)`.
+- **`--shadow-float`**, **`--shadow-float-lg`**, **`--shadow-toast`**: shadow tokens for floating surfaces (popover, custom select dropdown, flatpickr calendar, toast). Dark default in `:root` uses `rgba(0,0,0,0.45+)` for depth. All 6 light themes override in a single grouped selector in `themes.css` to `rgba(0,0,0,0.08–0.10)` — soft, not harsh. Always use these tokens; never hardcode shadow rgba values on floating components.
 - Pattern for any luminance-dependent value: `:root` = dark default, `body.theme-*` = light override. Never hardcode `rgba(255,255,255,0.1)` directly in templates or component CSS.
+- When a new floating component is added, use `box-shadow: var(--shadow-float)` (or `--shadow-float-lg` for larger surfaces like datepickers). The token automatically adjusts for all 9 themes.
 
 ---
 

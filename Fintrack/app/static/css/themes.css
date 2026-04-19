@@ -95,6 +95,7 @@ body.theme-rosso {
 
 /* Ivory — warm parchment, not white */
 body.theme-ivory {
+    --bg-primary: #F0EBE2;
     --obsidian: #F0EBE2;
     --racing-green: #E4DDD0;
     --roman-gold: #8B7340;
@@ -146,6 +147,7 @@ body.theme-ivory .form-select option {
 
 /* Pearl — cool blue-grey with depth */
 body.theme-pearl {
+    --bg-primary: #E4E8F0;
     --obsidian: #E4E8F0;
     --racing-green: #D6DCE8;
     --roman-gold: #4A6FA5;
@@ -195,6 +197,7 @@ body.theme-pearl .form-select option {
 
 /* Sandstone — warm earth with presence */
 body.theme-sandstone {
+    --bg-primary: #ECE4D6;
     --obsidian: #ECE4D6;
     --racing-green: #DED4C2;
     --roman-gold: #8B6D47;
@@ -244,6 +247,7 @@ body.theme-sandstone .form-select option {
 
 /* Sage — green with visible character */
 body.theme-sage {
+    --bg-primary: #E0E8DC;
     --obsidian: #E0E8DC;
     --racing-green: #D0DCC8;
     --roman-gold: #4A7358;
@@ -293,6 +297,7 @@ body.theme-sage .form-select option {
 
 /* Lavender — visible lilac tint */
 body.theme-lavender {
+    --bg-primary: #E4DFF0;
     --obsidian: #E4DFF0;
     --racing-green: #D6CEE4;
     --roman-gold: #6B5B8A;
@@ -342,6 +347,7 @@ body.theme-lavender .form-select option {
 
 /* Mist — warm grey with substance */
 body.theme-mist {
+    --bg-primary: #E2E2DE;
     --obsidian: #E2E2DE;
     --racing-green: #D4D4CE;
     --roman-gold: #6B6B65;
@@ -389,6 +395,19 @@ body.theme-mist .form-select option {
     color: #1C1C1A;
 }
 
+/* ===== LIGHT THEME SHADOW TOKENS ===== */
+
+body.theme-ivory,
+body.theme-pearl,
+body.theme-sandstone,
+body.theme-sage,
+body.theme-lavender,
+body.theme-mist {
+    --shadow-float: 0 4px 20px rgba(0, 0, 0, 0.08), 0 1px 6px rgba(0, 0, 0, 0.05);
+    --shadow-float-lg: 0 8px 28px rgba(0, 0, 0, 0.10), 0 2px 8px rgba(0, 0, 0, 0.06);
+    --shadow-toast: 0 4px 16px rgba(0, 0, 0, 0.10), 0 1px 4px rgba(0, 0, 0, 0.06);
+}
+
 /* ===== LIGHT THEME BUTTON OVERRIDES ===== */
 
 body.theme-ivory .btn-primary,
@@ -419,6 +438,73 @@ body.theme-mist .btn-secondary:hover {
     background: var(--roman-gold-dim);
     border-color: var(--roman-gold);
     color: var(--roman-gold);
+}
+
+/* Autofill: dark fallback (#0d1117) fires on light themes because --bg-secondary is undefined. Override with page bg. */
+body.theme-ivory input:-webkit-autofill,
+body.theme-ivory input:-webkit-autofill:hover,
+body.theme-ivory input:-webkit-autofill:focus,
+body.theme-ivory input:-webkit-autofill:active {
+    -webkit-box-shadow: 0 0 0 1000px rgba(240, 235, 226, 0.95) inset !important;
+    -webkit-text-fill-color: #1A1A18 !important;
+}
+body.theme-pearl input:-webkit-autofill,
+body.theme-pearl input:-webkit-autofill:hover,
+body.theme-pearl input:-webkit-autofill:focus,
+body.theme-pearl input:-webkit-autofill:active {
+    -webkit-box-shadow: 0 0 0 1000px rgba(228, 232, 240, 0.95) inset !important;
+    -webkit-text-fill-color: #1A1D24 !important;
+}
+body.theme-sandstone input:-webkit-autofill,
+body.theme-sandstone input:-webkit-autofill:hover,
+body.theme-sandstone input:-webkit-autofill:focus,
+body.theme-sandstone input:-webkit-autofill:active {
+    -webkit-box-shadow: 0 0 0 1000px rgba(236, 228, 214, 0.95) inset !important;
+    -webkit-text-fill-color: #2C2418 !important;
+}
+body.theme-sage input:-webkit-autofill,
+body.theme-sage input:-webkit-autofill:hover,
+body.theme-sage input:-webkit-autofill:focus,
+body.theme-sage input:-webkit-autofill:active {
+    -webkit-box-shadow: 0 0 0 1000px rgba(224, 232, 220, 0.95) inset !important;
+    -webkit-text-fill-color: #1A241C !important;
+}
+body.theme-lavender input:-webkit-autofill,
+body.theme-lavender input:-webkit-autofill:hover,
+body.theme-lavender input:-webkit-autofill:focus,
+body.theme-lavender input:-webkit-autofill:active {
+    -webkit-box-shadow: 0 0 0 1000px rgba(228, 223, 240, 0.95) inset !important;
+    -webkit-text-fill-color: #201C28 !important;
+}
+body.theme-mist input:-webkit-autofill,
+body.theme-mist input:-webkit-autofill:hover,
+body.theme-mist input:-webkit-autofill:focus,
+body.theme-mist input:-webkit-autofill:active {
+    -webkit-box-shadow: 0 0 0 1000px rgba(226, 226, 222, 0.95) inset !important;
+    -webkit-text-fill-color: #1C1C1A !important;
+}
+
+/* btn-primary disabled: opacity 0.38 makes gold invisible on light bg — override with explicit muted style */
+body.theme-ivory .btn-primary:disabled,
+body.theme-pearl .btn-primary:disabled,
+body.theme-sandstone .btn-primary:disabled,
+body.theme-sage .btn-primary:disabled,
+body.theme-lavender .btn-primary:disabled,
+body.theme-mist .btn-primary:disabled {
+    opacity: 1;
+    background: rgba(0, 0, 0, 0.08);
+    color: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+/* Mobile header bar: make border visible on light themes */
+body.theme-ivory .mobile-header-bar,
+body.theme-pearl .mobile-header-bar,
+body.theme-sandstone .mobile-header-bar,
+body.theme-sage .mobile-header-bar,
+body.theme-lavender .mobile-header-bar,
+body.theme-mist .mobile-header-bar {
+    border-bottom-color: var(--glass-border);
 }
 
 /* ===== LIGHT THEME TOAST OVERRIDES ===== */

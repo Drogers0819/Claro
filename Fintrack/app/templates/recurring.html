@@ -58,7 +58,7 @@
         <div style="display: flex; justify-content: space-between; align-items: flex-start;">
             <div style="flex: 1;">
                 <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px;">
-                    <span style="font-size: 1rem; color: var(--text-primary); text-transform: capitalize;">{{ r.merchant }}</span>
+                    <span class="merchant-name">{{ r.merchant }}</span>
                     <span class="badge {% if r.transaction_type == 'income' %}badge-success{% else %}badge-default{% endif %}">
                         {{ r.frequency_label }}
                     </span>

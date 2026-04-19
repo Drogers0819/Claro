@@ -52,11 +52,11 @@ function projectGoal(targetAmount, currentAmount, monthlyContribution) {
 }
 
 /**
- * Formats a date as "Month YYYY"
+ * Formats a date as "Mon YYYY" (abbreviated month for chart axis readability)
  */
 function formatDate(d) {
-    const months = ['January', 'February', 'March', 'April', 'May', 'June',
-        'July', 'August', 'September', 'October', 'November', 'December'];
+    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+        'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
     return months[d.getMonth()] + ' ' + d.getFullYear();
 }
 
@@ -104,8 +104,7 @@ function initProjectionChart(canvasId, targetAmount, currentAmount, currentContr
                     data: currentPath.balances,
                     borderColor: textSecondary,
                     backgroundColor: 'transparent',
-                    borderWidth: 2,
-                    borderDash: [6, 4],
+                    borderWidth: 1.5,
                     pointRadius: 0,
                     tension: 0.3
                 },
@@ -147,10 +146,11 @@ function initProjectionChart(canvasId, targetAmount, currentAmount, currentContr
                     labels: {
                         color: textSecondary,
                         font: { family: 'Inter, sans-serif', size: 11 },
-                        boxWidth: 12,
+                        usePointStyle: true,
+                        pointStyleWidth: 16,
                         padding: 16
                     },
-                    afterFit(legend) { legend.height += 12; }
+                    afterFit(legend) { legend.height += 24; }
                 },
                 tooltip: {
                     backgroundColor: 'rgba(2, 4, 8, 0.9)',
@@ -176,9 +176,10 @@ function initProjectionChart(canvasId, targetAmount, currentAmount, currentContr
                     display: true,
                     ticks: {
                         color: textTertiary,
-                        font: { family: 'Inter, sans-serif', size: 10 },
-                        maxTicksLimit: 8,
-                        maxRotation: 0
+                        font: { family: 'Inter, sans-serif', size: 11 },
+                        maxTicksLimit: 4,
+                        maxRotation: 0,
+                        autoSkipPadding: 16
                     },
                     grid: { display: false }
                 },
@@ -186,7 +187,7 @@ function initProjectionChart(canvasId, targetAmount, currentAmount, currentContr
                     display: true,
                     ticks: {
                         color: textTertiary,
-                        font: { family: 'Inter, sans-serif', size: 10 },
+                        font: { family: 'Inter, sans-serif', size: 11 },
                         callback: function(value) {
                             return '£' + value.toLocaleString('en-GB');
                         }
@@ -309,10 +310,11 @@ function initHabitChart(canvasId, horizons) {
                     labels: {
                         color: textSecondary,
                         font: { family: 'Inter, sans-serif', size: 11 },
-                        boxWidth: 12,
+                        usePointStyle: true,
+                        pointStyleWidth: 16,
                         padding: 16
                     },
-                    afterFit(legend) { legend.height += 12; }
+                    afterFit(legend) { legend.height += 24; }
                 },
                 tooltip: {
                     backgroundColor: 'rgba(2, 4, 8, 0.9)',
@@ -342,7 +344,7 @@ function initHabitChart(canvasId, horizons) {
                 y: {
                     ticks: {
                         color: textTertiary,
-                        font: { family: 'Inter, sans-serif', size: 10 },
+                        font: { family: 'Inter, sans-serif', size: 11 },
                         callback: function(v) { return '£' + v.toLocaleString('en-GB'); }
                     },
                     grid: { color: 'rgba(255,255,255,0.03)' }

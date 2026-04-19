@@ -70,7 +70,7 @@
     <div id="panel-appearance" hidden style="padding-top: 16px; border-top: 0.5px solid var(--glass-border); margin-top: 12px;">
         <p style="font-size: 0.75rem; color: var(--text-tertiary); margin-bottom: 16px;">Choose your look. Changes apply instantly.</p>
         <form method="POST" action="{{ url_for('pages.update_theme') }}">
-            <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px;">
+            <div class="theme-picker-grid">
                 {% set themes = [
                     ("racing-green", "Racing Green", "linear-gradient(135deg, #0A2A22, #020408)"),
                     ("midnight-navy", "Midnight Navy", "linear-gradient(135deg, #0A1628, #020408)"),

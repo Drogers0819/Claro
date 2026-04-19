@@ -19,7 +19,7 @@
         <span class="ai-pulse"></span>
         <span style="font-size: 0.65rem; color: var(--roman-gold); text-transform: uppercase; letter-spacing: 0.06em;">Projection</span>
     </div>
-    <div id="arrival-date" class="metric-value gold" style="margin-bottom: 4px; transition: all 0.3s ease;">
+    <div id="arrival-date" class="metric-value gold sm" style="margin-bottom: 4px; transition: all 0.3s ease;">
         {{ projection.completion_date_human }}
     </div>
     <p style="font-size: 0.85rem; color: var(--text-secondary); font-style: italic;">
@@ -43,7 +43,7 @@
            style="background: linear-gradient(to right, var(--roman-gold) 0%, var(--roman-gold) {{ slider_percent }}%, var(--glass-chip) {{ slider_percent }}%, var(--glass-chip) 100%);">
 
     <div style="text-align: center; margin-top: 12px;">
-        <span class="metric-value sm" id="slider-amount">
+        <span id="slider-amount" style="font-size: 1.05rem; font-family: var(--font-sans); font-variant-numeric: tabular-nums; color: var(--text-primary);">
             £{{ "{:,.2f}".format(projection.monthly_contribution) }}/month
         </span>
     </div>
@@ -52,7 +52,7 @@
 <!-- The chart — two-mode contrast -->
 <div class="glass-card" style="margin-bottom: 32px;">
     <div class="section-label" style="margin-top: 0;">Timeline projection</div>
-    <div style="height: 320px; position: relative;">
+    <div class="chart-container">
         <canvas id="projection-chart"></canvas>
     </div>
     {% if projection.total_interest_earned > 0 %}
