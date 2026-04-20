@@ -61,7 +61,7 @@ def detect_recurring_transactions(transactions):
                 "amount_consistent": amount_variance < (avg_amount * 0.1),
                 "monthly_cost": monthly_cost,
                 "last_date": txns[-1]["date"].isoformat(),
-                "last_date_display": txns[-1]["date"].strftime("%-d %b %Y"),
+                "last_date_display": txns[-1]["date"].strftime("%#d %b %Y"),
                 "next_expected": txns[-1]["date"] + timedelta(days=round(pattern["avg_interval"])),
                 "next_expected_display": _predict_next_date(txns[-1]["date"], pattern["avg_interval"]),
                 "category": txns[-1].get("category", "Other"),
@@ -181,8 +181,7 @@ def _calculate_monthly_cost(avg_amount, frequency):
 
 def _predict_next_date(last_date, avg_interval_days):
     next_date = last_date + timedelta(days=round(avg_interval_days))
-    return next_date.strftime("%-d %b %Y")
-
+    return next_date.strftime("%#d %b %Y")
 
 _EXCLUDED_SAVING_CATEGORIES = {"Bills", "Income", "Rent"}
 

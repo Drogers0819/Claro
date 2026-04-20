@@ -785,14 +785,22 @@ def goal_chips():
             target = None
             deadline = None
             must_hit = False
+            current_amount = 0
             if chip == "emergency":
                 name = "Emergency fund"
                 target = request.form.get("emergency_custom") or request.form.get("emergency_amount")
-
+                try:
+                    current_amount = round(float(request.form.get("emergency_current_savings") or 0), 2)
+                except (ValueError, TypeError):
+                    current_amount = 0
 
             elif chip == "house":
                 name = "House deposit"
                 target = request.form.get("house_custom") or request.form.get("house_amount")
+                try:
+                    current_amount = round(float(request.form.get("house_current_savings") or 0), 2)
+                except (ValueError, TypeError):
+                    current_amount = 0
                 months = request.form.get("house_timeline", type=int)
                 if months and months > 0:
                     deadline = today + relativedelta(months=months)
@@ -878,7 +886,7 @@ def goal_chips():
                             name=name,
                             type="savings_target",
                             target_amount=target_amount,
-                            current_amount=0,
+                            current_amount=current_amount,
                             deadline=deadline,
                             priority_rank=len(selected)
                         )

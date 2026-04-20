@@ -83,6 +83,10 @@
                         <label class="amt-opt"><input type="radio" name="emergency_amount" value="5000" style="display:none;" onchange="selOpt(this)"><span>£5,000</span></label>
                     </div>
                     <input type="number" name="emergency_custom" class="form-input form-input-sm" placeholder="Or enter a custom amount" step="500" min="500">
+                    <div style="margin-top: 12px;">
+                        <div class="timeline-label">Already have emergency savings?</div>
+                        <input type="number" name="emergency_current_savings" class="form-input form-input-sm" placeholder="Current emergency savings (£)" step="100" min="0">
+                    </div>
                 </div>
             </div>
 
@@ -96,6 +100,11 @@
                         <label class="amt-opt"><input type="radio" name="house_amount" value="25000" style="display:none;" onchange="selOpt(this)"><span>£25,000</span></label>
                     </div>
                     <input type="number" name="house_custom" class="form-input form-input-sm" style="margin-top: 10px;" placeholder="Or enter a custom amount" step="1000" min="1000">
+                    <div style="margin-top: 12px;">
+                        <div class="timeline-label">Already saving toward this?</div>
+                        <input type="number" name="house_current_savings" class="form-input form-input-sm" placeholder="Current savings toward deposit (£)" step="100" min="0">
+                        <p style="font-size: 0.68rem; color: var(--text-tertiary); margin-top: 4px; line-height: 1.4;">Include any LISA balance, Help to Buy ISA, or savings already set aside.</p>
+                    </div>
                     <div class="timeline-label">When are you hoping to buy?</div>
                     <div style="display: flex; flex-wrap: wrap; gap: 8px;">
                         <label class="amt-opt"><input type="radio" name="house_timeline" value="6" style="display:none;" onchange="selOpt(this); checkMustHit('house', 6)"><span>6 months</span></label>

@@ -10,15 +10,10 @@ Principle: Protect deadline goals, absorb from flexible pots first.
 import math
 
 
-# Withdrawal priority order (lower = pull from first)
-WITHDRAWAL_PRIORITY = {
-    "buffer": 1,        # Built for this — no timeline impact
-    "lifestyle": 2,     # Reduces fun money, replenishes next month
-    "savings": 3,       # General savings — ranked by timeline flexibility
-    "emergency": 4,     # Only if user opted in and has surplus
-    "debt": 99,         # Never touch — interest compounds
-    "must_hit": 99,     # Never touch — user marked as non-negotiable
-}
+# Withdrawal priority: only from goal pots, ranked by least damage
+# Lifestyle and buffer are NEVER touched — user already budgeted their spending
+# Debt is NEVER touched — interest compounds
+# Must-hit goals are NEVER touched — user marked as non-negotiable
 
 
 def calculate_withdrawal_strategy(pots, amount_needed, user_goals=None):
@@ -46,7 +41,8 @@ def calculate_withdrawal_strategy(pots, amount_needed, user_goals=None):
             "plan_impact_summary": "No withdrawal needed."
         }
 
-    # Build withdrawal candidates
+    # Build withdrawal candidates — ONLY from goal pots
+    # Never touch: lifestyle, buffer, debt, must-hit goals
     candidates = []
     for pot in pots:
         name = pot.get("name", "")
@@ -62,43 +58,40 @@ def calculate_withdrawal_strategy(pots, amount_needed, user_goals=None):
         if pot.get("completed"):
             continue
 
-        # Determine available balance for withdrawal
-        if pot_type == "buffer":
-            available = monthly  # This month's buffer allocation
-            priority = WITHDRAWAL_PRIORITY["buffer"]
-            impact_per_pound = 0  # No lasting impact
-        elif pot_type == "lifestyle":
-            available = monthly  # This month's lifestyle allocation
-            priority = WITHDRAWAL_PRIORITY["lifestyle"]
-            impact_per_pound = 0.1  # Minor — replenishes next month
-        elif "(must-hit)" in name.lower() or pot.get("_stage") == "must_hit":
-            continue  # Never touch must-hit goals
-        elif pot_type == "debt" or "pay off" in name.lower() or "credit" in name.lower():
-            continue  # Never touch debt payments
-        else:
-            # Regular savings goal — available is current balance
-            available = current
-            priority = WITHDRAWAL_PRIORITY.get(pot_type, 3)
+        # Never touch lifestyle or buffer — user already budgeted their spending
+        if pot_type in ("lifestyle", "buffer"):
+            continue
 
-            # Calculate impact: how much does pulling money extend the timeline?
-            if months_until_deadline and months_until_deadline > 0:
-                # Deadline goals: tighter deadline = higher cost to withdraw
-                urgency = 12 / max(months_until_deadline, 1)
-                impact_per_pound = urgency
-            elif months_to_target and months_to_target > 0:
-                # No deadline: longer timeline = safer to withdraw from
-                impact_per_pound = 1 / max(months_to_target, 1)
-            else:
-                impact_per_pound = 0.5
+        # Never touch must-hit goals
+        if "(must-hit)" in name.lower() or pot.get("_stage") == "must_hit":
+            continue
 
+        # Never touch debt payments — interest compounds
+        if pot_type == "debt" or "pay off" in name.lower() or "credit" in name.lower():
+            continue
+
+        # Only withdraw from pots that have a current balance
+        available = current
         if available <= 0:
             continue
+
+        # Calculate impact: how much damage does pulling from this pot cause?
+        if months_until_deadline and months_until_deadline > 0:
+            # Deadline goals: tighter deadline = more damage
+            # A goal due in 3 months is 4× more costly to withdraw from than one due in 12
+            impact_per_pound = 12 / max(months_until_deadline, 1)
+        elif months_to_target and months_to_target > 0:
+            # No deadline: longer timeline = safer to withdraw from
+            # A goal taking 24 months barely notices, one taking 3 months does
+            impact_per_pound = 1 / max(months_to_target, 1)
+        else:
+            impact_per_pound = 0.5
 
         candidates.append({
             "name": name,
             "type": pot_type,
             "available": round(available, 2),
-            "priority": priority,
+            "priority": 1,  # All goal pots have equal base priority
             "impact_per_pound": impact_per_pound,
             "monthly_amount": monthly,
             "current": current,
@@ -107,8 +100,8 @@ def calculate_withdrawal_strategy(pots, amount_needed, user_goals=None):
             "months_until_deadline": months_until_deadline
         })
 
-    # Sort by priority first, then by impact (lowest damage first)
-    candidates.sort(key=lambda c: (c["priority"], c["impact_per_pound"]))
+    # Sort by impact — least damaging first (furthest from deadline, longest timeline)
+    candidates.sort(key=lambda c: c["impact_per_pound"])
 
     # Allocate withdrawal across candidates
     remaining = amount_needed
@@ -144,25 +137,19 @@ def calculate_withdrawal_strategy(pots, amount_needed, user_goals=None):
             f"Your plan can cover £{total_covered:,.0f} of the £{amount_needed:,.0f} needed. "
             f"There's a £{shortfall:,.0f} shortfall — you may need to adjust a goal target or timeline."
         )
-    elif len(withdrawals) == 1 and withdrawals[0]["pot_type"] == "buffer":
-        summary = (
-            f"Good news — your buffer covers this entirely. "
-            f"No impact on any of your goals. The buffer replenishes next month."
-        )
     else:
-        affected_goals = [w["pot_name"] for w in withdrawals
-                          if w["pot_type"] not in ("buffer", "lifestyle")]
-        if affected_goals:
-            names = " and ".join(affected_goals)
+        if len(withdrawals) == 1:
+            name = withdrawals[0]["pot_name"]
             summary = (
-                f"This withdrawal is spread across {len(withdrawals)} pots to minimise impact. "
-                f"Your {names} timeline{'s' if len(affected_goals) > 1 else ''} will extend slightly. "
-                f"The plan recalculates automatically at your next check-in."
+                f"Pulling £{amount_needed:,.0f} from your {name} is the least damaging option. "
+                f"Your other goals are untouched."
             )
         else:
+            names = [w["pot_name"] for w in withdrawals]
             summary = (
-                f"Covered from your buffer and lifestyle pots. "
-                f"No impact on your goal timelines."
+                f"This withdrawal is spread across {len(withdrawals)} goals to minimise impact: "
+                f"{', '.join(names[:-1])} and {names[-1]}. "
+                f"The plan recalculates automatically at your next check-in."
             )
 
     return {
@@ -177,15 +164,6 @@ def _describe_impact(candidate, amount):
     """Generate a human-readable impact description for a withdrawal."""
     name = candidate["name"]
     pot_type = candidate["type"]
-
-    if pot_type == "buffer":
-        return "No impact — your buffer is designed for this. It replenishes next month."
-
-    if pot_type == "lifestyle":
-        remaining = candidate["monthly_amount"] - amount
-        if remaining <= 0:
-            return "Your lifestyle budget is fully used this month. It resets next month."
-        return f"You'll have £{remaining:,.0f} left for lifestyle spending this month."
 
     # Savings goal
     current_after = candidate["current"] - amount
@@ -218,8 +196,6 @@ def _severity(candidate, amount):
     """Return impact severity: low, medium, high."""
     pot_type = candidate["type"]
 
-    if pot_type in ("buffer", "lifestyle"):
-        return "low"
 
     # Check if this significantly impacts a deadline goal
     months_until = candidate.get("months_until_deadline")
