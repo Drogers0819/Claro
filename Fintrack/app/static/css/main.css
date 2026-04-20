@@ -126,24 +126,33 @@ a:hover {
     flex-direction: column;
 }
 
-.sidebar-logo {
+/* Fix 1 — Sidebar brand: icon mark + CSS wordmark */
+.sidebar-brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.sidebar-brand-mark {
+    width: 24px;
+    height: 24px;
+    object-fit: contain;
+    flex-shrink: 0;
+}
+
+.sidebar-brand-name {
     font-family: var(--font-serif);
-    font-size: 1.8rem;
     font-style: italic;
-    color: var(--roman-gold);
-    margin-bottom: 8px;
+    font-size: 1.35rem;
+    font-weight: 300;
+    color: var(--text-primary);
+    letter-spacing: -0.01em;
+    line-height: 1;
 }
 
-.sidebar-subtitle {
-    font-size: 0.75rem;
-    text-transform: uppercase;
-    letter-spacing: 0.3em;
-    color: var(--text-tertiary);
-    font-weight: 500;
-}
-
+/* Fix 2 — Reduce logo→nav dead space */
 .sidebar-nav {
-    margin-top: 48px;
+    margin-top: 32px;
     display: flex;
     flex-direction: column;
     gap: 4px;
@@ -168,9 +177,11 @@ a:hover {
     opacity: 1;
 }
 
+/* Fix 3+4 — Active state: gold color + weight signal */
 .nav-link.active {
     background: var(--roman-gold-dim);
     color: var(--roman-gold);
+    font-weight: 500;
 }
 
 .nav-icon {
@@ -200,6 +211,7 @@ a:hover {
     padding: 12px 0;
 }
 
+/* Fix 6 — Avatar initials legible */
 .user-avatar {
     width: 36px;
     height: 36px;
@@ -209,7 +221,7 @@ a:hover {
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 0.7rem;
+    font-size: 0.8rem;
     color: var(--text-secondary);
     font-weight: 500;
 }
@@ -219,12 +231,11 @@ a:hover {
     color: var(--text-primary);
 }
 
+/* Fix 5 — Tier whispers, name speaks */
 .user-tier {
     font-size: 0.65rem;
-    text-transform: uppercase;
-    letter-spacing: 0.12em;
     color: var(--text-tertiary);
-    font-weight: 600;
+    font-weight: 400;
 }
 
 /* Floating avatar — mobile only, always reachable from any screen */

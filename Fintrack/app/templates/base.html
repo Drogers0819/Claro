@@ -27,9 +27,11 @@
     {% if current_user.is_authenticated %}
     <div class="app-layout">
         <aside class="sidebar">
-            <div class="sidebar-logo-wrap" style="padding: 0 16px;">
-                <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Claro"
-                     style="width: 40px; height: 40px; object-fit: contain;">
+            <!-- Fix 1+7 — Brand: icon mark + wordmark, no extra indent -->
+            <div class="sidebar-brand">
+                <img src="{{ url_for('static', filename='images/logo.png') }}" alt="" aria-hidden="true"
+                     class="sidebar-brand-mark">
+                <span class="sidebar-brand-name">Claro</span>
             </div>
 
             <nav class="sidebar-nav">
