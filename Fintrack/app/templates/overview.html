@@ -151,7 +151,7 @@
         <div style="display: flex; justify-content: space-between; margin-top: 3px;">
             <span style="font-size: 0.65rem; color: var(--text-tertiary);">£{{ "{:,.2f}".format(pot.current) }} of £{{ "{:,.2f}".format(pot.target) }}</span>
             {% if pot.months_to_target is defined %}
-            <span style="font-size: 0.65rem; color: var(--text-tertiary);">{{ pot.months_to_target }} month{% if pot.months_to_target != 1 %}s{% endif %}</span>
+            <span style="font-size: 0.65rem; color: var(--text-tertiary);">{{ pot.months_to_target }} month{% if pot.months_to_target != 1 %}s{% endif %} to go</span>
             {% endif %}
         </div>
         {% else %}
