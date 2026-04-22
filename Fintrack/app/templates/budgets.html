@@ -12,7 +12,7 @@
 <div style="margin-bottom: 24px;">
     {% for alert in alerts %}
     <div style="padding: 12px 16px; border-radius: 10px; margin-bottom: 8px;
-        {% if alert.severity == 'high' %}background: rgba(252, 129, 129, 0.08); border: 0.5px solid rgba(252, 129, 129, 0.2);
+        {% if alert.severity == 'high' %}background: var(--danger-bg, rgba(252, 129, 129, 0.08)); border: 0.5px solid var(--danger-border, rgba(252, 129, 129, 0.2));
         {% else %}background: var(--roman-gold-dim); border: 0.5px solid var(--roman-gold-glow);{% endif %}">
         <div style="font-size: 0.8rem;
             {% if alert.severity == 'high' %}color: var(--danger);{% else %}color: var(--roman-gold);{% endif %}">
@@ -28,16 +28,16 @@
 <div class="grid-3" style="margin-bottom: 32px;">
     <div class="glass-card">
         <div class="metric-label">Total budgeted</div>
-        <div class="metric-value md">£{{ "%.2f" | format(summary.total_budgeted) }}</div>
+        <div class="metric-value md">£{{ "{:,.2f}".format(summary.total_budgeted) }}</div>
     </div>
     <div class="glass-card">
         <div class="metric-label">Total spent</div>
-        <div class="metric-value md">£{{ "%.2f" | format(summary.total_spent) }}</div>
+        <div class="metric-value md">£{{ "{:,.2f}".format(summary.total_spent) }}</div>
     </div>
     <div class="glass-card">
         <div class="metric-label">Remaining</div>
         <div class="metric-value md {% if summary.total_remaining >= 0 %}success{% else %}danger{% endif %}">
-            {% if summary.total_remaining < 0 %}−£{{ "%.2f" | format(summary.total_remaining | abs) }}{% else %}£{{ "%.2f" | format(summary.total_remaining) }}{% endif %}
+            {% if summary.total_remaining < 0 %}−£{{ "{:,.2f}".format(summary.total_remaining | abs) }}{% else %}£{{ "{:,.2f}".format(summary.total_remaining) }}{% endif %}
         </div>
     </div>
 </div>
@@ -48,7 +48,7 @@
         <span class="metric-label" style="margin-bottom: 0;">Overall budget usage</span>
         <span style="font-size: 0.8rem; color: var(--text-tertiary);">{{ summary.overall_percent }}% used</span>
     </div>
-    <div style="height: 8px; background: rgba(255,255,255,0.05); border-radius: 4px; overflow: hidden; position: relative;">
+    <div style="height: 8px; background: var(--progress-track); border-radius: 4px; overflow: hidden; position: relative;">
         <!-- Month progress marker -->
         <div style="position: absolute; left: {{ month_context.progress_percent }}%; top: -2px; width: 2px; height: 12px; background: var(--text-tertiary); border-radius: 1px; z-index: 2;"></div>
         <!-- Spending bar -->
@@ -84,12 +84,12 @@
 
         <!-- Amounts -->
         <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 8px;">
-            <span class="metric-value sm">£{{ "%.2f" | format(b.spent) }}</span>
-            <span style="font-size: 0.8rem; color: var(--text-tertiary);">of £{{ "%.2f" | format(b.monthly_limit) }}</span>
+            <span class="metric-value sm">£{{ "{:,.2f}".format(b.spent) }}</span>
+            <span style="font-size: 0.8rem; color: var(--text-tertiary);">of £{{ "{:,.2f}".format(b.monthly_limit) }}</span>
         </div>
 
         <!-- Progress bar -->
-        <div style="height: 6px; background: rgba(255,255,255,0.05); border-radius: 3px; overflow: hidden; position: relative; margin-bottom: 8px;">
+        <div style="height: 6px; background: var(--progress-track); border-radius: 3px; overflow: hidden; position: relative; margin-bottom: 8px;">
             <div style="position: absolute; left: {{ month_context.progress_percent }}%; top: -1px; width: 1px; height: 8px; background: var(--text-tertiary); z-index: 2;"></div>
             <div style="height: 100%; width: {{ [b.percent_used, 100] | min }}%; border-radius: 3px; transition: width 0.6s ease;
                 background: {{ b.category_colour }};
@@ -101,7 +101,7 @@
         <!-- Bottom stats -->
         <div style="display: flex; justify-content: space-between; font-size: 0.7rem; color: var(--text-tertiary);">
             <span>{{ b.percent_used }}% used</span>
-            <span>£{{ "%.2f" | format(b.daily_remaining) }}/day for {{ month_context.days_remaining }} days</span>
+            <span>£{{ "{:,.2f}".format(b.daily_remaining) }}/day for {{ month_context.days_remaining }} days</span>
         </div>
 
         <!-- Insight -->
@@ -110,13 +110,13 @@
         </div>
 
         {% if b.will_exceed and b.status != 'exceeded' %}
-        <div style="font-size: 0.7rem; color: var(--roman-gold); margin-top: 6px;">
-            Projected: £{{ "%.2f" | format(b.projected_total) }} (£{{ "%.2f" | format(b.projected_over) }} over)
+        <div style="font-size: 0.7rem; color: var(--warning, #F6AD55); margin-top: 6px;">
+            Projected: £{{ "{:,.2f}".format(b.projected_total) }} (£{{ "{:,.2f}".format(b.projected_over) }} over)
         </div>
         {% endif %}
 
         <!-- Actions -->
-        <div style="display: flex; gap: 8px; margin-top: 12px; padding-top: 12px; border-top: 0.5px solid rgba(255,255,255,0.05);">
+        <div style="display: flex; gap: 8px; margin-top: 12px; padding-top: 12px; border-top: 0.5px solid var(--glass-border-subtle);">
             <form action="{{ url_for('pages.delete_budget', budget_id=b.budget_id) }}" method="POST"
                   style="margin: 0;"
                   data-confirm-title="Remove budget?"
@@ -167,15 +167,15 @@
     </p>
     {% for s in suggestions %}
     <div style="display: flex; justify-content: space-between; align-items: center;
-        {% if not loop.last %}margin-bottom: 12px; padding-bottom: 12px; border-bottom: 0.5px solid rgba(255,255,255,0.05);{% endif %}">
+        {% if not loop.last %}margin-bottom: 12px; padding-bottom: 12px; border-bottom: 0.5px solid var(--glass-border-subtle);{% endif %}">
         <div>
             <div style="font-size: 0.9rem; color: var(--text-primary);">{{ s.category }}</div>
             <div style="font-size: 0.7rem; color: var(--text-tertiary);">
-                Avg £{{ "%.2f" | format(s.average_monthly) }}/month ({{ s.months_of_data }} month{{ "s" if s.months_of_data != 1 else "" }} of data)
+                Avg £{{ "{:,.2f}".format(s.average_monthly) }}/month ({{ s.months_of_data }} month{{ "s" if s.months_of_data != 1 else "" }} of data)
             </div>
         </div>
         <div style="text-align: right;">
-            <div class="metric-value xs gold">£{{ "%.0f" | format(s.suggested_limit) }}</div>
+            <div class="metric-value xs gold">£{{ "{:,.0f}".format(s.suggested_limit) }}</div>
             <div style="font-size: 0.6rem; color: var(--text-tertiary);">suggested</div>
         </div>
     </div>

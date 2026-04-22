@@ -2,151 +2,90 @@
 {% block title %}Start Your Trial – Claro{% endblock %}
 
 {% block content %}
-<!-- Plan ready header -->
-<div class="page-header" style="margin-bottom: 24px; padding-top: 8px;">
+
+<!-- Header -->
+<div style="margin-bottom: 32px;">
     <h1>Your plan is ready.</h1>
-    <p>Start your 14-day Pro+ trial to keep it running.</p>
+    {% if plan and plan.surplus %}
+    <p style="font-size: 0.85rem; color: var(--text-secondary); margin-top: 8px; line-height: 1.6;">
+        Claro's mapped out <strong style="color: var(--text-primary);">£{{ "{:,.0f}".format(plan.surplus) }}/mo</strong> toward your goals. Start your trial to keep it on track.
+    </p>
+    {% else %}
+    <p style="font-size: 0.85rem; color: var(--text-secondary); margin-top: 8px;">Start your trial to unlock your full financial plan.</p>
+    {% endif %}
 </div>
 
-    <!-- Plan summary card -->
-    {% if plan and plan.pots %}
-    <div class="glass-card" style="padding: 18px 22px; margin-bottom: 20px;">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
-            <span class="section-label" style="margin-top: 0;">Your plan allocates</span>
-            <span style="font-family: var(--font-serif); font-size: 1.2rem; color: var(--text-primary);">£{{ "{:,.0f}".format(plan.surplus) }}/mo</span>
+<!-- Plan summary — bare, not a card -->
+{% if plan and plan.pots %}
+<div style="margin-bottom: 28px; padding-bottom: 20px; border-bottom: 0.5px solid var(--glass-border);">
+    {% for pot in plan.pots %}
+    {% if pot.monthly_amount > 0 and pot.type not in ['lifestyle', 'buffer'] %}
+    <div style="display: flex; justify-content: space-between; align-items: center; padding: 6px 0;">
+        <span style="font-size: 0.82rem; color: var(--text-secondary);">{{ pot.name | replace(' (must-hit)', '') }}</span>
+        <div style="text-align: right;">
+            <span style="font-size: 0.82rem; color: var(--text-primary); font-weight: 500; font-variant-numeric: tabular-nums;">£{{ "{:,.0f}".format(pot.monthly_amount) }}/mo</span>
+            {% if pot.months_to_target %}
+            <span style="font-size: 0.68rem; color: var(--text-tertiary); margin-left: 8px;">~{{ pot.months_to_target }} months</span>
+            {% endif %}
         </div>
-        {% for pot in plan.pots %}
-        {% if pot.monthly_amount > 0 and pot.type not in ['lifestyle', 'buffer'] %}
-        <div style="display: flex; justify-content: space-between; align-items: center; padding: 7px 0; border-top: 0.5px solid var(--glass-border-subtle);">
-            <span style="font-size: 0.8rem; color: var(--text-secondary);">{{ pot.name | replace(' (must-hit)', '') }}</span>
-            <div style="text-align: right;">
-                <span style="font-size: 0.8rem; color: var(--text-primary); font-weight: 500;">£{{ "{:,.0f}".format(pot.monthly_amount) }}/mo</span>
-                {% if pot.months_to_target %}
-                <span style="font-size: 0.68rem; color: var(--text-tertiary); margin-left: 6px;">~{{ pot.months_to_target }} months</span>
-                {% endif %}
-            </div>
-        </div>
-        {% endif %}
-        {% endfor %}
     </div>
     {% endif %}
+    {% endfor %}
+</div>
+{% endif %}
 
-    <!-- Value framing -->
-    <div style="margin-bottom: 24px;">
-        <p style="font-size: 0.78rem; color: var(--text-tertiary); line-height: 1.6;">
-            Your plan manages <strong style="color: var(--text-secondary);">£{{ "{:,.0f}".format((plan.surplus or 0) * 12) }}/year</strong> for you.
-            Claro Pro keeps it running for <strong style="color: var(--text-primary);">£9.99/month</strong>, just {{ "{:.1f}".format((9.99 / ((plan.surplus or 1) * 12)) * 100) }}% of what it manages.
-        </p>
+<!-- Trial offer -->
+<div style="margin-bottom: 28px;">
+    <div style="margin-bottom: 16px;">
+        <div style="font-size: 0.95rem; color: var(--text-primary); font-weight: 500; margin-bottom: 3px;">14-day trial, then £9.99/month</div>
+        <div style="font-size: 0.75rem; color: var(--text-tertiary);">No charge until {{ trial_end_date }} · Cancel anytime</div>
     </div>
 
-    <!-- CTA card -->
-    <div style="padding: 24px; border-radius: 14px; background: var(--gold-whisper-bg); border: 1px solid var(--roman-gold-dim); margin-bottom: 16px;">
-        <div style="margin-bottom: 18px;">
-            <div style="font-size: 0.95rem; color: var(--text-primary); font-weight: 500; margin-bottom: 4px;">14-day Pro+ trial</div>
-            <div style="font-size: 0.78rem; color: var(--text-tertiary);">You won't be charged until {{ trial_end_date }}</div>
+    <div style="display: flex; flex-direction: column; gap: 7px; margin-bottom: 20px;">
+        {% set features = [
+            "Full financial plan with monthly tracking",
+            "AI companion: ask anything about your money",
+            "What-if scenarios and monthly check-ins",
+        ] %}
+        {% for label in features %}
+        <div style="display: flex; align-items: center; gap: 10px;">
+            <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--success)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0;"><polyline points="20 6 9 17 4 12"/></svg>
+            <span style="font-size: 0.8rem; color: var(--text-secondary);">{{ label }}</span>
         </div>
-
-        <!-- What's included -->
-        <div style="margin-bottom: 20px;">
-            {% set features = [
-                ("Full financial plan", true),
-                ("AI companion (30 msgs/day)", true),
-                ("What-if scenarios", true),
-                ("Standing order setup guide", true),
-                ("Monthly check-ins", true),
-                ("Pay day reminders", true),
-                ("Life check-ins", true)
-            ] %}
-            {% for label, included in features %}
-            <div style="display: flex; align-items: center; gap: 10px; padding: 5px 0;">
-                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--success)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0;"><polyline points="20 6 9 17 4 12"/></svg>
-                <span style="font-size: 0.78rem; color: var(--text-secondary);">{{ label }}</span>
-            </div>
-            {% endfor %}
-        </div>
-
-        <!-- Start trial button -->
-        <a href="{{ url_for('pages.checkout') }}" class="btn-primary btn-full" style="text-decoration: none;">
-            Start free trial
-        </a>
-
-        <p style="margin-top: 10px; font-size: 0.7rem; color: var(--text-tertiary);">
-            Cancel anytime · No charge for 14 days
-        </p>
+        {% endfor %}
     </div>
 
-    <!-- Tier comparison (collapsed) -->
-    <details style="margin-bottom: 20px;">
-        <summary style="font-size: 0.78rem; color: var(--text-tertiary); cursor: pointer; padding: 10px 0; list-style: none; display: flex; align-items: center; gap: 6px;">
-            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
-            Compare plans
-        </summary>
-        <div class="glass-card" style="padding: 16px; margin-top: 8px;">
-            <table style="width: 100%; font-size: 0.72rem; color: var(--text-secondary); border-collapse: collapse;">
-                <thead>
-                    <tr>
-                        <th style="text-align: left; padding: 6px 0; color: var(--text-tertiary); font-weight: 400;"></th>
-                        <th style="text-align: center; padding: 6px 8px; color: var(--text-secondary); font-weight: 500;">Pro</th>
-                        <th style="text-align: center; padding: 6px 8px; color: var(--roman-gold); font-weight: 500;">Pro+</th>
-                        <th style="text-align: center; padding: 6px 8px; color: var(--text-secondary); font-weight: 500;">Joint</th>
-                    </tr>
-                    <tr>
-                        <td></td>
-                        <td style="text-align: center; font-size: 0.68rem; color: var(--text-tertiary); padding-bottom: 8px;">£9.99/mo</td>
-                        <td style="text-align: center; font-size: 0.68rem; color: var(--text-tertiary); padding-bottom: 8px;">£16.99/mo</td>
-                        <td style="text-align: center; font-size: 0.68rem; color: var(--text-tertiary); padding-bottom: 8px;">£24.99/mo</td>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% set rows = [
-                        ("Financial plan", true, true, true),
-                        ("AI companion", "10/day", "30/day", "50/day"),
-                        ("Scenarios", true, true, true),
-                        ("AI coaching", false, true, true),
-                        ("Quarterly review", false, true, true),
-                        ("Joint plan", false, false, true)
-                    ] %}
-                    {% for label, pro, plus, joint in rows %}
-                    <tr style="border-top: 0.5px solid var(--glass-border-subtle);">
-                        <td style="padding: 7px 0;">{{ label }}</td>
-                        <td style="text-align: center; padding: 7px 8px;">
-                            {% if pro == true %}✓{% elif pro == false %}×{% else %}{{ pro }}{% endif %}
-                        </td>
-                        <td style="text-align: center; padding: 7px 8px;">
-                            {% if plus == true %}✓{% elif plus == false %}×{% else %}{{ plus }}{% endif %}
-                        </td>
-                        <td style="text-align: center; padding: 7px 8px;">
-                            {% if joint == true %}✓{% elif joint == false %}×{% else %}{{ joint }}{% endif %}
-                        </td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
-    </details>
+    <a href="{{ url_for('pages.checkout') }}" class="btn-primary btn-full" style="text-decoration: none;">
+        Start 14-day trial
+    </a>
+</div>
 
-    <!-- Maybe later -->
-    <div style="padding: 8px 0;">
-        <a href="{{ url_for('pages.overview') }}" style="font-size: 0.78rem; color: var(--text-tertiary); text-decoration: none; transition: color 0.2s ease;" onmouseover="this.style.color='var(--text-secondary)'" onmouseout="this.style.color='var(--text-tertiary)'">
-            Maybe later <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle;"><path d="M9 18l6-6-6-6"/></svg>
-        </a>
-        <p style="font-size: 0.68rem; color: var(--text-tertiary); opacity: 0.6; margin-top: 4px;">Your plan and data are saved. You can start your trial anytime.</p>
+<!-- Trust signals -->
+<div style="display: flex; gap: 20px; padding-bottom: 24px; border-bottom: 0.5px solid var(--glass-border);">
+    <div style="display: flex; align-items: center; gap: 5px;">
+        <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="color: var(--text-tertiary); flex-shrink:0;"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        <span style="font-size: 0.63rem; color: var(--text-tertiary);">Encrypted</span>
     </div>
+    <div style="display: flex; align-items: center; gap: 5px;">
+        <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="color: var(--text-tertiary); flex-shrink:0;"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        <span style="font-size: 0.63rem; color: var(--text-tertiary);">GDPR compliant</span>
+    </div>
+    <div style="display: flex; align-items: center; gap: 5px;">
+        <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="color: var(--text-tertiary); flex-shrink:0;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        <span style="font-size: 0.63rem; color: var(--text-tertiary);">FCA guidance only</span>
+    </div>
+</div>
 
-    <!-- Trust signals -->
-    <div style="display: flex; justify-content: flex-start; gap: 20px; margin-top: 28px; padding-top: 20px; border-top: 0.5px solid var(--glass-border);">
-        <div style="display: flex; align-items: center; gap: 5px;">
-            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="color: var(--text-tertiary); flex-shrink:0;"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-            <span style="font-size: 0.65rem; color: var(--text-tertiary);">Encrypted</span>
-        </div>
-        <div style="display: flex; align-items: center; gap: 5px;">
-            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="color: var(--text-tertiary); flex-shrink:0;"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-            <span style="font-size: 0.65rem; color: var(--text-tertiary);">GDPR compliant</span>
-        </div>
-        <div style="display: flex; align-items: center; gap: 5px;">
-            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="color: var(--text-tertiary); flex-shrink:0;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-            <span style="font-size: 0.65rem; color: var(--text-tertiary);">FCA guidance only</span>
-        </div>
-    </div>
+<!-- Exit — demoted sign out, transparent about consequence -->
+<div style="padding-top: 20px;">
+    <p style="font-size: 0.72rem; color: var(--text-tertiary); line-height: 1.6; margin-bottom: 8px;">
+        Your plan is saved. Sign back in anytime to start your trial.
+    </p>
+    <form action="{{ url_for('pages.logout') }}" method="POST" style="margin: 0;">
+        <button type="submit" style="background: none; border: none; padding: 0; font-size: 0.72rem; color: var(--text-tertiary); text-decoration: underline; text-underline-offset: 2px; text-decoration-color: rgba(255,255,255,0.15); cursor: pointer;">
+            Sign out for now
+        </button>
+    </form>
+</div>
 
 {% endblock %}

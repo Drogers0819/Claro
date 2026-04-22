@@ -135,7 +135,7 @@ def calculate_withdrawal_strategy(pots, amount_needed, user_goals=None):
     if shortfall > 0:
         summary = (
             f"Your plan can cover £{total_covered:,.0f} of the £{amount_needed:,.0f} needed. "
-            f"There's a £{shortfall:,.0f} shortfall — you may need to adjust a goal target or timeline."
+            f"There's a £{shortfall:,.0f} shortfall. You may need to adjust a goal target or timeline."
         )
     else:
         if len(withdrawals) == 1:
@@ -183,7 +183,7 @@ def _describe_impact(candidate, amount):
         added = new_months - (old_months or new_months)
 
         if added <= 0:
-            return f"Minimal impact — your {name} timeline stays roughly the same."
+            return f"Minimal impact. Your {name} timeline stays roughly the same."
         elif added == 1:
             return f"Your {name} extends by about 1 month."
         else:

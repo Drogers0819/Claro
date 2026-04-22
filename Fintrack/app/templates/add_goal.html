@@ -1,11 +1,15 @@
 {% extends "base.html" %}
 {% block title %}Add Goal – Claro{% endblock %}
 
+{% block header_content %}
+<nav class="app-breadcrumb" aria-label="Breadcrumb">
+    <a href="{{ url_for('pages.my_goals') }}">Goals</a>
+    <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
+    <span>New goal</span>
+</nav>
+{% endblock %}
+
 {% block content %}
-<a href="{{ url_for('pages.my_goals') }}" style="display: inline-flex; align-items: center; gap: 6px; font-size: 0.75rem; color: var(--text-tertiary); text-decoration: none; margin-bottom: 16px;">
-    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
-    Goals
-</a>
 <div class="page-header">
     <h1>Add a goal</h1>
     <p>What are you working toward?</p>
