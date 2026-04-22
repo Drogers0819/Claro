@@ -82,9 +82,14 @@
         </div>
         {% endfor %}
 
-        <button type="submit" class="btn-primary btn-full" style="margin-top: 20px;">
-            Confirm check-in
-        </button>
+        <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 20px;">
+            <button type="submit" class="btn-primary btn-full">Confirm check-in</button>
+            {% if request.args.get('edit') == '1' %}
+            <a href="{{ url_for('pages.checkin') }}" style="text-align: center; font-size: 0.82rem; color: var(--text-tertiary); text-decoration: none;">Cancel</a>
+            {% else %}
+            <a href="{{ url_for('pages.overview') }}" style="text-align: center; font-size: 0.82rem; color: var(--text-tertiary); text-decoration: none;">Cancel</a>
+            {% endif %}
+        </div>
     </form>
 </div>
 

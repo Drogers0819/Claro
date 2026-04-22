@@ -107,8 +107,9 @@
 
 {% elif projection.reachable is defined and not projection.reachable %}
 <div style="margin-bottom: 24px; padding-top: 8px;">
-    <p style="font-size: 0.95rem; color: var(--text-primary); font-weight: 500; margin-bottom: 8px;">No contribution set</p>
-    <p style="font-size: 0.82rem; color: var(--text-secondary); line-height: 1.6;">{{ projection.message }}</p>
+    <p style="font-size: 0.95rem; color: var(--text-primary); font-weight: 500; margin-bottom: 8px;">Set a monthly amount to get started</p>
+    <p style="font-size: 0.82rem; color: var(--text-secondary); line-height: 1.6; margin-bottom: 16px;">Once you set a monthly saving amount, Claro will project exactly when you'll reach this goal and show you a timeline.</p>
+    <a href="{{ url_for('pages.edit_goal', goal_id=goal.id) }}{% if request.args.get('from') %}?from={{ request.args.get('from') }}{% endif %}" style="font-size: 0.82rem; color: var(--text-secondary); text-decoration: underline; text-underline-offset: 3px;">Set monthly amount in Edit goal</a>
 </div>
 {% endif %}
 

@@ -33,6 +33,80 @@ def companion_page():
     )
 
 
+@companion_bp.route("/api/companion/edit", methods=["POST"])
+@login_required
+def edit_message():
+    """Edit an existing user message and regenerate the AI response."""
+    data = request.get_json()
+    message_id = data.get("message_id")
+    new_content = (data.get("new_content") or "").strip()
+
+    if not message_id or not new_content:
+        return jsonify({"error": "message_id and new_content required"}), 400
+    if len(new_content) > 1000:
+        return jsonify({"error": "Message too long (max 1000 characters)"}), 400
+
+    # Verify ownership
+    user_msg = ChatMessage.query.filter_by(
+        id=message_id, user_id=current_user.id, role="user"
+    ).first()
+    if not user_msg:
+        return jsonify({"error": "Message not found"}), 404
+
+    # Rate limit check
+    allowed, reason = check_rate_limit(current_user)
+    if not allowed:
+        return jsonify({"error": reason, "allowed": False}), 429
+
+    # Delete the message and everything after it (re-generates from that point)
+    ChatMessage.query.filter_by(user_id=current_user.id).filter(
+        ChatMessage.id >= message_id
+    ).delete()
+    db.session.flush()
+
+    # Load remaining history
+    recent = ChatMessage.query.filter_by(
+        user_id=current_user.id
+    ).order_by(ChatMessage.created_at.desc()).limit(10).all()
+    recent.reverse()
+    conversation_history = [{"role": m.role, "content": m.content} for m in recent]
+
+    # Build plan context
+    plan = None
+    if current_user.factfind_completed and current_user.monthly_income:
+        user_profile = current_user.profile_dict()
+        goals_data = [g.to_dict() for g in Goal.query.filter_by(
+            user_id=current_user.id, status="active"
+        ).order_by(Goal.priority_rank.asc()).all()]
+        plan = generate_financial_plan(user_profile, goals_data)
+
+    result = chat(
+        user=current_user,
+        message=new_content,
+        plan=plan,
+        conversation_history=conversation_history
+    )
+
+    new_user_msg = ChatMessage(user_id=current_user.id, role="user", content=new_content)
+    db.session.add(new_user_msg)
+    new_assistant_msg = ChatMessage(
+        user_id=current_user.id, role="assistant",
+        content=result["response"],
+        model_used=result.get("model_used"),
+        tokens_in=result.get("tokens_in", 0),
+        tokens_out=result.get("tokens_out", 0)
+    )
+    db.session.add(new_assistant_msg)
+    increment_message_count(current_user)
+    db.session.commit()
+
+    return jsonify({
+        "response": result["response"],
+        "user_message_id": new_user_msg.id,
+        "allowed": True
+    })
+
+
 @companion_bp.route("/api/companion/clear", methods=["POST"])
 @login_required
 def clear_chat():
@@ -113,6 +187,7 @@ def companion_chat():
     return jsonify({
         "response": result["response"],
         "model": result.get("model_used"),
+        "user_message_id": user_msg.id,
         "messages_used": current_user.companion_messages_today,
         "daily_limit": current_user.daily_message_limit,
         "allowed": True

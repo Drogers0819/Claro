@@ -91,9 +91,9 @@
         {% endif %}
 
         {% for msg in chat_history %}
-        <div class="chat-msg chat-{{ msg.role }}">
+        <div class="chat-msg chat-{{ msg.role }}" {% if msg.role == 'user' %}data-msg-id="{{ msg.id }}"{% endif %}>
             {% if msg.role == 'user' %}
-            <button class="msg-edit-btn" data-msg="{{ msg.content | e }}" onclick="fillInput(this.dataset.msg)" title="Edit">
+            <button class="msg-edit-btn" onclick="startEdit('{{ msg.content | e }}', {{ msg.id }}, this.closest('.chat-msg'))" title="Edit">
                 <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
             </button>
             {% endif %}
@@ -114,6 +114,12 @@
             You've used all {{ daily_limit }} messages for today. They reset at midnight.
         </div>
         {% else %}
+        <div id="edit-indicator" style="display:none; padding: 7px 12px; border-radius: 8px; margin-bottom: 8px; background: rgba(255,255,255,0.04); border: 0.5px solid var(--glass-border);">
+            <div style="display: flex; align-items: center; justify-content: space-between;">
+                <span style="font-size:0.72rem; color:var(--text-tertiary);">Editing message — previous replies will be removed</span>
+                <button onclick="cancelEdit()" style="font-size:0.72rem; color:var(--text-tertiary); background:none; border:none; cursor:pointer; padding:0 0 0 12px;">Cancel</button>
+            </div>
+        </div>
         <div style="display: flex; gap: 8px; align-items: flex-end;">
             <textarea id="chat-input" class="form-input" rows="1" placeholder="Ask me anything about your plan..."
                 style="flex: 1; resize: none; min-height: 40px; max-height: 120px; padding: 10px 14px; font-size: 0.85rem; line-height: 1.5;"
@@ -129,7 +135,7 @@
 {% endif %}
 
 <!-- Clear conversation modal -->
-<div id="clear-modal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.6); z-index:200; align-items:center; justify-content:center; padding:24px;">
+<div id="clear-modal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.6); z-index:200; align-items:center; justify-content:center; padding:24px;" onclick="if(event.target===this)closeClearModal();">
     <div style="background:var(--bg-secondary,var(--bg-primary)); border:0.5px solid var(--glass-border); border-radius:16px; padding:28px 24px; max-width:340px; width:100%;">
         <div style="font-size:0.92rem; color:var(--text-primary); font-weight:500; margin-bottom:8px;">Clear conversation?</div>
         <div style="font-size:0.8rem; color:var(--text-tertiary); line-height:1.5; margin-bottom:24px;">This deletes all messages and can't be undone.</div>
@@ -160,21 +166,20 @@
 .chat-user:hover .msg-edit-btn{opacity:0.7;}
 .msg-edit-btn:hover{opacity:1 !important;}
 @media(hover:none){.msg-edit-btn{opacity:0.5;}}
-#clear-modal.open{display:flex;}
 </style>
 
 <script>
 var sending = false;
 var messagesUsed = {{ messages_used }};
 var dailyLimit = {{ daily_limit }};
+var editingMsgId = null;
+var editingMsgRow = null;
 
-// Scroll chat to bottom on load
 document.addEventListener('DOMContentLoaded', function() {
     var container = document.getElementById('chat-messages');
     if (container) container.scrollTop = container.scrollHeight;
-    // Close modal on Escape
     document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape') closeClearModal();
+        if (e.key === 'Escape') { closeClearModal(); cancelEdit(); }
     });
 });
 
@@ -185,10 +190,7 @@ function autoResize(el) {
 }
 
 function handleKey(e) {
-    if (e.key === 'Enter' && !e.shiftKey) {
-        e.preventDefault();
-        sendMessage();
-    }
+    if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
 }
 
 function sendSuggestion(btn) {
@@ -196,32 +198,57 @@ function sendSuggestion(btn) {
     sendMessage();
 }
 
-function addMessage(role, content) {
+// ── Edit flow ──────────────────────────────────────────────────────────────
+function startEdit(text, msgId, rowEl) {
+    editingMsgId = msgId;
+    editingMsgRow = rowEl;
+    var input = document.getElementById('chat-input');
+    input.value = text;
+    input.focus();
+    autoResize(input);
+    var indicator = document.getElementById('edit-indicator');
+    if (indicator) indicator.style.display = 'block';
+    document.getElementById('send-btn').textContent = 'Update';
+}
+
+function cancelEdit() {
+    if (!editingMsgId) return;
+    editingMsgId = null;
+    editingMsgRow = null;
+    var indicator = document.getElementById('edit-indicator');
+    if (indicator) indicator.style.display = 'none';
+    var input = document.getElementById('chat-input');
+    input.value = '';
+    input.style.height = 'auto';
+    document.getElementById('send-btn').disabled = true;
+    document.getElementById('send-btn').textContent = 'Send';
+}
+// ──────────────────────────────────────────────────────────────────────────
+
+function addMessage(role, content, msgId) {
     var container = document.getElementById('chat-messages');
     var div = document.createElement('div');
     div.className = 'chat-msg chat-' + role;
+    if (msgId) div.setAttribute('data-msg-id', msgId);
 
     if (role === 'user') {
         var editBtn = document.createElement('button');
         editBtn.className = 'msg-edit-btn';
         editBtn.title = 'Edit';
         var svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-        svg.setAttribute('width', '12');
-        svg.setAttribute('height', '12');
-        svg.setAttribute('viewBox', '0 0 24 24');
-        svg.setAttribute('fill', 'none');
-        svg.setAttribute('stroke', 'currentColor');
-        svg.setAttribute('stroke-width', '1.5');
-        svg.setAttribute('stroke-linecap', 'round');
-        svg.setAttribute('stroke-linejoin', 'round');
+        svg.setAttribute('width', '12'); svg.setAttribute('height', '12');
+        svg.setAttribute('viewBox', '0 0 24 24'); svg.setAttribute('fill', 'none');
+        svg.setAttribute('stroke', 'currentColor'); svg.setAttribute('stroke-width', '1.5');
+        svg.setAttribute('stroke-linecap', 'round'); svg.setAttribute('stroke-linejoin', 'round');
         var p1 = document.createElementNS('http://www.w3.org/2000/svg', 'path');
         p1.setAttribute('d', 'M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7');
         var p2 = document.createElementNS('http://www.w3.org/2000/svg', 'path');
         p2.setAttribute('d', 'M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z');
-        svg.appendChild(p1);
-        svg.appendChild(p2);
+        svg.appendChild(p1); svg.appendChild(p2);
         editBtn.appendChild(svg);
-        (function(c) { editBtn.addEventListener('click', function() { fillInput(c); }); })(content);
+        (function(c, id, el) {
+            editBtn.addEventListener('click', function() { startEdit(c, id, el); });
+        })(content, msgId, div);
         div.appendChild(editBtn);
         showClearBtn();
     }
@@ -230,16 +257,9 @@ function addMessage(role, content) {
     bubble.className = 'chat-bubble ' + role + '-bubble';
     bubble.textContent = content;
     div.appendChild(bubble);
-
     container.appendChild(div);
     container.scrollTop = container.scrollHeight;
-}
-
-function fillInput(text) {
-    var input = document.getElementById('chat-input');
-    input.value = text;
-    input.focus();
-    autoResize(input);
+    return div;
 }
 
 function showClearBtn() {
@@ -248,11 +268,11 @@ function showClearBtn() {
 }
 
 function openClearModal() {
-    document.getElementById('clear-modal').classList.add('open');
+    document.getElementById('clear-modal').style.display = 'flex';
 }
 
 function closeClearModal() {
-    document.getElementById('clear-modal').classList.remove('open');
+    document.getElementById('clear-modal').style.display = 'none';
 }
 
 function executeClearChat() {
@@ -270,9 +290,7 @@ function showTyping() {
     bubble.className = 'chat-bubble assistant-bubble';
     var dots = document.createElement('div');
     dots.className = 'typing-dots';
-    for (var i = 0; i < 3; i++) {
-        dots.appendChild(document.createElement('span'));
-    }
+    for (var i = 0; i < 3; i++) dots.appendChild(document.createElement('span'));
     bubble.appendChild(dots);
     div.appendChild(bubble);
     container.appendChild(div);
@@ -292,28 +310,49 @@ function updateCounter() {
 
 function sendMessage() {
     if (sending) return;
+    if (editingMsgId) { _doSend(true); } else { _doSend(false); }
+}
+
+function _doSend(isEdit) {
     var input = document.getElementById('chat-input');
     var message = input.value.trim();
     if (!message) return;
 
     sending = true;
+    var msgId = editingMsgId;
+    var msgRow = editingMsgRow;
+
     input.value = '';
     input.style.height = 'auto';
+    cancelEdit();
 
     // Remove suggestion chips
-    var chips = document.querySelectorAll('.suggestion-chip');
-    chips.forEach(function(c) { c.parentElement.remove(); });
+    document.querySelectorAll('.suggestion-chip').forEach(function(c) { c.parentElement.remove(); });
 
-    addMessage('user', message);
+    if (isEdit && msgRow) {
+        // Remove the edited row and all rows after it from DOM
+        var container = document.getElementById('chat-messages');
+        var rows = Array.from(container.children);
+        var idx = rows.indexOf(msgRow);
+        if (idx >= 0) {
+            rows.slice(idx).forEach(function(r) { r.remove(); });
+        }
+    }
+
+    var userDiv = addMessage('user', message, null);
     showTyping();
-
     document.getElementById('send-btn').disabled = true;
     document.getElementById('send-btn').textContent = '...';
 
-    fetch('/api/companion/chat', {
+    var endpoint = isEdit ? '/api/companion/edit' : '/api/companion/chat';
+    var body = isEdit
+        ? { message_id: msgId, new_content: message }
+        : { message: message };
+
+    fetch(endpoint, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: message })
+        body: JSON.stringify(body)
     })
     .then(function(res) { return res.json(); })
     .then(function(data) {
@@ -321,6 +360,17 @@ function sendMessage() {
         if (data.error && !data.allowed) {
             addMessage('assistant', data.error);
         } else if (data.response) {
+            // Backfill the message ID on the user row so edit works on new messages too
+            if (data.user_message_id && userDiv) {
+                userDiv.setAttribute('data-msg-id', data.user_message_id);
+                var btn = userDiv.querySelector('.msg-edit-btn');
+                if (btn) {
+                    btn.onclick = null;
+                    (function(c, id, el) {
+                        btn.addEventListener('click', function() { startEdit(c, id, el); });
+                    })(message, data.user_message_id, userDiv);
+                }
+            }
             addMessage('assistant', data.response);
             updateCounter();
         }
@@ -331,9 +381,9 @@ function sendMessage() {
     })
     .finally(function() {
         sending = false;
-        var input = document.getElementById('chat-input');
         var sendBtn = document.getElementById('send-btn');
-        sendBtn.disabled = !input.value.trim();
+        var inp = document.getElementById('chat-input');
+        sendBtn.disabled = !inp.value.trim();
         sendBtn.textContent = 'Send';
     });
 }
