@@ -5,6 +5,8 @@
 <nav class="app-breadcrumb" aria-label="Breadcrumb">
     {% if request.args.get('from') == 'plan' %}
     <a href="{{ url_for('pages.plan') }}">Plan</a>
+    {% elif request.args.get('from') == 'overview' %}
+    <a href="{{ url_for('pages.overview') }}">Overview</a>
     {% else %}
     <a href="{{ url_for('pages.my_goals') }}">Goals</a>
     {% endif %}
@@ -16,7 +18,7 @@
 {% block content %}
 <div class="page-header" style="margin-bottom: 16px; display: flex; align-items: flex-start; justify-content: space-between; gap: 16px;">
     <h1>{{ goal.name | replace(' (must-hit)', '') }}</h1>
-    <a href="{{ url_for('pages.edit_goal', goal_id=goal.id) }}" class="btn-secondary btn-sm" style="flex-shrink: 0; margin-top: 4px;">Edit goal</a>
+    <a href="{{ url_for('pages.edit_goal', goal_id=goal.id) }}{% if request.args.get('from') %}?from={{ request.args.get('from') }}{% endif %}" class="btn-secondary btn-sm" style="flex-shrink: 0; margin-top: 4px;">Edit goal</a>
 </div>
 
 {% if projection.reachable %}

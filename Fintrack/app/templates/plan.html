@@ -121,6 +121,87 @@
 </div>
 {% endif %}
 
+<!-- Can I afford this? -->
+<div id="afford" style="padding-top: 20px; margin-top: 20px; border-top: 0.5px solid var(--glass-border);">
+    <div style="font-size: 0.9rem; color: var(--text-primary); font-weight: 500; margin-bottom: 4px;">Can I afford this?</div>
+    <p style="font-size: 0.78rem; color: var(--text-tertiary); margin-bottom: 14px;">Check a one-off expense against your plan.</p>
+    <form method="POST" action="{{ url_for('pages.plan') }}">
+        <input type="hidden" name="form_type" value="afford_check">
+        <div class="grid-2">
+            <div class="form-group" style="margin-bottom: 0;">
+                <label class="form-label">What is it?</label>
+                <input type="text" name="expense_name" class="form-input" placeholder="e.g. Lake District trip">
+            </div>
+            <div class="form-group" style="margin-bottom: 0;">
+                <label class="form-label">How much? (£)</label>
+                <input type="number" name="expense_amount" class="form-input" step="0.01" min="0.01" placeholder="e.g. 450" required>
+            </div>
+        </div>
+        <button type="submit" class="btn-secondary btn-sm" style="margin-top: 12px;">Check</button>
+    </form>
+</div>
+
+{% if afford_result %}
+<div class="gold-card" style="margin-top: 16px; margin-bottom: 0;">
+    <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 10px;">
+        <span class="ai-pulse"></span>
+        <span style="font-size: 0.65rem; color: var(--roman-gold); text-transform: uppercase; letter-spacing: 0.06em;">Claro</span>
+    </div>
+    <p style="font-size: 0.9rem; color: var(--text-secondary); line-height: 1.7; font-style: italic;">{{ afford_result.message }}</p>
+</div>
+{% endif %}
+
+<!-- Habit cost -->
+<div id="habit" style="padding-top: 20px; margin-top: 20px; border-top: 0.5px solid var(--glass-border);">
+    <div style="font-size: 0.9rem; color: var(--text-primary); font-weight: 500; margin-bottom: 4px;">Habit cost</div>
+    <p style="font-size: 0.78rem; color: var(--text-tertiary); margin-bottom: 14px;">See what a daily or monthly habit really costs over time.</p>
+    <form method="POST" action="{{ url_for('pages.plan') }}">
+        <input type="hidden" name="form_type" value="habit_cost">
+        <div class="grid-2">
+            <div class="form-group" style="margin-bottom: 0;">
+                <label class="form-label">Monthly amount (£)</label>
+                <input type="number" name="habit_amount" class="form-input" step="0.01" min="0.01" max="100000"
+                       placeholder="e.g. 50" value="{{ '%g' | format(habit_amount) if habit_amount else '' }}" required
+                       data-error-msg="Enter a monthly spend amount">
+            </div>
+            <div class="form-group" style="margin-bottom: 0;">
+                <label class="form-label">What's the spend?</label>
+                <input type="text" name="habit_description" class="form-input"
+                       placeholder="e.g. Netflix, takeaways..." value="{{ habit_description if habit_description else '' }}">
+            </div>
+        </div>
+        <button type="submit" class="btn-secondary btn-sm" style="margin-top: 12px;">Show me</button>
+    </form>
+</div>
+
+{% if habit_result %}
+<div class="gold-card" style="margin-top: 16px; margin-bottom: 28px;">
+    <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 12px;">
+        <span class="ai-pulse"></span>
+        <span style="font-size: 0.65rem; color: var(--roman-gold); text-transform: uppercase; letter-spacing: 0.06em;">Claro</span>
+    </div>
+    <div style="font-size: 1rem; font-weight: 500; color: var(--text-primary); margin-bottom: 8px; line-height: 1.4;">
+        {{ habit_result.insight.headline }}
+    </div>
+    <p style="font-size: 0.8rem; color: var(--text-secondary); line-height: 1.7;">{{ habit_result.insight.detail }}</p>
+    <p style="font-size: 0.8rem; color: var(--text-secondary); font-style: italic; margin-top: 8px; padding-top: 8px; border-top: 0.5px solid var(--glass-border);">{{ habit_result.insight.reframe }}</p>
+    <div style="margin-top: 20px; padding-top: 16px; border-top: 0.5px solid var(--glass-border);">
+        <div style="font-size: 0.7rem; color: var(--text-tertiary); margin-bottom: 16px;">What it adds up to</div>
+        <div style="display: flex;">
+            {% for key in ["5_year", "10_year", "20_year"] %}
+            {% set h = habit_result.horizons[key] %}
+            {% set is_headline = (key == "10_year") %}
+            <div style="flex: 1; text-align: center; {% if not loop.last %}border-right: 0.5px solid var(--glass-border); padding-right: 12px; margin-right: 12px;{% endif %}">
+                <div style="font-size: 0.65rem; color: var(--text-tertiary); letter-spacing: 0.06em; margin-bottom: 6px; text-transform: uppercase;">{{ h.years }} yr</div>
+                <div style="font-size: {% if is_headline %}1.1rem{% else %}0.9rem{% endif %}; font-weight: {% if is_headline %}600{% else %}400{% endif %}; color: {% if is_headline %}var(--text-primary){% else %}var(--text-secondary){% endif %}; margin-bottom: 4px;">£{{ "{:,.2f}".format(h.opportunity_cost) }}</div>
+                <div style="font-size: 0.65rem; color: var(--text-tertiary);">incl. £{{ "{:,.2f}".format(h.lost_growth) }} growth</div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endif %}
+
 {% else %}
 <!-- No plan yet -->
 <div style="padding: 8px 0 32px;">

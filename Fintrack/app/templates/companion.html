@@ -11,12 +11,12 @@
     {% if tier != "free" %}
     <p style="font-size: 0.75rem; color: var(--text-tertiary); margin-top: 4px; display: flex; align-items: center; gap: 8px;">
         <span id="msg-counter">{{ messages_used }}/{{ daily_limit }} messages today</span>
-        {% if chat_history %}
-        <span style="opacity: 0.35;">·</span>
-        <button id="clear-chat-btn" onclick="openClearModal()" title="Clear conversation" style="background: none; border: none; cursor: pointer; padding: 2px; color: var(--text-tertiary); opacity: 0.6; display: flex; align-items: center; transition: opacity 0.15s;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.6'">
-            <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg>
-        </button>
-        {% endif %}
+        <span id="clear-btn-wrapper" style="display: flex; align-items: center; gap: 8px; {% if not chat_history %}visibility: hidden;{% endif %}">
+            <span style="opacity: 0.35;">·</span>
+            <button id="clear-chat-btn" onclick="openClearModal()" title="Clear conversation" style="background: none; border: none; cursor: pointer; padding: 2px; color: var(--text-tertiary); opacity: 0.6; display: flex; align-items: center; transition: opacity 0.15s;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.6'">
+                <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg>
+            </button>
+        </span>
     </p>
     {% endif %}
 </div>
@@ -76,9 +76,7 @@
         {% if not chat_history %}
         <!-- Welcome message — rendered as an assistant bubble, not a card -->
         <div class="chat-msg chat-assistant">
-            <div class="chat-bubble assistant-bubble">
-                Hi {{ current_user.name.split(' ')[0] }}! I'm your Claro companion. I know your plan inside out. Ask me anything about your goals, run what-if scenarios, or just check how things are going.
-            </div>
+            <div class="chat-bubble assistant-bubble">Hi {{ current_user.name.split(' ')[0] }}! I'm your Claro companion. I know your plan inside out. Ask me anything about your goals, run what-if scenarios, or just check how things are going.</div>
         </div>
 
         <!-- Suggestion chips -->
@@ -95,8 +93,8 @@
         {% for msg in chat_history %}
         <div class="chat-msg chat-{{ msg.role }}">
             {% if msg.role == 'user' %}
-            <button class="msg-resend-btn" data-msg="{{ msg.content | e }}" onclick="resendMessage(this.dataset.msg)" title="Resend">
-                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+            <button class="msg-edit-btn" data-msg="{{ msg.content | e }}" onclick="fillInput(this.dataset.msg)" title="Edit">
+                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
             </button>
             {% endif %}
             <div class="chat-bubble {{ msg.role }}-bubble">{{ msg.content }}</div>
@@ -158,10 +156,10 @@
 @keyframes blink{0%,80%,100%{opacity:0.3;}40%{opacity:1;}}
 #chat-input:focus{outline:none;border-color:rgba(255,255,255,0.2);}
 #send-btn:disabled{opacity:0.38;cursor:not-allowed;}
-.msg-resend-btn{background:none;border:none;cursor:pointer;opacity:0;padding:4px;margin-right:8px;align-self:center;transition:opacity 0.15s;color:var(--text-tertiary);flex-shrink:0;}
-.chat-user:hover .msg-resend-btn{opacity:0.7;}
-.msg-resend-btn:hover{opacity:1 !important;}
-@media(hover:none){.msg-resend-btn{opacity:0.45;}}
+.msg-edit-btn{background:none;border:none;cursor:pointer;opacity:0;padding:4px;margin-right:8px;align-self:center;transition:opacity 0.15s;color:var(--text-tertiary);flex-shrink:0;}
+.chat-user:hover .msg-edit-btn{opacity:0.7;}
+.msg-edit-btn:hover{opacity:1 !important;}
+@media(hover:none){.msg-edit-btn{opacity:0.5;}}
 #clear-modal.open{display:flex;}
 </style>
 
@@ -204,27 +202,28 @@ function addMessage(role, content) {
     div.className = 'chat-msg chat-' + role;
 
     if (role === 'user') {
-        var resendBtn = document.createElement('button');
-        resendBtn.className = 'msg-resend-btn';
-        resendBtn.title = 'Resend';
+        var editBtn = document.createElement('button');
+        editBtn.className = 'msg-edit-btn';
+        editBtn.title = 'Edit';
         var svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
         svg.setAttribute('width', '12');
         svg.setAttribute('height', '12');
         svg.setAttribute('viewBox', '0 0 24 24');
         svg.setAttribute('fill', 'none');
         svg.setAttribute('stroke', 'currentColor');
-        svg.setAttribute('stroke-width', '2');
+        svg.setAttribute('stroke-width', '1.5');
         svg.setAttribute('stroke-linecap', 'round');
         svg.setAttribute('stroke-linejoin', 'round');
         var p1 = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-        p1.setAttribute('d', 'M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8');
+        p1.setAttribute('d', 'M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7');
         var p2 = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-        p2.setAttribute('d', 'M3 3v5h5');
+        p2.setAttribute('d', 'M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z');
         svg.appendChild(p1);
         svg.appendChild(p2);
-        resendBtn.appendChild(svg);
-        (function(c) { resendBtn.addEventListener('click', function() { resendMessage(c); }); })(content);
-        div.appendChild(resendBtn);
+        editBtn.appendChild(svg);
+        (function(c) { editBtn.addEventListener('click', function() { fillInput(c); }); })(content);
+        div.appendChild(editBtn);
+        showClearBtn();
     }
 
     var bubble = document.createElement('div');
@@ -236,11 +235,16 @@ function addMessage(role, content) {
     container.scrollTop = container.scrollHeight;
 }
 
-function resendMessage(text) {
+function fillInput(text) {
     var input = document.getElementById('chat-input');
     input.value = text;
     input.focus();
     autoResize(input);
+}
+
+function showClearBtn() {
+    var w = document.getElementById('clear-btn-wrapper');
+    if (w) w.style.visibility = '';
 }
 
 function openClearModal() {

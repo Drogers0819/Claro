@@ -10,6 +10,52 @@ Before writing or editing any template, read `DESIGN-SYSTEM.md`. It defines ever
 
 ---
 
+## MANDATORY: When fixing a pattern, check everywhere that pattern appears
+
+Victoria will point out one instance of an issue. Your job is to find and fix ALL instances across the entire app. Never fix only the reported occurrence.
+
+Steps:
+1. Grep the entire `app/templates/` directory for the pattern (class name, element type, query param, copy string)
+2. Audit every match — same issue may appear in different forms on different pages
+3. Fix all instances in a single pass
+4. Verify each affected page with Playwright
+
+Examples:
+- Breadcrumb shows wrong back-link on one page → audit ALL sub-pages with breadcrumbs
+- Navigation active state wrong in one context → check ALL nav conditions in base.html
+- Icon wrong in one template → find all uses of that icon across templates
+
+---
+
+## MANDATORY: Propagate navigation context through every hop
+
+When a user follows a link that carries `?from=X`, every subsequent link on that page must carry the same context forward. Never drop navigation context mid-chain.
+
+Pattern:
+- Overview → goal_detail?from=overview → edit_goal?from=overview → (breadcrumb shows full trail)
+- Plan → goal_detail?from=plan → edit_goal?from=plan → (breadcrumb shows full trail)
+
+Rules:
+1. Any page that reads `request.args.get('from')` must also pass it forward on outbound links
+2. Breadcrumbs must be multi-level — always show the full trail from origin, not just one step back
+3. Never hardcode a breadcrumb destination if the page has multiple entry points
+
+---
+
+## MANDATORY: Check existing instances before changing any UI element
+
+Before editing any UI element (button style, badge, icon, label, card type, spacing value, colour token), find at least 2 other places in the app where that same element appears. Match them exactly. Never introduce a new style for an existing semantic role.
+
+Steps:
+1. Grep for the element class or token across `app/templates/`
+2. Read 2+ instances to understand the established pattern
+3. Your change must match that pattern — not invent a new one
+4. If no existing pattern exists, check DESIGN-SYSTEM.md for the spec before writing anything
+
+This prevents visual drift. One-off treatments that look fine in isolation break the system at scale.
+
+---
+
 ## MANDATORY: Playwright verification after every UI change
 
 **After any change to a template or CSS — run Playwright and screenshot before marking the task done.**
