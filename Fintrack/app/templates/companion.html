@@ -9,7 +9,7 @@
 <div class="page-header">
     <h1>Your companion</h1>
     {% if tier != "free" %}
-    <p style="font-size: 0.75rem; color: var(--text-tertiary); margin-top: 4px; display: flex; align-items: center; gap: 8px;">
+    <p style="font-size: 0.75rem; color: var(--text-tertiary); margin-top: 6px; display: flex; align-items: center; gap: 8px;">
         <span id="msg-counter" title="You can send {{ daily_limit }} messages per day. Resets at midnight.">{{ messages_used }}/{{ daily_limit }} messages today</span>
         <span id="clear-btn-wrapper" style="display: flex; align-items: center; gap: 8px; {% if not chat_history %}display: none;{% endif %}">
             <span style="opacity: 0.35;">·</span>

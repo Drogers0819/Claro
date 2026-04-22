@@ -64,7 +64,7 @@
 
 {% else %}
 <!-- Check-in form -->
-<div style="margin-bottom: 24px;">
+<div style="margin-bottom: 24px; max-width: 560px;">
     <p style="font-size: 0.72rem; color: var(--text-tertiary); margin-bottom: 6px;">{{ checkin_month }}</p>
     <p style="font-size: 0.85rem; color: var(--text-secondary); line-height: 1.6; margin-bottom: 20px;">
         Looking back at {{ checkin_month }}. How much did you actually save toward each goal? Enter what you actually saved. Your plan updates to match reality.
@@ -109,7 +109,7 @@
 
 <!-- Past check-ins -->
 {% if past_checkins %}
-<div style="margin-top: 32px; padding-top: 24px; border-top: 0.5px solid var(--glass-divider);">
+<div style="margin-top: 24px; padding-top: 14px; border-top: 0.5px solid var(--glass-divider);">
     <div class="section-label" style="margin-bottom: 14px;">History</div>
     {% for ci in past_checkins %}
     <div style="display: flex; justify-content: space-between; align-items: center; padding: 8px 0; {% if not loop.last %}border-bottom: 0.5px solid var(--glass-border-subtle);{% endif %}">

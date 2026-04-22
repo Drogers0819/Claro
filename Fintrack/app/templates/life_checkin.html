@@ -15,6 +15,7 @@
     <p>Anything changed this month? Quick updates keep your plan accurate.</p>
 </div>
 
+<div style="max-width: 560px;">
 <form method="POST" action="{{ url_for('pages.life_checkin') }}" id="life-checkin-form">
 
     <!-- Type selection -->
@@ -24,7 +25,7 @@
             <label class="choice-card" for="type-all-good">
                 <input type="radio" name="checkin_type" id="type-all-good" value="all_good" checked style="display:none;">
                 <div class="choice-card-inner">
-                    <div style="display: flex; align-items: center; gap: 12px;">
+                    <div style="display: flex; align-items: flex-start; gap: 12px;">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0; color: var(--text-tertiary);"><polyline points="20 6 9 17 4 12"/></svg>
                         <div>
                             <div style="font-size: 0.85rem; color: var(--text-primary);">All good, nothing to report</div>
@@ -37,7 +38,7 @@
             <label class="choice-card" for="type-birthday">
                 <input type="radio" name="checkin_type" id="type-birthday" value="birthday" style="display:none;">
                 <div class="choice-card-inner">
-                    <div style="display: flex; align-items: center; gap: 12px;">
+                    <div style="display: flex; align-items: flex-start; gap: 12px;">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0; color: var(--text-tertiary);"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
                         <div>
                             <div style="font-size: 0.85rem; color: var(--text-primary);">Birthday or upcoming event</div>
@@ -50,7 +51,7 @@
             <label class="choice-card" for="type-unexpected">
                 <input type="radio" name="checkin_type" id="type-unexpected" value="unexpected_expense" style="display:none;">
                 <div class="choice-card-inner">
-                    <div style="display: flex; align-items: center; gap: 12px;">
+                    <div style="display: flex; align-items: flex-start; gap: 12px;">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0; color: var(--text-tertiary);"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
                         <div>
                             <div style="font-size: 0.85rem; color: var(--text-primary);">Unexpected bill or expense</div>
@@ -63,7 +64,7 @@
             <label class="choice-card" for="type-income">
                 <input type="radio" name="checkin_type" id="type-income" value="income_changed" style="display:none;">
                 <div class="choice-card-inner">
-                    <div style="display: flex; align-items: center; gap: 12px;">
+                    <div style="display: flex; align-items: flex-start; gap: 12px;">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0; color: var(--text-tertiary);"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
                         <div>
                             <div style="font-size: 0.85rem; color: var(--text-primary);">My income has changed</div>
@@ -76,7 +77,7 @@
             <label class="choice-card" for="type-new-goal">
                 <input type="radio" name="checkin_type" id="type-new-goal" value="new_goal" style="display:none;">
                 <div class="choice-card-inner">
-                    <div style="display: flex; align-items: center; gap: 12px;">
+                    <div style="display: flex; align-items: flex-start; gap: 12px;">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0; color: var(--text-tertiary);"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
                         <div>
                             <div style="font-size: 0.85rem; color: var(--text-primary);">I want to add a new goal</div>
@@ -89,7 +90,7 @@
             <label class="choice-card" for="type-bills">
                 <input type="radio" name="checkin_type" id="type-bills" value="bill_changed" style="display:none;">
                 <div class="choice-card-inner">
-                    <div style="display: flex; align-items: center; gap: 12px;">
+                    <div style="display: flex; align-items: flex-start; gap: 12px;">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0; color: var(--text-tertiary);"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
                         <div>
                             <div style="font-size: 0.85rem; color: var(--text-primary);">My rent or bills have changed</div>
@@ -102,7 +103,7 @@
             <label class="choice-card" for="type-other">
                 <input type="radio" name="checkin_type" id="type-other" value="other" style="display:none;">
                 <div class="choice-card-inner">
-                    <div style="display: flex; align-items: center; gap: 12px;">
+                    <div style="display: flex; align-items: flex-start; gap: 12px;">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0; color: var(--text-tertiary);"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg>
                         <div>
                             <div style="font-size: 0.85rem; color: var(--text-primary);">Something else</div>
@@ -115,7 +116,7 @@
             <label class="choice-card" for="type-later">
                 <input type="radio" name="checkin_type" id="type-later" value="ask_later" style="display:none;">
                 <div class="choice-card-inner">
-                    <div style="display: flex; align-items: center; gap: 12px;">
+                    <div style="display: flex; align-items: flex-start; gap: 12px;">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0; color: var(--text-tertiary);"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
                         <div>
                             <div style="font-size: 0.85rem; color: var(--text-primary);">Ask me later</div>
@@ -176,6 +177,7 @@
     </div>
 
 </form>
+</div>
 
 <style>
 .choice-card { display: block; cursor: pointer; }

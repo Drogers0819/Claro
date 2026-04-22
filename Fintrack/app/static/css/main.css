@@ -12,8 +12,8 @@
     --glass: rgba(255, 255, 255, 0.03);
     --glass-border: rgba(197, 163, 93, 0.12);
     --text-primary: rgba(255, 255, 255, 0.9);
-    --text-secondary: rgba(255, 255, 255, 0.65);
-    --text-tertiary: rgba(255, 255, 255, 0.5);
+    --text-secondary: rgba(255, 255, 255, 0.75);
+    --text-tertiary: rgba(255, 255, 255, 0.62);
     --danger: #FC8181;
     --success: #68D391;
     --font-serif: 'Cormorant Garamond', Georgia, serif;
@@ -24,9 +24,17 @@
     /* Glass layer tokens */
     --glass-border-subtle: rgba(255, 255, 255, 0.04);
     --glass-divider: rgba(255, 255, 255, 0.06);
-    --glass-chip: rgba(255, 255, 255, 0.08);
+    --glass-chip: rgba(255, 255, 255, 0.13);
     --glass-bg: var(--glass);
     --surface-subtle: rgba(255, 255, 255, 0.02);
+
+    /* Spacing scale — 4px base grid, use these everywhere */
+    --sp-xs:  4px;
+    --sp-sm:  8px;
+    --sp-md:  16px;
+    --sp-lg:  24px;
+    --sp-xl:  32px;
+    --sp-2xl: 48px;
 
     /* Success color family */
     --success-bg: rgba(72, 187, 120, 0.1);
@@ -35,14 +43,6 @@
     /* Danger color family */
     --danger-bg: rgba(252, 129, 129, 0.08);
     --danger-border: rgba(252, 129, 129, 0.2);
-
-    /* Spacing scale */
-    --space-xs: 8px;
-    --space-sm: 12px;
-    --space-md: 16px;
-    --space-lg: 24px;
-    --space-xl: 32px;
-    --space-2xl: 48px;
 
     /* Shadow tokens — floating surfaces */
     --shadow-float: 0 8px 32px rgba(0, 0, 0, 0.45), 0 2px 8px rgba(0, 0, 0, 0.25);
@@ -1545,7 +1545,7 @@ input[type="number"] {
 }
 
 .page-header {
-    margin-bottom: 32px;
+    margin-bottom: var(--sp-md); /* 16px — optical gap from h1 to first content */
 }
 
 .page-header h1 {
@@ -2125,7 +2125,7 @@ body.theme-mist .budget-row-danger {
 
     /* Page header */
     .page-header {
-        margin-bottom: 24px;
+        margin-bottom: var(--sp-sm); /* 8px on mobile — tighter */
     }
 
     .page-header h1 {

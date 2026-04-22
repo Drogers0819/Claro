@@ -65,7 +65,7 @@
     {% for pot in smart_plan.pots %}{% if pot.goal_id and pot.target %}{% set ns.total_targets = ns.total_targets + (pot.target | float) %}{% endif %}{% endfor %}
     {% if ns.total_targets > 0 %}
     {% set progress_pct = [(total_saved_toward_goals / ns.total_targets * 100) | round(0) | int, 100] | min %}
-    <div style="margin-top: 14px; padding-top: 14px; border-top: 0.5px solid var(--glass-border);">
+    <div style="margin-top: 16px;">
         <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 8px;">
             <div style="font-size: 0.65rem; color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.06em;">Overall progress</div>
             <div style="font-size: 1rem; color: var(--text-primary); font-weight: 600; font-variant-numeric: tabular-nums;">{{ progress_pct }}%</div>
@@ -79,7 +79,7 @@
     {% endif %}
 
     {% if plan_status == 'payday' and action_whisper %}
-    <div style="margin-top: 12px; padding-top: 12px; border-top: 0.5px solid var(--glass-border); display: flex; align-items: flex-start; gap: 8px;">
+    <div style="margin-top: 18px; display: flex; align-items: flex-start; gap: 8px;">
         <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--roman-gold)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0; margin-top: 2px;"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
         <div>
             <p style="font-size: 0.78rem; color: var(--text-secondary); line-height: 1.5; margin: 0 0 4px;">{{ action_whisper.message }}</p>
@@ -91,7 +91,7 @@
     {% endif %}
 
     {% if nearest_milestone %}
-    <div style="margin-top: 12px; padding-top: 12px; border-top: 0.5px solid var(--glass-border);">
+    <div style="margin-top: 22px;">
         <a href="{{ url_for('pages.goal_detail', goal_id=nearest_milestone.goal_id) }}?from=overview" style="display: flex; align-items: center; justify-content: space-between; text-decoration: none;">
             <div>
                 <div style="font-size: 0.65rem; color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 2px;">Nearest goal</div>
@@ -102,7 +102,7 @@
     </div>
     {% endif %}
 
-    <div style="margin-top: 14px; padding-top: 14px; border-top: 0.5px solid var(--glass-border);">
+    <div style="margin-top: 22px;">
         <a href="{{ url_for('pages.plan') }}" class="btn-secondary btn-sm">View full plan</a>
     </div>
 </div>
@@ -229,7 +229,7 @@
     {% endif %}
 
     {% else %}
-    <p style="font-size: 0.78rem; color: var(--text-tertiary); line-height: 1.5; margin: 0;">No transactions yet. Upload a bank statement or add them in My money to track your spending here.</p>
+    <p style="font-size: 0.78rem; color: var(--text-tertiary); line-height: 1.5; margin: 0;">No transactions yet. <a href="{{ url_for('pages.my_money') }}" style="color: var(--text-secondary); text-decoration: underline; text-underline-offset: 2px;">Add in My money.</a></p>
     {% endif %}
 </div>
 
