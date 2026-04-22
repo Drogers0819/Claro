@@ -1018,6 +1018,10 @@ def plan_review():
     if not current_user.factfind_completed:
         return redirect(url_for("pages.factfind"))
 
+    if not current_user.plan_wizard_complete:
+        current_user.plan_wizard_complete = True
+        db.session.commit()
+
     _ensure_emergency_goal()
 
     user_profile = current_user.profile_dict()
@@ -1339,7 +1343,7 @@ def factfind():
 
     return render_template("factfind.html",
         profile=current_user.profile_dict(),
-        show_sidebar=current_user.factfind_completed
+        show_sidebar=current_user.plan_wizard_complete
     )
 
 

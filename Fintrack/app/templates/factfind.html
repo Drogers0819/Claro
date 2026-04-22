@@ -2,7 +2,7 @@
 {% block title %}Your Financial Profile – Claro{% endblock %}
 
 {% block header_content %}
-{% if profile.factfind_completed %}
+{% if profile.get('plan_wizard_complete') %}
 <nav class="app-breadcrumb" aria-label="Breadcrumb">
     <a href="{{ url_for('pages.settings') }}">Settings</a>
     <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
@@ -12,9 +12,9 @@
 {% endblock %}
 
 {% block content %}
-<div style="max-width: 560px;">
+<div style="max-width: 560px;{% if not profile.get('plan_wizard_complete') %} margin: 0 auto;{% endif %}">
 
-{% if not profile.factfind_completed %}
+{% if not profile.get('plan_wizard_complete') %}
 <!-- Onboarding step indicator -->
 <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 24px;">
     <a href="{{ url_for('pages.welcome') }}" style="font-size: 0.65rem; color: var(--text-tertiary); text-decoration: none; white-space: nowrap; display: inline-flex; align-items: center; gap: 2px;"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>Back</a>
@@ -29,8 +29,8 @@
 {% endif %}
 
 <div class="page-header">
-    <h1>{% if profile.factfind_completed %}Your financial profile{% else %}Let's build your plan{% endif %}</h1>
-    <p>{% if profile.factfind_completed %}Update your details below.{% else %}This takes about 60 seconds. Five sections and we have everything we need.{% endif %}</p>
+    <h1>{% if profile.get('plan_wizard_complete') %}Your financial profile{% else %}Let's build your plan{% endif %}</h1>
+    <p>{% if profile.get('plan_wizard_complete') %}Update your details below.{% else %}This takes about 60 seconds. Five sections and we have everything we need.{% endif %}</p>
 </div>
 
 <form method="POST" action="{{ url_for('pages.factfind') }}">
@@ -242,13 +242,13 @@
     </p>
     <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 4px;">
         <button type="submit" class="btn-primary btn-full">
-            {% if profile.factfind_completed %}
+            {% if profile.get('plan_wizard_complete') %}
                 Update profile
             {% else %}
                 Save & continue <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
             {% endif %}
         </button>
-        {% if profile.factfind_completed %}
+        {% if profile.get('plan_wizard_complete') %}
         <a href="{{ url_for('pages.settings') }}" style="text-align: center; font-size: 0.82rem; color: var(--text-tertiary); text-decoration: none;">Cancel</a>
         {% endif %}
     </div>

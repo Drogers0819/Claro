@@ -27,6 +27,7 @@ class User(db.Model, UserMixin):
     lifestyle_budget = db.Column(db.Numeric(10, 2), nullable=True)
     income_day = db.Column(db.Integer, nullable=True)
     factfind_completed = db.Column(db.Boolean, default=False)
+    plan_wizard_complete = db.Column(db.Boolean, default=False)
 
     skip_emergency_fund = db.Column(db.Boolean, default=False)
     # Subscription
@@ -99,6 +100,7 @@ class User(db.Model, UserMixin):
             "total_essentials": self.total_essentials,
             "monthly_surplus": self.monthly_surplus,
             "factfind_completed": self.factfind_completed,
+            "plan_wizard_complete": self.plan_wizard_complete,
             "theme": self.theme
         }
 

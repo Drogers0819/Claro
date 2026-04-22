@@ -685,12 +685,7 @@ body.theme-paper .step-bar {
     background: rgba(0, 0, 0, 0.1);
 }
 
-body.theme-ivory .step-bar--complete,
-body.theme-pearl .step-bar--complete,
-body.theme-sage .step-bar--complete,
-body.theme-paper .step-bar--complete {
-    background: rgba(0, 0, 0, 0.45);
-}
+/* .step-bar--complete uses var(--roman-gold) globally — no light theme override needed */
 
 /* Suggestion chips and lifestyle budget chips on light themes */
 body.theme-ivory .suggestion-chip,

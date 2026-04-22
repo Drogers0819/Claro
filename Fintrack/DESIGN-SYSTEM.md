@@ -181,6 +181,8 @@ If it "feels nice" italic outside these three contexts — don't do it.
 
 **All gold must use `var(--roman-gold)` or `var(--roman-gold-dim)` — never hardcoded `rgba(197,163,93,...)`.**
 
+**`--ai-whisper` re-declaration rule:** `--ai-whisper` is derived from `--roman-gold` in `:root`. Any theme that overrides `--roman-gold` to a non-gold value (e.g. Cobalt sets it to `#63B3ED`) MUST also explicitly re-declare `--ai-whisper: var(--roman-gold)` inside that same theme block. Without it, `--ai-whisper` resolves against `:root`'s gold value — producing the wrong colour in that theme. This applies to any theme that redefines `--roman-gold` away from the canonical warm gold.
+
 ---
 
 ### 2.2 When is green (success) used?
@@ -298,6 +300,15 @@ Never use `var(--text-primary)` on gold-card body text. The italic + gold border
 **`btn-secondary` is ONLY valid alongside a primary action.** If it would be the sole interactive element on the page or in a state, it must be `btn-primary` instead. A lone secondary button communicates "this matters less than something else" — but if there's nothing else, that signal is wrong.
 
 **NEVER create a custom button class.** The vocabulary is exactly `btn-primary`, `btn-secondary`, `btn-danger` plus `btn-sm`/`btn-full` modifiers. There are no other button styles. If none of these fit, that is a design system question — raise it and define it here before implementing anything. Do not solve it inline with a `<style>` block.
+
+### 4.6 Button box model — all variants must render at the same height
+
+`btn-primary` (filled, no border) and `btn-secondary` (outlined, 1px border) must render at identical heights. Without correcting for the border difference, `btn-secondary` renders 2px taller.
+
+- **`btn-primary`**: must have `border: 1px solid transparent` — NOT `border: none`. This keeps the box model identical to `btn-secondary`.
+- **All button variants**: `box-sizing: border-box` so the border is included in the declared height.
+
+This matters most at `btn-sm` pairings — the 2px misalignment is visually obvious at smaller sizes.
 
 ### 4.5 Section CTAs — navigational links in section headers
 
@@ -480,6 +491,9 @@ Every `required` field must have a custom `oninvalid` message that explains what
 | Form icons | `var(--text-tertiary)` |
 | Destructive action icon | `var(--danger)` |
 | Neutral row icon | `var(--text-tertiary)` at opacity 0.5 |
+| Feature/paywall check icons | `var(--success)` — NEVER gold |
+
+**Feature check icons rule:** Validation lists in paywalls (checkmark Full financial plan, checkmark AI companion) always use `stroke="var(--success)"`. Gold is for achievement and brand. Confirming a feature is delivery — that is green. Gold on a paywall checklist is a violation.
 
 ### 8.3 Icon semantic map — always use these exact paths
 
@@ -569,6 +583,14 @@ Default size `width="14" height="14"` unless noted. Whisper icons use `width="16
 |---|---|---|
 | Steps / layers | `layers` | `<path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/>` |
 
+### 8.9 Icon alignment in two-line list items
+
+**Decision rule:** Does the icon sit beside a text block with both a title line and a description line?
+- **Yes** → `align-items: flex-start` on the flex container. This anchors the icon to the title (primary action line) — the correct semantic and visual hierarchy.
+- **No (single-line item)** → `align-items: center`.
+
+Never use `align-items: center` on a two-line item. It floats the icon between both lines, which reads as unmoored and misaligned. The icon always belongs with the primary line.
+
 ---
 
 ## 9. Section Structure
@@ -640,6 +662,21 @@ Both require:
 
 ---
 
+## 11.5 Double border anti-pattern — button + subordinate note
+
+When a primary button is followed by a whisper/note/hint line (e.g. "Or add manually" or a guidance footnote), the note must NOT have its own `border-top`.
+
+**Why:** The section wrapper already has a separator above it. Adding `border-top` on the note creates two borders that visually box the button in and make the note appear to be a separate section rather than a subordinate annotation.
+
+**Correct pattern:**
+```css
+.action-whisper {
+    margin-top: 10px;  /* spacing only — no border-top, no padding-top */
+}
+```
+
+---
+
 ## 12. Interactive States
 
 ### 12.0 List affordance — homogenous lists only
@@ -664,6 +701,21 @@ Both require:
 **Decision rule:** Is there a condition the user must meet before the action becomes valid?
 - **Yes** → Show the button disabled with instructional text ("Select a goal above to continue"), not hidden
 - Never hide the primary CTA. Disabled + instruction = clear path. Hidden = dead end.
+
+### 12.4 Interactive readout / slider value sizing
+
+**Rule:** Live interactive readouts (slider values, calculator inputs showing a result as the user types) must be styled at approximately `1rem` — never at `metric-value` size (`1.3rem` or larger).
+
+**Why:** At 1.3rem, a live readout creates false hierarchy against the primary metric on the same card. The readout is a feedback indicator — it responds to input. The primary metric is the hero. They must not compete.
+
+**Pattern:**
+```html
+<span style="font-size: 1.05rem; font-variant-numeric: tabular-nums; color: var(--text-primary);">
+    £{{ amount }}
+</span>
+```
+
+Use `tabular-nums` so the value doesn't shift width as the user drags.
 
 ### 12.3 Button disabled state implementation
 
@@ -796,6 +848,8 @@ The logo PNG is landscape (636×334). Always set `height` explicitly and let `wi
 9. **Custom button class** — `grep -rn "border-radius: 50px\|border-radius: 100px" templates/` → only valid inside `.goal-chip`, `.sub-chip`, `.suggestion-chip` (selection chips). Any other element with pill radius is a violation.
 10. **Hardcoded inline uppercase** — `grep -rn "text-transform: uppercase" templates/` → must also have `.section-label` class, not raw inline
 11. **When fixing a violation on one page** — always grep the entire templates directory for the same pattern before marking it done. One page fixed ≠ fixed everywhere.
+12. **Badge inline rgba** — `grep -rn "rgba(72,187,120" templates/` → any hardcoded success green on a badge is a violation. Use `var(--success)` token only.
+13. **Feature check icons** — `grep -rn "roman-gold" templates/companion.html templates/trial_gate.html` → any gold on a paywall checklist icon is a violation. Must be `var(--success)`.
 
 ---
 
@@ -814,4 +868,4 @@ When a pattern changes in code, update this document in the same commit.
 
 ---
 
-*Source of truth as of 18 April 2026. Built from full audit of main.css, themes.css, and all 25 active templates.*
+*Source of truth as of 22 April 2026. Built from full audit of main.css, themes.css, and all 25 active templates. Updated with button box model, feature check icon rule, slider readout sizing, double border anti-pattern, icon alignment in two-line list items, `--ai-whisper` re-declaration rule, empty progress bar rule, badge rgba compliance check.*
