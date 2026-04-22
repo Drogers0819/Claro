@@ -28,6 +28,7 @@
 
 {% elif already_done %}
 <!-- Already checked in -->
+<div style="max-width: 560px;">
 <div class="gold-card" style="margin-bottom: 24px;">
     <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 12px;">
         <span class="ai-pulse"></span>
@@ -58,9 +59,7 @@
 </div>
 {% endif %}
 
-<div style="margin-top: 4px;">
-    <a href="{{ url_for('pages.overview') }}" class="btn-secondary btn-sm">Back to overview</a>
-</div>
+</div><!-- /max-width already-done -->
 
 {% else %}
 <!-- Check-in form -->
@@ -109,7 +108,7 @@
 
 <!-- Past check-ins -->
 {% if past_checkins %}
-<div style="margin-top: 24px; padding-top: 14px; border-top: 0.5px solid var(--glass-divider);">
+<div style="margin-top: 24px; padding-top: 14px; border-top: 0.5px solid var(--glass-divider); max-width: 560px;">
     <div class="section-label" style="margin-bottom: 14px;">History</div>
     {% for ci in past_checkins %}
     <div style="display: flex; justify-content: space-between; align-items: center; padding: 8px 0; {% if not loop.last %}border-bottom: 0.5px solid var(--glass-border-subtle);{% endif %}">
