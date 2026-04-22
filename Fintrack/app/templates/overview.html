@@ -90,18 +90,6 @@
     </div>
     {% endif %}
 
-    {% if nearest_milestone %}
-    <div style="margin-top: 22px;">
-        <a href="{{ url_for('pages.goal_detail', goal_id=nearest_milestone.goal_id) }}?from=overview" style="display: flex; align-items: center; justify-content: space-between; text-decoration: none;">
-            <div>
-                <div style="font-size: 0.65rem; color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 2px;">Nearest goal</div>
-                <div style="font-size: 0.82rem; color: var(--text-primary);">{{ nearest_milestone.name | replace(' (must-hit)', '') }} · {{ nearest_milestone.months_to_target }} month{% if nearest_milestone.months_to_target != 1 %}s{% endif %}</div>
-            </div>
-            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--text-tertiary)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0;"><path d="M9 18l6-6-6-6"/></svg>
-        </a>
-    </div>
-    {% endif %}
-
     <div style="margin-top: 22px;">
         <a href="{{ url_for('pages.plan') }}" class="btn-secondary btn-sm">View full plan</a>
     </div>
@@ -235,7 +223,7 @@
     {% endif %}
 
     {% else %}
-    <p style="font-size: 0.78rem; color: var(--text-tertiary); line-height: 1.5; margin: 0;">No transactions yet. <a href="{{ url_for('pages.my_money') }}" style="color: var(--text-secondary); text-decoration: underline; text-underline-offset: 2px;">Add in My money.</a></p>
+    <p style="font-size: 0.78rem; color: var(--text-tertiary); line-height: 1.5; margin: 0;">Nothing recorded yet this month. Head to My money to log your spending.</p>
     {% endif %}
 </div>
 
