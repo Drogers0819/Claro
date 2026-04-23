@@ -4,7 +4,7 @@
 {% block content %}
 <div style="max-width: 560px; margin: 0 auto;">
 
-    <!-- Wizard step indicator — all complete, no step counter (detail page after step 4) -->
+    <!-- Wizard step indicator — same as plan_reveal (still step 4, reviewing the detail) -->
     <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 24px;">
         <a href="{{ url_for('pages.plan_reveal') }}" style="font-size: 0.65rem; color: var(--text-tertiary); text-decoration: none; white-space: nowrap; display: inline-flex; align-items: center; gap: 2px;"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>Back</a>
         <div style="display: flex; gap: 4px; flex: 1;">
@@ -13,6 +13,7 @@
             <div class="step-bar step-bar--complete"></div>
             <div class="step-bar step-bar--complete"></div>
         </div>
+        <span style="font-size: 0.65rem; color: var(--text-tertiary); white-space: nowrap; letter-spacing: 0.04em;">Step 4 of 4</span>
     </div>
 
     <div class="page-header">
