@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, redirect, url_for, flash, session
+from flask import Blueprint, render_template, request, redirect, url_for, flash, session, current_app, send_from_directory
 from flask_login import login_user, logout_user, login_required, current_user
 from app import db, bcrypt
 from app.models.user import User
@@ -1230,6 +1230,16 @@ def trial_gate():
         trial_end_date=trial_end,
         show_sidebar=False
     )
+
+
+# ─── PWA SERVICE WORKER ──────────────────────────────────
+
+@page_bp.route("/sw.js")
+def service_worker():
+    response = send_from_directory(current_app.static_folder, "sw.js", mimetype="application/javascript")
+    response.headers["Service-Worker-Allowed"] = "/"
+    response.headers["Cache-Control"] = "no-cache"
+    return response
 
 
 # ─── SETTINGS ────────────────────────────────────────────
