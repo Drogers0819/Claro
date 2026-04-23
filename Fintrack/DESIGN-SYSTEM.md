@@ -810,6 +810,24 @@ Sentence case. "on track" not "ON TRACK". The badge provides weight. The text pr
 ### 16.5 Numbers
 Always comma-separated thousands: `"{:,.0f}".format(value)`. Negative amounts: Unicode minus (U+2212, `−`) before `£`, never ASCII hyphen.
 
+### 16.6 Backend-generated copy — service file audit
+
+Service files (`planner_service.py`, `whisper_service.py`, any future `*_service.py`) produce user-facing strings. They get the same copy standards as templates — no exceptions.
+
+**Jargon words that must not appear in user-facing strings:**
+
+| Word / phrase | Replace with |
+|---|---|
+| `surplus` | "what's left", "remaining money", or name the specific amount |
+| `frees up`, `freed` | "is yours to use", "becomes available" |
+| `redirect`, `redirects` | "moves to", "goes to", "shifts to" |
+| `pots` | "goals" or name the specific goal |
+| `allocated`, `allocation` | "set aside for", "going to" |
+| `phase` (exposed to user) | describe what's happening ("while you clear your debt") |
+| `buffer` (without context) | "a small safety cushion" on first mention |
+
+**Decision rule:** Read the string aloud as if you've never used a budgeting app. If any word requires financial literacy to understand, rewrite it.
+
 ---
 
 ## 17. Logo & Mobile Header
@@ -850,6 +868,7 @@ The logo PNG is landscape (636×334). Always set `height` explicitly and let `wi
 11. **When fixing a violation on one page** — always grep the entire templates directory for the same pattern before marking it done. One page fixed ≠ fixed everywhere.
 12. **Badge inline rgba** — `grep -rn "rgba(72,187,120" templates/` → any hardcoded success green on a badge is a violation. Use `var(--success)` token only.
 13. **Feature check icons** — `grep -rn "roman-gold" templates/companion.html templates/trial_gate.html` → any gold on a paywall checklist icon is a violation. Must be `var(--success)`.
+14. **Service file copy sweep** — `grep -n 'return "' app/services/*.py` and `grep -n "return f'" app/services/*.py` → review every result against the jargon list in §16.6. Any hit containing surplus, frees up, redirect, pots, allocated, phase, or buffer (unexplained) is a violation.
 
 ---
 

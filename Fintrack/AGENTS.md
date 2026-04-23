@@ -348,6 +348,32 @@ Run these checks before marking any UI change done. Static analysis is not enoug
 
 ---
 
+## MANDATORY: Service file copy audit
+
+Every UI audit pass must include a hardcoded string sweep across all service files — not just templates.
+
+**Grep command:**
+```
+grep -n 'return "' app/services/*.py
+grep -n "return f'" app/services/*.py
+```
+
+Run both. Review every result. Service files in scope: `planner_service.py`, `whisper_service.py`, and any new `*_service.py` files added in future.
+
+**Jargon words — flag any of these in user-facing strings:**
+- `surplus` (use "what's left", "remaining money", or name the amount)
+- `frees up`, `freed`, `redirect`, `redirects` (use "moves to", "goes to", "shifts to")
+- `pots` (use "goals" or name the goal)
+- `buffer` used without explanation (use "a small safety cushion" on first use)
+- `lifestyle pot` (use "your lifestyle budget")
+- `allocated`, `allocation` (use "set aside", "going to")
+- `phase` as a noun exposed to users (use "stage" or just describe what's happening)
+- Any sentence a first-time user couldn't parse in 10 seconds
+
+**Rule:** Every hardcoded return string must read as plain English to someone who has never used a budgeting app. If Dan adds a feature with a new service file or new return strings, this audit catches it before it ships.
+
+---
+
 ## Italic rule
 
 - `font-style: italic` only inside `gold-card` blocks (AI insight/prediction/summary copy).
