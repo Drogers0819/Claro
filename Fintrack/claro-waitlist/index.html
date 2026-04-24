@@ -172,6 +172,15 @@ body {
 }
 .form-input:focus { border-color: var(--roman-gold); }
 .form-input::placeholder { color: var(--text-tertiary); }
+.form-error {
+    font-size: 0.72rem;
+    color: rgba(252,129,129,0.9);
+    margin-top: -4px;
+    display: none;
+    text-align: left;
+    padding-left: 2px;
+    animation: fadeUp 0.2s ease both;
+}
 
 /* ===== SECTION LABEL — exact app pattern ===== */
 .section-label {
@@ -618,7 +627,8 @@ footer {
     <div class="form-wrap">
         <form id="waitlistForm" onsubmit="return submitToBeehiiv(event, 'waitlistForm', 'formSuccess', 'socialProof')">
             <label class="sr-only" for="emailInput">Email address</label>
-            <input class="form-input" type="email" id="emailInput" name="email" placeholder="Your email address" required autocomplete="email">
+            <input class="form-input" type="email" id="emailInput" name="email" placeholder="Your email address" autocomplete="email">
+            <p class="form-error">Please enter a valid email address.</p>
             <button type="submit" class="btn-primary">Join the waitlist</button>
         </form>
         <div class="form-success" id="formSuccess">
@@ -733,7 +743,8 @@ footer {
     <div class="form-wrap" style="animation: none;">
         <form id="waitlistForm2" onsubmit="return submitToBeehiiv(event, 'waitlistForm2', 'formSuccess2', null)">
             <label class="sr-only" for="emailInput2">Email address</label>
-            <input class="form-input" type="email" id="emailInput2" name="email" placeholder="Your email address" required autocomplete="email">
+            <input class="form-input" type="email" id="emailInput2" name="email" placeholder="Your email address" autocomplete="email">
+            <p class="form-error">Please enter a valid email address.</p>
             <button type="submit" class="btn-primary">Join the waitlist</button>
         </form>
         <div class="form-success" id="formSuccess2">
@@ -786,7 +797,16 @@ function submitToBeehiiv(e, formId, successId, proofId) {
 
     if (!email || !email.includes('@') || !email.includes('.')) {
         emailInput.style.borderColor = 'rgba(252,129,129,0.5)';
-        setTimeout(function() { emailInput.style.borderColor = ''; }, 2000);
+        var errorEl = emailInput.nextElementSibling;
+        if (errorEl && errorEl.classList.contains('form-error')) {
+            errorEl.style.display = 'block';
+        }
+        emailInput.addEventListener('input', function() {
+            emailInput.style.borderColor = '';
+            if (errorEl && errorEl.classList.contains('form-error')) {
+                errorEl.style.display = 'none';
+            }
+        }, { once: true });
         return false;
     }
 
