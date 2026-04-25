@@ -1,45 +1,19 @@
 {% extends "base.html" %}
-{% block title %}Welcome to Claro{% endblock %}
+{% block title %}Welcome – Claro{% endblock %}
 
 {% block content %}
-<div class="page-header">
-    <h1>Good {{ greeting }}, {{ current_user.name.split()[0] }}</h1>
-</div>
-
-<!-- Trial framing -->
-<div style="display: flex; align-items: center; gap: 10px; padding: 12px 16px; border-radius: 10px; background: var(--roman-gold-dim); border: 0.5px solid var(--glass-border); margin-bottom: 24px; max-width: 560px;">
-    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--roman-gold)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0;"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-    <span style="font-size: 0.8rem; color: var(--text-secondary); line-height: 1.5;">Your 14-day full access has started. No card needed.</span>
-</div>
-
-<p style="font-size: 0.82rem; color: var(--text-secondary); margin-bottom: 4px; max-width: 560px;">Let's build your financial plan.</p>
-<p style="font-size: 0.78rem; color: var(--text-tertiary); margin-bottom: 28px; max-width: 560px; line-height: 1.6;">Takes about 90 seconds. We'll ask about your income and costs, you'll choose your goals, and Claro builds a plan that puts every pound to work.</p>
-
-<!-- Step preview — users see the 4-step journey before they start -->
-<div style="display: flex; align-items: center; gap: 10px; margin-bottom: 20px; max-width: 560px;">
-    <div style="display: flex; gap: 4px; flex: 1;">
-        <div class="step-bar"></div>
-        <div class="step-bar"></div>
-        <div class="step-bar"></div>
-        <div class="step-bar"></div>
+<div style="max-width: 480px; width: 100%; margin: 0 auto; min-height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding-bottom: var(--sp-2xl); animation: fadeInUp 0.5s ease-out both;">
+    <div class="page-header" style="margin-bottom: var(--sp-lg); width: 100%;">
+        <h1 style="font-size: 2.5rem;">Hi {{ current_user.name.split()[0] }},</h1>
     </div>
-    <span style="font-size: 0.65rem; color: var(--text-tertiary); white-space: nowrap; letter-spacing: 0.04em;">4 steps</span>
-</div>
 
-<div style="max-width: 560px;">
-    <div class="glass-card" style="border-color: var(--roman-gold-glow);">
-        <div style="display: flex; align-items: flex-start; gap: 16px;">
-            <div style="flex-shrink: 0; width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: var(--glass-chip); color: var(--text-tertiary);">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
-            </div>
-            <div style="flex: 1;">
-                <span style="font-size: 0.95rem; color: var(--text-primary); display: block; margin-bottom: 4px;">Your financial profile & goals</span>
-                <p style="font-size: 0.8rem; color: var(--text-tertiary); line-height: 1.6; margin-bottom: 14px;">
-                    Income, rent, bills, subscriptions. Then choose what you're working toward. Claro handles the rest.
-                </p>
-                <a href="{{ url_for('pages.factfind') }}" class="btn-primary btn-sm">Get started</a>
-            </div>
-        </div>
-    </div>
+    <p style="font-size: 0.95rem; color: var(--text-secondary); line-height: 1.7; margin-bottom: var(--sp-sm);">
+        To build a plan that fits your life, we'll ask about your income, your regular costs, and what you're working toward.
+    </p>
+    <p style="font-size: 0.85rem; color: var(--text-secondary); line-height: 1.6; margin-bottom: var(--sp-2xl);">
+        Takes about 2 minutes. Your answers shape everything.
+    </p>
+
+    <a href="{{ url_for('pages.factfind') }}" class="btn-primary" style="max-width: 220px; width: 100%;">Build my plan</a>
 </div>
 {% endblock %}

@@ -328,7 +328,7 @@ def _build_whisper_data_for_user(user):
 def index():
     if current_user.is_authenticated:
         return redirect(url_for("pages.overview"))
-    return redirect(url_for("pages.login"))
+    return render_template("splash.html")
 
 
 @page_bp.route("/register", methods=["GET", "POST"])
@@ -359,7 +359,7 @@ def register():
         db.session.commit()
 
         login_user(user)
-        return redirect(url_for("pages.factfind"))
+        return redirect(url_for("pages.welcome"))
 
     return render_template("register.html")
 
@@ -380,6 +380,8 @@ def login():
             return render_template("login.html", prefill_email=email)
 
         login_user(user)
+        if not user.factfind_completed:
+            return redirect(url_for("pages.welcome"))
         return redirect(url_for("pages.overview"))
 
     return render_template("login.html")
@@ -399,6 +401,7 @@ def logout():
 @login_required
 def overview():
     data = _build_whisper_data()
+    first_overview = session.pop('first_overview', False)
 
     hour = datetime.now().hour
     greeting = "morning" if hour < 12 else "afternoon" if hour < 18 else "evening"
@@ -503,10 +506,15 @@ def overview():
         if days_since_signup >= 14 and 13 <= day_of_month <= 16 and not already_checked_in:
             show_life_checkin_nudge = True
 
+    never_started_trial = (
+        not current_user.trial_ends_at
+        and current_user.subscription_status in (None, "none", "")
+    )
     is_frozen = (
         bool(current_user.factfind_completed)
         and (data["active_goals"] or 0) > 0
         and not is_subscription_active(current_user)
+        and not never_started_trial
     )
 
     return render_template("overview.html",
@@ -527,6 +535,7 @@ def overview():
         total_saved_toward_goals=total_saved_toward_goals,
         show_life_checkin_nudge=show_life_checkin_nudge,
         is_frozen=is_frozen,
+        first_overview=first_overview,
     )
 
 
@@ -645,10 +654,15 @@ def plan():
             except (ValueError, TypeError):
                 flash("Invalid amount", "error")
 
+    never_started_trial = (
+        not current_user.trial_ends_at
+        and current_user.subscription_status in (None, "none", "")
+    )
     is_frozen = (
         bool(current_user.factfind_completed)
         and (data["active_goals"] or 0) > 0
         and not is_subscription_active(current_user)
+        and not never_started_trial
     )
 
     return render_template("plan.html",
@@ -844,7 +858,8 @@ def surplus_reveal():
         income=round(income, 2),
         essentials=round(essentials, 2),
         surplus=surplus,
-        show_sidebar=False
+        show_sidebar=False,
+        show_header=False
     )
 
 # ─── GOAL CHIPS (Onboarding) ─────────────────────────────────
@@ -983,7 +998,7 @@ def goal_chips():
 
         return redirect(url_for("pages.plan_reveal"))
 
-    return render_template("goal_chips.html", show_sidebar=False)
+    return render_template("goal_chips.html", show_sidebar=False, show_header=False)
 
 
 # ─── PLAN REVEAL (Onboarding) ────────────────────────────────
@@ -1062,13 +1077,15 @@ def plan_reveal():
 
     if not current_user.plan_wizard_complete:
         current_user.plan_wizard_complete = True
+        session['first_overview'] = True
         db.session.commit()
 
     return render_template("plan_reveal.html",
         plan=plan,
         reasoning=reasoning,
         summary=summary,
-        show_sidebar=False
+        show_sidebar=False,
+        show_header=False
     )
 
 # ─── PLAN REVIEW (Onboarding) — redirects to merged plan_reveal ──────────────
@@ -1228,7 +1245,8 @@ def trial_gate():
     return render_template("trial_gate.html",
         plan=plan,
         trial_end_date=trial_end,
-        show_sidebar=False
+        show_sidebar=False,
+        show_header=False
     )
 
 
@@ -1332,7 +1350,8 @@ def factfind():
 
     return render_template("factfind.html",
         profile=current_user.profile_dict(),
-        show_sidebar=current_user.plan_wizard_complete
+        show_sidebar=current_user.plan_wizard_complete,
+        show_header=current_user.plan_wizard_complete
     )
 
 
@@ -1968,27 +1987,9 @@ def update_account():
 @page_bp.route("/welcome")
 @login_required
 def welcome():
-    has_transactions = Transaction.query.filter_by(user_id=current_user.id).first() is not None
-    has_goals = Goal.query.filter_by(user_id=current_user.id).first() is not None
-
-    steps_done = sum([
-        current_user.factfind_completed,
-        has_goals
-    ])
-
-    if steps_done == 2:
+    if current_user.factfind_completed:
         return redirect(url_for("pages.overview"))
-
-    hour = datetime.now().hour
-    greeting = "morning" if hour < 12 else "afternoon" if hour < 18 else "evening"
-
-    return render_template("welcome.html",
-        greeting=greeting,
-        profile_done=current_user.factfind_completed,
-        goals_done=has_goals,
-        steps_done=steps_done,
-        show_sidebar=False
-    )
+    return render_template("welcome.html", show_sidebar=False, show_header=False)
 
 @page_bp.route("/unsubscribe")
 def unsubscribe():

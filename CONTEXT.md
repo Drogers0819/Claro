@@ -1,5 +1,5 @@
 # CONTEXT.md — Claro
-# Last updated: 2026-04-22
+# Last updated: 2026-04-25
 # Persona: Product
 
 ## Problem statement

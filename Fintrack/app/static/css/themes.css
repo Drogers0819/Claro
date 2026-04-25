@@ -92,6 +92,7 @@ body.theme-rosso {
     --warning: #F6AD55;
 
     --popover-bg: #0c1220;
+    --sidebar-bg: rgba(15, 22, 40, 0.88);
 
     /* Transaction semantics */
     --income: #48BB78;
@@ -130,6 +131,7 @@ body.theme-ivory {
 body.theme-ivory {
     --popover-bg: #e8e0d0;
     --sidebar-border: rgba(139, 115, 64, 0.18);
+    --sidebar-bg: rgba(240, 235, 226, 0.88);
 }
 
 body.theme-ivory .sidebar {
@@ -180,6 +182,7 @@ body.theme-pearl {
 body.theme-pearl {
     --popover-bg: #d0d8e8;
     --sidebar-border: rgba(74, 111, 165, 0.16);
+    --sidebar-bg: rgba(228, 232, 240, 0.88);
 }
 
 body.theme-pearl .sidebar {
@@ -232,6 +235,7 @@ body.theme-paper {
 body.theme-paper {
     --popover-bg: #F8F7F4;
     --sidebar-border: rgba(0, 0, 0, 0.09);
+    --sidebar-bg: rgba(255, 255, 255, 0.88);
 }
 
 body.theme-paper .sidebar {
@@ -283,6 +287,7 @@ body.theme-sage {
 body.theme-sage {
     --popover-bg: #c4d4bc;
     --sidebar-border: rgba(74, 115, 88, 0.14);
+    --sidebar-bg: rgba(224, 232, 220, 0.88);
 }
 
 body.theme-sage .sidebar {

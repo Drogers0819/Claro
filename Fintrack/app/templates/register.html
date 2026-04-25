@@ -3,11 +3,9 @@
 
 {% block auth_content %}
 <div style="max-width: 400px; margin: 60px auto; padding: 0 20px;">
-    <div style="text-align: center; margin-bottom: 28px;">
-        <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Claro"
-             style="width: 160px; height: auto; margin-bottom: 16px;">
-        <p class="serif" style="font-size: 1.5rem; color: var(--text-primary); margin-bottom: 6px;">Your money, finally clear.</p>
-        <p style="font-size: 0.82rem; color: var(--text-tertiary); line-height: 1.6;">Answer a few questions. Get a financial plan built around you in 60 seconds.</p>
+    <div style="display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 32px;">
+        <img src="{{ url_for('static', filename='images/logo.png') }}" alt="" style="height: 28px; width: auto; margin-right: -17px;">
+        <span style="font-family: var(--font-sans); font-size: 1.3rem; font-weight: 600; color: var(--text-primary); letter-spacing: -0.01em; line-height: 1;">Claro</span>
     </div>
 
     <div class="glass-card">
@@ -102,8 +100,5 @@ function checkStrength(val) {
             Already have an account? <a href="{{ url_for('pages.login') }}">Sign in</a>
         </p>
     </div>
-    <p style="text-align: center; margin-top: 20px; font-size: 0.72rem; color: var(--text-tertiary); line-height: 1.6; padding: 0 8px;">
-        Built by a financial planner who spent five years watching people make life-changing money decisions without ever being shown the full picture.
-    </p>
 </div>
 {% endblock %}

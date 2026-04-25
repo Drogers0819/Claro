@@ -28,7 +28,7 @@
 </div>
 {% endif %}
 
-<div class="page-header">
+<div class="page-header" style="margin-bottom: var(--sp-xl);">
     <h1>{% if profile.get('plan_wizard_complete') %}Your financial profile{% else %}Let's build your plan{% endif %}</h1>
     <p>{% if profile.get('plan_wizard_complete') %}Update your details below.{% else %}This takes about 60 seconds. Five sections and we have everything we need.{% endif %}</p>
 </div>
@@ -55,7 +55,7 @@
     </div>
 
     <!-- ─── COMMITMENTS ─── -->
-    <div class="section-label" style="margin-top: 28px; margin-bottom: 16px;">Commitments</div>
+    <div class="section-label" style="margin-top: var(--sp-xl); margin-bottom: 16px;">Commitments</div>
 
     <div class="grid-2">
         <div class="form-group" style="margin-bottom: 0;">
@@ -88,44 +88,54 @@
     </div>
 
     <!-- ─── SUBSCRIPTIONS ─── -->
-    <div style="display: flex; justify-content: space-between; align-items: baseline; margin-top: 28px; margin-bottom: 10px;">
+    <div style="display: flex; justify-content: space-between; align-items: baseline; margin-top: var(--sp-xl); margin-bottom: 10px;">
         <div class="section-label" style="margin-top: 0;">Subscriptions</div>
         <span id="sub-selected-count" style="font-size: 0.7rem; color: var(--text-tertiary);"></span>
     </div>
     <p style="font-size: 0.75rem; color: var(--text-tertiary); margin-bottom: 14px;">Tap any you pay for. We'll add up the total.</p>
 
-    <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 14px;">
-        {% set subs = [
-            {"id": "netflix", "label": "Netflix", "cost": 10.99},
-            {"id": "spotify", "label": "Spotify", "cost": 10.99},
-            {"id": "prime", "label": "Amazon Prime", "cost": 8.99},
-            {"id": "disney", "label": "Disney+", "cost": 7.99},
-            {"id": "apple_music", "label": "Apple Music", "cost": 10.99},
-            {"id": "apple_tv", "label": "Apple TV+", "cost": 8.99},
-            {"id": "youtube", "label": "YouTube Premium", "cost": 12.99},
-            {"id": "now_tv", "label": "NOW TV", "cost": 6.99},
-            {"id": "sky", "label": "Sky", "cost": 26.00},
-            {"id": "gym", "label": "Gym membership", "cost": 30.00},
-            {"id": "crunch", "label": "Crunchyroll", "cost": 4.99},
-            {"id": "audible", "label": "Audible", "cost": 7.99},
-            {"id": "xbox", "label": "Xbox Game Pass", "cost": 12.99},
-            {"id": "ps_plus", "label": "PS Plus", "cost": 10.99},
-            {"id": "icloud", "label": "iCloud+", "cost": 2.99},
-            {"id": "chatgpt", "label": "ChatGPT Plus", "cost": 20.00},
-            {"id": "notion", "label": "Notion", "cost": 8.00},
-            {"id": "adobe", "label": "Adobe CC", "cost": 19.97},
-            {"id": "deliveroo", "label": "Deliveroo Plus", "cost": 3.49},
-            {"id": "just_eat", "label": "Just Eat+", "cost": 5.99}
-        ] %}
-        {% for sub in subs %}
-        <label style="cursor: pointer;">
-            <input type="checkbox" class="sub-checkbox" data-cost="{{ sub.cost }}" data-name="{{ sub.label }}" style="display: none;" onchange="updateSubTotal()">
-            <div class="sub-chip" style="display: flex; align-items: center; gap: 6px; padding: 7px 14px; border-radius: 50px; border: 1px solid var(--glass-chip); background: var(--surface-subtle); transition: all 0.2s ease; font-size: 0.78rem; color: var(--text-secondary); user-select: none;">
-                {{ sub.label }} <span style="color: var(--text-tertiary); font-size: 0.7rem;">£{{ "{:,.2f}".format(sub.cost) }}</span>
-            </div>
-        </label>
-        {% endfor %}
+    {% macro sub_chip(id, label, cost) %}
+    <label style="cursor: pointer;">
+        <input type="checkbox" class="sub-checkbox" data-cost="{{ cost }}" data-name="{{ label }}" style="display: none;" onchange="updateSubTotal()">
+        <div class="sub-chip" style="display: flex; align-items: center; gap: 6px; padding: 7px 14px; border-radius: 50px; border: 1px solid var(--glass-chip); background: var(--surface-subtle); transition: all 0.2s ease; font-size: 0.78rem; color: var(--text-secondary); user-select: none;">
+            {{ label }} <span style="color: var(--text-tertiary); font-size: 0.7rem;">£{{ "{:,.2f}".format(cost) }}</span>
+        </div>
+    </label>
+    {% endmacro %}
+
+    <!-- Top 8 — always visible -->
+    <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 8px;">
+        {{ sub_chip("netflix",     "Netflix",          10.99) }}
+        {{ sub_chip("spotify",     "Spotify",          10.99) }}
+        {{ sub_chip("prime",       "Amazon Prime",      8.99) }}
+        {{ sub_chip("disney",      "Disney+",           7.99) }}
+        {{ sub_chip("apple_music", "Apple Music",      10.99) }}
+        {{ sub_chip("apple_tv",    "Apple TV+",         8.99) }}
+        {{ sub_chip("youtube",     "YouTube Premium",  12.99) }}
+        {{ sub_chip("now_tv",      "NOW TV",            6.99) }}
     </div>
+
+    <!-- Overflow — hidden until toggle -->
+    <div id="subs-more" style="display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 0; overflow: hidden; max-height: 0; transition: max-height 0.3s ease;">
+        {{ sub_chip("sky",       "Sky",              26.00) }}
+        {{ sub_chip("gym",       "Gym membership",   30.00) }}
+        {{ sub_chip("crunch",    "Crunchyroll",       4.99) }}
+        {{ sub_chip("audible",   "Audible",           7.99) }}
+        {{ sub_chip("xbox",      "Xbox Game Pass",   12.99) }}
+        {{ sub_chip("ps_plus",   "PS Plus",          10.99) }}
+        {{ sub_chip("icloud",    "iCloud+",           2.99) }}
+        {{ sub_chip("chatgpt",   "ChatGPT Plus",     20.00) }}
+        {{ sub_chip("notion",    "Notion",            8.00) }}
+        {{ sub_chip("adobe",     "Adobe CC",         19.97) }}
+        {{ sub_chip("deliveroo", "Deliveroo Plus",    3.49) }}
+        {{ sub_chip("just_eat",  "Just Eat+",         5.99) }}
+    </div>
+
+    <!-- Toggle -->
+    <button type="button" id="subs-more-btn" onclick="toggleSubsMore()" style="background: none; border: none; padding: 10px 0 6px; font-size: 0.75rem; color: var(--text-tertiary); cursor: pointer; display: flex; align-items: center; gap: 4px; margin-bottom: 8px;">
+        <svg id="subs-more-chevron" xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="transition: transform 0.3s ease;"><path d="M6 9l6 6 6-6"/></svg>
+        <span id="subs-more-label">12 more</span>
+    </button>
 
     <!-- Custom subscription -->
     <div style="display: flex; gap: 8px; align-items: stretch; margin-bottom: 14px;">
@@ -204,7 +214,7 @@
     <input type="hidden" name="other_commitments" id="other_commitments" value="{{ '%g' | format(profile.other_commitments) if profile.other_commitments else '0' }}">
 
     <!-- ─── LIVING COSTS ─── -->
-    <div class="section-label" style="margin-top: 4px; margin-bottom: 16px;">Living costs</div>
+    <div class="section-label" style="margin-top: var(--sp-sm); margin-bottom: 16px;">Living costs</div>
 
     <div class="grid-2">
         <div class="form-group" style="margin-bottom: 0;">
@@ -236,10 +246,6 @@
     </div>
     {% endif %}
 
-    <p style="font-size: 0.7rem; color: var(--text-tertiary); margin-bottom: 16px;">
-        <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle; margin-right: 4px;"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-        Encrypted in transit · never sold · never shared
-    </p>
     <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 4px;">
         <button type="submit" class="btn-primary btn-full">
             {% if profile.get('plan_wizard_complete') %}
@@ -265,6 +271,22 @@
 <script>
 function fmtGBP(n) {
     return n.toLocaleString('en-GB', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+}
+
+function toggleSubsMore() {
+    var el = document.getElementById('subs-more');
+    var chevron = document.getElementById('subs-more-chevron');
+    var label = document.getElementById('subs-more-label');
+    var isOpen = el.style.maxHeight && el.style.maxHeight !== '0px';
+    if (isOpen) {
+        el.style.maxHeight = '0px';
+        chevron.style.transform = 'rotate(0deg)';
+        label.textContent = '12 more';
+    } else {
+        el.style.maxHeight = el.scrollHeight + 'px';
+        chevron.style.transform = 'rotate(180deg)';
+        label.textContent = 'Show less';
+    }
 }
 
 var customSubs = [];

@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block title %}Claro{% endblock %}
+
+{% block auth_content %}
+<div class="splash-page">
+    <div class="splash-lockup">
+        <img src="{{ url_for('static', filename='images/logo.png') }}" alt="" class="splash-logo">
+        <span class="splash-wordmark">Claro</span>
+    </div>
+    <p class="splash-tagline">Your money, with a plan</p>
+</div>
+
+<div class="splash-progress">
+    <div id="splash-bar" class="splash-progress-bar"></div>
+</div>
+
+<script>
+    (function () {
+        var isReturning = !!localStorage.getItem('claro_returning');
+        var dest = isReturning
+            ? '{{ url_for("pages.login") }}'
+            : '{{ url_for("pages.register") }}';
+        var DELAY = 2000;
+
+        function advance() {
+            document.body.style.transition = 'opacity 0.35s ease';
+            document.body.style.opacity = '0';
+            setTimeout(function () { window.location.href = dest; }, 350);
+        }
+
+        var bar = document.getElementById('splash-bar');
+        if (bar) {
+            requestAnimationFrame(function () {
+                requestAnimationFrame(function () {
+                    bar.style.transition = 'width ' + DELAY + 'ms linear';
+                    bar.style.width = '100%';
+                });
+            });
+        }
+
+        var timer = setTimeout(advance, DELAY);
+
+        document.addEventListener('click', function () {
+            clearTimeout(timer);
+            advance();
+        }, { once: true });
+    })();
+</script>
+{% endblock %}

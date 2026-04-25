@@ -21,8 +21,8 @@
     <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='favicon.ico') }}">
     <link rel="icon" type="image/png" sizes="32x32" href="{{ url_for('static', filename='images/logo.png') }}">
     <link rel="apple-touch-icon" href="{{ url_for('static', filename='images/logo.png') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}?v=20260422v">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/themes.css') }}?v=20260422v">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}?v=20260425t">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/themes.css') }}?v=20260425t">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <style>
         .pwa-install-banner {
@@ -86,7 +86,7 @@
         }
     </style>
 </head>
-<body class="{% if current_user.is_authenticated %}theme-{{ current_user.theme }}{% else %}theme-racing-green{% endif %}">
+<body class="{% if current_user.is_authenticated %}theme-{{ current_user.theme }}{% else %}theme-racing-green{% endif %}{% if show_header is defined and not show_header %} no-app-header{% endif %}">
     <!-- PWA install banner (shown when installable; hidden if already installed or recently dismissed) -->
     <div id="pwaInstallBanner" class="pwa-install-banner" hidden role="region" aria-label="Install Claro">
         <span class="pwa-install-banner__icon" aria-hidden="true">
@@ -98,6 +98,7 @@
     </div>
 
     {% if current_user.is_authenticated %}
+    {% if show_header is not defined or show_header %}
     <header class="app-header">
         <div class="app-header-brand">
             Claro
@@ -108,6 +109,7 @@
         </div>
         {% endif %}
     </header>
+    {% endif %}
     <div class="app-layout">
         {% if show_sidebar is not defined or show_sidebar %}
         <aside class="sidebar">
@@ -181,6 +183,7 @@
         </main>
     </div>
     <!-- Mobile fixed header bar — solid background prevents avatar overlapping scrolled content -->
+    {% if show_header is not defined or show_header %}
     <div class="mobile-header-bar">
         <a href="{{ url_for('pages.overview') }}" class="mobile-logo" aria-label="Claro home">
             <span style="font-family: var(--font-sans); font-size: 1rem; font-weight: 500; color: var(--text-primary); letter-spacing: 0; line-height: 1;">Claro</span>
@@ -189,6 +192,7 @@
             {{ current_user.name[0] | upper }}
         </a>
     </div>
+    {% endif %}
     {% else %}
     <div>
         {% block auth_content %}{% endblock %}
@@ -414,6 +418,7 @@
         });
     </script>
     {% block scripts %}{% endblock %}
+    {% if current_user.is_authenticated %}<script>localStorage.setItem('claro_returning','1');</script>{% endif %}
     <script>
         // ── PWA install prompt ──
         (function () {

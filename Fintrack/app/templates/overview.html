@@ -28,7 +28,7 @@
 </svg>
 {% endmacro %}
 <div class="page-header">
-    <h1>Good {{ greeting }}, {{ current_user.name.split()[0] }}.</h1>
+    <h1>{% if first_overview %}Your plan is ready, {{ current_user.name.split()[0] }}.{% else %}Good {{ greeting }}, {{ current_user.name.split()[0] }}.{% endif %}</h1>
 </div>
 
 {% if is_frozen %}
@@ -108,9 +108,9 @@
 <div style="display: flex; align-items: flex-start; gap: 10px; padding: 12px 14px; border-radius: 10px; border: 0.5px solid var(--glass-border); background: var(--surface-subtle); margin-bottom: 20px;">
     <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--text-tertiary)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0; margin-top: 2px;"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
     <div style="flex: 1;">
-        <p style="font-size: 0.82rem; color: var(--text-primary); line-height: 1.5; margin: 0 0 {% if action_whisper.action_label %}4px{% else %}0{% endif %};">{{ action_whisper.message }}</p>
-        {% if action_whisper.action_label %}
-        <span style="font-size: 0.72rem; color: var(--text-tertiary);">{{ action_whisper.action_label }}</span>
+        <p style="font-size: 0.82rem; color: var(--text-primary); line-height: 1.5; margin: 0 0 {% if action_whisper.action_url and action_whisper.action_label %}4px{% else %}0{% endif %};">{{ action_whisper.message }}</p>
+        {% if action_whisper.action_url and action_whisper.action_label %}
+        <a href="{{ action_whisper.action_url }}" style="font-size: 0.72rem; color: var(--text-tertiary); text-decoration: underline; text-underline-offset: 2px;">{{ action_whisper.action_label }}</a>
         {% endif %}
     </div>
 </div>
@@ -127,7 +127,9 @@
 
 <!-- ════ ACTIVE POTS — compact progress ════ -->
 {% set goal_pots = smart_plan.pots %}
-{% if goal_pots and not is_frozen %}
+{% set ns_gp = namespace(has_visible=false) %}
+{% for _p in goal_pots %}{% if _p.monthly_amount > 0 and _p.goal_id %}{% set ns_gp.has_visible = true %}{% endif %}{% endfor %}
+{% if ns_gp.has_visible and not is_frozen %}
 <div style="margin-bottom: 24px; padding-top: 20px; border-top: 0.5px solid var(--glass-border);">
     <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 14px;">
         <span class="section-label" style="margin-top: 0; margin-bottom: 0;">Goals</span>

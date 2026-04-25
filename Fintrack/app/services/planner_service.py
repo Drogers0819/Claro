@@ -887,7 +887,7 @@ def get_plan_summary(plan):
         else:
             return (
                 f"Your {soon_name} completes in ~{soon_months} month{'s' if soon_months != 1 else ''}. "
-                f"After that, that £{soon_amount:,.0f}/month is yours to redirect however you like."
+                f"After that, £{soon_amount:,.0f}/month is yours to redirect however you like."
             )
 
     # Fallback: underfunded goals warning

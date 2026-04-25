@@ -78,3 +78,57 @@ When a list item has an icon + two-line text block (title + description), use `a
 **Applied**: life_checkin.html — all 8 choice-card items changed from `align-items: center` to `align-items: flex-start`.
 
 ---
+
+## Onboarding/welcome screens — vertical centering, not top-dump
+
+Single-purpose onboarding screens (welcome, plan reveal, etc.) where the user isn't scrolling should have their content vertically placed in the viewport, not top-aligned like a content page. Use `min-height: calc(100vh - 120px); display: flex; flex-direction: column; justify-content: center` on the content wrapper. Top-dumping makes the page feel abandoned at desktop widths.
+
+**Applied**: welcome.html — changed from `padding-top: var(--sp-xl)` to flex centering with min-height.
+
+---
+
+## Brand lockup consistency — all pre-auth screens use icon + wordmark
+
+Login and register were using a large (160-180px) standalone logo icon. After adding the horizontal lockup to the splash, that created inconsistency across pre-auth screens. Rule: all pre-auth screens use the icon + "Claro" wordmark side-by-side. Splash: 40px icon / 1.75rem text. Login/register: 28px icon / 1.3rem text. Scale for context but never use icon alone on these screens.
+
+**Applied**: login.html, register.html — replaced large standalone icons with horizontal lockup.
+
+---
+
+## Logo PNG has significant transparent padding — compensate BOTH sides for centred lockups
+
+`logo.png` is 636×334px. The visible icon circle only spans x=143 to x=436, leaving 143px transparent left and 200px transparent right. At rendered sizes:
+- **40px height** (splash): element renders at 76.2px wide, visible circle = 35.1px, left transparent = 17.1px, right transparent = 24.0px
+- **28px height** (login/register): element = 53.3px wide, right transparent = 16.8px
+
+**Fix for inline lockups (icon + wordmark side by side)**:
+- Compensate right strip with `margin-right: -Npx` so the wordmark sits at the intended gap from the visible icon
+- Compensate left strip with `margin-left: -Npx` when the lockup is centred on screen — without it, the visual centre of (icon + wordmark) is shifted right of the container centre
+- At 40px: `margin-left: -17px; margin-right: -20px` → lockup visually centres correctly
+- At 28px (login/register): only `margin-right: -17px` needed — these are left-aligned, not centred
+
+Do NOT just reduce gap — gap alone cannot close the transparent padding. Negative margin on the img is the right tool.
+
+**Applied**: `.splash-logo { margin-left: -17px; margin-right: -20px }` in main.css; login.html + register.html img inline `margin-right: -17px` (left unchanged — left-aligned context).
+
+---
+
+## Nav/sidebar bg on dark gradient themes — keep transparent, do NOT add a flat colour
+
+The body gradient cannot be approximated with a flat colour. Any flat value — even the dark terminus of the gradient — will look visibly different from the content area because the gradient shifts hue across the viewport. The only value that truly matches the content area is `transparent`, so the body gradient shows through the nav/sidebar identically.
+
+`backdrop-filter: blur(10px)` on `.app-header` and `.sidebar` is sufficient to protect readability when content scrolls behind; the existing `border-bottom`/`border-right` at `0.5px solid var(--glass-border)` provides visual edge separation.
+
+**Do not set `--sidebar-bg` on dark gradient themes** (racing-green, midnight-navy, oxford-saddle, amethyst, rosso, obsidian). Leave the root `--sidebar-bg: transparent` to apply. Only light themes and cobalt (which have a flat `--bg-primary`) need an explicit `--sidebar-bg`.
+
+**Applied**: themes.css — removed all 6 dark gradient theme `--sidebar-bg` overrides.
+
+---
+
+## Page-header conditional overrides — always apply unconditionally when the same spacing is needed in both modes
+
+When a `{% if condition %}style="..."{% endif %}` inline override only applies in one mode, edit mode falls through to the CSS default — which may be stale in the user's browser. Make the inline style unconditional if both modes need the same value. Version-string cache busting alone is not enough during an active session.
+
+**Applied**: factfind.html `.page-header` — removed the `{% if not plan_wizard_complete %}` conditional so `margin-bottom: var(--sp-xl)` applies in both onboarding and edit modes.
+
+---
