@@ -1,7 +1,16 @@
 {
   "permissions": {
     "allow": [
-      "Bash(git pull *)"
+      "Bash(git pull *)",
+      "Bash(C:/Users/User/OneDrive/Documents/Claro/Fintrack/venv/Scripts/python.exe *)",
+      "Bash(C:/Users/User/OneDrive/Documents/Claro/Fintrack/venv/Scripts/pip.exe install *)",
+      "Bash(venv/Scripts/python.exe -m pytest -q)",
+      "Bash(venv/Scripts/python.exe -m pytest tests/ -q)",
+      "Bash(C:/Users/User/OneDrive/Documents/Claro/Fintrack/venv/Scripts/pip.exe list *)",
+      "Skill(schedule)",
+      "Bash(git add *)",
+      "Bash(git commit -m ' *)",
+      "Bash(git push *)"
     ]
   }
 }

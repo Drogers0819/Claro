@@ -30,6 +30,7 @@ DEFAULT_CATEGORIES = [
 
 
 def create_app(config_class=None):
+    import os
     if config_class is None:
         if os.environ.get("FLASK_ENV") == "production":
             from config import ProductionConfig
