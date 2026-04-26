@@ -132,3 +132,13 @@ When a `{% if condition %}style="..."{% endif %}` inline override only applies i
 **Applied**: factfind.html `.page-header` — removed the `{% if not plan_wizard_complete %}` conditional so `margin-bottom: var(--sp-xl)` applies in both onboarding and edit modes.
 
 ---
+
+## CSS `display` on a component overrides the HTML `hidden` attribute — always add a `[hidden]` guard
+
+The HTML `hidden` attribute maps to `[hidden] { display: none }` in the UA stylesheet. Any explicit `display` value in your own CSS (e.g. `.pwa-install-banner { display: flex }`) has higher specificity and silently overrides it — the element stays visible even when `banner.hidden = true` in JS. The computed style returns the CSS value, not `none`, making this very hard to spot.
+
+**Fix**: Always add `.component-name[hidden] { display: none !important }` alongside any component that uses `display` in CSS and `hidden` in JS.
+
+**Applied**: `.pwa-install-banner[hidden] { display: none !important }` in base.html — banner was appearing on desktop despite `banner.hidden = true` because the flex rule won.
+
+---
