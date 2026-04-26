@@ -12,7 +12,8 @@
       "Bash(git commit -m ' *)",
       "Bash(git push *)",
       "Bash(./venv/Scripts/python.exe -m pytest -q)",
-      "Bash(./venv/Scripts/python.exe -m pytest tests/ -q)"
+      "Bash(./venv/Scripts/python.exe -m pytest tests/ -q)",
+      "Bash(git *)"
     ]
   }
 }
