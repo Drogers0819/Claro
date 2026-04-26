@@ -448,6 +448,7 @@
 
             function dismissedRecently() {
                 try {
+                    if (localStorage.getItem('claro_pwa_installed') === '1') return true;
                     var ts = parseInt(localStorage.getItem(STORAGE_KEY) || '0', 10);
                     if (!ts) return false;
                     return (Date.now() - ts) < DISMISS_MS;
@@ -532,7 +533,7 @@
 
             window.addEventListener('appinstalled', function () {
                 deferredPrompt = null;
-                try { localStorage.removeItem(STORAGE_KEY); } catch (_) {}
+                try { localStorage.setItem('claro_pwa_installed', '1'); } catch (_) {}
                 hideBanner();
                 updateSettingsRow();
                 console.log('PWA installed');
