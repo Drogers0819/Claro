@@ -44,6 +44,7 @@
     </div>
 
     <form method="POST" action="{{ url_for('pages.goal_chips') }}" id="goalForm">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
 
 
         <!-- Goal chips -->

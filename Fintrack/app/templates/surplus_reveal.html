@@ -72,6 +72,7 @@
 
     <!-- Lifestyle budget question — bare, no card wrapper -->
     <form method="POST" action="{{ url_for('pages.surplus_reveal') }}">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
         <div style="margin-bottom: 24px; padding-top: 20px; border-top: 0.5px solid var(--glass-border);">
             <div style="font-size: 0.95rem; color: var(--text-primary); font-weight: 500; margin-bottom: 4px;">Monthly lifestyle budget</div>
             <p style="font-size: 0.78rem; color: var(--text-tertiary); margin-bottom: 16px; line-height: 1.5;">

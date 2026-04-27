@@ -139,6 +139,7 @@
 <div class="section-label">Add a budget</div>
 <div style="max-width: 560px; margin-bottom: 32px;">
     <form method="POST" action="{{ url_for('pages.create_budget_page') }}">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
         <div class="grid-2">
             <div class="form-group">
                 <label class="form-label">Category</label>

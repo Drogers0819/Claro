@@ -282,7 +282,13 @@ function closeClearModal() {
 }
 
 function executeClearChat() {
-    fetch('/api/companion/clear', { method: 'POST', headers: { 'Content-Type': 'application/json' } })
+    fetch('/api/companion/clear', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+        }
+    })
     .then(function(res) { return res.json(); })
     .then(function(data) { if (data.success) window.location.reload(); });
 }
@@ -357,7 +363,10 @@ function _doSend(isEdit) {
 
     fetch(endpoint, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+        },
         body: JSON.stringify(body)
     })
     .then(function(res) { return res.json(); })

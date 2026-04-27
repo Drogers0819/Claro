@@ -21,6 +21,8 @@ class TestingConfig:
     SECRET_KEY = "test-secret-key"
     TESTING = True
     SQLALCHEMY_DATABASE_URI = "sqlite:///:memory:"
+    WTF_CSRF_ENABLED = False
+    RATELIMIT_ENABLED = False
 
 
 class ProductionConfig:

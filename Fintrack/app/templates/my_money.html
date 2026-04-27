@@ -213,7 +213,10 @@ function saveCategory(id, select) {
     var catName = select.options[select.selectedIndex].text;
     fetch('/api/transactions/' + id + '/categorise', {
         method: 'PUT',
-        headers: {'Content-Type': 'application/json'},
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+        },
         body: JSON.stringify({category_id: catId})
     }).then(function(res) {
         if (res.ok) {

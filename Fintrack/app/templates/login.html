@@ -10,6 +10,7 @@
 
     <div class="glass-card">
         <form method="POST" action="{{ url_for('pages.login') }}">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
             <div class="form-group">
                 <label class="form-label">Email</label>
                 <input type="email" name="email" class="form-input" placeholder="you@email.com" value="{{ prefill_email or '' }}" required>

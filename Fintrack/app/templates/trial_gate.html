@@ -134,6 +134,7 @@
         Your plan is saved. Sign back in anytime to start your trial.
     </p>
     <form action="{{ url_for('pages.logout') }}" method="POST" style="margin: 0;">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
         <button type="submit" style="background: none; border: none; padding: 0; font-size: 0.72rem; color: var(--text-tertiary); text-decoration: underline; text-underline-offset: 2px; text-decoration-color: var(--glass-border); cursor: pointer;">
             Sign out for now
         </button>

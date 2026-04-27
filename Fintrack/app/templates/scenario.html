@@ -17,6 +17,7 @@
 
 <div style="margin-bottom: 32px;">
     <form method="POST" action="{{ url_for('pages.scenario_page') }}">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
         <div class="section-label" style="margin-top: 0; margin-bottom: 16px;">Income & commitments</div>
         <div class="grid-2" style="margin-bottom: 24px;">
             <div class="form-group" style="margin-bottom: 0;">

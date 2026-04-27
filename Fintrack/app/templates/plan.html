@@ -146,6 +146,7 @@
     <div style="font-size: 0.9rem; color: var(--text-primary); font-weight: 500; margin-bottom: 4px;">Can I afford this?</div>
     <p style="font-size: 0.78rem; color: var(--text-tertiary); margin-bottom: 14px;">Check a one-off expense against your plan.</p>
     <form method="POST" action="{{ url_for('pages.plan') }}">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
         <input type="hidden" name="form_type" value="afford_check">
         <div class="grid-2">
             <div class="form-group" style="margin-bottom: 0;">
@@ -176,6 +177,7 @@
     <div style="font-size: 0.9rem; color: var(--text-primary); font-weight: 500; margin-bottom: 4px;">Habit cost</div>
     <p style="font-size: 0.78rem; color: var(--text-tertiary); margin-bottom: 14px;">See what a daily or monthly habit really costs over time.</p>
     <form method="POST" action="{{ url_for('pages.plan') }}">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
         <input type="hidden" name="form_type" value="habit_cost">
         <div class="grid-2">
             <div class="form-group" style="margin-bottom: 0;">

@@ -17,6 +17,7 @@
 
 <div style="max-width: 560px;">
 <form method="POST" action="{{ url_for('pages.life_checkin') }}" id="life-checkin-form">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
 
     <!-- Type selection -->
     <div style="margin-bottom: 24px;">

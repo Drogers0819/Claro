@@ -5,7 +5,7 @@ import stripe
 from flask import Blueprint, abort, current_app, flash, redirect, request, url_for
 from flask_login import current_user, login_required
 
-from app import db
+from app import csrf, db, limiter
 from app.models.user import User
 from app.services.stripe_service import (
     init_stripe,
@@ -22,6 +22,7 @@ logger = logging.getLogger(__name__)
 
 @billing_bp.route("/checkout/<plan>")
 @login_required
+@limiter.limit("10 per minute")
 def checkout(plan):
     price_id = price_id_for_plan(plan)
     if not price_id:
@@ -81,6 +82,8 @@ def billing_portal():
     return redirect(session.url, code=303)
 
 
+@csrf.exempt
+@limiter.exempt
 @billing_bp.route("/stripe/webhook", methods=["POST"])
 def stripe_webhook():
     payload = request.get_data()

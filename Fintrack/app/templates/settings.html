@@ -68,6 +68,7 @@
     <div id="panel-appearance" hidden style="padding-top: 16px; border-top: 0.5px solid var(--glass-border); margin-top: 12px;">
         <p style="font-size: 0.75rem; color: var(--text-tertiary); margin-bottom: 16px;">Choose your look. Changes apply instantly.</p>
         <form method="POST" action="{{ url_for('pages.update_theme') }}">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
             <div class="theme-picker-grid">
                 {% set themes = [
                     ("racing-green", "Racing Green", "linear-gradient(135deg, #0A2A22, #020408)"),
@@ -177,6 +178,7 @@
             </div>
             <div id="edit-name-form" hidden style="margin-top: 14px;">
                 <form method="POST" action="{{ url_for('pages.update_account') }}">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                     <input type="hidden" name="form_type" value="change_name">
                     <div class="form-group" style="margin-bottom: 14px;">
                         <label class="form-label" for="new_name">Full name</label>
@@ -201,6 +203,7 @@
             </div>
             <div id="edit-email-form" hidden style="margin-top: 14px;">
                 <form method="POST" action="{{ url_for('pages.update_account') }}">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                     <input type="hidden" name="form_type" value="change_email">
                     <div class="form-group" style="margin-bottom: 14px;">
                         <label class="form-label" for="new_email">New email address</label>
@@ -235,6 +238,7 @@
             </div>
             <div id="edit-password-form" hidden style="margin-top: 14px;">
                 <form method="POST" action="{{ url_for('pages.update_account') }}">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                     <input type="hidden" name="form_type" value="change_password">
                     <div class="form-group" style="margin-bottom: 14px;">
                         <label class="form-label" for="currentPassword">Current password</label>
@@ -302,6 +306,7 @@
 <!-- Sign out — mobile only (desktop uses sidebar popover) -->
 <div class="mobile-only" style="margin-top: 40px; padding-top: 20px; border-top: 0.5px solid var(--glass-divider);">
     <form method="POST" action="{{ url_for('pages.logout') }}">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
         <button type="submit" style="background: none; border: none; padding: 0; font-size: 0.82rem; color: var(--text-tertiary); cursor: pointer; font-family: var(--font-sans); display: flex; align-items: center; gap: 8px;">
             <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
             Sign out

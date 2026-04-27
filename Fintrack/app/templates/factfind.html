@@ -34,6 +34,7 @@
 </div>
 
 <form method="POST" action="{{ url_for('pages.factfind') }}">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
 
     <!-- ─── INCOME ─── -->
     <div class="section-label" style="margin-top: 0; margin-bottom: 16px;">Income</div>

@@ -17,6 +17,7 @@
 
 <div style="max-width: 560px;">
     <form method="POST" action="{{ url_for('pages.upload_statement') }}" enctype="multipart/form-data" novalidate>
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
         <div class="form-group">
             <label class="form-label">Bank statement (CSV)</label>
             <input type="file" name="file" accept=".csv" id="csv-upload" class="file-upload-input" required>

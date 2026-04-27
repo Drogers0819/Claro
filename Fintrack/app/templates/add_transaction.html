@@ -16,6 +16,7 @@
 
 <div style="max-width: 560px; padding-bottom: 80px;">
     <form method="POST" action="{{ url_for('pages.add_transaction') }}">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
         <div class="grid-2">
             <div class="form-group">
                 <label class="form-label">Amount (£)</label>

@@ -19,6 +19,7 @@
 
 <!-- Amount input -->
 <form method="POST" style="margin-bottom: 28px;">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
     <div class="form-group" style="margin-bottom: 10px;">
         <label class="form-label">How much do you need? (£)</label>
         <input type="number" name="amount" class="form-input" id="amount-input" placeholder="500" step="50" min="10" required>

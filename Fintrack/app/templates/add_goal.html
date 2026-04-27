@@ -17,6 +17,7 @@
 
 <div style="max-width: 560px; padding-bottom: 100px;">
     <form method="POST" action="{{ url_for('pages.add_goal') }}">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
         <div class="form-group">
             <label class="form-label">Goal name</label>
             <input type="text" name="name" class="form-input" placeholder="e.g. Manchester house deposit" required

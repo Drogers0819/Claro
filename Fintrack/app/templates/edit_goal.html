@@ -28,6 +28,7 @@
 
 <div style="max-width: 560px;">
     <form method="POST" action="{{ url_for('pages.edit_goal', goal_id=goal.id) }}">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
         <div class="form-group">
             <label class="form-label">What's this goal called?</label>
             <input type="text" name="name" class="form-input" value="{{ goal.name | replace(' (must-hit)', '') }}" required

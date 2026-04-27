@@ -125,6 +125,7 @@
     <div style="font-size: 0.72rem; color: var(--text-tertiary); margin-bottom: 16px; margin-top: 20px;">Set a spending limit</div>
     {% endif %}
     <form method="POST" action="{{ url_for('pages.create_budget_page') }}">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
         <div class="grid-2">
             <div class="form-group" style="margin-bottom: 0;">
                 <select name="category_id" class="form-select" required>
@@ -172,7 +173,10 @@ function saveBudgetLimit(id) {
     if (!newLimit || newLimit <= 0) return;
     fetch('/api/budgets/' + id, {
         method: 'PUT',
-        headers: {'Content-Type': 'application/json'},
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+        },
         body: JSON.stringify({monthly_limit: newLimit})
     }).then(function() { window.location.reload(); })
       .catch(function() { window.location.reload(); });

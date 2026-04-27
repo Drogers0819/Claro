@@ -1,6 +1,14 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash, session, current_app, send_from_directory
 from flask_login import login_user, logout_user, login_required, current_user
-from app import db, bcrypt
+from app import db, bcrypt, limiter
+from app.utils.validators import (
+    sanitize_string,
+    validate_amount,
+    validate_email,
+    validate_int,
+    validate_name,
+    validate_password,
+)
 from app.models.user import User
 from app.models.transaction import Transaction
 from app.models.category import Category
@@ -334,21 +342,18 @@ def index():
 
 
 @page_bp.route("/register", methods=["GET", "POST"])
+@limiter.limit("3 per minute, 10 per hour", methods=["POST"])
 def register():
     if current_user.is_authenticated:
         return redirect(url_for("pages.overview"))
 
     if request.method == "POST":
-        name = request.form.get("name", "").strip()
-        email = request.form.get("email", "").strip()
-        password = request.form.get("password", "")
-
-        if not name or not email or not password:
-            flash("All fields are required", "error")
-            return redirect(url_for("pages.register"))
-
-        if len(password) < 8:
-            flash("Password must be at least 8 characters", "error")
+        try:
+            name = validate_name(request.form.get("name", ""), max_length=100)
+            email = validate_email(request.form.get("email", ""))
+            password = validate_password(request.form.get("password", ""))
+        except ValueError as e:
+            flash(str(e), "error")
             return redirect(url_for("pages.register"))
 
         if User.query.filter_by(email=email).first():
@@ -367,15 +372,16 @@ def register():
 
 
 @page_bp.route("/login", methods=["GET", "POST"])
+@limiter.limit("5 per minute, 20 per hour", methods=["POST"])
 def login():
     if current_user.is_authenticated:
         return redirect(url_for("pages.overview"))
 
     if request.method == "POST":
-        email = request.form.get("email", "").strip()
+        email = (request.form.get("email", "") or "").strip().lower()
         password = request.form.get("password", "")
 
-        user = User.query.filter_by(email=email).first()
+        user = User.query.filter_by(email=email).first() if email else None
 
         if not user or not user.check_password(password):
             flash("Invalid email or password", "error")
@@ -861,11 +867,15 @@ def checkin():
         for pot in pots_for_checkin:
             form_key = f"actual_{pot['name'].replace(' ', '_')}"
             try:
-                actual = round(float(request.form.get(form_key, 0)), 2)
-            except (ValueError, TypeError):
+                actual = validate_amount(
+                    request.form.get(form_key, 0) or 0,
+                    "Contribution", min_val=0, max_val=1_000_000
+                )
+            except ValueError:
                 actual = 0
 
-            note = request.form.get(f"note_{pot['name'].replace(' ', '_')}", "").strip() or None
+            raw_note = request.form.get(f"note_{pot['name'].replace(' ', '_')}", "")
+            note = sanitize_string(raw_note, max_length=500) or None
 
             entry = CheckInEntry(
                 checkin_id=checkin_record.id,
@@ -876,9 +886,11 @@ def checkin():
             )
             db.session.add(entry)
 
-            # Update goal current_amount
+            # Update goal current_amount — verify ownership before mutating
             if pot.get("goal_id") and actual > 0:
-                goal = Goal.query.get(pot["goal_id"])
+                goal = Goal.query.filter_by(
+                    id=pot["goal_id"], user_id=current_user.id
+                ).first()
                 if goal:
                     goal.current_amount = round(
                         float(goal.current_amount or 0) + actual, 2
@@ -1363,53 +1375,48 @@ def update_theme():
 def factfind():
     if request.method == "POST":
         try:
-            monthly_income = round(float(request.form.get("monthly_income", 0)), 2)
-        except (ValueError, TypeError):
-            flash("Invalid income amount", "error")
+            monthly_income = validate_amount(
+                request.form.get("monthly_income", 0),
+                "Monthly income", min_val=0.01, max_val=1_000_000
+            )
+            rent_amount = validate_amount(
+                request.form.get("rent_amount", 0),
+                "Rent", min_val=0, max_val=100_000
+            )
+            bills_amount = validate_amount(
+                request.form.get("bills_amount", 0),
+                "Bills", min_val=0, max_val=100_000
+            )
+            groceries_estimate = validate_amount(
+                request.form.get("groceries_estimate", 0) or 0,
+                "Groceries", min_val=0, max_val=100_000
+            )
+            transport_estimate = validate_amount(
+                request.form.get("transport_estimate", 0) or 0,
+                "Transport", min_val=0, max_val=100_000
+            )
+            subscriptions_total = validate_amount(
+                request.form.get("subscriptions_total", 0) or 0,
+                "Subscriptions", min_val=0, max_val=100_000
+            )
+            other_commitments = validate_amount(
+                request.form.get("other_commitments", 0) or 0,
+                "Other commitments", min_val=0, max_val=100_000
+            )
+            income_day = validate_int(
+                request.form.get("income_day"),
+                "Pay day", min_val=1, max_val=31, allow_none=True
+            )
+        except ValueError as e:
+            flash(str(e), "error")
             return redirect(url_for("pages.factfind"))
-
-        if monthly_income <= 0:
-            flash("Monthly income must be greater than zero", "error")
-            return redirect(url_for("pages.factfind"))
-
-        try:
-            rent_amount = round(float(request.form.get("rent_amount", 0)), 2)
-        except (ValueError, TypeError):
-            flash("Invalid rent amount", "error")
-            return redirect(url_for("pages.factfind"))
-
-        try:
-            bills_amount = round(float(request.form.get("bills_amount", 0)), 2)
-        except (ValueError, TypeError):
-            flash("Invalid bills amount", "error")
-            return redirect(url_for("pages.factfind"))
-
-        income_day = request.form.get("income_day", type=int)
-
-        try:
-            groceries_estimate = round(float(request.form.get("groceries_estimate", 0)), 2)
-        except (ValueError, TypeError):
-            groceries_estimate = 0
-
-        try:
-            transport_estimate = round(float(request.form.get("transport_estimate", 0)), 2)
-        except (ValueError, TypeError):
-            transport_estimate = 0
 
         current_user.monthly_income = monthly_income
         current_user.rent_amount = rent_amount
         current_user.bills_amount = bills_amount
         current_user.groceries_estimate = groceries_estimate
         current_user.transport_estimate = transport_estimate
-        try:
-            subscriptions_total = round(float(request.form.get("subscriptions_total", 0)), 2)
-        except (ValueError, TypeError): 
-            subscriptions_total = 0
         current_user.subscriptions_total = subscriptions_total
-        try:
-            other_commitments = round(float(request.form.get("other_commitments", 0)), 2)
-        except (ValueError, TypeError):
-            other_commitments = 0
         current_user.other_commitments = other_commitments
         current_user.income_day = income_day
         was_already_completed = current_user.factfind_completed
@@ -1619,40 +1626,36 @@ def delete_transaction(transaction_id):
 @login_required
 def add_goal():
     if request.method == "POST":
-        name = request.form.get("name", "").strip()
-        goal_type = request.form.get("type", "savings_target")
-        priority_rank = request.form.get("priority_rank", 1, type=int)
-
-        if not name:
-            flash("Goal name is required", "error")
+        try:
+            name = validate_name(request.form.get("name", ""), max_length=255)
+            target_amount = validate_amount(
+                request.form.get("target_amount", "") or None,
+                "Target amount", min_val=0.01, max_val=10_000_000, allow_none=True
+            )
+            current_amount = validate_amount(
+                request.form.get("current_amount", "") or 0,
+                "Current amount", min_val=0, max_val=10_000_000
+            )
+            monthly_allocation = validate_amount(
+                request.form.get("monthly_allocation", "") or None,
+                "Monthly allocation", min_val=0, max_val=1_000_000, allow_none=True
+            )
+            priority_rank = validate_int(
+                request.form.get("priority_rank", 1),
+                "Priority", min_val=1, max_val=100, allow_none=False
+            )
+        except ValueError as e:
+            flash(str(e), "error")
             return redirect(url_for("pages.add_goal"))
 
-        target_amount = None
-        val = request.form.get("target_amount", "").strip()
-        if val:
-            try:
-                target_amount = round(float(val), 2)
-            except ValueError:
-                pass
+        if target_amount is not None and current_amount > target_amount:
+            flash("Current amount cannot exceed target", "error")
+            return redirect(url_for("pages.add_goal"))
 
-        current_amount = 0
-        val = request.form.get("current_amount", "").strip()
-        if val:
-            try:
-                current_amount = round(float(val), 2)
-            except ValueError:
-                pass
-
-        monthly_allocation = None
-        val = request.form.get("monthly_allocation", "").strip()
-        if val:
-            try:
-                monthly_allocation = round(float(val), 2)
-            except ValueError:
-                pass
+        goal_type = sanitize_string(request.form.get("type", "savings_target"), max_length=30) or "savings_target"
 
         deadline = None
-        val = request.form.get("deadline", "").strip()
+        val = (request.form.get("deadline") or "").strip()
         if val:
             try:
                 deadline = date.fromisoformat(val)

@@ -1,11 +1,12 @@
 from flask import Blueprint, request, jsonify, render_template
 from flask_login import login_required, current_user
-from app import db
+from app import db, limiter
 from app.models.chat import ChatMessage
 from app.models.goal import Goal
 from app.services.companion_service import chat, check_rate_limit, increment_message_count
 from app.services.planner_service import generate_financial_plan
 from app.utils.auth import requires_subscription
+from app.utils.validators import sanitize_string
 
 companion_bp = Blueprint("companion", __name__)
 
@@ -39,14 +40,12 @@ def companion_page():
 @login_required
 def edit_message():
     """Edit an existing user message and regenerate the AI response."""
-    data = request.get_json()
+    data = request.get_json(silent=True) or {}
     message_id = data.get("message_id")
-    new_content = (data.get("new_content") or "").strip()
+    new_content = sanitize_string(data.get("new_content") or "", max_length=2000)
 
     if not message_id or not new_content:
         return jsonify({"error": "message_id and new_content required"}), 400
-    if len(new_content) > 1000:
-        return jsonify({"error": "Message too long (max 1000 characters)"}), 400
 
     # Verify ownership
     user_msg = ChatMessage.query.filter_by(
@@ -120,6 +119,7 @@ def clear_chat():
 
 @companion_bp.route("/api/companion/chat", methods=["POST"])
 @login_required
+@limiter.limit("30 per day")
 @requires_subscription
 def companion_chat():
     """Handle a chat message to the companion."""
@@ -128,13 +128,14 @@ def companion_chat():
     if not allowed:
         return jsonify({"error": reason, "allowed": False}), 429
 
-    data = request.get_json()
-    if not data or not data.get("message"):
+    data = request.get_json(silent=True) or {}
+    raw_message = data.get("message")
+    if not raw_message or not str(raw_message).strip():
         return jsonify({"error": "Message is required"}), 400
 
-    message = data["message"].strip()
-    if len(message) > 1000:
-        return jsonify({"error": "Message too long (max 1000 characters)"}), 400
+    message = sanitize_string(raw_message, max_length=2000)
+    if not message:
+        return jsonify({"error": "Message is required"}), 400
 
     # Build plan context
     plan = None

@@ -67,6 +67,7 @@
     </p>
 
     <form method="POST" action="{{ url_for('pages.checkin') }}">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
         {% for pot in pots %}
         <div style="padding: 14px 0; {% if not loop.last %}border-bottom: 0.5px solid var(--glass-border-subtle);{% endif %}">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
