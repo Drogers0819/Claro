@@ -22,8 +22,8 @@
     <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='favicon.ico') }}">
     <link rel="icon" type="image/png" sizes="32x32" href="{{ url_for('static', filename='images/logo.png') }}">
     <link rel="apple-touch-icon" href="{{ url_for('static', filename='images/logo.png') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}?v=20260426a">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/themes.css') }}?v=20260426a">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}?v=20260427a">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/themes.css') }}?v=20260427a">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <style>
         .pwa-install-banner[hidden] { display: none !important; }
@@ -88,7 +88,7 @@
         }
     </style>
 </head>
-<body class="{% if current_user.is_authenticated %}theme-{{ current_user.theme }}{% else %}theme-racing-green{% endif %}{% if show_header is defined and not show_header %} no-app-header{% endif %}">
+<body class="{% if current_user.is_authenticated %}theme-{{ current_user.theme or 'obsidian-vault' }}{% else %}theme-obsidian-vault{% endif %}{% if show_header is defined and not show_header %} no-app-header{% endif %}">
     <!-- PWA install banner (shown when installable; hidden if already installed or recently dismissed) -->
     <div id="pwaInstallBanner" class="pwa-install-banner" hidden role="region" aria-label="Install Claro">
         <span class="pwa-install-banner__icon" aria-hidden="true">
@@ -196,6 +196,32 @@
         </a>
     </div>
     {% endif %}
+
+    <!-- Mobile bottom tab bar (replaces the legacy sidebar-as-bottom-nav on mobile) -->
+    <nav class="bottom-tab-bar" aria-label="Primary">
+        <a href="{{ url_for('pages.overview') }}" class="bottom-tab {% if request.endpoint == 'pages.overview' %}is-active{% endif %}">
+            <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg>
+            Overview
+        </a>
+        <a href="{{ url_for('pages.my_goals') }}" class="bottom-tab {% if request.endpoint in ['pages.my_goals', 'pages.add_goal', 'pages.goal_detail', 'pages.edit_goal'] %}is-active{% endif %}">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
+            Goals
+        </a>
+        <div class="bottom-tab-fab-cell">
+            <a href="{{ url_for('pages.checkin') }}" class="bottom-tab-fab" aria-label="Quick check-in">
+                <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            </a>
+        </div>
+        <a href="{{ url_for('companion.companion_page') }}" class="bottom-tab {% if request.endpoint == 'companion.companion_page' %}is-active{% endif %}">
+            <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+            Chat
+        </a>
+        <a href="{{ url_for('pages.settings') }}" class="bottom-tab {% if request.endpoint == 'pages.settings' %}is-active{% endif %}">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+            Settings
+        </a>
+    </nav>
+
     {% else %}
     <div>
         {% block auth_content %}{% endblock %}

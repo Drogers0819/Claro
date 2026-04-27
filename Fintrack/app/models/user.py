@@ -41,7 +41,7 @@ class User(db.Model, UserMixin):
     last_life_checkin = db.Column(db.Date, nullable=True)
 
     # Preferences
-    theme = db.Column(db.String(30), default="racing-green")
+    theme = db.Column(db.String(30), default="obsidian-vault")
 
     # Relationships
     transactions = db.relationship("Transaction", backref="user", lazy=True)

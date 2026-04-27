@@ -1357,10 +1357,11 @@ def settings():
 @login_required
 def update_theme():
     theme = request.form.get("theme", "racing-green")
-    valid = ["racing-green", "midnight-navy", "oxford-saddle", "amethyst",
+    valid = ["obsidian-vault", "soft-modern",
+             "racing-green", "midnight-navy", "oxford-saddle", "amethyst",
              "rosso", "cobalt", "obsidian", "ivory", "pearl", "sage", "paper"]
     if theme not in valid:
-        theme = "racing-green"
+        theme = "obsidian-vault"
 
     current_user.theme = theme
     db.session.commit()

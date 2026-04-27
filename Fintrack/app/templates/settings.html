@@ -56,6 +56,49 @@
     </div>
 </div>
 
+<!-- App theme — primary mobile shell variant -->
+<div style="padding: 16px 0; border-top: 0.5px solid var(--glass-border);">
+    <button class="settings-toggle" onclick="toggleSettings('app-theme')" aria-expanded="true">
+        <div style="display: flex; align-items: center; gap: 10px;">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="opacity: 0.5;"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+            <span style="font-size: 0.9rem; color: var(--text-primary);">App theme</span>
+        </div>
+        <svg id="chevron-app-theme" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="opacity: 0.4; transition: transform 0.2s; transform: rotate(90deg);"><path d="M9 18l6-6-6-6"/></svg>
+    </button>
+    <div id="panel-app-theme" style="padding-top: 16px; border-top: 0.5px solid var(--glass-border); margin-top: 12px;">
+        <p style="font-size: 0.75rem; color: var(--text-tertiary); margin-bottom: 16px;">Pick the look that suits you. Changes apply instantly.</p>
+        <form method="POST" action="{{ url_for('pages.update_theme') }}">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                {% set app_themes = [
+                    ("obsidian-vault", "Obsidian Vault", "Dark · Roman gold accents", "linear-gradient(135deg, #0a1220 0%, #020408 100%)", "#C5A35D"),
+                    ("soft-modern", "Soft Modern", "Light · Near-black accents", "linear-gradient(135deg, #ffffff 0%, #f5f3ee 100%)", "#1a1916")
+                ] %}
+                {% for theme_id, theme_name, theme_desc, gradient, dot in app_themes %}
+                <label style="cursor: pointer; display: block;">
+                    <input type="radio" name="theme" value="{{ theme_id }}"
+                           {% if current_user.theme == theme_id %}checked{% endif %}
+                           style="display: none;"
+                           onchange="this.form.submit()">
+                    <div style="border-radius: 14px; overflow: hidden; border: 1.5px solid {% if current_user.theme == theme_id %}var(--roman-gold){% else %}var(--glass-border){% endif %}; background: {{ gradient }}; padding: 14px; height: 92px; display: flex; flex-direction: column; justify-content: space-between; transition: border-color 120ms ease;">
+                        <div style="display: flex; align-items: center; gap: 6px;">
+                            <span style="display: inline-block; width: 10px; height: 10px; border-radius: 50%; background: {{ dot }};"></span>
+                            <span style="display: inline-block; width: 24px; height: 4px; border-radius: 2px; background: rgba(127,127,127,0.25);"></span>
+                        </div>
+                        <div style="display: flex; gap: 4px; align-items: center; justify-content: flex-end;">
+                            <span style="display: inline-block; width: 28px; height: 4px; border-radius: 2px; background: rgba(127,127,127,0.25);"></span>
+                            <span style="display: inline-block; width: 14px; height: 14px; border-radius: 50%; background: {{ dot }};"></span>
+                        </div>
+                    </div>
+                    <div style="margin-top: 8px; font-size: 0.78rem; color: var(--text-primary); font-weight: 500;">{{ theme_name }}</div>
+                    <div style="font-size: 0.65rem; color: var(--text-tertiary); margin-top: 1px;">{{ theme_desc }}</div>
+                </label>
+                {% endfor %}
+            </div>
+        </form>
+    </div>
+</div>
+
 <!-- Appearance -->
 <div style="padding: 16px 0; border-top: 0.5px solid var(--glass-border);">
     <button class="settings-toggle" onclick="toggleSettings('appearance')" aria-expanded="false">
@@ -316,7 +359,7 @@
 
 <script>
 function toggleSettings(key) {
-    var keys = ['profile', 'appearance', 'billing', 'account'];
+    var keys = ['profile', 'app-theme', 'appearance', 'billing', 'account'];
     keys.forEach(function(k) {
         var p = document.getElementById('panel-' + k);
         var c = document.getElementById('chevron-' + k);

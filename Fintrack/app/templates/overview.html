@@ -156,30 +156,51 @@
 
     {% for pot in goal_pots %}
     {% if pot.monthly_amount > 0 and pot.goal_id %}
-    <a href="{{ url_for('pages.goal_detail', goal_id=pot.goal_id) }}?from=overview" style="display: block; padding: 12px 0; text-decoration: none; {% if not loop.last %}border-bottom: 0.5px solid var(--glass-border);{% endif %}">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
-            <div style="display: flex; align-items: center; gap: 6px;">
-                <span style="font-size: 0.85rem; color: var(--text-primary);">{{ pot.name | replace(' (must-hit)', '') }}</span>
-                {% if pot.completed %}
-                <span style="font-size: 0.6rem; padding: 1px 6px; border-radius: 4px; background: var(--success-bg); color: var(--success-text);">done</span>
+        {# Pick a color + emoji from goal type / name keywords #}
+        {% set _name_low = (pot.name or '') | lower %}
+        {% set _type = pot.type or '' %}
+        {% if _type == 'debt' or 'debt' in _name_low or 'loan' in _name_low or 'overdraft' in _name_low or 'card' in _name_low %}
+            {% set _circle = '#888780' %}{% set _emoji = '💳' %}
+        {% elif 'emergency' in _name_low or 'safety' in _name_low or 'rainy' in _name_low %}
+            {% set _circle = '#5b8a72' %}{% set _emoji = '🛡️' %}
+        {% elif 'house' in _name_low or 'deposit' in _name_low or 'mortgage' in _name_low or 'home' in _name_low %}
+            {% set _circle = '#3f6c8a' %}{% set _emoji = '🏠' %}
+        {% elif 'holiday' in _name_low or 'travel' in _name_low or 'trip' in _name_low or 'vacation' in _name_low %}
+            {% set _circle = '#c5a35d' %}{% set _emoji = '✈️' %}
+        {% elif 'wedding' in _name_low or 'baby' in _name_low or 'ring' in _name_low %}
+            {% set _circle = '#c47b6b' %}{% set _emoji = '💍' %}
+        {% elif 'car' in _name_low or 'vehicle' in _name_low %}
+            {% set _circle = '#6e6e7a' %}{% set _emoji = '🚗' %}
+        {% else %}
+            {% set _circle = '#7d6f99' %}{% set _emoji = '🎯' %}
+        {% endif %}
+    <a href="{{ url_for('pages.goal_detail', goal_id=pot.goal_id) }}?from=overview" style="display: flex; gap: 12px; align-items: center; padding: 12px 0; text-decoration: none; {% if not loop.last %}border-bottom: 0.5px solid var(--glass-border);{% endif %}">
+        <span aria-hidden="true" style="flex-shrink: 0; width: 36px; height: 36px; border-radius: 50%; background: {{ _circle }}; color: #fff; display: inline-flex; align-items: center; justify-content: center; font-size: 0.95rem;">{{ _emoji }}</span>
+        <div style="flex: 1; min-width: 0;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+                <div style="display: flex; align-items: center; gap: 6px; min-width: 0;">
+                    <span style="font-size: 0.85rem; color: var(--text-primary); overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{ pot.name | replace(' (must-hit)', '') }}</span>
+                    {% if pot.completed %}
+                    <span style="font-size: 0.6rem; padding: 1px 6px; border-radius: 4px; background: var(--success-bg); color: var(--success-text); flex-shrink: 0;">done</span>
+                    {% endif %}
+                </div>
+                <div style="display: flex; align-items: center; gap: 6px; flex-shrink: 0;">
+                    <span style="font-size: 0.8rem; color: var(--text-primary);">£{{ "{:,.2f}".format(pot.monthly_amount) }}/mo</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="var(--text-secondary)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
+                </div>
+            </div>
+            {% if pot.target and not pot.completed %}
+            <div class="progress-track">
+                <div class="progress-fill" style="width: {{ ((pot.current / pot.target) * 100) | round(1) }}%; background: var(--roman-gold);"></div>
+            </div>
+            <div style="display: flex; justify-content: space-between; margin-top: 3px;">
+                <span style="font-size: 0.65rem; color: var(--text-tertiary);">£{{ "{:,.2f}".format(pot.current) }} of £{{ "{:,.2f}".format(pot.target) }}</span>
+                {% if pot.months_to_target is defined %}
+                <span style="font-size: 0.65rem; color: var(--text-tertiary);">{{ pot.months_to_target }} month{% if pot.months_to_target != 1 %}s{% endif %} to go</span>
                 {% endif %}
             </div>
-            <div style="display: flex; align-items: center; gap: 6px;">
-                <span style="font-size: 0.8rem; color: var(--text-primary);">£{{ "{:,.2f}".format(pot.monthly_amount) }}/mo</span>
-                <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="var(--text-secondary)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
-            </div>
-        </div>
-        {% if pot.target and not pot.completed %}
-        <div class="progress-track">
-            <div class="progress-fill" style="width: {{ ((pot.current / pot.target) * 100) | round(1) }}%; background: var(--roman-gold);"></div>
-        </div>
-        <div style="display: flex; justify-content: space-between; margin-top: 3px;">
-            <span style="font-size: 0.65rem; color: var(--text-tertiary);">£{{ "{:,.2f}".format(pot.current) }} of £{{ "{:,.2f}".format(pot.target) }}</span>
-            {% if pot.months_to_target is defined %}
-            <span style="font-size: 0.65rem; color: var(--text-tertiary);">{{ pot.months_to_target }} month{% if pot.months_to_target != 1 %}s{% endif %} to go</span>
             {% endif %}
         </div>
-        {% endif %}
     </a>
     {% endif %}
     {% endfor %}
@@ -246,5 +267,25 @@
     <p style="font-size: 0.78rem; color: var(--text-tertiary); line-height: 1.5; margin: 0;">Nothing recorded yet this month. Head to My money to log your spending.</p>
     {% endif %}
 </div>
+
+{# "Anything on your mind?" — companion prompt styled as an input, navigates to /companion #}
+{% if not is_frozen %}
+<a href="{{ url_for('companion.companion_page') }}"
+   style="display: flex; align-items: center; gap: 12px; padding: 14px 18px; margin: 8px 0 24px; border-radius: 14px;
+          background: var(--gold-whisper-bg, var(--glass-bg, rgba(197,163,93,0.05)));
+          border: 0.5px solid var(--gold-whisper-border, var(--glass-border));
+          text-decoration: none; -webkit-tap-highlight-color: transparent;
+          transition: transform 60ms ease-out;"
+   onmousedown="this.style.transform='scale(0.985)'"
+   onmouseup="this.style.transform=''"
+   ontouchstart="this.style.transform='scale(0.985)'"
+   ontouchend="this.style.transform=''">
+    <span aria-hidden="true" style="display: inline-flex; align-items: center; justify-content: center; width: 32px; height: 32px; border-radius: 50%; background: var(--glass); color: var(--roman-gold); flex-shrink: 0;">
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+    </span>
+    <span style="flex: 1; font-size: 0.85rem; color: var(--text-tertiary); font-style: italic;">Anything on your mind?</span>
+    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--text-tertiary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="opacity: 0.5; flex-shrink: 0;"><path d="M9 18l6-6-6-6"/></svg>
+</a>
+{% endif %}
 
 {% endblock %}
