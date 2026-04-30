@@ -187,6 +187,27 @@ document.addEventListener('DOMContentLoaded', function() {
     document.addEventListener('keydown', function(e) {
         if (e.key === 'Escape') { closeClearModal(); cancelEdit(); }
     });
+
+    // ── ?q= prefill: arrive from overview chip with a pre-filled prompt ──
+    try {
+        var params = new URLSearchParams(window.location.search);
+        var q = params.get('q');
+        if (q) {
+            var input = document.getElementById('chat-input');
+            if (input) {
+                input.value = q;
+                autoResize(input);
+                // Strip ?q= from the URL so refresh / share doesn't re-fire
+                if (window.history && window.history.replaceState) {
+                    window.history.replaceState({}, document.title, window.location.pathname);
+                }
+                // Auto-submit only when user is allowed to send
+                if (typeof messagesUsed !== 'undefined' && messagesUsed < dailyLimit) {
+                    setTimeout(function() { sendMessage(); }, 50);
+                }
+            }
+        }
+    } catch (_) { /* no-op */ }
 });
 
 function autoResize(el) {

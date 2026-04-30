@@ -606,18 +606,55 @@ def overview():
                 "next_date_str": _fmt(next_date),
             }
 
+    # ── Savings rate, plan phase, date label, first name (slim shell shell) ──
+    first_name = (current_user.name or "").split()[0] if current_user.name else ""
+    date_label = today.strftime("%A, %d %B")
+
+    savings_rate = None
+    if smart_plan and "error" not in smart_plan:
+        income_for_rate = float(current_user.monthly_income or 0)
+        plan_surplus = float(smart_plan.get("surplus") or 0)
+        if income_for_rate > 0 and plan_surplus > 0:
+            savings_rate = round((plan_surplus / income_for_rate) * 100)
+
+    plan_phase = None
+    if smart_plan and "error" not in smart_plan:
+        phases = smart_plan.get("phases") or []
+        if phases:
+            current_phase = phases[0]
+            plan_phase = {
+                "current": int(current_phase.get("phase") or 1),
+                "total": len(phases),
+                "description": current_phase.get("description", ""),
+            }
+
+    # Active goal count for the right-panel stat pill
+    active_goals_for_pill = 0
+    if smart_plan and "error" not in smart_plan:
+        for pot in smart_plan.get("pots") or []:
+            if pot.get("goal_id") and pot.get("monthly_amount", 0) > 0 and not pot.get("completed"):
+                active_goals_for_pill += 1
+
+    plan_surplus_value = 0.0
+    if smart_plan and "error" not in smart_plan:
+        plan_surplus_value = float(smart_plan.get("surplus") or 0)
+
     return render_template("overview.html",
         greeting=greeting,
+        first_name=first_name,
+        date_label=date_label,
         smart_plan=smart_plan,
         plan_summary=plan_summary,
         money_left=money_left,
         days_remaining=days_remaining,
         has_data=has_data,
         monthly_spending=float(expenses),
+        expenses_this_month=float(expenses),
         monthly_income_txn=float(income),
         top_categories=categories,
         primary_goal=data["primary_goal"] if data["primary_goal"] else None,
         active_goals_count=data["active_goals"],
+        active_goals_for_pill=active_goals_for_pill,
         action_whisper=action_whisper,
         plan_status=plan_status,
         nearest_milestone=nearest_milestone,
@@ -631,6 +668,9 @@ def overview():
         debt_allocation=debt_allocation,
         available_surplus=available_surplus,
         has_debt_goals=has_debt_goals,
+        savings_rate=savings_rate,
+        plan_phase=plan_phase,
+        plan_surplus_value=plan_surplus_value,
     )
 
 

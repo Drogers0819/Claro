@@ -161,4 +161,24 @@ def create_app(config_class=None):
     app.register_blueprint(category_bp)
     app.register_blueprint(goal_bp)
 
+    # Pages that opt into the slim icon-sidebar / bottom-tab-bar shell
+    _SLIM_SHELL_ENDPOINTS = {
+        "pages.overview",
+        "pages.my_goals",
+        "pages.add_goal",
+        "pages.edit_goal",
+        "pages.goal_detail",
+        "companion.companion_page",
+        "pages.plan",
+        "pages.scenario_page",
+        "pages.checkin",
+        "pages.settings",
+        "pages.withdraw",
+    }
+
+    @app.context_processor
+    def _inject_slim_shell_flag():
+        from flask import request
+        return {"use_slim_shell": request.endpoint in _SLIM_SHELL_ENDPOINTS}
+
     return app

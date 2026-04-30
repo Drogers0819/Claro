@@ -24,8 +24,8 @@
     <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='favicon.ico') }}">
     <link rel="icon" type="image/png" sizes="32x32" href="{{ url_for('static', filename='images/logo.png') }}">
     <link rel="apple-touch-icon" href="{{ url_for('static', filename='images/logo.png') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}?v=20260427b">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/themes.css') }}?v=20260427b">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}?v=20260430b">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/themes.css') }}?v=20260430b">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <style>
         .pwa-install-banner[hidden] { display: none !important; }
@@ -90,7 +90,7 @@
         }
     </style>
 </head>
-<body class="{% if current_user.is_authenticated %}theme-{{ current_user.theme or 'obsidian-vault' }}{% else %}theme-obsidian-vault{% endif %}{% if show_header is defined and not show_header %} no-app-header{% endif %}">
+<body class="{% if current_user.is_authenticated %}theme-{{ current_user.theme or 'obsidian-vault' }}{% else %}theme-obsidian-vault{% endif %}{% if show_header is defined and not show_header %} no-app-header{% endif %}{% if use_slim_shell %} has-slim-shell{% endif %}">
     <!-- PWA install banner (shown when installable; hidden if already installed or recently dismissed) -->
     <div id="pwaInstallBanner" class="pwa-install-banner" hidden role="region" aria-label="Install Claro">
         <span class="pwa-install-banner__icon" aria-hidden="true">
@@ -102,6 +102,48 @@
     </div>
 
     {% if current_user.is_authenticated %}
+    {% set _slim_active_overview = (request.endpoint == 'pages.overview') %}
+    {% set _slim_active_checkin = (request.endpoint == 'pages.checkin') %}
+    {% set _slim_active_goals = (request.endpoint in ['pages.my_goals', 'pages.add_goal', 'pages.goal_detail', 'pages.edit_goal']) %}
+    {% set _slim_active_companion = (request.endpoint == 'companion.companion_page') %}
+    {% set _slim_active_plan = (request.endpoint in ['pages.plan', 'pages.scenario_page', 'pages.withdraw']) %}
+    {% set _slim_active_settings = (request.endpoint == 'pages.settings') %}
+
+    {# ── SLIM CHROME: rendered when use_slim_shell is true ── #}
+    {% if use_slim_shell %}
+    <aside class="slim-sidebar" aria-label="Primary navigation">
+        <a href="{{ url_for('pages.overview') }}" class="slim-sidebar__logo" aria-label="Claro home"><em>C</em></a>
+        <nav class="slim-sidebar__nav">
+            <a href="{{ url_for('pages.overview') }}" class="slim-sidebar__icon{% if _slim_active_overview %} is-active{% endif %}" aria-label="Overview" data-tooltip="Overview">
+                <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg>
+            </a>
+            <a href="{{ url_for('pages.checkin') }}" class="slim-sidebar__icon{% if _slim_active_checkin %} is-active{% endif %}" aria-label="Check-in" data-tooltip="Check-in">
+                <svg viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+            </a>
+            <a href="{{ url_for('pages.my_goals') }}" class="slim-sidebar__icon{% if _slim_active_goals %} is-active{% endif %}" aria-label="Goals" data-tooltip="Goals">
+                <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
+            </a>
+            <a href="{{ url_for('companion.companion_page') }}" class="slim-sidebar__icon{% if _slim_active_companion %} is-active{% endif %}" aria-label="Companion" data-tooltip="Companion">
+                <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+            </a>
+            <a href="{{ url_for('pages.plan') }}" class="slim-sidebar__icon{% if _slim_active_plan %} is-active{% endif %}" aria-label="Plan" data-tooltip="Plan">
+                <svg viewBox="0 0 24 24"><line x1="22" x2="2" y1="12" y2="12"/><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/><line x1="6" x2="6.01" y1="16" y2="16"/><line x1="10" x2="10.01" y1="16" y2="16"/></svg>
+            </a>
+            <a href="{{ url_for('pages.settings') }}" class="slim-sidebar__icon slim-sidebar__settings{% if _slim_active_settings %} is-active{% endif %}" aria-label="Settings" data-tooltip="Settings">
+                <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+            </a>
+        </nav>
+        <div class="slim-sidebar__profile">
+            <a href="{{ url_for('pages.settings') }}" class="slim-avatar" title="{{ current_user.name }} · {{ current_user.tier }}">{{ current_user.name[0:2] | upper }}</a>
+        </div>
+    </aside>
+
+    <header class="slim-mobile-topbar">
+        <a href="{{ url_for('pages.overview') }}" class="slim-mobile-topbar__brand" aria-label="Claro home"><em>C</em>laro</a>
+        <a href="{{ url_for('pages.settings') }}" class="slim-mobile-topbar__avatar" aria-label="Settings">{{ current_user.name[0] | upper }}</a>
+    </header>
+
+    {% else %}
     {% if show_header is not defined or show_header %}
     <header class="app-header">
         <div class="app-header-brand">
@@ -114,8 +156,10 @@
         {% endif %}
     </header>
     {% endif %}
+    {% endif %}{# end use_slim_shell branch — header chrome only #}
+
     <div class="app-layout">
-        {% if show_sidebar is not defined or show_sidebar %}
+        {% if not use_slim_shell and (show_sidebar is not defined or show_sidebar) %}
         <aside class="sidebar">
             <nav class="sidebar-nav">
                 <a href="{{ url_for('pages.overview') }}" class="nav-link {% if request.endpoint == 'pages.overview' or (request.endpoint == 'pages.goal_detail' and request.args.get('from') == 'overview') %}active{% endif %}">
@@ -183,10 +227,37 @@
         </aside>
         {% endif %}
 
-        <main class="{% if show_sidebar is not defined or show_sidebar %}main-content{% else %}main-content--solo{% endif %} {% block main_class %}{% endblock %}">
+        <main class="{% if use_slim_shell %}main-content{% elif show_sidebar is not defined or show_sidebar %}main-content{% else %}main-content--solo{% endif %} {% block main_class %}{% endblock %}">
             {% block content %}{% endblock %}
         </main>
     </div>
+
+    {% if use_slim_shell %}
+    {# ── Slim bottom tabs (mobile) ── #}
+    <nav class="slim-bottom-tabs" aria-label="Primary">
+        <a href="{{ url_for('pages.overview') }}" class="slim-tab{% if _slim_active_overview %} is-active{% endif %}">
+            <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg>
+            Overview
+        </a>
+        <a href="{{ url_for('pages.my_goals') }}" class="slim-tab{% if _slim_active_goals %} is-active{% endif %}">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
+            Goals
+        </a>
+        <div class="slim-tab-fab-cell">
+            <a href="{{ url_for('pages.checkin') }}" class="slim-tab-fab" aria-label="Quick check-in">
+                <svg viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+            </a>
+        </div>
+        <a href="{{ url_for('companion.companion_page') }}" class="slim-tab{% if _slim_active_companion %} is-active{% endif %}">
+            <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+            Chat
+        </a>
+        <a href="{{ url_for('pages.settings') }}" class="slim-tab{% if _slim_active_settings %} is-active{% endif %}">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+            Settings
+        </a>
+    </nav>
+    {% else %}
     <!-- Mobile fixed header bar — solid background prevents avatar overlapping scrolled content -->
     {% if show_header is not defined or show_header %}
     <div class="mobile-header-bar">
@@ -199,7 +270,7 @@
     </div>
     {% endif %}
 
-    <!-- Mobile bottom tab bar (replaces the legacy sidebar-as-bottom-nav on mobile) -->
+    <!-- Mobile bottom tab bar (legacy) -->
     <nav class="bottom-tab-bar" aria-label="Primary">
         <a href="{{ url_for('pages.overview') }}" class="bottom-tab {% if request.endpoint == 'pages.overview' %}is-active{% endif %}">
             <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg>
@@ -223,6 +294,7 @@
             Settings
         </a>
     </nav>
+    {% endif %}
 
     {% else %}
     <div>

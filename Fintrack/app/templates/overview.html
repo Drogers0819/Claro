@@ -1,318 +1,325 @@
 {% extends "base.html" %}
 {% block title %}Overview – Claro{% endblock %}
 
-{% block header_content %}<span class="app-header-title">Overview</span>{% endblock %}
+{# ─────────────────────────────────────────────────────────────────
+   Goal icon macros — coloured circle SVG glyphs by goal-name keyword
+   Theme tokens drive both circle background and stroke colour.
+   ───────────────────────────────────────────────────────────────── #}
+{% macro goal_visual(name, type) %}
+  {% set _n = (name or '') | lower %}
+  {% set _t = (type or '') | lower %}
+  {% set _is_debt = (_t == 'debt' or 'debt' in _n or 'loan' in _n or 'overdraft' in _n or 'credit card' in _n or 'pay off' in _n) %}
+  {% if _is_debt %}
+    {% set _bg = 'var(--goal-circle-debt)' %}{% set _stroke = 'var(--goal-stroke-debt)' %}
+    {% set _svg = 'card' %}
+  {% elif 'house' in _n or 'deposit' in _n or 'mortgage' in _n or 'home' in _n %}
+    {% set _bg = 'var(--goal-circle-house)' %}{% set _stroke = 'var(--goal-stroke-house)' %}
+    {% set _svg = 'house' %}
+  {% elif 'emergency' in _n or 'safety' in _n or 'rainy' in _n %}
+    {% set _bg = 'var(--goal-circle-emergency)' %}{% set _stroke = 'var(--goal-stroke-emergency)' %}
+    {% set _svg = 'shield' %}
+  {% elif 'wedding' in _n or 'baby' in _n or 'family' in _n or 'ring' in _n %}
+    {% set _bg = 'var(--goal-circle-wedding)' %}{% set _stroke = 'var(--goal-stroke-wedding)' %}
+    {% set _svg = 'heart' %}
+  {% elif 'car' in _n or 'vehicle' in _n %}
+    {% set _bg = 'var(--goal-circle-car)' %}{% set _stroke = 'var(--goal-stroke-car)' %}
+    {% set _svg = 'car' %}
+  {% elif 'holiday' in _n or 'travel' in _n or 'trip' in _n or 'vacation' in _n %}
+    {% set _bg = 'var(--goal-circle-holiday)' %}{% set _stroke = 'var(--goal-stroke-holiday)' %}
+    {% set _svg = 'plane' %}
+  {% else %}
+    {% set _bg = 'var(--goal-circle-default)' %}{% set _stroke = 'var(--goal-stroke-default)' %}
+    {% set _svg = 'target' %}
+  {% endif %}
+  <span class="slim-goal-circle" style="background: {{ _bg }};" data-stroke="{{ _stroke }}">
+    <svg viewBox="0 0 24 24" stroke="{{ _stroke }}">
+      {%- if _svg == 'house' -%}
+        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>
+      {%- elif _svg == 'shield' -%}
+        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+      {%- elif _svg == 'heart' -%}
+        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+      {%- elif _svg == 'card' -%}
+        <rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/>
+      {%- elif _svg == 'car' -%}
+        <path d="M5 17h14l-1.5-7H6.5L5 17z"/><circle cx="7.5" cy="17.5" r="1.5"/><circle cx="16.5" cy="17.5" r="1.5"/>
+      {%- elif _svg == 'plane' -%}
+        <path d="M21 14l-9-3v-6l-2-1-1 1v6l-9 3v2l9-2 1 5-2 2v1l3-1 3 1v-1l-2-2 1-5 9 2v-2z"/>
+      {%- else -%}
+        <circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/>
+      {%- endif -%}
+    </svg>
+  </span>
+  <span class="slim-goal-stroke" hidden data-stroke="{{ _stroke }}"></span>
+{% endmacro %}
 
 {% block content %}
-{% macro category_icon(name, colour) %}
-<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
-     stroke="{{ colour }}" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"
-     style="flex-shrink: 0; opacity: 0.8;">
-{% if name == 'Bills' or name == 'Housing' %}
-    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>
-{% elif name == 'Food' or name == 'Eating Out' or name == 'Groceries' %}
-    <path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"/><path d="M7 2v20"/><path d="M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3z"/><path d="M21 15v7"/>
-{% elif name == 'Shopping' %}
-    <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/>
-{% elif name == 'Transport' or name == 'Travel' %}
-    <rect x="1" y="3" width="15" height="13" rx="2"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/>
-{% elif name == 'Health' %}
-    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
-{% elif name == 'Subscriptions' or name == 'Entertainment' %}
-    <polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/>
-{% elif name == 'Savings' or name == 'Investments' %}
-    <line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
-{% else %}
-    <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/>
-{% endif %}
-</svg>
-{% endmacro %}
-<div class="page-header">
-    <h1>{% if first_overview %}Your plan is ready, {{ current_user.name.split()[0] }}.{% else %}Good {{ greeting }}, {{ current_user.name.split()[0] }}.{% endif %}</h1>
-</div>
+{% set _greeting_label = greeting | capitalize %}
+{% set _first = first_name or current_user.name.split()[0] %}
 
 {% if is_frozen %}
-<div style="margin-bottom: 24px; padding: 16px 18px; border-radius: 12px; border: 1px solid var(--roman-gold); background: var(--glass-bg);">
-    <div style="font-size: 0.72rem; color: var(--roman-gold); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 6px;">Trial ended</div>
+<div style="margin-bottom: 18px; padding: 14px 16px; border-radius: 12px; border: 0.5px solid var(--whisper-border-left); background: var(--card-bg);">
+    <div style="font-size: 0.66rem; color: var(--whisper-border-left); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 6px;">Trial ended</div>
     <p style="font-size: 0.85rem; color: var(--text-primary); line-height: 1.6; margin: 0 0 12px;">Your trial has ended. Your plan and data are safe — pick a plan to reactivate.</p>
     <a href="{{ url_for('pages.trial_gate') }}" class="btn-primary btn-sm" style="text-decoration: none;">Reactivate</a>
 </div>
 {% endif %}
 
-{% set _p = current_user.factfind_completed %}
-{% set _g = active_goals_count > 0 %}
-{% set _steps = [_p, _g] | select | list | length %}
+{% set _profile_done = current_user.factfind_completed %}
+{% set _has_goals = active_goals_count > 0 %}
 
-{% if not _p %}
-<!-- Step 1 not done: profile prompt -->
-<a href="{{ url_for('pages.factfind') }}" class="factfind-nudge">
-    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0; color: var(--text-tertiary);"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-    <span style="flex: 1; font-size: 0.8rem; color: var(--text-secondary);">Complete your profile to generate your financial plan</span>
-    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--text-tertiary)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0;"><path d="M9 18l6-6-6-6"/></svg>
+{% if not _profile_done %}
+<a href="{{ url_for('pages.factfind') }}" class="press-scale" style="display:flex; align-items:center; gap:10px; padding:12px 16px; border-radius:12px; background:var(--card-bg); border:0.5px solid var(--card-border); margin-bottom:18px; text-decoration:none;">
+    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--text-tertiary)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+    <span style="flex:1; font-size:0.82rem; color:var(--text-secondary);">Complete your profile to generate your financial plan</span>
+    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--text-tertiary)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;"><path d="M9 18l6-6-6-6"/></svg>
 </a>
-
-{% elif not _g %}
-<!-- Profile done, no goals yet — continue wizard -->
-<a href="{{ url_for('pages.goal_chips') }}" style="display: flex; align-items: center; gap: 10px; padding: 11px 16px; border-radius: 10px; background: var(--surface-subtle); border: 0.5px solid var(--glass-border); margin-bottom: 24px; text-decoration: none;">
-    <span style="flex: 1; font-size: 0.8rem; color: var(--text-secondary);">One step left. Choose your goals to finish building your plan.</span>
-    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0; color: var(--text-tertiary);"><path d="M9 18l6-6-6-6"/></svg>
+{% elif not _has_goals %}
+<a href="{{ url_for('pages.goal_chips') }}" class="press-scale" style="display:flex; align-items:center; gap:10px; padding:12px 16px; border-radius:12px; background:var(--card-bg); border:0.5px solid var(--card-border); margin-bottom:18px; text-decoration:none;">
+    <span style="flex:1; font-size:0.82rem; color:var(--text-secondary);">One step left. Choose your goals to finish building your plan.</span>
+    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--text-tertiary)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;"><path d="M9 18l6-6-6-6"/></svg>
 </a>
+{% endif %}
 
-{% elif smart_plan and not smart_plan.error %}
-<!-- ════ PLAN STATUS — the hero ════ -->
-<div class="gold-card" style="margin-bottom: 24px;">
-    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
-        <div style="display: flex; align-items: center; gap: 8px;">
-            <span class="ai-pulse"></span>
-            <span style="font-size: 0.65rem; color: var(--roman-gold); text-transform: uppercase; letter-spacing: 0.06em;">Your plan</span>
-        </div>
-    </div>
-    <p style="font-size: 0.82rem; color: var(--text-secondary); line-height: 1.7; font-style: italic;">{{ plan_summary }}</p>
-    {% if total_saved_toward_goals > 0 %}
-    {% set ns = namespace(total_targets=0) %}
-    {% for pot in smart_plan.pots %}{% if pot.goal_id and pot.target %}{% set ns.total_targets = ns.total_targets + (pot.target | float) %}{% endif %}{% endfor %}
-    {% if ns.total_targets > 0 %}
-    {% set progress_pct = [(total_saved_toward_goals / ns.total_targets * 100) | round(0) | int, 100] | min %}
-    <div style="margin-top: 16px;">
-        <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 8px;">
-            <div style="font-size: 0.65rem; color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.06em;">Overall progress</div>
-            <div style="font-size: 1rem; color: var(--text-primary); font-weight: 600; font-variant-numeric: tabular-nums;">{{ progress_pct }}%</div>
-        </div>
-        <div class="progress-track">
-            <div class="progress-fill" style="width: {{ progress_pct }}%;"></div>
-        </div>
-        <div style="font-size: 0.72rem; color: var(--text-tertiary); margin-top: 6px; font-variant-numeric: tabular-nums;">£{{ "{:,.0f}".format(total_saved_toward_goals) }} of £{{ "{:,.0f}".format(ns.total_targets) }} across your goals</div>
-    </div>
-    {% endif %}
-    {% endif %}
+<div class="slim-overview">
 
-    {% if smart_plan.surplus and smart_plan.surplus > 0 %}
-    <div style="margin-top: 14px; font-size: 0.75rem; color: var(--text-tertiary); line-height: 1.5;">
-        {% if has_debt_goals and debt_allocation > 0 %}
-        £{{ "{:,.0f}".format(smart_plan.surplus) }}/month surplus
-        · <span style="color: #c98a3f;">£{{ "{:,.0f}".format(debt_allocation) }} clearing debt</span>
-        · £{{ "{:,.0f}".format(available_surplus) }} building goals
-        {% else %}
-        £{{ "{:,.0f}".format(smart_plan.surplus) }}/month surplus
+    {# ────── MAIN COLUMN (left) ────── #}
+    <div class="slim-overview__main">
+
+        {# Greeting + check-in pill #}
+        <div class="slim-greet">
+            <div>
+                <p class="slim-greet__date">{{ date_label }}</p>
+                <h1 class="slim-greet__title">
+                    {%- if first_overview -%}
+                        Your plan is ready, {{ _first }}.
+                    {%- else -%}
+                        Good {{ greeting }}, {{ _first }}.
+                    {%- endif -%}
+                </h1>
+            </div>
+            {% if checkin_state and not is_frozen %}
+            <a href="{{ url_for('pages.checkin') }}" class="slim-greet__pill press-scale">
+                <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                {% if checkin_state.completed %}Check-in ✓{% else %}{{ checkin_state.label }}{% endif %}
+            </a>
+            {% endif %}
+        </div>
+
+        {# Directed counter — serif italic, gold #}
+        {% if directed_amount and not is_frozen %}
+        <p class="slim-directed">
+            £{{ "{:,.0f}".format(directed_amount) }} directed toward your goals{% if directed_since %} since {{ directed_since }}{% endif %}
+        </p>
         {% endif %}
-    </div>
-    {% endif %}
 
-    {% if plan_status == 'payday' and action_whisper and not is_frozen %}
-    <div style="margin-top: 18px; display: flex; align-items: flex-start; gap: 8px;">
-        <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--roman-gold)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0; margin-top: 2px;"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+        {# Three stat pills #}
+        {% if smart_plan and not smart_plan.error and not is_frozen %}
+        <div class="slim-stats">
+            <div class="slim-stat">
+                <div class="slim-stat__label">Surplus / mo</div>
+                <div class="slim-stat__value">£{{ "{:,.0f}".format(plan_surplus_value) }}</div>
+            </div>
+            <div class="slim-stat">
+                <div class="slim-stat__label">Savings rate</div>
+                <div class="slim-stat__value">{% if savings_rate is not none %}{{ savings_rate }}%{% else %}—{% endif %}</div>
+            </div>
+            <div class="slim-stat">
+                <div class="slim-stat__label">Active goals</div>
+                <div class="slim-stat__value">{{ active_goals_for_pill }}</div>
+            </div>
+        </div>
+        {% endif %}
+
+        {# Plan whisper card — gold left border #}
+        {% if plan_summary and smart_plan and not smart_plan.error and not is_frozen %}
+        <div class="slim-card slim-card--whisper">
+            <div class="slim-card__eyebrow">Your plan</div>
+            <p class="slim-card__body">{{ plan_summary }}</p>
+            {% if has_debt_goals and debt_allocation > 0 %}
+            <div class="slim-card__meta">
+                £{{ "{:,.0f}".format(plan_surplus_value) }}/month surplus · <span style="color: var(--goal-stroke-debt);">£{{ "{:,.0f}".format(debt_allocation) }} clearing debt</span> · £{{ "{:,.0f}".format(available_surplus) }} building goals
+            </div>
+            {% elif plan_surplus_value > 0 %}
+            <div class="slim-card__meta">£{{ "{:,.0f}".format(plan_surplus_value) }}/month surplus directed to your plan</div>
+            {% endif %}
+
+            {% if plan_status == 'payday' and action_whisper and action_whisper.message %}
+            <div class="slim-card__meta" style="margin-top: 14px; padding-top: 12px; border-top: 0.5px solid var(--card-border); color: var(--text-secondary);">
+                {{ action_whisper.message }}
+                {% if action_whisper.action_url and action_whisper.action_label %}
+                <a href="{{ action_whisper.action_url }}" style="display:inline-block; margin-top:6px; font-size:0.72rem; color:var(--text-tertiary); text-decoration:underline; text-underline-offset:2px;">{{ action_whisper.action_label }}</a>
+                {% endif %}
+            </div>
+            {% endif %}
+        </div>
+        {% endif %}
+
+        {# Goals section #}
+        {% set goal_pots = smart_plan.pots if smart_plan and not smart_plan.error else [] %}
+        {% set ns_gp = namespace(visible=0) %}
+        {% for _p in goal_pots %}{% if _p.monthly_amount > 0 and _p.goal_id %}{% set ns_gp.visible = ns_gp.visible + 1 %}{% endif %}{% endfor %}
+        {% if ns_gp.visible > 0 and not is_frozen %}
         <div>
-            <p style="font-size: 0.78rem; color: var(--text-secondary); line-height: 1.5; margin: 0 0 4px;">{{ action_whisper.message }}</p>
-            {% if action_whisper.action_url and action_whisper.action_label %}
-            <a href="{{ action_whisper.action_url }}" style="font-size: 0.72rem; color: var(--text-secondary); text-decoration: underline; text-underline-offset: 2px;">{{ action_whisper.action_label }}</a>
-            {% endif %}
-        </div>
-    </div>
-    {% endif %}
-
-    <div style="margin-top: 22px;">
-        <a href="{{ url_for('pages.plan') }}" class="btn-secondary btn-sm">View full plan</a>
-    </div>
-</div>
-
-<!-- Setup action row — days 1-7 only, separate from AI card -->
-{% if plan_status == 'setting_up' and action_whisper and not is_frozen %}
-<div style="display: flex; align-items: flex-start; gap: 10px; padding: 12px 14px; border-radius: 10px; border: 0.5px solid var(--glass-border); background: var(--surface-subtle); margin-bottom: 20px;">
-    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--text-tertiary)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0; margin-top: 2px;"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
-    <div style="flex: 1;">
-        <p style="font-size: 0.82rem; color: var(--text-primary); line-height: 1.5; margin: 0 0 {% if action_whisper.action_url and action_whisper.action_label %}4px{% else %}0{% endif %};">{{ action_whisper.message }}</p>
-        {% if action_whisper.action_url and action_whisper.action_label %}
-        <a href="{{ action_whisper.action_url }}" style="font-size: 0.72rem; color: var(--text-tertiary); text-decoration: underline; text-underline-offset: 2px;">{{ action_whisper.action_label }}</a>
-        {% endif %}
-    </div>
-</div>
-{% endif %}
-
-<!-- Life check-in nudge — shown mid-month (days 13-16) once user is ≥14 days old and hasn't checked in this month -->
-{% if show_life_checkin_nudge and not is_frozen %}
-<a href="{{ url_for('pages.life_checkin') }}" style="display: flex; align-items: center; gap: 10px; padding: 11px 14px; border-radius: 10px; border: 0.5px solid var(--glass-border); background: transparent; text-decoration: none; margin-bottom: 20px;">
-    <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--text-tertiary)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0;"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-    <span style="flex: 1; font-size: 0.78rem; color: var(--text-tertiary);">Anything coming up this month we should plan around?</span>
-    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--text-tertiary)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0; opacity: 0.5;"><path d="M9 18l6-6-6-6"/></svg>
-</a>
-{% endif %}
-
-<!-- ════ DIRECTED COUNTER + NEXT CHECK-IN ════ -->
-{% if not is_frozen and (directed_amount or checkin_state) %}
-<div style="margin-bottom: 24px;">
-    {% if directed_amount %}
-    <div style="font-family: var(--font-serif); font-style: italic; font-size: 1.1rem; color: var(--roman-gold);">
-        £{{ "{:,.0f}".format(directed_amount) }} directed toward your goals{% if directed_since %} since {{ directed_since }}{% endif %}
-    </div>
-    {% endif %}
-    {% if checkin_state %}
-    <a href="{{ url_for('pages.checkin') }}" style="display: inline-block; margin-top: 4px; font-size: 0.78rem; color: var(--text-tertiary); text-decoration: none;">
-        {% if checkin_state.completed %}{{ checkin_state.label }} ✓ — next one {{ checkin_state.next_date_str }}{% else %}{{ checkin_state.label }} · {{ checkin_state.next_date_str }}{% endif %}
-    </a>
-    {% endif %}
-</div>
-{% endif %}
-
-<!-- ════ ACTIVE POTS — compact progress ════ -->
-{% set goal_pots = smart_plan.pots %}
-{% set ns_gp = namespace(has_visible=false) %}
-{% for _p in goal_pots %}{% if _p.monthly_amount > 0 and _p.goal_id %}{% set ns_gp.has_visible = true %}{% endif %}{% endfor %}
-{% if ns_gp.has_visible and not is_frozen %}
-<div style="margin-bottom: 24px; padding-top: 20px; border-top: 0.5px solid var(--glass-border);">
-    <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 14px;">
-        <span class="section-label" style="margin-top: 0; margin-bottom: 0;">Goals</span>
-        <a href="{{ url_for('pages.my_goals') }}" class="btn-secondary btn-sm">
-            See all <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
-        </a>
-    </div>
-
-    {% for pot in goal_pots %}
-    {% if pot.monthly_amount > 0 and pot.goal_id %}
-        {# Pick a color + emoji from goal type / name keywords #}
-        {% set _name_low = (pot.name or '') | lower %}
-        {% set _type = pot.type or '' %}
-        {% set _is_debt = (_type == 'debt' or 'debt' in _name_low or 'loan' in _name_low or 'overdraft' in _name_low or 'credit card' in _name_low or 'pay off' in _name_low) %}
-        {% if _is_debt %}
-            {% set _circle = '#c98a3f' %}{% set _emoji = '💳' %}
-        {% elif 'emergency' in _name_low or 'safety' in _name_low or 'rainy' in _name_low %}
-            {% set _circle = '#5b8a72' %}{% set _emoji = '🛡️' %}
-        {% elif 'house' in _name_low or 'deposit' in _name_low or 'mortgage' in _name_low or 'home' in _name_low %}
-            {% set _circle = '#3f6c8a' %}{% set _emoji = '🏠' %}
-        {% elif 'holiday' in _name_low or 'travel' in _name_low or 'trip' in _name_low or 'vacation' in _name_low %}
-            {% set _circle = '#c5a35d' %}{% set _emoji = '✈️' %}
-        {% elif 'wedding' in _name_low or 'baby' in _name_low or 'ring' in _name_low %}
-            {% set _circle = '#c47b6b' %}{% set _emoji = '💍' %}
-        {% elif 'car' in _name_low or 'vehicle' in _name_low %}
-            {% set _circle = '#6e6e7a' %}{% set _emoji = '🚗' %}
-        {% else %}
-            {% set _circle = '#7d6f99' %}{% set _emoji = '🎯' %}
-        {% endif %}
-    <a href="{{ url_for('pages.goal_detail', goal_id=pot.goal_id) }}?from=overview" style="display: flex; gap: 12px; align-items: center; padding: 12px 0; text-decoration: none; {% if not loop.last %}border-bottom: 0.5px solid var(--glass-border);{% endif %}">
-        <span aria-hidden="true" style="flex-shrink: 0; width: 36px; height: 36px; border-radius: 50%; background: {{ _circle }}; color: #fff; display: inline-flex; align-items: center; justify-content: center; font-size: 0.95rem;">{{ _emoji }}</span>
-        <div style="flex: 1; min-width: 0;">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
-                <div style="display: flex; align-items: center; gap: 6px; min-width: 0;">
-                    <span style="font-size: 0.85rem; color: var(--text-primary); overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{ pot.name | replace(' (must-hit)', '') }}</span>
-                    {% if pot.completed %}
-                    <span style="font-size: 0.6rem; padding: 1px 6px; border-radius: 4px; background: var(--success-bg); color: var(--success-text); flex-shrink: 0;">done</span>
-                    {% endif %}
-                </div>
-                <div style="display: flex; align-items: center; gap: 6px; flex-shrink: 0;">
-                    <span style="font-size: 0.8rem; color: var(--text-primary);">£{{ "{:,.2f}".format(pot.monthly_amount) }}/mo</span>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="var(--text-secondary)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
-                </div>
+            <div class="slim-section-head">
+                <span class="slim-section-head__label">Goals</span>
+                <a href="{{ url_for('pages.my_goals') }}" class="slim-section-head__link">See all →</a>
             </div>
-            {% if pot.target and not pot.completed %}
-            {% if _is_debt %}
-            {% set _remaining = [pot.target - pot.current, 0] | max %}
-            {% set _remaining_pct = ([(_remaining / pot.target) * 100, 100] | min) | round(1) %}
-            <div class="progress-track">
-                <div class="progress-fill" style="width: {{ _remaining_pct }}%; background: #c98a3f;"></div>
-            </div>
-            <div style="display: flex; justify-content: space-between; margin-top: 3px;">
-                <span style="font-size: 0.65rem; color: var(--text-tertiary);">£{{ "{:,.2f}".format(_remaining) }} left to clear</span>
-                {% if pot.months_to_target is defined %}
-                <span style="font-size: 0.65rem; color: var(--text-tertiary);">{{ pot.months_to_target }} month{% if pot.months_to_target != 1 %}s{% endif %} to go</span>
+            <div>
+                {% for pot in goal_pots %}
+                {% if pot.monthly_amount > 0 and pot.goal_id %}
+                {% set _name_low = (pot.name or '') | lower %}
+                {% set _ptype = pot.type or '' %}
+                {% set _is_debt = (_ptype == 'debt' or 'debt' in _name_low or 'loan' in _name_low or 'overdraft' in _name_low or 'credit card' in _name_low or 'pay off' in _name_low) %}
+                <a href="{{ url_for('pages.goal_detail', goal_id=pot.goal_id) }}?from=overview" class="slim-goal-card">
+                    {{ goal_visual(pot.name, _ptype) }}
+                    <div class="slim-goal-body">
+                        <div class="slim-goal-row1">
+                            <span class="slim-goal-name">{{ pot.name | replace(' (must-hit)', '') }}</span>
+                            <span class="slim-goal-mo">£{{ "{:,.0f}".format(pot.monthly_amount) }}/mo</span>
+                        </div>
+                        {% if pot.target and not pot.completed %}
+                          {% if _is_debt %}
+                            {% set _remaining = [pot.target - pot.current, 0] | max %}
+                            {% set _remaining_pct = ([(_remaining / pot.target) * 100, 100] | min) | round(1) %}
+                            <div class="slim-progress"><span style="width: {{ _remaining_pct }}%; background: var(--goal-stroke-debt);"></span></div>
+                            <div class="slim-goal-row2">
+                                <span>£{{ "{:,.0f}".format(_remaining) }} left to clear</span>
+                                {% if pot.months_to_target is defined %}<span>{{ pot.months_to_target }} mo to go</span>{% endif %}
+                            </div>
+                          {% else %}
+                            {% set _pct = ((pot.current / pot.target) * 100) | round(1) %}
+                            {% if _name_low and ('house' in _name_low or 'deposit' in _name_low or 'mortgage' in _name_low or 'home' in _name_low) %}{% set _bar = 'var(--goal-stroke-house)' %}
+                            {% elif 'emergency' in _name_low or 'safety' in _name_low or 'rainy' in _name_low %}{% set _bar = 'var(--goal-stroke-emergency)' %}
+                            {% elif 'wedding' in _name_low or 'baby' in _name_low or 'family' in _name_low or 'ring' in _name_low %}{% set _bar = 'var(--goal-stroke-wedding)' %}
+                            {% elif 'car' in _name_low or 'vehicle' in _name_low %}{% set _bar = 'var(--goal-stroke-car)' %}
+                            {% elif 'holiday' in _name_low or 'travel' in _name_low or 'trip' in _name_low or 'vacation' in _name_low %}{% set _bar = 'var(--goal-stroke-holiday)' %}
+                            {% else %}{% set _bar = 'var(--roman-gold)' %}
+                            {% endif %}
+                            <div class="slim-progress"><span style="width: {{ _pct }}%; background: {{ _bar }};"></span></div>
+                            <div class="slim-goal-row2">
+                                <span>£{{ "{:,.0f}".format(pot.current) }} of £{{ "{:,.0f}".format(pot.target) }}</span>
+                                {% if pot.months_to_target is defined %}<span>{{ pot.months_to_target }} mo to go</span>{% endif %}
+                            </div>
+                          {% endif %}
+                        {% elif pot.completed %}
+                            <div class="slim-progress"><span style="width:100%; background: var(--success);"></span></div>
+                            <div class="slim-goal-row2"><span style="color:var(--success);">Goal complete</span></div>
+                        {% endif %}
+                    </div>
+                </a>
                 {% endif %}
+                {% endfor %}
             </div>
-            {% else %}
-            <div class="progress-track">
-                <div class="progress-fill" style="width: {{ ((pot.current / pot.target) * 100) | round(1) }}%; background: var(--roman-gold);"></div>
-            </div>
-            <div style="display: flex; justify-content: space-between; margin-top: 3px;">
-                <span style="font-size: 0.65rem; color: var(--text-tertiary);">£{{ "{:,.2f}".format(pot.current) }} of £{{ "{:,.2f}".format(pot.target) }}</span>
-                {% if pot.months_to_target is defined %}
-                <span style="font-size: 0.65rem; color: var(--text-tertiary);">{{ pot.months_to_target }} month{% if pot.months_to_target != 1 %}s{% endif %} to go</span>
-                {% endif %}
-            </div>
-            {% endif %}
-            {% endif %}
-        </div>
-    </a>
-    {% endif %}
-    {% endfor %}
-</div>
-{% endif %}
-
-<!-- ════ ALERTS — only if plan has warnings ════ -->
-{% if smart_plan.alerts %}
-<div style="margin-bottom: 24px;">
-    {% for alert in smart_plan.alerts %}
-    <p style="font-size: 0.8rem; color: var(--text-secondary); line-height: 1.6; margin-bottom: 6px;">{{ alert.message }}</p>
-    {% endfor %}
-</div>
-{% endif %}
-
-{% endif %}
-
-<!-- ════ SPENDING SNAPSHOT — secondary ════ -->
-<div style="margin-bottom: 24px; padding-top: 20px; border-top: 0.5px solid var(--glass-border);">
-    <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 14px;">
-        <span class="section-label" style="margin-top: 0; margin-bottom: 0;">This month</span>
-        <a href="{{ url_for('pages.my_money') }}" class="btn-secondary btn-sm">My money <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg></a>
-    </div>
-
-    {% if has_data and monthly_spending > 0 %}
-    <div style="display: flex; gap: 12px; margin-bottom: 14px;">
-        {% if money_left is not none %}
-        <div style="flex: 1;">
-            <div style="font-size: 0.65rem; color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 2px;">Left to spend</div>
-            <div style="font-size: 1.1rem; font-weight: 500; color: {% if money_left >= 0 %}var(--text-primary){% else %}var(--danger){% endif %};">
-                {% if money_left < 0 %}−{% endif %}£{{ "{:,.2f}".format(money_left | abs) }}
-            </div>
-            {% if money_left > 0 and days_remaining > 0 %}
-            <div style="font-size: 0.65rem; color: var(--text-tertiary);">£{{ "{:,.2f}".format((money_left / days_remaining) | int) }}/day · {{ days_remaining }} days</div>
-            {% endif %}
-        </div>
-        {% elif monthly_income_txn > 0 %}
-        <div style="flex: 1;">
-            <div style="font-size: 0.65rem; color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 2px;">Income</div>
-            <div style="font-size: 1.1rem; font-weight: 500; color: var(--text-primary);">£{{ "{:,.2f}".format(monthly_income_txn) }}</div>
         </div>
         {% endif %}
-        <div style="flex: 1;">
-            <div style="font-size: 0.65rem; color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 2px;">Spent so far</div>
-            <div style="font-size: 1.1rem; font-weight: 500; color: var(--text-primary);">£{{ "{:,.2f}".format(monthly_spending) }}</div>
+
+        {# Quick action buttons — mobile only (right panel handles them on desktop) #}
+        {% if not is_frozen %}
+        <div class="slim-overview__side--mobile">
+            <div style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap:8px;">
+                <a href="{{ url_for('pages.withdraw') }}" class="slim-stat press-scale" style="text-align:center; text-decoration:none; padding:12px 6px;">
+                    <div style="display:flex; justify-content:center; margin-bottom:4px; color:var(--text-secondary);">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1v22"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                    </div>
+                    <div style="font-size:0.7rem; color:var(--text-secondary);">I need money</div>
+                </a>
+                <a href="{{ url_for('pages.life_checkin') }}" class="slim-stat press-scale" style="text-align:center; text-decoration:none; padding:12px 6px;">
+                    <div style="display:flex; justify-content:center; margin-bottom:4px; color:var(--text-secondary);">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                    </div>
+                    <div style="font-size:0.7rem; color:var(--text-secondary);">Life check-in</div>
+                </a>
+                <a href="{{ url_for('pages.plan') }}" class="slim-stat press-scale" style="text-align:center; text-decoration:none; padding:12px 6px;">
+                    <div style="display:flex; justify-content:center; margin-bottom:4px; color:var(--text-secondary);">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><line x1="22" x2="2" y1="12" y2="12"/><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/></svg>
+                    </div>
+                    <div style="font-size:0.7rem; color:var(--text-secondary);">Full plan</div>
+                </a>
+            </div>
         </div>
+        {% endif %}
+
+        {# Companion prompt — fake input #}
+        {% if not is_frozen %}
+        <div>
+            <a href="{{ url_for('companion.companion_page') }}" class="slim-companion-prompt">
+                <span class="slim-companion-prompt__icon">
+                    <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                </span>
+                <span class="slim-companion-prompt__text">Anything on your mind?</span>
+                <span class="slim-companion-prompt__arrow"><svg viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg></span>
+            </a>
+            <div class="slim-chips" role="list">
+                <a class="slim-chip" href="{{ url_for('companion.companion_page', q='Can I afford a holiday?') }}" role="listitem">Can I afford a holiday?</a>
+                <a class="slim-chip" href="{{ url_for('companion.companion_page', q='What if I got a raise?') }}" role="listitem">What if I got a raise?</a>
+                <a class="slim-chip" href="{{ url_for('companion.companion_page', q='Am I on track?') }}" role="listitem">Am I on track?</a>
+            </div>
+        </div>
+        {% endif %}
     </div>
 
-    {% if top_categories %}
-    <div style="padding-top: 10px; border-top: 0.5px solid var(--glass-border);">
-        {% for cat in top_categories %}
-        <div style="display: flex; justify-content: space-between; align-items: center; padding: 4px 0;">
-            <span style="display: flex; align-items: center; gap: 6px; font-size: 0.8rem; color: var(--text-secondary);">
-                {{ category_icon(cat.name, cat.colour) }}
-                {{ cat.name }}
-            </span>
-            <span style="font-size: 0.8rem; color: var(--text-tertiary);">£{{ "{:,.2f}".format(cat.total) }}</span>
+    {# ────── RIGHT PANEL (desktop only) ────── #}
+    <aside class="slim-overview__side">
+        {% if not is_frozen %}
+        <div class="slim-side-card">
+            <div class="slim-side-card__title">Quick actions</div>
+            <a href="{{ url_for('pages.withdraw') }}" class="slim-qa-row press-scale">
+                <span class="slim-qa-row__icon"><svg viewBox="0 0 24 24"><path d="M12 1v22"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></span>
+                <span class="slim-qa-row__label">I need money</span>
+                <svg class="slim-qa-row__chev" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>
+            </a>
+            <a href="{{ url_for('pages.life_checkin') }}" class="slim-qa-row press-scale">
+                <span class="slim-qa-row__icon"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></span>
+                <span class="slim-qa-row__label">Life check-in</span>
+                <svg class="slim-qa-row__chev" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>
+            </a>
+            <a href="{{ url_for('pages.plan') }}" class="slim-qa-row press-scale">
+                <span class="slim-qa-row__icon"><svg viewBox="0 0 24 24"><line x1="22" x2="2" y1="12" y2="12"/><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/></svg></span>
+                <span class="slim-qa-row__label">View full plan</span>
+                <svg class="slim-qa-row__chev" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>
+            </a>
         </div>
-        {% endfor %}
-    </div>
-    {% endif %}
 
-    {% else %}
-    <p style="font-size: 0.78rem; color: var(--text-tertiary); line-height: 1.5; margin: 0;">Nothing recorded yet this month. Head to My money to log your spending.</p>
-    {% endif %}
+        <div class="slim-side-card">
+            <div class="slim-side-card__title">This month</div>
+            <div class="slim-mini-row"><span style="color:var(--text-tertiary);">Spending</span><span>£{{ "{:,.0f}".format(expenses_this_month) }}</span></div>
+            {% if smart_plan and not smart_plan.error and total_saved_toward_goals > 0 %}
+            <div class="slim-mini-row"><span style="color:var(--text-tertiary);">Saved</span><span>£{{ "{:,.0f}".format(total_saved_toward_goals) }}</span></div>
+            {% set ns_t = namespace(total=0) %}
+            {% for pot in smart_plan.pots %}{% if pot.goal_id and pot.target %}{% set ns_t.total = ns_t.total + (pot.target | float) %}{% endif %}{% endfor %}
+            {% if ns_t.total > 0 %}
+            {% set _overall_pct = [((total_saved_toward_goals / ns_t.total) * 100) | round(0) | int, 100] | min %}
+            <div style="margin-top:10px; padding-top:10px; border-top:0.5px solid var(--card-border);">
+                <div class="slim-mini-row" style="padding:0 0 6px;">
+                    <span style="color:var(--text-tertiary); font-size:0.66rem; letter-spacing:0.04em; text-transform:uppercase;">Overall progress</span>
+                    <span style="font-weight:500;">{{ _overall_pct }}%</span>
+                </div>
+                <div class="slim-progress"><span style="width: {{ _overall_pct }}%; background: var(--whisper-border-left);"></span></div>
+            </div>
+            {% endif %}
+            {% endif %}
+        </div>
+
+        {% if plan_phase %}
+        <div class="slim-side-card">
+            <div class="slim-side-card__title">Plan phase</div>
+            <div style="font-size:0.85rem; color:var(--text-primary); font-weight:500; margin-bottom:4px;">Phase {{ plan_phase.current }} of {{ plan_phase.total }}</div>
+            <div style="font-size:0.74rem; color:var(--text-tertiary); line-height:1.5;">{{ plan_phase.description }}</div>
+        </div>
+        {% endif %}
+
+        <div class="slim-side-card">
+            <div class="slim-side-profile">
+                <span class="slim-side-profile__avatar">{{ current_user.name[0:2] | upper }}</span>
+                <div>
+                    <div class="slim-side-profile__name">{{ _first }}</div>
+                    <div class="slim-side-profile__tier">{{ current_user.tier }}</div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </aside>
+
 </div>
-
-{# "Anything on your mind?" — companion prompt styled as an input, navigates to /companion #}
-{% if not is_frozen %}
-<a href="{{ url_for('companion.companion_page') }}"
-   style="display: flex; align-items: center; gap: 12px; padding: 14px 18px; margin: 8px 0 24px; border-radius: 14px;
-          background: var(--gold-whisper-bg, var(--glass-bg, rgba(197,163,93,0.05)));
-          border: 0.5px solid var(--gold-whisper-border, var(--glass-border));
-          text-decoration: none; -webkit-tap-highlight-color: transparent;
-          transition: transform 60ms ease-out;"
-   onmousedown="this.style.transform='scale(0.985)'"
-   onmouseup="this.style.transform=''"
-   ontouchstart="this.style.transform='scale(0.985)'"
-   ontouchend="this.style.transform=''">
-    <span aria-hidden="true" style="display: inline-flex; align-items: center; justify-content: center; width: 32px; height: 32px; border-radius: 50%; background: var(--glass); color: var(--roman-gold); flex-shrink: 0;">
-        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-    </span>
-    <span style="flex: 1; font-size: 0.85rem; color: var(--text-tertiary); font-style: italic;">Anything on your mind?</span>
-    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--text-tertiary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="opacity: 0.5; flex-shrink: 0;"><path d="M9 18l6-6-6-6"/></svg>
-</a>
-{% endif %}
-
 {% endblock %}

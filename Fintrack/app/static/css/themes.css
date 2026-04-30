@@ -958,3 +958,80 @@ body.theme-soft-modern input:-webkit-autofill:active {
         padding-bottom: calc(76px + env(safe-area-inset-bottom, 0px) + 12px) !important;
     }
 }
+
+/* ===================================================================
+   SHARED SHELL TOKENS — Soft Modern + Obsidian Vault
+   Slim sidebar (desktop) + bottom tab bar (mobile)
+   =================================================================== */
+
+body.theme-soft-modern {
+    --sidebar-bg: #ffffff;
+    --tab-bar-bg: #ffffff;
+    --tab-bar-border: rgba(0, 0, 0, 0.06);
+    --fab-bg: #1a1916;
+    --fab-icon: #f5f3ee;
+    --fab-fg: #f5f3ee;
+    --page-bg: #f5f3ee;
+    --card-bg: #ffffff;
+    --card-border: rgba(0, 0, 0, 0.06);
+    --card-hover-border: rgba(0, 0, 0, 0.12);
+    --stat-bg: #f5f3ee;
+    --whisper-border-left: #9b7d3a;
+    --progress-track: #f0ece4;
+    --goal-circle-house: #E6F1FB;
+    --goal-stroke-house: #185FA5;
+    --goal-circle-emergency: #EAF3DE;
+    --goal-stroke-emergency: #3B6D11;
+    --goal-circle-wedding: #FBEAF0;
+    --goal-stroke-wedding: #993556;
+    --goal-circle-debt: rgba(201, 138, 63, 0.15);
+    --goal-stroke-debt: #c98a3f;
+    --goal-circle-car: #ECE6F5;
+    --goal-stroke-car: #6e6e7a;
+    --goal-circle-holiday: #FBEFDF;
+    --goal-stroke-holiday: #c5a35d;
+    --goal-circle-default: #EFEDE6;
+    --goal-stroke-default: #6e6e6a;
+    --qa-chip-bg: #f5f3ee;
+    --qa-chip-border: transparent;
+    --nav-active-bg: rgba(0, 0, 0, 0.05);
+    --nav-hover-bg: rgba(0, 0, 0, 0.03);
+    --nav-icon-color: #5c5a54;
+    --nav-icon-active-color: #1a1916;
+}
+
+body.theme-obsidian-vault {
+    --sidebar-bg: #0a0c10;
+    --tab-bar-bg: rgba(2, 4, 8, 0.95);
+    --tab-bar-border: rgba(197, 163, 93, 0.08);
+    --fab-bg: #C5A35D;
+    --fab-icon: #020408;
+    --fab-fg: #020408;
+    --page-bg: #020408;
+    --card-bg: rgba(255, 255, 255, 0.03);
+    --card-border: rgba(255, 255, 255, 0.06);
+    --card-hover-border: rgba(255, 255, 255, 0.12);
+    --stat-bg: rgba(255, 255, 255, 0.03);
+    --whisper-border-left: #C5A35D;
+    --progress-track: rgba(255, 255, 255, 0.06);
+    --goal-circle-house: rgba(24, 95, 165, 0.15);
+    --goal-stroke-house: #4a9edd;
+    --goal-circle-emergency: rgba(59, 109, 17, 0.15);
+    --goal-stroke-emergency: #6db33f;
+    --goal-circle-wedding: rgba(153, 53, 86, 0.15);
+    --goal-stroke-wedding: #cc6b8e;
+    --goal-circle-debt: rgba(201, 138, 63, 0.10);
+    --goal-stroke-debt: #c98a3f;
+    --goal-circle-car: rgba(155, 114, 207, 0.14);
+    --goal-stroke-car: #9B72CF;
+    --goal-circle-holiday: rgba(197, 163, 93, 0.14);
+    --goal-stroke-holiday: #C5A35D;
+    --goal-circle-default: rgba(255, 255, 255, 0.06);
+    --goal-stroke-default: rgba(242, 240, 234, 0.7);
+    --qa-chip-bg: rgba(255, 255, 255, 0.03);
+    --qa-chip-border: rgba(255, 255, 255, 0.06);
+    --nav-active-bg: rgba(255, 255, 255, 0.06);
+    --nav-hover-bg: rgba(255, 255, 255, 0.03);
+    --nav-icon-color: rgba(242, 240, 234, 0.55);
+    --nav-icon-active-color: #F2F0EA;
+}
