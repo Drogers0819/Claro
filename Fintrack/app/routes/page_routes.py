@@ -161,6 +161,25 @@ def _ensure_emergency_goal():
     return
 
 
+def _auto_complete_finished_goals():
+    """Mark any active goal whose current balance has reached its target as
+    completed. Idempotent — safe to call on every page load."""
+    finished = Goal.query.filter_by(
+        user_id=current_user.id, status="active"
+    ).all()
+    changed = False
+    for g in finished:
+        if g.target_amount and g.current_amount is not None:
+            try:
+                if float(g.current_amount) >= float(g.target_amount):
+                    g.status = "completed"
+                    changed = True
+            except (TypeError, ValueError):
+                continue
+    if changed:
+        db.session.commit()
+
+
 def _build_whisper_data():
     """Builds the data object used by the insight engine."""
     txn_list = _get_txn_list()
@@ -408,6 +427,11 @@ def logout():
 @page_bp.route("/overview")
 @login_required
 def overview():
+    # Auto-complete any active goal whose balance has reached its target.
+    # Without this, finished goals (e.g., a fully-paid credit card) keep
+    # showing up as active and the plan phase never advances.
+    _auto_complete_finished_goals()
+
     data = _build_whisper_data()
     first_overview = session.pop('first_overview', False)
 

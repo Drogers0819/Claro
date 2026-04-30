@@ -98,16 +98,20 @@ def _build_pots(surplus, essentials, goals, debts=None):
 
     if debts:
         for i, debt in enumerate(debts):
+            debt_target = float(debt.get("amount", 0))
+            debt_current = float(debt.get("current", 0))
+            already_cleared = bool(debt_target) and debt_current >= debt_target
             pots.append({
                 "name": debt.get("name", f"Debt {i+1}"),
                 "type": "debt",
-                "target": float(debt.get("amount", 0)),
-                "current": 0,
+                "target": debt_target,
+                "current": debt_current,
                 "monthly_amount": 0,
                 "min_payment": float(debt.get("min_payment", 0)),
                 "deadline": None,
                 "priority": 0,
-                "completed": False,
+                "completed": already_cleared,
+                "completed_month": 0 if already_cleared else None,
                 "goal_id": debt.get("goal_id")
             })
 
@@ -115,16 +119,23 @@ def _build_pots(surplus, essentials, goals, debts=None):
 
     user_goals = _parse_goals(goals, today)
     for i, goal in enumerate(user_goals):
+        target = goal.get("target", 0) or 0
+        current = goal.get("current", 0) or 0
+        # Mark already-funded goals as completed up-front. This stops them
+        # from being allocated to, appearing in active phases, or being
+        # described as the focus of the current phase.
+        already_completed = bool(target) and current >= target
         pots.append({
             "name": goal["name"],
             "type": goal.get("pot_type", "savings"),
-            "target": goal.get("target", 0),
-            "current": goal.get("current", 0),
+            "target": target,
+            "current": current,
             "monthly_amount": 0,
             "deadline": goal.get("deadline"),
             "months_until_deadline": goal.get("months_until_deadline"),
             "priority": 2 + i,
-            "completed": False,
+            "completed": already_completed,
+            "completed_month": 0 if already_completed else None,
             "goal_id": goal.get("goal_id")
         })
 
