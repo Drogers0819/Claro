@@ -764,6 +764,121 @@ body.theme-soft-modern .cs-trigger {
     background: rgba(0, 0, 0, 0.02);
 }
 
+/* ===================================================================
+   DARK THEME — SHARED CONTRAST TOKENS
+   Match Obsidian Vault's visible card borders, stat pills, progress
+   tracks, goal circles, and chips across every dark aura. Accent-tinted
+   themes (cobalt, amethyst, rosso) keep their accent on buttons, FAB,
+   whisper border via var(--roman-gold) — but cards stay neutrally
+   tinted for predictable contrast.
+   =================================================================== */
+body.theme-racing-green,
+body.theme-midnight-navy,
+body.theme-oxford-saddle,
+body.theme-amethyst,
+body.theme-rosso,
+body.theme-cobalt,
+body.theme-obsidian {
+    /* Slim-shell card / pill / chip / progress tokens */
+    --card-bg: rgba(255, 255, 255, 0.06);
+    --card-border: rgba(255, 255, 255, 0.10);
+    --card-hover-border: rgba(255, 255, 255, 0.18);
+
+    --stat-bg: rgba(255, 255, 255, 0.06);
+    --progress-track: rgba(255, 255, 255, 0.10);
+
+    --qa-chip-bg: rgba(255, 255, 255, 0.06);
+    --qa-chip-border: rgba(255, 255, 255, 0.10);
+
+    /* Glass tokens — neutral white tint at visible opacity */
+    --glass: rgba(255, 255, 255, 0.05);
+    --glass-bg: rgba(255, 255, 255, 0.05);
+    --glass-border: rgba(255, 255, 255, 0.10);
+    --glass-chip: rgba(255, 255, 255, 0.10);
+    --glass-divider: rgba(255, 255, 255, 0.10);
+    --glass-border-subtle: rgba(255, 255, 255, 0.08);
+    --surface-subtle: rgba(255, 255, 255, 0.05);
+
+    /* Goal circles — visible coloured tints */
+    --goal-circle-house: rgba(24, 95, 165, 0.25);
+    --goal-stroke-house: #4a9edd;
+    --goal-circle-emergency: rgba(59, 109, 17, 0.25);
+    --goal-stroke-emergency: #6db33f;
+    --goal-circle-wedding: rgba(153, 53, 86, 0.25);
+    --goal-stroke-wedding: #cc6b8e;
+    --goal-circle-debt: rgba(201, 138, 63, 0.20);
+    --goal-stroke-debt: #c98a3f;
+    --goal-circle-car: rgba(155, 114, 207, 0.22);
+    --goal-stroke-car: #9B72CF;
+    --goal-circle-holiday: rgba(197, 163, 93, 0.22);
+    --goal-stroke-holiday: #C5A35D;
+    --goal-circle-default: rgba(255, 255, 255, 0.10);
+    --goal-stroke-default: rgba(255, 255, 255, 0.7);
+
+    /* Tab bar / FAB — accent uses theme's roman-gold (cobalt blue, etc.) */
+    --tab-bar-bg: rgba(2, 4, 8, 0.95);
+    --tab-bar-border: rgba(197, 163, 93, 0.15);
+    --fab-bg: var(--roman-gold);
+    --fab-icon: #020408;
+    --fab-fg: #020408;
+
+    /* Slim sidebar nav states */
+    --nav-active-bg: rgba(255, 255, 255, 0.08);
+    --nav-hover-bg: rgba(255, 255, 255, 0.04);
+    --nav-icon-color: rgba(255, 255, 255, 0.6);
+    --nav-icon-active-color: rgba(255, 255, 255, 0.95);
+
+    /* Slim whisper card */
+    --whisper-border-left: var(--roman-gold);
+    --whisper-bg: rgba(197, 163, 93, 0.04);
+}
+
+/* Per-theme sidebar bg — slightly lighter than each page background so
+   the slim icon rail is distinguishable from the page. */
+body.theme-racing-green   { --sidebar-bg: #0E2F26; }
+body.theme-midnight-navy  { --sidebar-bg: #0E1B30; }
+body.theme-oxford-saddle  { --sidebar-bg: #311E12; }
+body.theme-amethyst       { --sidebar-bg: #21102E; }
+body.theme-rosso          { --sidebar-bg: #421616; }
+body.theme-cobalt         { --sidebar-bg: #131C32; }
+body.theme-obsidian       { --sidebar-bg: #181818; }
+
+/* Slim whisper card on every dark aura — soft accent tint behind the gold
+   left border so it doesn't float on a transparent card */
+body.theme-racing-green   .slim-card--whisper,
+body.theme-midnight-navy  .slim-card--whisper,
+body.theme-oxford-saddle  .slim-card--whisper,
+body.theme-amethyst       .slim-card--whisper,
+body.theme-rosso          .slim-card--whisper,
+body.theme-cobalt         .slim-card--whisper,
+body.theme-obsidian       .slim-card--whisper {
+    background: var(--whisper-bg, rgba(197, 163, 93, 0.04));
+}
+
+/* Lift the glass-card / gold-card on every dark aura so cards have a
+   visible body and border — matches Obsidian Vault's contrast level */
+body.theme-racing-green   .glass-card,
+body.theme-midnight-navy  .glass-card,
+body.theme-oxford-saddle  .glass-card,
+body.theme-amethyst       .glass-card,
+body.theme-rosso          .glass-card,
+body.theme-cobalt         .glass-card,
+body.theme-obsidian       .glass-card {
+    background: rgba(255, 255, 255, 0.06);
+    border-color: rgba(255, 255, 255, 0.10);
+}
+
+body.theme-racing-green   .glass-card:hover,
+body.theme-midnight-navy  .glass-card:hover,
+body.theme-oxford-saddle  .glass-card:hover,
+body.theme-amethyst       .glass-card:hover,
+body.theme-rosso          .glass-card:hover,
+body.theme-cobalt         .glass-card:hover,
+body.theme-obsidian       .glass-card:hover {
+    border-color: rgba(255, 255, 255, 0.18);
+}
+
+
 /* ===== APP THEME: OBSIDIAN VAULT (default dark) ===== */
 body.theme-obsidian-vault {
     --obsidian: #020408;

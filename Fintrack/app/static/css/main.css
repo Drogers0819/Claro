@@ -9,7 +9,7 @@
     --gold-whisper-bg: rgba(197, 163, 93, 0.05);
     --gold-whisper-border: rgba(197, 163, 93, 0.08);
     --ai-whisper: var(--text-secondary);  /* AI card body text — same as spec: italic serif does the AI signal, not gold */
-    --glass: rgba(255, 255, 255, 0.03);
+    --glass: rgba(255, 255, 255, 0.06);
     --glass-border: rgba(197, 163, 93, 0.12);
     --text-primary: rgba(255, 255, 255, 0.9);
     --text-secondary: rgba(255, 255, 255, 0.75);
@@ -22,11 +22,11 @@
     --popover-bg: #101e15;
 
     /* Glass layer tokens */
-    --glass-border-subtle: rgba(255, 255, 255, 0.04);
-    --glass-divider: rgba(255, 255, 255, 0.06);
+    --glass-border-subtle: rgba(255, 255, 255, 0.08);
+    --glass-divider: rgba(255, 255, 255, 0.10);
     --glass-chip: rgba(255, 255, 255, 0.13);
     --glass-bg: var(--glass);
-    --surface-subtle: rgba(255, 255, 255, 0.02);
+    --surface-subtle: rgba(255, 255, 255, 0.05);
 
     /* Spacing scale — 4px base grid, use these everywhere */
     --sp-xs:  4px;
@@ -721,7 +721,7 @@ a:hover {
 
 .form-input, .form-select {
     width: 100%;
-    background: rgba(255, 255, 255, 0.03);
+    background: rgba(255, 255, 255, 0.05);
     border: 0.5px solid var(--glass-border);
     border-radius: 10px;
     padding: 14px 18px;
@@ -973,7 +973,7 @@ input[type="number"] {
     justify-content: space-between;
     gap: 8px;
     width: 100%;
-    background: rgba(255, 255, 255, 0.03);
+    background: rgba(255, 255, 255, 0.05);
     border: 0.5px solid var(--glass-border);
     border-radius: 10px;
     padding: 14px 14px 14px 18px;
