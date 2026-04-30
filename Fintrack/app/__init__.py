@@ -99,8 +99,33 @@ def create_app(config_class=None):
         from app.models.chat import ChatMessage
         from app.models.life_checkin import LifeCheckIn
         from app.models.checkin import CheckIn, CheckInEntry
-        
+
         db.create_all()
+
+        # ── Idempotent column migrations ──
+        # On a fresh DB, db.create_all() picks these columns up from the
+        # models, so the migration is a no-op. On an existing PostgreSQL
+        # DB that pre-dates a column, this adds it without manual SQL.
+        from sqlalchemy import inspect, text
+        inspector = inspect(db.engine)
+        try:
+            existing_columns = [col["name"] for col in inspector.get_columns("users")]
+        except Exception:
+            existing_columns = []
+
+        migrations = [
+            ("employment_type", "ALTER TABLE users ADD COLUMN employment_type VARCHAR(30) DEFAULT 'full_time'"),
+        ]
+
+        for col_name, sql in migrations:
+            if col_name not in existing_columns:
+                try:
+                    db.session.execute(text(sql))
+                    db.session.commit()
+                    print(f"Migration: added column {col_name}")
+                except Exception as e:
+                    db.session.rollback()
+                    print(f"Migration skipped {col_name}: {e}")
 
         if Category.query.count() == 0:
             for cat_data in DEFAULT_CATEGORIES:
