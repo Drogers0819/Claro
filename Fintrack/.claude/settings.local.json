@@ -19,7 +19,15 @@
       "Bash(./venv/Scripts/python.exe -m pytest tests/ -q --maxfail=5)",
       "Bash(./venv/Scripts/python.exe _inject_csrf.py)",
       "Bash(./venv/Scripts/python.exe -m pytest tests/ -q --maxfail=10)",
-      "Bash(./venv/Scripts/python.exe -c ' *)"
+      "Bash(./venv/Scripts/python.exe -c ' *)",
+      "Bash(python -m pytest --tb=short -q)",
+      "Bash(where python *)",
+      "Bash(venv/Scripts/python.exe -m pytest --tb=short -q)",
+      "Bash(venv/Scripts/python.exe -m pytest test_james.py --co)",
+      "Bash(venv/Scripts/python.exe -m pytest tests/ --tb=short -q)",
+      "Bash(venv/Scripts/python.exe -m pytest tests/test_budget.py::TestCalculateBudgetStatus::test_daily_remaining --tb=short -q)",
+      "Bash(venv/Scripts/python.exe -m pytest tests/test_routes.py tests/test_profile.py tests/test_planner.py -q)",
+      "Bash(venv/Scripts/python.exe -m pytest tests/test_budget.py -q)"
     ]
   }
 }

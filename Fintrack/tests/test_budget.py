@@ -101,6 +101,9 @@ class TestCalculateBudgetStatus:
         assert result["budgets"][0]["spent"] == 50
 
     def test_daily_remaining(self):
+        # Pin to mid-month so daily_remaining is always > 0
+        # (on the last day of the month, days_remaining is 0 and the value is 0).
+        fixed_date = date(2026, 4, 15)
         budgets = [{
             "id": 1, "category_name": "Food", "category_icon": "🍕",
             "category_colour": "#E07A5F", "monthly_limit": 300,
@@ -108,10 +111,10 @@ class TestCalculateBudgetStatus:
         }]
         transactions = [{
             "amount": 100, "category": "Food", "type": "expense",
-            "date": date.today()
+            "date": fixed_date
         }]
 
-        result = calculate_budget_status(budgets, transactions)
+        result = calculate_budget_status(budgets, transactions, current_date=fixed_date)
         assert result["budgets"][0]["daily_remaining"] > 0
 
     def test_alerts_generated(self):
