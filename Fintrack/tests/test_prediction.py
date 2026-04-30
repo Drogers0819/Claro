@@ -91,7 +91,10 @@ class TestBlendPredictions:
 class TestPredictMonthlySpending:
 
     def test_with_current_month_data(self):
-        today = date.today()
+        # Pin to mid-month so `today - 1 day` stays in the current month
+        # (on the 1st of the month, yesterday falls in the previous month and
+        # would be excluded from current-month spending).
+        today = date(2026, 4, 15)
         txns = [
             {"amount": 50, "type": "expense", "date": today, "category": "Food", "description": "Tesco"},
             {"amount": 30, "type": "expense", "date": today - timedelta(days=1), "category": "Transport", "description": "Uber"},

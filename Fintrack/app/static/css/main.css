@@ -3362,9 +3362,185 @@ html {
     line-height: 1.2;
 }
 
+/* =====================================================================
+   MOBILE POLISH — slim shell (≤767px)
+   Fix cramped spacing, prevent horizontal overflow, and re-flow the
+   greeting/check-in pill to a column on small screens.
+   ===================================================================== */
+
+/* Globals — apply on every viewport but cheap */
+html, body { overflow-x: hidden; }
+body { -webkit-text-size-adjust: 100%; }
+
 @media (max-width: 767px) {
-    .slim-greet__title { font-size: 1.55rem; }
-    .slim-stats { gap: 8px; }
-    .slim-stat { padding: 10px 12px; }
-    .slim-stat__value { font-size: 0.92rem; }
+
+    /* ── Page chrome ────────────────────────────────────────────── */
+    body.has-slim-shell .main-content,
+    body.has-slim-shell .main-content--solo {
+        padding: calc(48px + env(safe-area-inset-top, 0px) + 16px) 16px calc(96px + env(safe-area-inset-bottom, 0px));
+        max-width: 100vw;
+        overflow-x: hidden;
+    }
+
+    .slim-mobile-topbar {
+        height: calc(48px + env(safe-area-inset-top, 0px));
+        padding-left: 16px;
+        padding-right: 16px;
+    }
+
+    /* ── Overview grid: single column, hide right panel ─────────── */
+    .slim-overview {
+        display: flex;
+        flex-direction: column;
+        gap: 18px;
+    }
+    .slim-overview__side { display: none !important; }
+
+    /* ── Greeting block: stack title + check-in pill ────────────── */
+    .slim-greet {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+        padding: 4px 0 0;
+    }
+    .slim-greet__date {
+        font-size: 0.7rem;
+        margin-bottom: 2px;
+    }
+    .slim-greet__title {
+        font-size: 1.4rem;
+        line-height: 1.2;
+    }
+    .slim-greet__pill {
+        align-self: flex-start;
+        font-size: 0.7rem;
+    }
+    .slim-directed {
+        font-size: 0.95rem;
+        margin-top: 2px;
+    }
+
+    /* ── Stat pills: tighter gap, smaller value, readable label ── */
+    .slim-stats {
+        display: flex;
+        gap: 8px;
+        margin: 4px 0 0;
+        padding: 0;
+    }
+    .slim-stat {
+        flex: 1;
+        min-width: 0;
+        padding: 12px 8px;
+    }
+    .slim-stat__label {
+        font-size: 0.6rem;
+    }
+    .slim-stat__value {
+        font-size: 1.05rem;
+    }
+
+    /* ── Plan whisper card ──────────────────────────────────────── */
+    .slim-card {
+        padding: 14px 14px;
+    }
+    .slim-card--whisper {
+        padding: 14px 14px;
+    }
+    .slim-card__body {
+        font-size: 0.84rem;
+        line-height: 1.6;
+    }
+    .slim-card__meta {
+        font-size: 0.7rem;
+        margin-top: 10px;
+    }
+
+    /* ── Section heads ──────────────────────────────────────────── */
+    .slim-section-head {
+        margin: 4px 0 8px;
+    }
+    .slim-section-head__label,
+    .slim-side-card__title {
+        font-size: 0.6rem;
+        letter-spacing: 0.06em;
+    }
+
+    /* ── Goal cards ─────────────────────────────────────────────── */
+    .slim-goal-card {
+        padding: 14px 14px;
+        gap: 12px;
+    }
+    .slim-goal-card + .slim-goal-card {
+        margin-top: 10px;
+    }
+    .slim-goal-name {
+        font-size: 0.85rem;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    .slim-goal-mo {
+        font-size: 0.78rem;
+        white-space: nowrap;
+        flex-shrink: 0;
+    }
+    .slim-goal-row2 { font-size: 0.65rem; }
+
+    /* ── Mobile quick action row (rendered inside __side--mobile) ─ */
+    .slim-overview__side--mobile {
+        margin: 0;
+    }
+    .slim-overview__side--mobile .slim-stat {
+        padding: 12px 6px;
+    }
+
+    /* ── Companion prompt + chips ───────────────────────────────── */
+    .slim-companion-prompt {
+        padding: 12px 14px;
+    }
+    .slim-companion-prompt__text {
+        font-size: 0.84rem;
+    }
+    .slim-chips {
+        gap: 6px;
+        margin-top: 10px;
+        padding-bottom: 4px;
+    }
+    .slim-chip {
+        padding: 7px 12px;
+        font-size: 0.74rem;
+    }
+
+    /* ── Bottom tab bar — proper safe-area + smaller FAB lift ────── */
+    .slim-bottom-tabs {
+        height: auto;
+        padding: 8px 0 calc(8px + env(safe-area-inset-bottom, 0px));
+    }
+    .slim-tab-fab {
+        top: -16px;
+        width: 48px;
+        height: 48px;
+    }
+
+    /* ── Other pages — sensible breathing room ───────────────────── */
+    body.has-slim-shell .glass-card,
+    body.has-slim-shell .gold-card {
+        padding: 16px;
+    }
+    body.has-slim-shell .glass-card + .glass-card {
+        margin-top: 12px;
+    }
+
+    /* Companion input zone clears the bottom tab bar on slim shell */
+    body.has-slim-shell .companion-input-zone {
+        bottom: calc(60px + env(safe-area-inset-bottom, 0px));
+    }
+}
+
+/* iPad portrait — slim shell switches to desktop layout cleanly */
+@media (min-width: 768px) and (max-width: 1023px) {
+    body.has-slim-shell .main-content,
+    body.has-slim-shell .main-content--solo {
+        padding: 24px 28px 32px;
+    }
 }
