@@ -422,4 +422,75 @@ Ran a comprehensive end-to-end UI audit against the full `/ui-audit` checklist a
 
 ---
 
+## 2026-05-01 — Server-side PostHog instrumentation
+
+### What I did
+
+- Added the `posthog==7.13.2` Python SDK + `backoff==2.2.1` dep to `requirements.txt`.
+- Built `app/services/analytics_service.py` — a thin lazy-init wrapper around the
+  PostHog SDK with three public functions: `track_event(user_id, event_name, properties=None)`,
+  `identify_user(user_id, properties=None)`, and `flush()`. The wrapper:
+  - Reads `POSTHOG_API_KEY` and `POSTHOG_HOST` from Flask config (or env vars when no app context).
+  - Drops events silently and logs a single warning when the key is missing — dev environments without it don't crash.
+  - Catches every SDK exception so analytics failures NEVER propagate into a user-facing route.
+  - Auto-attaches `environment` (test/dev/prod), `timestamp`, and `user_tier` (when discoverable from `current_user`) to every captured event.
+- Wired the agreed taxonomy server-side at the natural firing point in each route handler. **Server-side capture only — no JS snippet in `base.html`.**
+
+### Events instrumented (where they fire)
+
+| Event | Location |
+|------|---------|
+| `user_signed_up` | `pages.register` POST + `auth.register` POST (API) |
+| `welcome_screen_viewed` | `pages.welcome` GET |
+| `factfind_started` | `pages.factfind` GET when `factfind_completed=False` |
+| `onboarding_stage1_completed` | `pages.factfind` POST success (first time only) |
+| `partial_projection_1_viewed` | `pages.surplus_reveal` GET |
+| `onboarding_stage2_completed` | `pages.surplus_reveal` POST success |
+| `partial_projection_2_viewed` | `pages.goal_chips` GET |
+| `onboarding_stage3_completed` | `pages.goal_chips` POST success — includes `time_to_onboarding_complete` (minutes since signup) |
+| `goals_added` | `pages.goal_chips` POST + `pages.add_goal` POST (with `count`, `types`, `source`) |
+| `plan_revealed` | `pages.plan_reveal` GET when `plan_wizard_complete` is being set true (first reveal only) |
+| `credit_card_added` | Stripe `checkout.session.completed` webhook |
+| `trial_started` | Same handler — Stripe Checkout requires a card before the subscription, so they fire together |
+| `checkin_started` | `pages.checkin` GET when not already done |
+| `checkin_completed` | `pages.checkin` POST success |
+| `goal_milestone_hit` | Inside `pages.checkin` POST loop — fires when a goal's progress crosses 25/50/75/100% |
+| `companion_message_sent` | `companion.companion_chat` after successful response — properties: `tier`, `message_count_today`, `tokens_in/out` |
+| `withdrawal_started` | `pages.withdraw` GET |
+| `withdrawal_confirmed` | `pages.withdraw` POST success |
+| `cancel_confirmed` | Stripe `customer.subscription.deleted` webhook |
+| `dev_test_event` | `/dev/posthog-test` (debug-only smoke test) |
+
+`identify_user(user_id, {email, name, tier, signup_date})` also fires on every register and login so funnels attribute to a stable distinct ID.
+
+### Events NOT yet instrumented (TODO)
+
+- `email_verified` — no email verification flow exists yet. Add when that ships.
+- `crisis_flow_entered` — no crisis flow page exists yet.
+- `cancel_clicked` / `cancel_dismissed` — Stripe customer-portal hosts the cancel UI off-app, so we don't see the click. When an in-app cancel page ships, instrument these there. Marked with `TODO PostHog:` comments in `billing_routes.py`.
+
+### Tests
+
+Added `tests/test_analytics_service.py` (9 tests) covering the four contracts:
+1. No-op when key missing
+2. SDK called with right args when key set
+3. Exceptions don't propagate (wrapper + integration)
+4. `environment` auto-attached to every event
+
+Total suite: **407 passing** (398 original + 9 new).
+
+### What's deliberately NOT done
+
+- **No JS snippet in `base.html`.** Server-side capture only — keeps the data clean, avoids consent-banner complexity at MVP stage. When we need session replay or autocapture, revisit.
+- **Git remote update** (`Drogers0819/Fintrack.git → Drogers0819/Claro.git`) is a user action; left for Daniel to run manually.
+- **Render env vars** must still be set in the dashboard before the next deploy or events fail silently in prod.
+
+### Hard lessons / decisions
+
+- **Lazy single-client init** — easier than wiring a Flask extension. The first call to `track_event` triggers init via `current_app.config`; subsequent calls hit a cached client. Guards against repeat warning spam when the key is missing.
+- **Exception swallowing is non-negotiable** — `except Exception` in tracking code is normally a smell, but here the contract is explicit: analytics is auxiliary, must not break product features.
+- **`time_to_onboarding_complete` is computed at the firing point** rather than stored on the user — keeps the event self-describing and avoids a migration. Computed as `(datetime.utcnow() - user.created_at).total_seconds() / 60` at the moment stage 3 completes.
+
+---
+
 *This journal is part of the FinTrack project. It documents genuine learning, not polished retrospection. Mistakes, confusion, and wrong turns are included deliberately — they're where the real growth happened.*

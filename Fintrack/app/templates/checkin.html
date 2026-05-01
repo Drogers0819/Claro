@@ -66,8 +66,7 @@
         Looking back at {{ checkin_month }}. How much did you actually save toward each goal? Enter what you actually saved. Your plan updates to match reality.
     </p>
 
-    <form method="POST" action="{{ url_for('pages.checkin') }}"
-          onsubmit="if(window.posthog)posthog.capture('checkin_completed');">
+    <form method="POST" action="{{ url_for('pages.checkin') }}">
         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
 
         {% if variable_income %}

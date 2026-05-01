@@ -36,6 +36,7 @@ from app.services.withdrawal_service import get_withdrawal_options
 from app.models.life_checkin import LifeCheckIn
 from app.models.checkin import CheckInEntry
 from app.utils.auth import is_subscription_active, requires_subscription
+from app.services.analytics_service import track_event, identify_user
 from sqlalchemy.exc import IntegrityError
 page_bp = Blueprint("pages", __name__)
 
@@ -385,6 +386,13 @@ def register():
         db.session.commit()
 
         login_user(user)
+        identify_user(user.id, {
+            "email": user.email,
+            "name": user.name,
+            "tier": user.subscription_tier or "free",
+            "signup_date": (user.created_at or datetime.utcnow()).isoformat(),
+        })
+        track_event(user.id, "user_signed_up", {"email_domain": email.split("@")[-1] if "@" in email else None})
         return redirect(url_for("pages.welcome"))
 
     return render_template("register.html")
@@ -407,6 +415,12 @@ def login():
             return render_template("login.html", prefill_email=email)
 
         login_user(user)
+        identify_user(user.id, {
+            "email": user.email,
+            "name": user.name,
+            "tier": user.subscription_tier or "free",
+            "signup_date": (user.created_at.isoformat() if user.created_at else None),
+        })
         if not user.factfind_completed:
             return redirect(url_for("pages.welcome"))
         return redirect(url_for("pages.overview"))
@@ -999,11 +1013,29 @@ def checkin():
                     id=pot["goal_id"], user_id=current_user.id
                 ).first()
                 if goal:
-                    goal.current_amount = round(
-                        float(goal.current_amount or 0) + actual, 2
-                    )
+                    old_amount = float(goal.current_amount or 0)
+                    new_amount = round(old_amount + actual, 2)
+                    goal.current_amount = new_amount
+
+                    # Goal milestone tracking — fire when crossing 25/50/75/100% bands
+                    if goal.target_amount and float(goal.target_amount) > 0:
+                        target_f = float(goal.target_amount)
+                        old_pct = (old_amount / target_f) * 100
+                        new_pct = (new_amount / target_f) * 100
+                        for milestone in (25, 50, 75, 100):
+                            if old_pct < milestone <= new_pct:
+                                track_event(current_user.id, "goal_milestone_hit", {
+                                    "goal_id": goal.id,
+                                    "goal_name": goal.name,
+                                    "milestone_pct": milestone,
+                                })
 
         db.session.commit()
+        track_event(current_user.id, "checkin_completed", {
+            "month": checkin_month,
+            "year": checkin_year,
+            "pots_count": len(pots_for_checkin),
+        })
         flash("Check-in complete. Your plan has been updated.", "success")
         return redirect(url_for("pages.checkin"))
 
@@ -1011,6 +1043,13 @@ def checkin():
     past_checkins = CheckIn.query.filter_by(
         user_id=current_user.id
     ).order_by(CheckIn.year.desc(), CheckIn.month.desc()).limit(6).all()
+
+    if not (existing and not edit_mode):
+        track_event(current_user.id, "checkin_started", {
+            "month": checkin_month,
+            "year": checkin_year,
+            "edit_mode": edit_mode,
+        })
 
     return render_template("checkin.html",
         checkin_month=checkin_month_name,
@@ -1044,9 +1083,14 @@ def surplus_reveal():
 
         current_user.lifestyle_budget = lifestyle
         db.session.commit()
+        track_event(current_user.id, "onboarding_stage2_completed", {
+            "lifestyle_budget": lifestyle,
+            "surplus": surplus,
+        })
 
         return redirect(url_for("pages.goal_chips"))
 
+    track_event(current_user.id, "partial_projection_1_viewed", {"surplus": surplus})
     return render_template("surplus_reveal.html",
         profile=profile,
         income=round(income, 2),
@@ -1189,9 +1233,25 @@ def goal_chips():
 
         db.session.commit()
 
+        # ── Onboarding stage 3 + goals_added (multi-goal selection) ──
+        ttc_minutes = None
+        if current_user.created_at:
+            elapsed = datetime.utcnow() - current_user.created_at
+            ttc_minutes = round(elapsed.total_seconds() / 60, 2)
+        track_event(current_user.id, "onboarding_stage3_completed", {
+            "goals_count": len(selected),
+            "time_to_onboarding_complete": ttc_minutes,
+        })
+        if selected:
+            track_event(current_user.id, "goals_added", {
+                "count": len(selected),
+                "types": list(selected),
+                "source": "goal_chips",
+            })
 
         return redirect(url_for("pages.plan_reveal"))
 
+    track_event(current_user.id, "partial_projection_2_viewed")
     return render_template("goal_chips.html", show_sidebar=False, show_header=False)
 
 
@@ -1269,10 +1329,15 @@ def plan_reveal():
 
     summary = get_plan_summary(plan) if "error" not in plan else ""
 
-    if not current_user.plan_wizard_complete:
+    first_reveal = not current_user.plan_wizard_complete
+    if first_reveal:
         current_user.plan_wizard_complete = True
         session['first_overview'] = True
         db.session.commit()
+        track_event(current_user.id, "plan_revealed", {
+            "phase_count": plan.get("phase_count") if "error" not in plan else None,
+            "monthly_surplus": plan.get("surplus") if "error" not in plan else None,
+        })
 
     return render_template("plan_reveal.html",
         plan=plan,
@@ -1311,8 +1376,11 @@ def withdraw():
             amount = round(float(request.form.get("amount", 0)), 2)
             if amount > 0:
                 result = get_withdrawal_options(plan, amount)
+                track_event(current_user.id, "withdrawal_confirmed", {"amount": amount})
         except (ValueError, TypeError):
             flash("Please enter a valid amount.", "error")
+    elif request.method == "GET":
+        track_event(current_user.id, "withdrawal_started")
 
     return render_template("withdraw.html", plan=plan, result=result)
 
@@ -1538,11 +1606,18 @@ def factfind():
         current_user.factfind_completed = True
 
         db.session.commit()
+        if not was_already_completed:
+            track_event(current_user.id, "onboarding_stage1_completed", {
+                "employment_type": employment_type,
+                "monthly_income": float(monthly_income),
+            })
         flash("Financial profile updated" if was_already_completed else "Financial profile saved", "success")
         if was_already_completed:
             return redirect(url_for("pages.settings"))
         return redirect(url_for("pages.surplus_reveal"))
 
+    if not current_user.factfind_completed:
+        track_event(current_user.id, "factfind_started")
     return render_template("factfind.html",
         profile=current_user.profile_dict(),
         show_sidebar=current_user.plan_wizard_complete,
@@ -1785,6 +1860,13 @@ def add_goal():
         )
         db.session.add(goal)
         db.session.commit()
+        track_event(current_user.id, "goals_added", {
+            "count": 1,
+            "types": [goal_type],
+            "has_target": target_amount is not None,
+            "has_deadline": deadline is not None,
+            "source": "add_goal",
+        })
         flash("Goal created", "success")
         return redirect(url_for("pages.my_goals"))
 
@@ -2185,6 +2267,7 @@ def update_account():
 def welcome():
     if current_user.factfind_completed:
         return redirect(url_for("pages.overview"))
+    track_event(current_user.id, "welcome_screen_viewed")
     return render_template("welcome.html", show_sidebar=False, show_header=False)
 
 @page_bp.route("/unsubscribe")

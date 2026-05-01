@@ -206,4 +206,15 @@ def create_app(config_class=None):
         from flask import request
         return {"use_slim_shell": request.endpoint in _SLIM_SHELL_ENDPOINTS}
 
+    # Debug-only smoke-test route for PostHog. Daniel hits this once locally,
+    # confirms the event lands in PostHog's live feed, then deletes the route.
+    if app.debug:
+        from app.services.analytics_service import track_event, flush as ph_flush
+
+        @app.route("/dev/posthog-test")
+        def _posthog_test():
+            track_event("dev-test-user", "dev_test_event", {"source": "manual_smoke_test"})
+            ph_flush()
+            return "fired", 200
+
     return app

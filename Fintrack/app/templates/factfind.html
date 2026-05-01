@@ -33,8 +33,7 @@
     <p>{% if profile.get('plan_wizard_complete') %}Update your details below.{% else %}This takes about 60 seconds. Five sections and we have everything we need.{% endif %}</p>
 </div>
 
-<form method="POST" action="{{ url_for('pages.factfind') }}"
-      onsubmit="if(window.posthog)posthog.capture('factfind_completed');">
+<form method="POST" action="{{ url_for('pages.factfind') }}">
     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
 
     <!-- ─── EMPLOYMENT TYPE ─── -->

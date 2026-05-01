@@ -7,6 +7,7 @@ from flask_login import current_user, login_required
 
 from app import csrf, db, limiter
 from app.models.user import User
+from app.services.analytics_service import track_event
 from app.services.stripe_service import (
     init_stripe,
     price_id_for_plan,
@@ -182,6 +183,16 @@ def _handle_checkout_completed(session):
     user.trial_ends_at = datetime.utcnow() + timedelta(days=14)
     db.session.commit()
 
+    # Stripe Checkout requires a valid card before creating a subscription, so
+    # checkout.session.completed is the canonical "card added" + "trial started"
+    # signal for our funnel. If we add a separate setup_intent flow later, move
+    # `credit_card_added` to that handler.
+    track_event(user.id, "credit_card_added", {"tier": user.subscription_tier})
+    track_event(user.id, "trial_started", {
+        "tier": user.subscription_tier,
+        "trial_ends_at": user.trial_ends_at.isoformat() if user.trial_ends_at else None,
+    })
+
 
 def _handle_subscription_updated(subscription):
     customer_id = subscription.get("customer")
@@ -210,10 +221,17 @@ def _handle_subscription_deleted(subscription):
     if not user:
         return
 
+    prior_tier = user.subscription_tier
     user.subscription_tier = "free"
     user.subscription_status = "canceled"
     user.stripe_subscription_id = None
     db.session.commit()
+
+    # `cancel_confirmed` fires here because Stripe's customer-portal cancel UI
+    # is hosted off-app, so we don't see the click. When we build an in-app
+    # cancellation flow, instrument cancel_clicked / cancel_dismissed there.
+    # TODO PostHog: confirm this fires correctly when in-app cancel UI ships.
+    track_event(user.id, "cancel_confirmed", {"prior_tier": prior_tier})
 
 
 def _handle_invoice_paid(invoice):

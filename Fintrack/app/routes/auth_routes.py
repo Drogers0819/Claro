@@ -2,6 +2,7 @@ from flask import Blueprint, request, jsonify
 from flask_login import login_user, logout_user, login_required, current_user
 from app import db, limiter
 from app.models.user import User
+from app.services.analytics_service import track_event, identify_user
 from app.utils.validators import (
     validate_email,
     validate_name,
@@ -37,6 +38,17 @@ def register():
     db.session.add(user)
     db.session.commit()
 
+    identify_user(user.id, {
+        "email": user.email,
+        "name": user.name,
+        "tier": user.subscription_tier or "free",
+        "signup_date": (user.created_at.isoformat() if user.created_at else None),
+    })
+    track_event(user.id, "user_signed_up", {
+        "email_domain": email.split("@")[-1] if "@" in email else None,
+        "source": "api",
+    })
+
     return jsonify({
         "message": "Account created successfully",
         "user": {
@@ -67,6 +79,12 @@ def login():
         return jsonify({"error": "Invalid email or password"}), 401
 
     login_user(user)
+    identify_user(user.id, {
+        "email": user.email,
+        "name": user.name,
+        "tier": user.subscription_tier or "free",
+        "signup_date": (user.created_at.isoformat() if user.created_at else None),
+    })
 
     return jsonify({
         "message": "Login successful",

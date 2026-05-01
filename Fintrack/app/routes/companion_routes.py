@@ -5,6 +5,7 @@ from app.models.chat import ChatMessage
 from app.models.goal import Goal
 from app.services.companion_service import chat, check_rate_limit, increment_message_count
 from app.services.planner_service import generate_financial_plan
+from app.services.analytics_service import track_event
 from app.utils.auth import requires_subscription
 from app.utils.validators import sanitize_string
 
@@ -187,6 +188,13 @@ def companion_chat():
     # Increment rate limit counter
     increment_message_count(current_user)
     db.session.commit()
+
+    track_event(current_user.id, "companion_message_sent", {
+        "tier": current_user.subscription_tier or "free",
+        "message_count_today": current_user.companion_messages_today,
+        "tokens_in": result.get("tokens_in", 0),
+        "tokens_out": result.get("tokens_out", 0),
+    })
 
     return jsonify({
         "response": result["response"],

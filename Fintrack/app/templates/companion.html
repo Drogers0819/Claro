@@ -409,7 +409,6 @@ function _doSend(isEdit) {
             }
             addMessage('assistant', data.response);
             updateCounter();
-            if (window.posthog) posthog.capture('companion_message_sent');
         }
     })
     .catch(function() {
