@@ -290,8 +290,27 @@ def create_app(config_class=None):
         from flask import request
         return {"use_slim_shell": request.endpoint in _SLIM_SHELL_ENDPOINTS}
 
-    # Debug-only smoke-test route for PostHog. Daniel hits this once locally,
-    # confirms the event lands in PostHog's live feed, then deletes the route.
+    @app.context_processor
+    def _inject_companion_access():
+        """Templates use `can_access_companion` to decide whether to render
+        the Companion nav link. The companion page itself is gated by
+        @requires_subscription; this just keeps the nav consistent with
+        what the user can actually reach."""
+        from flask_login import current_user
+        from app.utils.auth import is_subscription_active
+        try:
+            allowed = bool(
+                current_user
+                and current_user.is_authenticated
+                and is_subscription_active(current_user)
+            )
+        except Exception:
+            allowed = False
+        return {"can_access_companion": allowed}
+
+    # Debug-only smoke-test routes. Each one is meant to be hit a couple
+    # times by the developer on a fresh deploy and then removed in a
+    # follow-up commit; they bypass real-user logic on purpose.
     if app.debug:
         from app.services.analytics_service import track_event, flush as ph_flush
 
@@ -300,5 +319,32 @@ def create_app(config_class=None):
             track_event("dev-test-user", "dev_test_event", {"source": "manual_smoke_test"})
             ph_flush()
             return "fired", 200
+
+        @app.route("/dev/companion-smoke-test")
+        def _companion_smoke_test():
+            from time import perf_counter
+            from app.services.companion_service import smoke_test_chat
+            start = perf_counter()
+            try:
+                result = smoke_test_chat()
+                latency_ms = int((perf_counter() - start) * 1000)
+                cache_read = result.get("cache_read_input_tokens", 0)
+                cache_create = result.get("cache_creation_input_tokens", 0)
+                from flask import jsonify
+                return jsonify({
+                    "success": result.get("error") is None,
+                    "response_text": result.get("text", ""),
+                    "model_used": result.get("model", ""),
+                    "cache_read_input_tokens": cache_read,
+                    "cache_creation_input_tokens": cache_create,
+                    "cache_hit": cache_read > 0,
+                    "input_tokens": result.get("input_tokens", 0),
+                    "output_tokens": result.get("output_tokens", 0),
+                    "latency_ms": latency_ms,
+                    "error": result.get("error"),
+                })
+            except Exception as exc:  # noqa: BLE001
+                from flask import jsonify
+                return jsonify({"success": False, "error": str(exc)}), 500
 
     return app

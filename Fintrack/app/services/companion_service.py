@@ -7,7 +7,7 @@ Rate limiting per tier. FCA-compliant system prompt.
 
 import os
 import json
-from datetime import date, datetime
+from datetime import date, datetime, timedelta, timezone
 from anthropic import Anthropic
 
 # ─── CONFIGURATION ────────────────────────────────────────────
@@ -20,16 +20,36 @@ DAILY_LIMITS = {
     "pro": 10,
     "pro_plus": 30,
     "joint": 50,
-    "trial": 5  # 5 total during trial, not per day
+    "trial": 5,
 }
 
-# Queries that trigger Sonnet (complex reasoning)
+# Queries that trigger Sonnet (complex reasoning).
+# Two flavours: scenario/reasoning markers and distress markers. Distress
+# language routes to Sonnet because its judgement and warmth on emotionally
+# heavy financial situations is materially better than Haiku's.
 COMPLEX_TRIGGERS = [
+    # Scenario / reasoning
     "what if", "should i", "can i afford", "how long", "compare",
     "explain", "why", "adjust my plan", "change my", "scenario",
     "recommend", "advice", "strategy", "review my", "analyse",
-    "help me decide", "trade-off", "priority", "rebalance"
+    "help me decide", "trade-off", "priority", "rebalance",
+    # Distress markers
+    "lost my job", "can't afford", "struggling", "worried",
+    "anxious", "stressed", "scared", "overwhelmed",
+    "in trouble", "broke", "no money",
+    "behind on", "missed a payment",
 ]
+
+
+# Per-tier rate-limit chat-bubble copy. The "tier" here is the effective
+# rate-limit key returned by _effective_limit_key (so an active trial maps
+# to "trial" regardless of the user's plan tier).
+_RATE_LIMIT_COPY = {
+    "pro": "You've used your 10 messages for today. Pro+ unlocks 30 daily, would that help?",
+    "pro_plus": "You've used your 30 messages for today. They reset at midnight UTC. Your plan is here whenever you need it.",
+    "joint": "You've used your 50 messages for today. They reset at midnight UTC.",
+    "trial": "You've used your 5 messages for today during your trial. They reset at midnight UTC, and you'll have full access once you subscribe.",
+}
 
 
 # ─── SYSTEM PROMPT ────────────────────────────────────────────
@@ -251,36 +271,74 @@ def _select_model(message):
 
 
 # ─── RATE LIMITING ────────────────────────────────────────────
+#
+# The daily counter resets at midnight UTC. We store the most recent reset
+# date in user.companion_last_reset (a Date column). On Render the server is
+# UTC anyway, but reading datetime.utcnow().date() makes the timezone
+# behaviour explicit so it's not coupled to server local time.
+
+
+def _effective_limit_key(user):
+    """Key into DAILY_LIMITS for this user. An active trial uses the trial
+    limit regardless of the user's plan tier; otherwise the plan tier
+    determines the limit."""
+    if getattr(user, "subscription_status", None) == "trialing":
+        return "trial"
+    return (getattr(user, "subscription_tier", None) or "free").lower()
+
+
+def _rate_limit_message(tier_key):
+    return _RATE_LIMIT_COPY.get(
+        tier_key,
+        "You've used all your messages for today. They reset at midnight UTC.",
+    )
+
+
+def seconds_until_utc_midnight(now=None):
+    """Seconds from `now` (UTC) to the next 00:00 UTC."""
+    now = now or datetime.now(timezone.utc).replace(tzinfo=None)
+    tomorrow = (now + timedelta(days=1)).replace(
+        hour=0, minute=0, second=0, microsecond=0
+    )
+    return int((tomorrow - now).total_seconds())
+
 
 def check_rate_limit(user):
-    """Check if user can send a message. Returns (allowed, reason)."""
-    tier = user.subscription_tier or "free"
+    """Returns (allowed, reason, kind) where kind is one of:
+      'free'        — user lacks companion access for tier reasons
+      'rate_limit'  — daily limit hit
+      None          — allowed
+    """
+    tier_key = _effective_limit_key(user)
 
-    if tier == "free":
-        return False, "The AI companion is available on Pro and above. Upgrade to chat with Claro."
+    if tier_key == "free":
+        return (
+            False,
+            "The AI companion is available on Pro and above. Upgrade to chat with Claro.",
+            "free",
+        )
 
-    limit = DAILY_LIMITS.get(tier, 0)
+    limit = DAILY_LIMITS.get(tier_key, 0)
     if limit == 0:
-        return False, "The AI companion is available on Pro and above."
+        return False, "The AI companion is available on Pro and above.", "free"
 
-    # Reset daily counter if new day
-    today = date.today()
-    if user.companion_last_reset != today:
+    today_utc = datetime.utcnow().date()
+    if user.companion_last_reset != today_utc:
         user.companion_messages_today = 0
-        user.companion_last_reset = today
+        user.companion_last_reset = today_utc
 
     if user.companion_messages_today >= limit:
-        return False, f"You've used all {limit} messages for today. They reset at midnight."
+        return False, _rate_limit_message(tier_key), "rate_limit"
 
-    return True, None
+    return True, None, None
 
 
 def increment_message_count(user):
-    """Increment the user's daily message counter."""
-    today = date.today()
-    if user.companion_last_reset != today:
+    """Increment the user's daily message counter. Resets at midnight UTC."""
+    today_utc = datetime.utcnow().date()
+    if user.companion_last_reset != today_utc:
         user.companion_messages_today = 1
-        user.companion_last_reset = today
+        user.companion_last_reset = today_utc
     else:
         user.companion_messages_today = (user.companion_messages_today or 0) + 1
 
@@ -390,3 +448,50 @@ def chat(user, message, plan=None, conversation_history=None):
             "tokens_out": 0,
             "error": str(e)
         }
+
+
+# ─── SMOKE TEST ──────────────────────────────────────────────
+#
+# Used by the debug-only /dev/companion-smoke-test route for one-off
+# verification by the developer. Bypasses user context, rate limits, and
+# chat persistence. Returns the cache-token counts so we can confirm prompt
+# caching is actually engaging (cache_creation > 0 on first call,
+# cache_read > 0 on the second within 5 minutes).
+
+
+def smoke_test_chat(message="Hello, this is a smoke test. Reply with exactly 'Smoke test successful.'"):
+    api_key = os.environ.get("ANTHROPIC_API_KEY")
+    if not api_key:
+        return {
+            "text": "",
+            "model": "",
+            "cache_read_input_tokens": 0,
+            "cache_creation_input_tokens": 0,
+            "input_tokens": 0,
+            "output_tokens": 0,
+            "error": "no_api_key",
+        }
+
+    client = Anthropic(api_key=api_key)
+    response = client.messages.create(
+        model=HAIKU_MODEL,
+        max_tokens=100,
+        system=[
+            {
+                "type": "text",
+                "text": SYSTEM_PROMPT_STATIC,
+                "cache_control": {"type": "ephemeral"},
+            },
+        ],
+        messages=[{"role": "user", "content": message}],
+    )
+    usage = response.usage
+    return {
+        "text": response.content[0].text if response.content else "",
+        "model": HAIKU_MODEL,
+        "cache_read_input_tokens": getattr(usage, "cache_read_input_tokens", 0) or 0,
+        "cache_creation_input_tokens": getattr(usage, "cache_creation_input_tokens", 0) or 0,
+        "input_tokens": getattr(usage, "input_tokens", 0) or 0,
+        "output_tokens": getattr(usage, "output_tokens", 0) or 0,
+        "error": None,
+    }

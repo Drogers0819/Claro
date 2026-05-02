@@ -241,7 +241,7 @@
         {% endif %}
 
         {# Companion prompt — fake input #}
-        {% if not is_frozen %}
+        {% if not is_frozen and can_access_companion %}
         <div>
             <a href="{{ url_for('companion.companion_page') }}" class="slim-companion-prompt">
                 <span class="slim-companion-prompt__icon">

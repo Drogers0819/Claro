@@ -3,7 +3,13 @@ from flask_login import login_required, current_user
 from app import db, limiter
 from app.models.chat import ChatMessage
 from app.models.goal import Goal
-from app.services.companion_service import chat, check_rate_limit, increment_message_count
+from app.services.companion_service import (
+    chat,
+    check_rate_limit,
+    increment_message_count,
+    seconds_until_utc_midnight,
+    _effective_limit_key,
+)
 from app.services.planner_service import generate_financial_plan
 from app.services.analytics_service import track_event
 from app.utils.auth import requires_subscription
@@ -17,7 +23,7 @@ companion_bp = Blueprint("companion", __name__)
 @requires_subscription
 def companion_page():
     """Render the companion chat UI."""
-    allowed, reason = check_rate_limit(current_user)
+    allowed, reason, kind = check_rate_limit(current_user)
     messages_used = current_user.companion_messages_today or 0
     limit = current_user.daily_message_limit
 
@@ -27,13 +33,19 @@ def companion_page():
     ).order_by(ChatMessage.created_at.desc()).limit(20).all()
     recent_messages.reverse()
 
+    # When the daily limit is already hit, surface the per-tier copy as an
+    # assistant chat bubble at the end of the history. The bubble is UI-only,
+    # never persisted as a chat_messages row.
+    rate_limit_bubble = reason if kind == "rate_limit" else None
+
     return render_template("companion.html",
         allowed=allowed,
         reason=reason,
         messages_used=messages_used,
         daily_limit=limit,
         chat_history=recent_messages,
-        tier=current_user.subscription_tier or "free"
+        tier=current_user.subscription_tier or "free",
+        rate_limit_bubble=rate_limit_bubble,
     )
 
 
@@ -56,8 +68,13 @@ def edit_message():
         return jsonify({"error": "Message not found"}), 404
 
     # Rate limit check
-    allowed, reason = check_rate_limit(current_user)
+    allowed, reason, kind = check_rate_limit(current_user)
     if not allowed:
+        if kind == "rate_limit":
+            track_event(current_user.id, "companion_rate_limit_hit", {
+                "tier": _effective_limit_key(current_user),
+                "time_until_reset_seconds": seconds_until_utc_midnight(),
+            })
         return jsonify({"error": reason, "allowed": False}), 429
 
     # Delete the message and everything after it (re-generates from that point)
@@ -125,8 +142,13 @@ def clear_chat():
 def companion_chat():
     """Handle a chat message to the companion."""
     # Rate limit check
-    allowed, reason = check_rate_limit(current_user)
+    allowed, reason, kind = check_rate_limit(current_user)
     if not allowed:
+        if kind == "rate_limit":
+            track_event(current_user.id, "companion_rate_limit_hit", {
+                "tier": _effective_limit_key(current_user),
+                "time_until_reset_seconds": seconds_until_utc_midnight(),
+            })
         return jsonify({"error": reason, "allowed": False}), 429
 
     data = request.get_json(silent=True) or {}
@@ -194,6 +216,7 @@ def companion_chat():
         "message_count_today": current_user.companion_messages_today,
         "tokens_in": result.get("tokens_in", 0),
         "tokens_out": result.get("tokens_out", 0),
+        "model_routed": result.get("model_used"),
     })
 
     return jsonify({

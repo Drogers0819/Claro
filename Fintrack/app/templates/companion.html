@@ -100,6 +100,12 @@
             <div class="chat-bubble {{ msg.role }}-bubble">{{ msg.content }}</div>
         </div>
         {% endfor %}
+
+        {% if rate_limit_bubble %}
+        <div class="chat-msg chat-assistant" id="rate-limit-bubble">
+            <div class="chat-bubble assistant-bubble">{{ rate_limit_bubble }}</div>
+        </div>
+        {% endif %}
     </div>
 
     {% endif %}
@@ -108,10 +114,10 @@
 {% if tier != "free" %}
 <!-- Full-bleed fixed input zone — breaks out of content column -->
 <div class="companion-input-zone">
-    <div class="companion-input-inner">
+    <div class="companion-input-inner" id="companion-input-inner">
         {% if messages_used >= daily_limit %}
-        <div style="padding: 12px 0; font-size: 0.8rem; color: var(--text-tertiary);">
-            You've used all {{ daily_limit }} messages for today. They reset at midnight.
+        <div class="rate-limit-notice" style="padding: 14px 0; font-size: 0.75rem; color: var(--text-tertiary); text-align: center;">
+            Messaging resumes at midnight UTC.
         </div>
         {% else %}
         <div id="edit-indicator" style="display:none; padding: 7px 12px; border-radius: 8px; margin-bottom: 8px; background: var(--popover-bg, var(--bg-primary)); border: 0.5px solid var(--glass-border);">
@@ -394,7 +400,13 @@ function _doSend(isEdit) {
     .then(function(data) {
         hideTyping();
         if (data.error && !data.allowed) {
+            // Rate-limit (or tier-block) response: render as an assistant
+            // bubble and replace the input zone with the resume notice.
             addMessage('assistant', data.error);
+            var inner = document.getElementById('companion-input-inner');
+            if (inner) {
+                inner.innerHTML = '<div class="rate-limit-notice" style="padding: 14px 0; font-size: 0.75rem; color: var(--text-tertiary); text-align: center;">Messaging resumes at midnight UTC.</div>';
+            }
         } else if (data.response) {
             // Backfill the message ID on the user row so edit works on new messages too
             if (data.user_message_id && userDiv) {

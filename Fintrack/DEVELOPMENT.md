@@ -507,7 +507,8 @@ before the first `flask db upgrade`).
 | `checkin_started` | `pages.checkin` GET when not already done |
 | `checkin_completed` | `pages.checkin` POST success |
 | `goal_milestone_hit` | Inside `pages.checkin` POST loop — fires when a goal's progress crosses 25/50/75/100% |
-| `companion_message_sent` | `companion.companion_chat` after successful response — properties: `tier`, `message_count_today`, `tokens_in/out` |
+| `companion_message_sent` | `companion.companion_chat` after successful response — properties: `tier`, `message_count_today`, `tokens_in/out`, `model_routed` (`haiku` or `sonnet`) |
+| `companion_rate_limit_hit` | `companion.companion_chat` and `.edit_message` when daily limit reached — properties: `tier` (effective rate-limit key, e.g. `pro`/`pro_plus`/`joint`/`trial`), `time_until_reset_seconds` |
 | `withdrawal_started` | `pages.plan` GET when `?withdraw=1` first opens the inline section |
 | `withdrawal_preview_generated` | `pages.plan_withdraw_preview` POST success — properties: `amount` |
 | `withdrawal_confirmed` | `pages.plan_withdraw_confirm` POST success — properties: `amount` (the plan was applied to goals) |
@@ -545,6 +546,43 @@ Total suite: **407 passing** (398 original + 9 new).
 - **Lazy single-client init** — easier than wiring a Flask extension. The first call to `track_event` triggers init via `current_app.config`; subsequent calls hit a cached client. Guards against repeat warning spam when the key is missing.
 - **Exception swallowing is non-negotiable** — `except Exception` in tracking code is normally a smell, but here the contract is explicit: analytics is auxiliary, must not break product features.
 - **`time_to_onboarding_complete` is computed at the firing point** rather than stored on the user — keeps the event self-describing and avoids a migration. Computed as `(datetime.utcnow() - user.created_at).total_seconds() / 60` at the moment stage 3 completes.
+
+---
+
+## 2026-05-02 — Companion live in production
+
+### What I did
+
+- **UTC rate-limit reset.** `check_rate_limit` and `increment_message_count` in `companion_service.py` now compare against `datetime.utcnow().date()` instead of `date.today()`. No schema change — the existing `companion_last_reset` Date column is reused, the comparison is just explicit about timezone. On Render the server is UTC anyway; this just decouples behaviour from server local time.
+- **Per-tier rate-limit chat bubble.** `check_rate_limit` returns a 3-tuple `(allowed, reason, kind)` where `kind` is `'free'` (paywall), `'rate_limit'` (daily cap), or `None` (allowed). Per-tier copy lives in `_RATE_LIMIT_COPY` in `companion_service.py`. Pro / Pro+ / Joint / Trial each get tailored wording. The bubble renders at the end of chat history (page-load path) or via the existing 429 JS handler (mid-chat path); not persisted as a `chat_messages` row. Below the bubble, the input zone is replaced with "Messaging resumes at midnight UTC."
+- **Companion nav visibility.** Added `_inject_companion_access` context processor in `app/__init__.py` exposing `can_access_companion = is_subscription_active(current_user)`. Wraps the four companion nav slots in `base.html` (slim sidebar, legacy desktop sidebar, slim mobile tabs, legacy mobile tabs) plus the overview prompt + chips. Free post-trial users no longer see a link they can't follow.
+- **Hybrid classifier enriched.** `COMPLEX_TRIGGERS` extended with distress markers (`lost my job`, `can't afford`, `struggling`, `worried`, `anxious`, `stressed`, `scared`, `overwhelmed`, `in trouble`, `broke`, `no money`, `behind on`, `missed a payment`). Routes these to Sonnet because its judgement and warmth on emotionally-loaded financial situations is materially better than Haiku's. Skipped the conversation-history continuation and length-based heuristic — the keyword list is sufficient at this stage and we'll revisit after the 25-scenario sprint.
+- **Effective limit key.** Added `_effective_limit_key(user)` so trial users (status=`trialing`) hit the trial limit (5/day) regardless of their plan tier. Previously a Pro-tier user mid-trial would have got the Pro limit (10/day) — minor but the per-tier copy depends on it.
+- **Smoke test route.** `/dev/companion-smoke-test` registered only when `app.debug` is true. Calls `companion_service.smoke_test_chat()` which bypasses user context, rate limits, and persistence — just hits the API with the cached static system prompt and returns `success`, `response_text`, `model_used`, `cache_read_input_tokens`, `cache_creation_input_tokens`, `cache_hit`, `latency_ms`. Hit it twice within 5 minutes locally to verify caching engages: first call shows `cache_creation_input_tokens > 0`, second shows `cache_read_input_tokens > 0`. **Remove in a follow-up commit (`chore: remove companion smoke test route once verified`) after one-off verification.**
+
+### Events instrumented
+
+- `companion_message_sent` — added `model_routed` property (`haiku` or `sonnet`) so we can track the routing split in PostHog and compare against the 70/30 cost model.
+- `companion_rate_limit_hit` (new) — fires from `companion.companion_chat` and `.edit_message` when the daily cap is reached. Properties: `tier` (effective rate-limit key) and `time_until_reset_seconds` (computed from next UTC midnight). Helps quantify how often users hit the cap and inform whether 30/day on Pro+ is the right number.
+
+### What's deliberately NOT done
+
+- **No `@requires_companion_access` decorator and no `/companion/upgrade-needed` page.** `@requires_subscription` already gates the only fully-blocked case (free post-trial). Pro tier keeps its 10 messages/day. The pricing page handles tier-feature messaging ("AI companion (limited)" vs "(full)") rather than the gating logic.
+- **No schema change for `companion_messages_reset_at`.** The existing `companion_last_reset` Date column does the job once UTC is wired in. Adding a DateTime column would have been the same behaviour on Render with extra migration risk.
+- **No conversation-history or length-based heuristic in the classifier.** Keyword list is enough for now; revisit after the 25-scenario evaluation sprint.
+
+### Tests
+
+Added `tests/test_companion_routes.py` covering classifier (existing triggers + distress markers + simple), rate-limit (UTC reset, per-tier copy, kind discrimination, free-tier blocking), per-tier `_effective_limit_key`, smoke-test 404 in non-debug mode, and the rate-limit chat-bubble rendering on page load.
+
+### Manual verification still needed
+
+- Confirm `ANTHROPIC_API_KEY` and `POSTHOG_API_KEY` are set in Render.
+- Hit `/dev/companion-smoke-test` locally twice within 5 minutes to confirm caching engages.
+- Send a real message in production with a Pro+ test account; check PostHog for `companion_message_sent` with `model_routed` populated.
+- Verify a free post-trial test account does NOT see the Companion nav link in any of the four nav slots.
+- Verify the rate-limit bubble appears (lower the limit temporarily to 1 if needed for the test).
+- After verification, delete the smoke test route in a follow-up commit.
 
 ---
 
