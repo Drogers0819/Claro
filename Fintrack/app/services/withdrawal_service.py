@@ -90,6 +90,7 @@ def calculate_withdrawal_strategy(pots, amount_needed, user_goals=None):
         candidates.append({
             "name": name,
             "type": pot_type,
+            "goal_id": pot.get("goal_id"),
             "available": round(available, 2),
             "priority": 1,  # All goal pots have equal base priority
             "impact_per_pound": impact_per_pound,
@@ -121,6 +122,7 @@ def calculate_withdrawal_strategy(pots, amount_needed, user_goals=None):
         withdrawals.append({
             "pot_name": candidate["name"],
             "pot_type": candidate["type"],
+            "goal_id": candidate.get("goal_id"),
             "amount": round(pull, 2),
             "impact": impact,
             "impact_severity": _severity(candidate, pull)

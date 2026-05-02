@@ -106,7 +106,7 @@
     {% set _slim_active_checkin = (request.endpoint == 'pages.checkin') %}
     {% set _slim_active_goals = (request.endpoint in ['pages.my_goals', 'pages.add_goal', 'pages.goal_detail', 'pages.edit_goal']) %}
     {% set _slim_active_companion = (request.endpoint == 'companion.companion_page') %}
-    {% set _slim_active_plan = (request.endpoint in ['pages.plan', 'pages.scenario_page', 'pages.withdraw']) %}
+    {% set _slim_active_plan = (request.endpoint in ['pages.plan', 'pages.scenario_page']) %}
     {% set _slim_active_settings = (request.endpoint == 'pages.settings') %}
 
     {# ── SLIM CHROME: rendered when use_slim_shell is true ── #}

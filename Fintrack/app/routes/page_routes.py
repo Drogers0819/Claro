@@ -32,7 +32,7 @@ from app.services.simulator_service import (
 import calendar
 from app.services.planner_service import generate_financial_plan, get_plan_summary, can_i_afford
 from app.services.whisper_service import generate_action_whisper
-from app.services.withdrawal_service import get_withdrawal_options
+from app.services.withdrawal_service import calculate_withdrawal_strategy
 from app.models.life_checkin import LifeCheckIn
 from app.models.checkin import CheckInEntry
 from app.utils.auth import is_subscription_active, requires_subscription
@@ -851,6 +851,16 @@ def plan():
                 has_debt_goals = True
         debt_monthly = round(debt_monthly, 2)
 
+    # Withdrawal section state. The form on /plan submits to one of the
+    # /plan/withdraw/* routes which stash the strategy in the session and
+    # redirect back here. We render the section when the user has either
+    # asked for it (?withdraw=1) or already has a stashed preview pending.
+    withdrawal_preview = session.get("withdrawal_preview")
+    show_withdraw = request.args.get("withdraw") == "1" or withdrawal_preview is not None
+    if show_withdraw and request.args.get("withdraw") == "1" and not withdrawal_preview:
+        # First time entering the section — fire the event once per visit.
+        track_event(current_user.id, "withdrawal_started")
+
     return render_template("plan.html",
         waterfall=data["waterfall"],
         projections=data["projections"],
@@ -863,6 +873,8 @@ def plan():
         is_frozen=is_frozen,
         debt_monthly=debt_monthly,
         has_debt_goals=has_debt_goals,
+        show_withdraw=show_withdraw,
+        withdrawal_preview=withdrawal_preview,
     )
 
 
@@ -1355,35 +1367,108 @@ def plan_review():
     return redirect(url_for("pages.plan_reveal"))
 
 # ─── WITHDRAWAL ───────────────────────────────────────────
+#
+# The withdrawal flow is rendered inline on /plan. The three POST endpoints
+# below stash state in the session and redirect back to /plan?withdraw=1.
+#
+# Lifecycle:
+#   preview  -> stash {amount, result, decided=False}, both Yes/No visible
+#   confirm  -> apply withdrawal to goals, clear session, flash success
+#   dismiss  -> mark decided=True, recommendation stays visible, flash info
 
-@page_bp.route("/withdraw", methods=["GET", "POST"])
-@login_required
-@requires_subscription
-def withdraw():
-    if not current_user.factfind_completed or not current_user.monthly_income:
-        flash("Complete your financial profile first.", "error")
-        return redirect(url_for("pages.factfind"))
 
+def _redirect_to_plan_withdraw():
+    return redirect(url_for("pages.plan", withdraw=1))
+
+
+def _build_user_plan():
+    """Generate the current plan dict for the logged-in user."""
     user_profile = current_user.profile_dict()
     goals_data = [g.to_dict() for g in Goal.query.filter_by(
         user_id=current_user.id, status="active"
     ).order_by(Goal.priority_rank.asc()).all()]
+    return generate_financial_plan(user_profile, goals_data)
 
-    plan = generate_financial_plan(user_profile, goals_data)
-    result = None
 
-    if request.method == "POST" and "error" not in plan:
-        try:
-            amount = round(float(request.form.get("amount", 0)), 2)
-            if amount > 0:
-                result = get_withdrawal_options(plan, amount)
-                track_event(current_user.id, "withdrawal_confirmed", {"amount": amount})
-        except (ValueError, TypeError):
-            flash("Please enter a valid amount.", "error")
-    elif request.method == "GET":
-        track_event(current_user.id, "withdrawal_started")
+@page_bp.route("/plan/withdraw/preview", methods=["POST"])
+@login_required
+@requires_subscription
+def plan_withdraw_preview():
+    if not current_user.factfind_completed or not current_user.monthly_income:
+        flash("Complete your financial profile first.", "error")
+        return redirect(url_for("pages.factfind"))
 
-    return render_template("withdraw.html", plan=plan, result=result)
+    raw_amount = request.form.get("amount", "")
+    try:
+        amount = round(float(raw_amount), 2)
+    except (TypeError, ValueError):
+        flash("Please enter a valid amount.", "error")
+        return _redirect_to_plan_withdraw()
+
+    if amount <= 0:
+        flash("Please enter an amount greater than zero.", "error")
+        return _redirect_to_plan_withdraw()
+
+    plan = _build_user_plan()
+    if "error" in plan:
+        flash("Your plan is not ready yet.", "error")
+        return redirect(url_for("pages.plan"))
+
+    result = calculate_withdrawal_strategy(plan.get("pots", []), amount)
+    session["withdrawal_preview"] = {
+        "amount": amount,
+        "result": result,
+        "decided": False,
+    }
+    track_event(current_user.id, "withdrawal_preview_generated", {"amount": amount})
+    return _redirect_to_plan_withdraw()
+
+
+@page_bp.route("/plan/withdraw/confirm", methods=["POST"])
+@login_required
+@requires_subscription
+def plan_withdraw_confirm():
+    preview = session.get("withdrawal_preview")
+    if not preview or not preview.get("result", {}).get("withdrawals"):
+        flash("There's nothing to apply. Enter an amount first.", "error")
+        return _redirect_to_plan_withdraw()
+
+    withdrawals = preview["result"]["withdrawals"]
+    amount = preview.get("amount")
+
+    # Decrement current_amount on each goal touched by the strategy.
+    # Match by goal_id (preferred) or fall back to name match scoped to this user.
+    goals_by_id = {g.id: g for g in Goal.query.filter_by(
+        user_id=current_user.id, status="active"
+    ).all()}
+    goals_by_name = {g.name: g for g in goals_by_id.values()}
+
+    for w in withdrawals:
+        goal = goals_by_id.get(w.get("goal_id")) or goals_by_name.get(w.get("pot_name"))
+        if goal is None:
+            continue
+        current = float(goal.current_amount or 0)
+        new_current = max(round(current - float(w.get("amount", 0)), 2), 0)
+        goal.current_amount = new_current
+
+    db.session.commit()
+    session.pop("withdrawal_preview", None)
+    track_event(current_user.id, "withdrawal_confirmed", {"amount": amount})
+    flash("Your plan has been updated.", "success")
+    return redirect(url_for("pages.plan"))
+
+
+@page_bp.route("/plan/withdraw/dismiss", methods=["POST"])
+@login_required
+@requires_subscription
+def plan_withdraw_dismiss():
+    preview = session.get("withdrawal_preview")
+    if preview:
+        preview["decided"] = True
+        session["withdrawal_preview"] = preview
+        track_event(current_user.id, "withdrawal_dismissed", {"amount": preview.get("amount")})
+    flash("No changes made. The recommendation is here when you're ready.", "info")
+    return _redirect_to_plan_withdraw()
 
 # ─── LIFE CHECK-IN ────────────────────────────────────────
 

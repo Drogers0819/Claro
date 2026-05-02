@@ -253,11 +253,98 @@
 </div>
 
 <!-- I need money -->
-<div style="padding-top: 20px; margin-top: 20px; border-top: 0.5px solid var(--glass-border);">
+<div id="withdraw" style="padding-top: 20px; margin-top: 20px; border-top: 0.5px solid var(--glass-border);">
     <div style="font-size: 0.9rem; color: var(--text-primary); font-weight: 500; margin-bottom: 4px;">Need to access money?</div>
     <p style="font-size: 0.78rem; color: var(--text-tertiary); margin-bottom: 14px;">Claro works out the safest way to release funds from your plan without derailing your goals.</p>
-    <a href="{{ url_for('pages.withdraw') }}" class="btn-secondary btn-sm">
+
+    {% if not show_withdraw %}
+    <a href="{{ url_for('pages.plan', withdraw=1) }}#withdraw" class="btn-secondary btn-sm">
         I need money <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
     </a>
+    {% else %}
+
+    {% if smart_plan and not smart_plan.error %}
+    <form method="POST" action="{{ url_for('pages.plan_withdraw_preview') }}" style="margin-bottom: 18px;">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <div class="form-group" style="margin-bottom: 10px;">
+            <label class="form-label">How much do you need? (£)</label>
+            <input type="number" name="amount" class="form-input" id="withdraw-amount-input" placeholder="e.g. 500" step="0.01" min="1"
+                value="{{ '%g' | format(withdrawal_preview.amount) if withdrawal_preview else '' }}" required>
+        </div>
+
+        <div style="display: flex; gap: 6px; margin-bottom: 14px; flex-wrap: wrap;">
+            {% for amt in [100, 250, 500, 1000] %}
+            <button type="button" onclick="document.getElementById('withdraw-amount-input').value={{ amt }}"
+                style="padding: 6px 14px; border-radius: 50px; border: 0.5px solid var(--glass-border); background: var(--glass-bg); font-size: 0.75rem; color: var(--text-tertiary); cursor: pointer;">£{{ amt }}</button>
+            {% endfor %}
+        </div>
+
+        <button type="submit" class="btn-secondary btn-sm">Show me the impact</button>
+    </form>
+    {% else %}
+    <p style="font-size: 0.8rem; color: var(--text-tertiary);">Your plan needs to be ready before we can suggest a withdrawal.</p>
+    {% endif %}
+
+    {% if withdrawal_preview and withdrawal_preview.result %}
+    {% set wp = withdrawal_preview.result %}
+    <div style="margin-top: 8px; padding-top: 16px; border-top: 0.5px solid var(--glass-border);">
+
+        <div class="gold-card" style="margin-bottom: 16px;">
+            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 10px;">
+                <span class="ai-pulse"></span>
+                <span style="font-size: 0.65rem; color: var(--roman-gold); text-transform: uppercase; letter-spacing: 0.06em;">Recommendation</span>
+            </div>
+            <p style="font-size: 0.88rem; color: var(--text-secondary); line-height: 1.7;">{{ wp.plan_impact_summary }}</p>
+        </div>
+
+        {% if wp.withdrawals %}
+        <div style="margin-bottom: 18px;">
+            <span class="section-label" style="margin-bottom: 12px; display: block;">Recommended split</span>
+            {% for w in wp.withdrawals %}
+            <div style="padding: 12px 0; border-bottom: 0.5px solid var(--glass-border);">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+                    <span style="font-size: 0.88rem; color: var(--text-primary);">{{ w.pot_name }}</span>
+                    <span style="font-size: 0.88rem; font-weight: 500; color: {% if w.impact_severity == 'low' %}var(--text-secondary){% elif w.impact_severity == 'medium' %}var(--roman-gold){% else %}var(--danger){% endif %}; font-variant-numeric: tabular-nums;">£{{ "{:,.0f}".format(w.amount) }}</span>
+                </div>
+                <p style="font-size: 0.75rem; color: var(--text-tertiary); line-height: 1.5;">{{ w.impact }}</p>
+            </div>
+            {% endfor %}
+
+            <div style="display: flex; justify-content: space-between; padding: 14px 0 6px;">
+                <span style="font-size: 0.85rem; color: var(--text-secondary);">Total covered</span>
+                <span style="font-size: 0.95rem; font-weight: 500; color: var(--text-primary); font-variant-numeric: tabular-nums;">£{{ "{:,.0f}".format(wp.total_covered) }}</span>
+            </div>
+        </div>
+        {% endif %}
+
+        {% if wp.shortfall and wp.shortfall > 0 %}
+        <div style="padding: 12px 16px; border-radius: 10px; background: var(--danger-bg); border: 0.5px solid var(--danger-border); margin-bottom: 18px;">
+            <p style="font-size: 0.8rem; color: var(--danger); line-height: 1.6;">Shortfall: £{{ "{:,.0f}".format(wp.shortfall) }}. Your plan can't fully cover this without touching protected goals. Consider adjusting a goal target or timeline.</p>
+        </div>
+        {% endif %}
+
+        {% if wp.withdrawals and not withdrawal_preview.decided %}
+        <div style="padding: 16px 0; border-top: 1px solid var(--glass-border);">
+            <p style="font-size: 0.88rem; color: var(--text-primary); line-height: 1.6; margin-bottom: 14px;">Would you like Claro to recalculate your plan with this withdrawal?</p>
+            <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                <form method="POST" action="{{ url_for('pages.plan_withdraw_confirm') }}" style="display: inline;">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    <button type="submit" class="btn-primary btn-sm">Yes, update my plan</button>
+                </form>
+                <form method="POST" action="{{ url_for('pages.plan_withdraw_dismiss') }}" style="display: inline;">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    <button type="submit" class="btn-secondary btn-sm">No, just show me</button>
+                </form>
+            </div>
+        </div>
+        {% endif %}
+
+        <p style="font-size: 0.72rem; color: var(--text-tertiary); line-height: 1.6; margin-top: 14px;">
+            This is a suggestion for how to manage your own savings pots. It's guidance to help you decide, not financial advice. You're always in control of where your money goes.
+        </p>
+    </div>
+    {% endif %}
+
+    {% endif %}
 </div>
 {% endblock %}

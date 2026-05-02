@@ -508,8 +508,10 @@ before the first `flask db upgrade`).
 | `checkin_completed` | `pages.checkin` POST success |
 | `goal_milestone_hit` | Inside `pages.checkin` POST loop — fires when a goal's progress crosses 25/50/75/100% |
 | `companion_message_sent` | `companion.companion_chat` after successful response — properties: `tier`, `message_count_today`, `tokens_in/out` |
-| `withdrawal_started` | `pages.withdraw` GET |
-| `withdrawal_confirmed` | `pages.withdraw` POST success |
+| `withdrawal_started` | `pages.plan` GET when `?withdraw=1` first opens the inline section |
+| `withdrawal_preview_generated` | `pages.plan_withdraw_preview` POST success — properties: `amount` |
+| `withdrawal_confirmed` | `pages.plan_withdraw_confirm` POST success — properties: `amount` (the plan was applied to goals) |
+| `withdrawal_dismissed` | `pages.plan_withdraw_dismiss` POST — user clicked "No, just show me"; properties: `amount` |
 | `cancel_confirmed` | Stripe `customer.subscription.deleted` webhook |
 | `account_deleted` | `account_service.delete_user_account` — fires before the User row is removed; properties: `reason` (optional free text from the user) |
 | `dev_test_event` | `/dev/posthog-test` (debug-only smoke test) |

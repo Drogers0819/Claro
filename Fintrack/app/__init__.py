@@ -283,7 +283,6 @@ def create_app(config_class=None):
         "pages.scenario_page",
         "pages.checkin",
         "pages.settings",
-        "pages.withdraw",
     }
 
     @app.context_processor
