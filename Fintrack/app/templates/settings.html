@@ -423,6 +423,18 @@
     </form>
 </div>
 
+<!-- Your data — GDPR Article 15/20 export. Safe action, kept visually distinct from the Danger zone below. -->
+<div style="margin-top: 24px; padding-top: 20px; border-top: 0.5px solid var(--glass-divider);">
+    <div style="font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.12em; color: var(--text-tertiary); margin-bottom: 10px;">Your data</div>
+    <a href="{{ url_for('pages.export_data') }}" style="display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 14px 0; text-decoration: none; color: var(--text-secondary);">
+        <div style="min-width: 0;">
+            <div style="font-size: 0.85rem; color: var(--text-primary); margin-bottom: 2px;">Download my data</div>
+            <div style="font-size: 0.72rem; color: var(--text-tertiary);">Download a copy of all the data Claro holds about you, as a JSON file.</div>
+        </div>
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="opacity: 0.5; flex-shrink: 0;"><path d="M9 18l6-6-6-6"/></svg>
+    </a>
+</div>
+
 <!-- Danger zone — restrained, deliberate. The deletion page does the heavy lifting. -->
 <div style="margin-top: 24px; padding-top: 20px; border-top: 0.5px solid var(--glass-divider);">
     <div style="font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.12em; color: var(--text-tertiary); margin-bottom: 10px;">Danger zone</div>
