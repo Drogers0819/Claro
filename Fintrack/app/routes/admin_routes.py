@@ -16,6 +16,7 @@ account. This is deliberately limited:
 
 from __future__ import annotations
 
+import os
 from functools import wraps
 
 from flask import Blueprint, abort, render_template
@@ -24,9 +25,9 @@ from flask_login import current_user, login_required
 admin_bp = Blueprint("admin", __name__, url_prefix="/admin")
 
 
-# Founder email — see Block 2 Task 2.7 prompt. Move to config / a
-# proper admin column when admin surface area grows.
-_FOUNDER_EMAIL = "daniel.rogers19@hotmail.com"
+# Founder email — read from FOUNDER_EMAIL env var at import. Must be set
+# in production (Render). If unset, the admin gate denies everyone.
+_FOUNDER_EMAIL = os.environ.get("FOUNDER_EMAIL", "").strip().lower()
 
 
 def _require_founder(view):
@@ -38,7 +39,9 @@ def _require_founder(view):
     def wrapped(*args, **kwargs):
         if not current_user.is_authenticated:
             abort(404)
-        if (current_user.email or "").lower() != _FOUNDER_EMAIL.lower():
+        if not _FOUNDER_EMAIL:
+            abort(404)
+        if (current_user.email or "").lower() != _FOUNDER_EMAIL:
             abort(404)
         return view(*args, **kwargs)
     return wrapped

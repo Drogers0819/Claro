@@ -248,4 +248,4 @@ class User(db.Model, UserMixin):
         return latest.completed_at >= datetime.utcnow() - timedelta(days=14)
 
     def __repr__(self):
-        return f"<User {self.id}: {self.email}>"
+        return f"<User {self.id}>"

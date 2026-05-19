@@ -1,3 +1,7 @@
+import os
+
+os.environ.setdefault("FOUNDER_EMAIL", "daniel.rogers19@hotmail.com")
+
 import pytest
 from app import create_app, db
 from app.models.user import User
