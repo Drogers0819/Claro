@@ -456,8 +456,6 @@ def register():
 
         login_user(user)
         identify_user(user.id, {
-            "email": user.email,
-            "name": user.name,
             "tier": user.subscription_tier or "free",
             "signup_date": (user.created_at or datetime.utcnow()).isoformat(),
         })
@@ -485,8 +483,6 @@ def login():
 
         login_user(user)
         identify_user(user.id, {
-            "email": user.email,
-            "name": user.name,
             "tier": user.subscription_tier or "free",
             "signup_date": (user.created_at.isoformat() if user.created_at else None),
         })

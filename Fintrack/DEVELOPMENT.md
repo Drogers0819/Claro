@@ -518,7 +518,7 @@ before the first `flask db upgrade`).
 | `account_deleted` | `account_service.delete_user_account` — fires before the User row is removed; properties: `reason` (optional free text from the user) |
 | `dev_test_event` | `/dev/posthog-test` (debug-only smoke test) |
 
-`identify_user(user_id, {email, name, tier, signup_date})` also fires on every register and login so funnels attribute to a stable distinct ID.
+`identify_user(user_id, {tier, signup_date})` also fires on every register and login so funnels attribute to a stable distinct ID. PII (email, name) is intentionally not sent — per the GDPR audit, PostHog receives `user_id` only as the distinct identifier.
 
 ### Events NOT yet instrumented (TODO)
 
