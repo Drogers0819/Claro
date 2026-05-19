@@ -247,5 +247,56 @@ class User(db.Model, UserMixin):
             return False
         return latest.completed_at >= datetime.utcnow() - timedelta(days=14)
 
+    def export_dict(self):
+        """Full user-row serialisation for GDPR data export.
+
+        Why: every column the user owns must be returned for Article 15/20.
+        How to apply: password_hash is the only field deliberately excluded —
+        it is a credential, not personal data the user is entitled to receive.
+        """
+        def _num(v):
+            return float(v) if v is not None else None
+
+        def _ts(v):
+            return v.isoformat() if v else None
+
+        return {
+            "id": self.id,
+            "email": self.email,
+            "name": self.name,
+            "created_at": _ts(self.created_at),
+            "monthly_income": _num(self.monthly_income),
+            "rent_amount": _num(self.rent_amount),
+            "bills_amount": _num(self.bills_amount),
+            "groceries_estimate": _num(self.groceries_estimate),
+            "transport_estimate": _num(self.transport_estimate),
+            "subscriptions_total": _num(self.subscriptions_total),
+            "other_commitments": _num(self.other_commitments),
+            "lifestyle_budget": _num(self.lifestyle_budget),
+            "income_day": self.income_day,
+            "payday_notification_last_sent": _ts(self.payday_notification_last_sent),
+            "checkin_reminder_1_sent": _ts(self.checkin_reminder_1_sent),
+            "checkin_reminder_2_sent": _ts(self.checkin_reminder_2_sent),
+            "checkin_reminder_3_sent": _ts(self.checkin_reminder_3_sent),
+            "survival_mode_active": bool(self.survival_mode_active),
+            "survival_mode_started_at": _ts(self.survival_mode_started_at),
+            "subscription_paused_until": _ts(self.subscription_paused_until),
+            "last_pause_started_at": _ts(self.last_pause_started_at),
+            "starting_net_worth": _num(self.starting_net_worth),
+            "employment_type": self.employment_type,
+            "factfind_completed": bool(self.factfind_completed),
+            "plan_wizard_complete": bool(self.plan_wizard_complete),
+            "skip_emergency_fund": bool(self.skip_emergency_fund),
+            "subscription_tier": self.subscription_tier,
+            "subscription_status": self.subscription_status,
+            "trial_ends_at": _ts(self.trial_ends_at),
+            "stripe_customer_id": self.stripe_customer_id,
+            "stripe_subscription_id": self.stripe_subscription_id,
+            "companion_messages_today": self.companion_messages_today,
+            "companion_last_reset": _ts(self.companion_last_reset),
+            "last_life_checkin": _ts(self.last_life_checkin),
+            "theme": self.theme,
+        }
+
     def __repr__(self):
         return f"<User {self.id}>"

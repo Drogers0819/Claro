@@ -23,3 +23,14 @@ class ChatMessage(db.Model):
             passive_deletes=True,
         ),
     )
+
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "role": self.role,
+            "content": self.content,
+            "model_used": self.model_used,
+            "tokens_in": self.tokens_in,
+            "tokens_out": self.tokens_out,
+            "created_at": self.created_at.isoformat() if self.created_at else None,
+        }

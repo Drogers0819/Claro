@@ -55,5 +55,21 @@ class CrisisEvent(db.Model):
         ),
     )
 
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "event_type": self.event_type,
+            "income_change_type": self.income_change_type,
+            "new_monthly_income": float(self.new_monthly_income) if self.new_monthly_income is not None else None,
+            "income_unknown": bool(self.income_unknown) if self.income_unknown is not None else None,
+            "cost_description": self.cost_description,
+            "cost_amount": float(self.cost_amount) if self.cost_amount is not None else None,
+            "cost_already_paid": self.cost_already_paid,
+            "occurred_on": self.occurred_on.isoformat() if self.occurred_on else None,
+            "created_at": self.created_at.isoformat() if self.created_at else None,
+            "resolved_at": self.resolved_at.isoformat() if self.resolved_at else None,
+            "resolution_notes": self.resolution_notes,
+        }
+
     def __repr__(self):
         return f"<CrisisEvent {self.id}: {self.event_type} user={self.user_id}>"

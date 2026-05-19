@@ -66,5 +66,18 @@ class SubscriptionEvent(db.Model):
         ),
     )
 
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "event_type": self.event_type,
+            "stripe_subscription_id": self.stripe_subscription_id,
+            "stripe_event_id": self.stripe_event_id,
+            "pause_duration_days": self.pause_duration_days,
+            "pause_started_at": self.pause_started_at.isoformat() if self.pause_started_at else None,
+            "pause_ends_at": self.pause_ends_at.isoformat() if self.pause_ends_at else None,
+            "metadata_json": self.metadata_json,
+            "created_at": self.created_at.isoformat() if self.created_at else None,
+        }
+
     def __repr__(self):
         return f"<SubscriptionEvent {self.id}: {self.event_type} user={self.user_id}>"

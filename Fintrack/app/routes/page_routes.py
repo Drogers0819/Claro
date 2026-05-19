@@ -1830,6 +1830,67 @@ def resume_subscription_route():
     return redirect(url_for("pages.settings"))
 
 
+@page_bp.route("/settings/export-data")
+@login_required
+def export_data():
+    """GDPR Article 15/20 — right of access / portability.
+
+    Returns the authenticated user's complete data as a downloadable
+    JSON archive. password_hash is the only field excluded; it's a
+    credential, not personal data the user is entitled to receive.
+    """
+    from datetime import datetime as _dt
+    from flask import Response
+    import json as _json
+
+    from app.models.checkin import CheckIn
+    from app.models.chat import ChatMessage
+    from app.models.crisis_event import CrisisEvent
+    from app.models.subscription_event import SubscriptionEvent
+    from app.models.recurring_contribution import RecurringContribution
+
+    uid = current_user.id
+
+    payload = {
+        "export_generated_at": _dt.utcnow().isoformat() + "Z",
+        "schema_version": 1,
+        "user": current_user.export_dict(),
+        "transactions": [
+            t.to_dict() for t in Transaction.query.filter_by(user_id=uid).all()
+        ],
+        "goals": [
+            g.to_dict() for g in Goal.query.filter_by(user_id=uid).all()
+        ],
+        "budgets": [
+            b.to_dict() for b in Budget.query.filter_by(user_id=uid).all()
+        ],
+        "checkins": [
+            c.to_dict() for c in CheckIn.query.filter_by(user_id=uid).all()
+        ],
+        "life_checkins": [
+            l.to_dict() for l in LifeCheckIn.query.filter_by(user_id=uid).all()
+        ],
+        "crisis_events": [
+            e.to_dict() for e in CrisisEvent.query.filter_by(user_id=uid).all()
+        ],
+        "subscription_events": [
+            s.to_dict() for s in SubscriptionEvent.query.filter_by(user_id=uid).all()
+        ],
+        "recurring_contributions": [
+            r.to_dict() for r in RecurringContribution.query.filter_by(user_id=uid).all()
+        ],
+        "chat_messages": [
+            m.to_dict() for m in ChatMessage.query.filter_by(user_id=uid).all()
+        ],
+    }
+
+    body = _json.dumps(payload, indent=2, ensure_ascii=False)
+    filename = f"claro-data-export-{uid}-{date.today().isoformat()}.json"
+    resp = Response(body, mimetype="application/json")
+    resp.headers["Content-Disposition"] = f'attachment; filename="{filename}"'
+    return resp
+
+
 @page_bp.route("/settings/delete-account", methods=["GET", "POST"])
 @login_required
 def delete_account():

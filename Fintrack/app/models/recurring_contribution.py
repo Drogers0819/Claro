@@ -99,6 +99,18 @@ class RecurringContribution(db.Model):
         ),
     )
 
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "source": self.source,
+            "chip_id": self.chip_id,
+            "label": self.label,
+            "amount": float(self.amount) if self.amount is not None else None,
+            "linked_goal_id": self.linked_goal_id,
+            "created_at": self.created_at.isoformat() if self.created_at else None,
+            "updated_at": self.updated_at.isoformat() if self.updated_at else None,
+        }
+
     def __repr__(self):
         chip = self.chip_id or "<custom>"
         return (
