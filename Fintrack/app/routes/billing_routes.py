@@ -21,6 +21,23 @@ billing_bp = Blueprint("billing", __name__)
 logger = logging.getLogger(__name__)
 
 
+def _field(obj, key, default=None):
+    """Read a field from a Stripe SDK object (or plain dict) safely.
+
+    stripe.Webhook.construct_event() returns stripe.* SDK objects
+    (stripe.Event, stripe.Subscription, ...), which since stripe-python
+    v5+ no longer expose dict.get() — calling .get() on them raises
+    AttributeError. Subscript access (obj[key]) works on both SDK
+    objects and dicts and raises KeyError when the key is absent, so we
+    wrap it here and fall back to `default` for missing-or-null fields.
+    """
+    try:
+        value = obj[key]
+    except (KeyError, TypeError):
+        return default
+    return default if value is None else value
+
+
 @billing_bp.route("/checkout/<plan>")
 @login_required
 @limiter.limit("10 per minute")
@@ -105,14 +122,15 @@ def stripe_webhook():
     try:
         _handle_event(event)
     except Exception:
-        logger.exception("Error handling Stripe event %s", event.get("id"))
+        logger.exception("Error handling Stripe event %s", _field(event, "id"))
 
     return ("", 200)
 
 
 def _handle_event(event):
-    event_type = event.get("type", "")
-    data = event.get("data", {}).get("object", {}) or {}
+    event_type = _field(event, "type", "")
+    event_data = _field(event, "data", {})
+    data = _field(event_data, "object", {})
 
     if event_type == "checkout.session.completed":
         _handle_checkout_completed(data)
@@ -121,8 +139,8 @@ def _handle_event(event):
         # event id, both needed by the pause auto-resume detection.
         _handle_subscription_updated(
             data,
-            previous_attributes=event.get("data", {}).get("previous_attributes") or {},
-            stripe_event_id=event.get("id"),
+            previous_attributes=_field(event_data, "previous_attributes", {}),
+            stripe_event_id=_field(event, "id"),
         )
     elif event_type == "customer.subscription.deleted":
         _handle_subscription_deleted(data)
@@ -133,8 +151,8 @@ def _handle_event(event):
 
 
 def _user_from_session(session):
-    metadata = session.get("metadata") or {}
-    user_id = metadata.get("user_id")
+    metadata = _field(session, "metadata", {})
+    user_id = _field(metadata, "user_id")
     if user_id:
         try:
             user = db.session.get(User, int(user_id))
@@ -143,7 +161,7 @@ def _user_from_session(session):
         except (TypeError, ValueError):
             pass
 
-    customer_id = session.get("customer")
+    customer_id = _field(session, "customer")
     if customer_id:
         return User.query.filter_by(stripe_customer_id=customer_id).first()
     return None
@@ -156,21 +174,21 @@ def _user_from_customer(customer_id):
 
 
 def _first_price_id(subscription_obj):
-    items = (subscription_obj.get("items") or {}).get("data") or []
+    items = _field(_field(subscription_obj, "items", {}), "data", [])
     if not items:
         return None
-    price = items[0].get("price") or {}
-    return price.get("id")
+    price = _field(items[0], "price", {})
+    return _field(price, "id")
 
 
 def _handle_checkout_completed(session):
     user = _user_from_session(session)
     if not user:
-        logger.warning("checkout.session.completed without matching user: %s", session.get("id"))
+        logger.warning("checkout.session.completed without matching user: %s", _field(session, "id"))
         return
 
-    customer_id = session.get("customer")
-    subscription_id = session.get("subscription")
+    customer_id = _field(session, "customer")
+    subscription_id = _field(session, "subscription")
 
     if customer_id:
         user.stripe_customer_id = customer_id
@@ -202,7 +220,7 @@ def _handle_checkout_completed(session):
 
 def _handle_subscription_updated(subscription, *, previous_attributes=None, stripe_event_id=None):
     previous_attributes = previous_attributes or {}
-    customer_id = subscription.get("customer")
+    customer_id = _field(subscription, "customer")
     user = _user_from_customer(customer_id)
     if not user:
         return
@@ -213,7 +231,7 @@ def _handle_subscription_updated(subscription, *, previous_attributes=None, stri
     # service is idempotent on stripe_event_id, so duplicate
     # deliveries are no-ops.
     was_paused = "pause_collection" in previous_attributes
-    is_now_paused = subscription.get("pause_collection") is not None
+    is_now_paused = _field(subscription, "pause_collection") is not None
     if was_paused and not is_now_paused:
         try:
             from app.services.pause_service import handle_scheduled_resume_webhook
@@ -225,11 +243,11 @@ def _handle_subscription_updated(subscription, *, previous_attributes=None, stri
     if price_id:
         user.subscription_tier = tier_for_price_id(price_id)
 
-    status = subscription.get("status")
+    status = _field(subscription, "status")
     if status:
         user.subscription_status = status
 
-    sub_id = subscription.get("id")
+    sub_id = _field(subscription, "id")
     if sub_id:
         user.stripe_subscription_id = sub_id
 
@@ -237,7 +255,7 @@ def _handle_subscription_updated(subscription, *, previous_attributes=None, stri
 
 
 def _handle_subscription_deleted(subscription):
-    customer_id = subscription.get("customer")
+    customer_id = _field(subscription, "customer")
     user = _user_from_customer(customer_id)
     if not user:
         return
@@ -256,7 +274,7 @@ def _handle_subscription_deleted(subscription):
 
 
 def _handle_invoice_paid(invoice):
-    customer_id = invoice.get("customer")
+    customer_id = _field(invoice, "customer")
     user = _user_from_customer(customer_id)
     if not user:
         return
@@ -266,7 +284,7 @@ def _handle_invoice_paid(invoice):
 
 
 def _handle_invoice_failed(invoice):
-    customer_id = invoice.get("customer")
+    customer_id = _field(invoice, "customer")
     user = _user_from_customer(customer_id)
     if not user:
         return
