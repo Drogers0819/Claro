@@ -1597,4 +1597,80 @@ This is a separate design conversation, not a near-term task. The marker is here
 
 ---
 
+## 2026-06-04 — Sentry error monitoring (errors only, PII-stripped)
+
+Phase 1 pre-beta item 22. Minimal Sentry integration for beta: **errors
+only** — `traces_sample_rate=0`, no performance monitoring, no session
+replay.
+
+### Error monitoring — how it's wired
+
+- **`app/observability.py`** owns the integration. `create_app()` calls
+  `init_sentry()` once, early in the factory.
+- **No-ops without a DSN.** `init_sentry()` reads `SENTRY_DSN` from the
+  environment and returns immediately if it's blank or missing. Local dev,
+  tests, and CI run with no DSN and Sentry stays off — nothing breaks.
+- **PII protection.** `send_default_pii=False` so Sentry won't auto-capture
+  emails, names, or IP addresses (non-negotiable given the financial-data
+  context). On top of that, a `before_send` hook recursively scrubs
+  sensitive fields from every event before it leaves the process —
+  redacting matching values to `[Filtered]`. Matching is **case-insensitive
+  and by substring** (`_SENSITIVE_SUBSTRINGS` in `app/observability.py`), so
+  prefixed/suffixed variants are all caught, and it walks request data,
+  cookies, headers, stack-frame locals, `extra`, and breadcrumbs:
+  - **Secrets / credentials:** `password` (→ `password_hash` too),
+    `secret` (→ `stripe_secret_key`), `api_key` (→ `anthropic_api_key`),
+    `token` / `csrf` (→ `csrf_token`), `session`, `cookie` (→ `Cookie` /
+    `Set-Cookie`), `authorization`.
+  - **PII:** `email` (→ `customer_email`, `user_email`), `name` (→
+    `first_name`, `last_name`, `full_name`), and IP variants via
+    `ip_address` / `client_ip` / `remote_ip` / `forwarded_for` / `_ip` /
+    `ip_`.
+  - The bias is deliberately toward over-redaction: the substring `name`
+    will also redact non-PII keys like `category_name` (and Sentry's own
+    `sdk.name` / `server_name` / `contexts.*.name` metadata). That lost
+    debug context is an accepted trade for guaranteeing PII never leaks.
+    The `environment` and `release` tags and the exception type/value/stack
+    are unaffected, so error triage is unimpaired.
+- **Environment + release tags.** `environment` comes from
+  `SENTRY_ENVIRONMENT` (defaults to `"production"`) so staging and
+  production errors are distinguishable. `release` comes from
+  `RENDER_GIT_COMMIT`, which Render injects automatically — gives per-deploy
+  error attribution.
+
+### Production setup (Render)
+
+1. Get the project DSN from the Sentry dashboard:
+   **Settings → Projects → [project] → Client Keys (DSN)**. It looks like
+   `https://<key>@<org>.ingest.sentry.io/<project_id>`.
+2. In the Render dashboard, set the env vars (each triggers a redeploy):
+   - `SENTRY_DSN=https://<key>@<org>.ingest.sentry.io/<project_id>`
+   - `SENTRY_ENVIRONMENT=production`
+3. Local dev: leave `SENTRY_DSN` blank — Sentry stays off, no noise.
+
+### `/debug/sentry-test` — verification route (temporary)
+
+A gated route (`app/routes/debug_routes.py`) that raises
+`RuntimeError("Sentry verification test")` so you can confirm errors reach
+the dashboard. It is **404 unless `SENTRY_DEBUG_ENABLED=1`** is set in the
+environment (checked at request time), so it can't be hit accidentally when
+the var is unset.
+
+To verify: temporarily set `SENTRY_DEBUG_ENABLED=1` in Render, hit
+`/debug/sentry-test`, confirm the error lands in Sentry with the right
+environment tag, release (commit hash), and **no PII**. Then **remove
+`SENTRY_DEBUG_ENABLED`** from Render — the route goes inert. The route
+itself should be removed entirely in a follow-up commit
+(`chore: remove /debug/sentry-test once Sentry verified`) once verification
+is stable.
+
+### Tests
+
+`tests/test_sentry_init.py` covers: app starts cleanly with no DSN (the
+local-dev/CI guarantee) and with a dummy DSN; `before_send` strips every
+spec'd sensitive field while preserving non-sensitive data; and the debug
+route is 404 when the flag is unset and raises when it's `1`.
+
+---
+
 *This journal is part of the FinTrack project. It documents genuine learning, not polished retrospection. Mistakes, confusion, and wrong turns are included deliberately — they're where the real growth happened.*

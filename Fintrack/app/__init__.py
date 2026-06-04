@@ -51,6 +51,12 @@ def create_app(config_class=None):
     app = Flask(__name__)
     app.config.from_object(config_class)
 
+    # Error monitoring — no-ops gracefully when SENTRY_DSN is unset (local
+    # dev, tests, CI). Initialised early so it can capture errors raised
+    # anywhere during app setup. See app/observability.py.
+    from app.observability import init_sentry
+    init_sentry()
+
     app.config["SQLALCHEMY_ENGINE_OPTIONS"] = {
         "pool_pre_ping": True,
         "pool_recycle": 300,
@@ -289,12 +295,14 @@ def create_app(config_class=None):
     from app.routes.cron_routes import cron_bp
     from app.routes.crisis_routes import crisis_bp
     from app.routes.admin_routes import admin_bp
+    from app.routes.debug_routes import debug_bp
     app.register_blueprint(narrative_bp)
     app.register_blueprint(companion_bp)
     app.register_blueprint(billing_bp)
     app.register_blueprint(cron_bp)
     app.register_blueprint(crisis_bp)
     app.register_blueprint(admin_bp)
+    app.register_blueprint(debug_bp)
 
     from app.services.stripe_service import init_stripe
     init_stripe()
