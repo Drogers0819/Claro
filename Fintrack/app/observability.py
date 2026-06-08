@@ -117,6 +117,19 @@ def init_sentry():
     `create_app()` — local dev, tests, and CI run without a DSN and get the
     no-op path.
     """
+    # DIAGNOSTIC — remove after Sentry verification works
+    logger.info("[sentry-diagnostic] init_sentry called")
+    _diag_dsn = os.environ.get("SENTRY_DSN", "")
+    # Log only the LENGTH — the DSN is a sensitive credential, never log its value.
+    logger.info(
+        "[sentry-diagnostic] SENTRY_DSN length: %s",
+        len(_diag_dsn) if _diag_dsn else "empty",
+    )
+    logger.info(
+        "[sentry-diagnostic] SENTRY_ENVIRONMENT: %s",
+        os.environ.get("SENTRY_ENVIRONMENT", ""),
+    )
+
     dsn = os.environ.get("SENTRY_DSN", "").strip()
     if not dsn:
         logger.info("SENTRY_DSN not set — Sentry error monitoring disabled.")
@@ -129,20 +142,39 @@ def init_sentry():
         logger.warning("sentry-sdk not installed — Sentry error monitoring disabled.")
         return False
 
-    sentry_sdk.init(
-        dsn=dsn,
-        integrations=[FlaskIntegration()],
-        # Errors only — no performance monitoring, no session replay.
-        traces_sample_rate=0,
-        # Distinguishes staging from production in the Sentry dashboard.
-        environment=os.environ.get("SENTRY_ENVIRONMENT", "production"),
-        # Render injects RENDER_GIT_COMMIT automatically → per-deploy
-        # error attribution. Falls back to "unknown" off-Render.
-        release=os.environ.get("RENDER_GIT_COMMIT", "unknown"),
-        # PII protection: do not auto-capture emails, names, IPs.
-        send_default_pii=False,
-        before_send=before_send,
+    # DIAGNOSTIC — remove after Sentry verification works
+    logger.info("[sentry-diagnostic] sentry_sdk.init() about to be called")
+    try:
+        sentry_sdk.init(
+            dsn=dsn,
+            integrations=[FlaskIntegration()],
+            # Errors only — no performance monitoring, no session replay.
+            traces_sample_rate=0,
+            # Distinguishes staging from production in the Sentry dashboard.
+            environment=os.environ.get("SENTRY_ENVIRONMENT", "production"),
+            # Render injects RENDER_GIT_COMMIT automatically → per-deploy
+            # error attribution. Falls back to "unknown" off-Render.
+            release=os.environ.get("RENDER_GIT_COMMIT", "unknown"),
+            # PII protection: do not auto-capture emails, names, IPs.
+            send_default_pii=False,
+            before_send=before_send,
+        )
+    except Exception as e:  # DIAGNOSTIC — remove after Sentry verification works
+        # Surface the failure in the logs, then re-raise so it still fails loudly.
+        logger.info(
+            "[sentry-diagnostic] sentry_sdk.init() raised: %s (type=%s)",
+            e,
+            type(e).__name__,
+        )
+        raise
+    # DIAGNOSTIC — remove after Sentry verification works
+    logger.info("[sentry-diagnostic] sentry_sdk.init() completed successfully")
+    # If the client is None, init() silently failed (e.g. malformed DSN swallowed).
+    logger.info(
+        "[sentry-diagnostic] sentry_sdk.Hub.current.client exists: %s",
+        sentry_sdk.Hub.current.client is not None,
     )
+
     logger.info(
         "Sentry initialised (environment=%s, release=%s)",
         os.environ.get("SENTRY_ENVIRONMENT", "production"),
